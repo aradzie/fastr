@@ -1,5 +1,6 @@
 import { Body } from "@webfx-http/body";
 import { Headers } from "@webfx-http/headers";
+import { isSuccess } from "@webfx-http/status";
 import { IncomingMessage, RequestOptions } from "http";
 import { sendBody } from "./body";
 import { selectTransport } from "./transport";
@@ -10,14 +11,19 @@ export async function requestAdapter(
   request: HttpRequest,
 ): Promise<HttpResponse> {
   const url = toURL(request.url);
-  const { method, headers, body } = request;
+  const { method, headers, body, options = {} } = request;
+  let { agent } = options;
+  if (typeof agent === "function") {
+    agent = agent(url);
+  }
   const transport = selectTransport(url);
-  const options: RequestOptions = {
+  const requestOptions: RequestOptions = {
     method: method.toUpperCase(),
     headers: headers?.toJSON(),
+    agent: agent ?? false,
   };
   const res = await new Promise<IncomingMessage>((resolve, reject) => {
-    const req = transport(url, options, (res) => {
+    const req = transport(url, requestOptions, (res) => {
       resolve(res);
     }).on("error", (err) => {
       reject(err);
@@ -43,7 +49,7 @@ function makeResponse(
     statusCode: status = 200,
     statusMessage: statusText = "OK",
   } = incomingMessage;
-  const ok = status >= 200 && status < 300;
+  const ok = isSuccess(status);
   const headers = Headers.fromJSON(incomingMessage.headers);
   const body = Body.from(incomingMessage);
   return new (class implements HttpResponse {

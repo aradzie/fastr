@@ -18,7 +18,7 @@ export class Canonical implements IMiddleware {
     this.port = port;
   }
 
-  async handle(ctx: RouterContext, next: Koa.Next) {
+  async handle(ctx: RouterContext, next: Koa.Next): Promise<any> {
     const { protocol, hostname, port } = this;
     let url = ctx.request.URL;
     if (

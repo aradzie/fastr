@@ -8,6 +8,14 @@ import { BodyDataType, HttpRequestBody } from "./types";
 
 const GZIP_SIZE_THRESHOLD = 1024;
 
+// TODO Support stream-able bodies.
+
+export function isStreamBody(
+  body: BodyDataType | HttpRequestBody | null,
+): boolean {
+  return body != null && toPayload(body).kind === "stream";
+}
+
 export function sendBody(
   req: ClientRequest,
   body: BodyDataType | HttpRequestBody | null,

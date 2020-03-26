@@ -1,4 +1,5 @@
 import { URL } from "url";
+import { isStreamBody } from "../body";
 import { RedirectError } from "../errors";
 import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
 import { toURL } from "../util";
@@ -31,12 +32,16 @@ export function followRedirects({
   }
   return (adapter: Adapter): Adapter => {
     return async (request: HttpRequest): Promise<HttpResponse> => {
+      // TODO Cache stream body.
+      if (isStreamBody(request.body ?? null)) {
+        throw new TypeError("Cannot follow with stream bodies");
+      }
+
       // The current url to visit which is updated after each redirect response.
       let url = toURL(request.url);
       // The set of already visited urls for the loop detection purposes.
       const visited = new Set<string>();
 
-      // eslint-disable-next-line no-constant-condition
       while (true) {
         // Send request with a new url.
         const response = await adapter({

@@ -6,19 +6,22 @@ import { brotliCompressSync, gzipSync } from "zlib";
 import { Body } from "./body";
 
 test("parse buffer body", async (t) => {
-  t.deepEqual(await Body.from(new FakeRequest("")).buffer(), Buffer.from(""));
   t.deepEqual(
-    await Body.from(new FakeRequest("buffer")).buffer(),
+    await Body.from(new FakeIncomingMessage("")).buffer(),
+    Buffer.from(""),
+  );
+  t.deepEqual(
+    await Body.from(new FakeIncomingMessage("buffer")).buffer(),
     Buffer.from("buffer"),
   );
 });
 
 test("parse text body", async (t) => {
-  t.is(await Body.from(new FakeRequest("")).text(), "");
-  t.is(await Body.from(new FakeRequest("text")).text(), "text");
+  t.is(await Body.from(new FakeIncomingMessage("")).text(), "");
+  t.is(await Body.from(new FakeIncomingMessage("text")).text(), "text");
   t.is(
     await Body.from(
-      new FakeRequest(Buffer.from("text", "utf8"), {
+      new FakeIncomingMessage(Buffer.from("text", "utf8"), {
         "content-type": "text/plain; charset=UTF8",
       }),
     ).text(),
@@ -26,7 +29,7 @@ test("parse text body", async (t) => {
   );
   t.is(
     await Body.from(
-      new FakeRequest(Buffer.from("text", "utf16le"), {
+      new FakeIncomingMessage(Buffer.from("text", "utf16le"), {
         "content-type": "text/plain; charset=UTF16LE",
       }),
     ).text(),
@@ -34,7 +37,7 @@ test("parse text body", async (t) => {
   );
   t.is(
     await Body.from(
-      new FakeRequest(Buffer.from("text", "latin1"), {
+      new FakeIncomingMessage(Buffer.from("text", "latin1"), {
         "content-type": "text/plain; charset=ISO-8859-1",
       }),
     ).text(),
@@ -42,7 +45,7 @@ test("parse text body", async (t) => {
   );
   t.is(
     await Body.from(
-      new FakeRequest(Buffer.from("text", "ascii"), {
+      new FakeIncomingMessage(Buffer.from("text", "ascii"), {
         "content-type": "text/plain; charset=Ascii",
       }),
     ).text(),
@@ -51,12 +54,15 @@ test("parse text body", async (t) => {
 });
 
 test("parse json body", async (t) => {
-  t.deepEqual(await Body.from(new FakeRequest('{"json":true}')).json(), {
-    json: true,
-  });
+  t.deepEqual(
+    await Body.from(new FakeIncomingMessage('{"json":true}')).json(),
+    {
+      json: true,
+    },
+  );
   t.deepEqual(
     await Body.from(
-      new FakeRequest(Buffer.from('{"json":true}', "utf16le"), {
+      new FakeIncomingMessage(Buffer.from('{"json":true}', "utf16le"), {
         "content-type": "application/json; charset=utf16le",
       }),
     ).json(),
@@ -65,13 +71,13 @@ test("parse json body", async (t) => {
 });
 
 test("parse form body", async (t) => {
-  t.deepEqual(await Body.from(new FakeRequest("")).form(), {});
-  t.deepEqual(await Body.from(new FakeRequest("form=true")).form(), {
+  t.deepEqual(await Body.from(new FakeIncomingMessage("")).form(), {});
+  t.deepEqual(await Body.from(new FakeIncomingMessage("form=true")).form(), {
     form: "true",
   });
   t.deepEqual(
     await Body.from(
-      new FakeRequest(Buffer.from("form=true", "utf16le"), {
+      new FakeIncomingMessage(Buffer.from("form=true", "utf16le"), {
         "content-type": "application/x-www-form-urlencoded; charset=utf16le",
       }),
     ).form(),
@@ -80,7 +86,7 @@ test("parse form body", async (t) => {
 });
 
 test("use body once", async (t) => {
-  const body = Body.from(new FakeRequest("buffer"));
+  const body = Body.from(new FakeIncomingMessage("buffer"));
 
   t.false(body.bodyUsed);
 
@@ -122,7 +128,7 @@ test("use body once", async (t) => {
 });
 
 test("demand binary stream", async (t) => {
-  const req = new FakeRequest("buffer");
+  const req = new FakeIncomingMessage("buffer");
   req.setEncoding("utf8");
 
   await t.throwsAsync(
@@ -138,7 +144,7 @@ test("demand binary stream", async (t) => {
 
 test("honor data limit", async (t) => {
   {
-    const req = new FakeRequest("body");
+    const req = new FakeIncomingMessage("body");
     t.false(req.isPaused());
     await t.throwsAsync(
       async () => {
@@ -153,7 +159,7 @@ test("honor data limit", async (t) => {
   }
 
   {
-    const req = new FakeRequest("body", { "content-length": "4" });
+    const req = new FakeIncomingMessage("body", { "content-length": "4" });
     t.false(req.isPaused());
     await t.throwsAsync(
       async () => {
@@ -168,7 +174,7 @@ test("honor data limit", async (t) => {
   }
 
   {
-    const req = new FakeRequest("body");
+    const req = new FakeIncomingMessage("body");
     t.false(req.isPaused());
     t.is(await Body.from(req, { lengthLimit: 4 }).text(), "body");
     t.false(req.isPaused());
@@ -182,24 +188,26 @@ test("decompress data", async (t) => {
 
   t.is(
     await Body.from(
-      new FakeRequest(data, { "content-encoding": "identity" }),
+      new FakeIncomingMessage(data, { "content-encoding": "identity" }),
     ).text(),
     data,
   );
   t.is(
     await Body.from(
-      new FakeRequest(gzip, { "content-encoding": "gzip" }),
+      new FakeIncomingMessage(gzip, { "content-encoding": "gzip" }),
     ).text(),
     data,
   );
   t.is(
     await Body.from(
-      new FakeRequest(gzip, { "content-encoding": "deflate" }),
+      new FakeIncomingMessage(gzip, { "content-encoding": "deflate" }),
     ).text(),
     data,
   );
   t.is(
-    await Body.from(new FakeRequest(br, { "content-encoding": "br" })).text(),
+    await Body.from(
+      new FakeIncomingMessage(br, { "content-encoding": "br" }),
+    ).text(),
     data,
   );
 });
@@ -208,7 +216,7 @@ test("handle invalid compressed data", async (t) => {
   await t.throwsAsync(
     async () => {
       await Body.from(
-        new FakeRequest("body", { "content-encoding": "invalid" }),
+        new FakeIncomingMessage("body", { "content-encoding": "invalid" }),
       ).text();
     },
     {
@@ -219,7 +227,7 @@ test("handle invalid compressed data", async (t) => {
   await t.throwsAsync(
     async () => {
       await Body.from(
-        new FakeRequest("invalid", { "content-encoding": "gzip" }),
+        new FakeIncomingMessage("invalid", { "content-encoding": "gzip" }),
       ).text();
     },
     {
@@ -230,7 +238,7 @@ test("handle invalid compressed data", async (t) => {
   await t.throwsAsync(
     async () => {
       await Body.from(
-        new FakeRequest("invalid", { "content-encoding": "deflate" }),
+        new FakeIncomingMessage("invalid", { "content-encoding": "deflate" }),
       ).text();
     },
     {
@@ -241,7 +249,7 @@ test("handle invalid compressed data", async (t) => {
   await t.throwsAsync(
     async () => {
       await Body.from(
-        new FakeRequest("invalid", { "content-encoding": "br" }),
+        new FakeIncomingMessage("invalid", { "content-encoding": "br" }),
       ).text();
     },
     {
@@ -252,7 +260,7 @@ test("handle invalid compressed data", async (t) => {
 });
 
 test("read from destroyed stream", async (t) => {
-  const req = new FakeRequest("buffer");
+  const req = new FakeIncomingMessage("buffer");
   req.destroy();
 
   await t.throwsAsync(
@@ -266,7 +274,7 @@ test("read from destroyed stream", async (t) => {
   );
 });
 
-class FakeRequest extends Readable {
+class FakeIncomingMessage extends Readable {
   readonly headers: IncomingHttpHeaders;
 
   constructor(

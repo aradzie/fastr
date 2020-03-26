@@ -3,6 +3,7 @@ import type { Headers, MimeType } from "@webfx-http/headers";
 import type { Json } from "@webfx/request-json";
 import type { Readable } from "stream";
 import type { URL, URLSearchParams } from "url";
+import type { AnyAgent } from "./agent";
 
 /**
  * Adapter is a function which takes a request and returns a response promise.
@@ -24,6 +25,11 @@ export interface HasMiddleware {
   readonly middleware?: readonly Middleware[];
 }
 
+export interface HttpRequestOptions {
+  readonly timeout?: number;
+  readonly agent?: AnyAgent | ((url: URL) => AnyAgent);
+}
+
 export interface HttpRequest {
   /**
    * The URL of a resource to request.
@@ -41,6 +47,10 @@ export interface HttpRequest {
    * The request body.
    */
   readonly body?: BodyDataType | HttpRequestBody | null;
+  /**
+   * Any additional request options.
+   */
+  readonly options?: HttpRequestOptions;
 }
 
 export interface HttpRequestBody {

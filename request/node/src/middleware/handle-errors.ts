@@ -21,6 +21,13 @@ import {
 import { HttpStatus, isClientError, isServerError } from "@webfx-http/status";
 import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
 
+export interface HandleErrorOptions {
+  /**
+   * Whether to ignore response body in case of a failed response.
+   */
+  readonly ignoreBody?: boolean;
+}
+
 /**
  * Returns a new middleware which checks the response status and throws HTTP
  * errors in case of client of server error statuses.
@@ -34,13 +41,16 @@ import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
  * This middleware automates error handling and rejects the returned promises
  * with an HTTP error instance if the response status if not successful.
  */
-export function handleErrors(): Middleware {
+export function handleErrors(options: HandleErrorOptions = {}): Middleware {
+  const { ignoreBody = true } = options;
   return (adapter: Adapter): Adapter => {
     return async (request: HttpRequest): Promise<HttpResponse> => {
       const response = await adapter(request);
       const { status, statusText } = response;
       if (isClientError(status)) {
-        response.abort();
+        if (ignoreBody) {
+          response.abort();
+        }
         switch (status) {
           case HttpStatus.BAD_REQUEST:
             throw new BadRequestError(statusText);
@@ -71,7 +81,9 @@ export function handleErrors(): Middleware {
         }
       }
       if (isServerError(status)) {
-        response.abort();
+        if (ignoreBody) {
+          response.abort();
+        }
         switch (status) {
           case HttpStatus.INTERNAL_SERVER_ERROR:
             throw new InternalServerError(statusText);

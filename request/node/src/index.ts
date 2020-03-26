@@ -13,5 +13,11 @@ export {
   followRedirects,
   expectType,
   handleErrors,
+  retryFailed,
+} from "./middleware";
+export type {
+  FollowRedirectOptions,
+  HandleErrorOptions,
+  RetryFailedOptions,
 } from "./middleware";
 export { RequestError, RedirectError } from "./errors";

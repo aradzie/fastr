@@ -1,4 +1,5 @@
 import { Headers as HttpHeaders } from "@webfx-http/headers";
+import { isSuccess } from "@webfx-http/status";
 import { RequestError } from "../errors";
 import type { HttpResponse, ProgressListener } from "../types";
 import { HttpRequest } from "../types";
@@ -84,7 +85,7 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
 function makeResponse(xhr: XMLHttpRequest, body: Promise<Blob>): HttpResponse {
   const { status, statusText, responseURL: url } = xhr;
   const headers = HttpHeaders.parse(xhr.getAllResponseHeaders());
-  const ok = status >= 200 && status < 300;
+  const ok = isSuccess(status);
   let bodyUsed = false;
 
   return new (class XhrHttpResponse implements HttpResponse {

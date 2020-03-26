@@ -1,6 +1,10 @@
 import codes from "./status-codes.json";
 
-export const statusCodes = codes as { [code: string]: string };
+export interface StatusCodesDict {
+  readonly [code: string]: string;
+}
+
+export const statusCodes = codes as StatusCodesDict;
 
 export enum HttpStatus {
   CONTINUE = 100,
@@ -51,18 +55,14 @@ export enum HttpStatus {
   HTTP_VERSION_NOT_SUPPORTED = 505,
 }
 
-export function isSuccess(status: number) {
-  return status >= 200 && status < 300;
-}
+export const isSuccess = (status: number): boolean =>
+  status >= 200 && status < 300;
 
-export function isRedirect(status: number) {
-  return status >= 300 && status < 400;
-}
+export const isRedirect = (status: number): boolean =>
+  status >= 300 && status < 400;
 
-export function isClientError(status: number) {
-  return status >= 400 && status < 500;
-}
+export const isClientError = (status: number): boolean =>
+  status >= 400 && status < 500;
 
-export function isServerError(status: number) {
-  return status >= 500 && status < 600;
-}
+export const isServerError = (status: number): boolean =>
+  status >= 500 && status < 600;

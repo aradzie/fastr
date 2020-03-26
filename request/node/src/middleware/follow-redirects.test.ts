@@ -7,7 +7,7 @@ import {
 import { Adapter, HttpRequest, HttpResponse } from "../types";
 import { followRedirects } from "./follow-redirects";
 
-test("passes through if response status is not redirect", async (t) => {
+test("pass through if response status is not redirect", async (t) => {
   // Arrange.
 
   const underTest = followRedirects();
@@ -28,7 +28,7 @@ test("passes through if response status is not redirect", async (t) => {
   t.is(await response.body.text(), "found");
 });
 
-test("returns first response the redirect option is manual", async (t) => {
+test("return first response the redirect option is manual", async (t) => {
   // Arrange.
 
   const underTest = followRedirects({ redirect: "manual" });

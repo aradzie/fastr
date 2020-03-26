@@ -1,10 +1,12 @@
 import { BadRequestError } from "@webfx-http/error";
 import { MimeType } from "@webfx-http/headers";
-import { IncomingHttpHeaders } from "http";
-import { IParseOptions, parse } from "qs";
+import type { IncomingHttpHeaders } from "http";
+import type { IParseOptions } from "qs";
+import { parse } from "qs";
 import { Readable } from "stream";
 import { normalizeCharset } from "./charset";
-import { Encoding, getEncoding, readAll } from "./encoding";
+import type { Encoding } from "./encoding";
+import { getEncoding, readAll } from "./encoding";
 
 export interface BodyMessage extends Readable {
   readonly headers: IncomingHttpHeaders;
@@ -16,10 +18,14 @@ export interface BodyOptions {
    *
    * If the received body data is larger than this size then
    * the `PayloadTooLargeError` error will be thrown.
+   *
+   * By default there is no limit on body size.
    */
   readonly lengthLimit?: number;
   /**
    * The default charset to use if not specified in a request.
+   *
+   * The default value is `UTF-8`.
    */
   readonly charset?: string;
 }
@@ -69,6 +75,9 @@ export class Body {
 
   /**
    * Reads the whole body response as a single buffer.
+   *
+   * @throws PayloadTooLargeError If received body size is above the configured
+   *                              limit.
    */
   buffer(): Promise<Buffer> {
     this.setBodyUsed();
@@ -88,6 +97,9 @@ export class Body {
 
   /**
    * Reads the whole body response as a single string.
+   *
+   * @throws PayloadTooLargeError If received body size is above the configured
+   *                              limit.
    */
   async text(): Promise<string> {
     return (await this.buffer()).toString(
@@ -101,6 +113,8 @@ export class Body {
    * Reads the whole body response as a single string then parses it as JSON.
    *
    * @throws BadRequestError If the body cannot be parsed as JSON.
+   * @throws PayloadTooLargeError If received body size is above the configured
+   *                              limit.
    */
   async json(
     reviver?: (this: any, key: string, value: any) => any,
@@ -118,6 +132,8 @@ export class Body {
    * data using the `qs` library.
    *
    * @throws BadRequestError If the body cannot be parsed as form data.
+   * @throws PayloadTooLargeError If received body size is above the configured
+   *                              limit.
    */
   async form(options?: IParseOptions): Promise<any> {
     const text = await this.text();

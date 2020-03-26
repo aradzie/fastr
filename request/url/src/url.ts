@@ -78,7 +78,6 @@ type Segment = string | { readonly name: string };
 function split(path: string): readonly Segment[] {
   const segments: Segment[] = [];
   let last = 0;
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const begin = path.indexOf("{", last);
     if (begin === -1) {
