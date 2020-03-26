@@ -1,0 +1,41 @@
+{
+  "name": "@webfx-middleware/session-sql-store",
+  "version": "0.0.1",
+  "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
+  "homepage": "https://github.com/aradzie/webfx#readme",
+  "repository": "aradzie/webfx",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "module": "lib-esm/index.js",
+  "engines": {
+    "node": ">=12"
+  },
+  "dependencies": {
+    "@webfx-middleware/session": "*",
+    "bson": "^4.0.3",
+    "inversify": "^5.0.1",
+    "knex": "^0.20.8",
+    "reflect-metadata": "^0.1.13",
+    "tslib": "^1.11.1"
+  },
+  "devDependencies": {
+    "@types/bson": "^4.0.1",
+    "@types/knex": "^0.16.1",
+    "@types/koa": "^2.11.2",
+    "koa": "^2.11.0",
+    "sqlite3": "^4.1.1"
+  },
+  "scripts": {
+    "compile": "rm -fr lib; rm -fr lib-esm; tsc; tsc -b tsconfig-esm.json",
+    "test": "ava"
+  },
+  "ava": {
+    "files": [
+      "lib/**/*.test.js"
+    ],
+    "require": [
+      "reflect-metadata"
+    ]
+  }
+}

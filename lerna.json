@@ -1,0 +1,9 @@
+{
+  "packages": [
+    "http/*",
+    "request/*",
+    "server/*",
+    "server-middleware/*"
+  ],
+  "version": "0.0.1"
+}

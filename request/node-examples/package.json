@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "name": "@webfx/node-request-examples",
+  "version": "0.0.1",
+  "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
+  "homepage": "https://github.com/aradzie/webfx#readme",
+  "repository": "aradzie/webfx",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12"
+  },
+  "dependencies": {
+    "@webfx/node-request": "*",
+    "@webfx-http/error": "*",
+    "@webfx-http/headers": "*",
+    "@webfx-http/mimetype": "*",
+    "@webfx-http/status": "*",
+    "tslib": "^1.11.1"
+  },
+  "scripts": {
+    "compile": "rm -fr build; tsc"
+  }
+}

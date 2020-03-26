@@ -1,0 +1,40 @@
+{
+  "private": true,
+  "name": "@webfx/controller-tests",
+  "version": "0.0.1",
+  "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
+  "homepage": "https://github.com/aradzie/webfx#readme",
+  "repository": "aradzie/webfx",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "module": "lib-esm/index.js",
+  "engines": {
+    "node": ">=12"
+  },
+  "dependencies": {
+    "inversify": "^5.0.1",
+    "reflect-metadata": "^0.1.13",
+    "tslib": "^1.11.1"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.11.2",
+    "@webfx/controller": "*",
+    "@webfx/middleware": "*",
+    "@webfx-middleware/body": "*",
+    "@webfx-middleware/router": "*",
+    "koa": "^2.11.0"
+  },
+  "scripts": {
+    "compile": "rm -fr build; tsc",
+    "test": "ava"
+  },
+  "ava": {
+    "files": [
+      "build/**/*.test.js"
+    ],
+    "require": [
+      "reflect-metadata"
+    ]
+  }
+}

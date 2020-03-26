@@ -1,0 +1,35 @@
+{
+  "name": "@webfx-middleware/validate",
+  "version": "0.0.1",
+  "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
+  "homepage": "https://github.com/aradzie/webfx#readme",
+  "repository": "aradzie/webfx",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "module": "lib-esm/index.js",
+  "engines": {
+    "node": ">=12"
+  },
+  "dependencies": {
+    "@types/joi": "^14.3.4",
+    "@webfx-http/error": "*",
+    "joi": "^14.3.1",
+    "reflect-metadata": "^0.1.13",
+    "tslib": "^1.11.1"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.11.2",
+    "@webfx-middleware/body": "*",
+    "koa": "^2.11.0"
+  },
+  "scripts": {
+    "compile": "rm -fr lib; rm -fr lib-esm; tsc; tsc -b tsconfig-esm.json",
+    "test": "ava"
+  },
+  "ava": {
+    "files": [
+      "lib/**/*.test.js"
+    ]
+  }
+}

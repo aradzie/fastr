@@ -1,0 +1,38 @@
+{
+  "private": true,
+  "name": "@webfx/root",
+  "version": "0.0.1",
+  "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
+  "homepage": "https://github.com/aradzie/webfx#readme",
+  "repository": "aradzie/webfx",
+  "license": "MIT",
+  "scripts": {
+    "postinstall": "lerna bootstrap",
+    "compile": "lerna run compile",
+    "test": "lerna run test",
+    "lint": "eslint packages --ext .ts",
+    "lint-fix": "eslint packages --ext .ts --fix",
+    "format": "prettier --write 'packages/*/src/**/*.ts'"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/runtime": "^7.9.2",
+    "@types/mockdate": "^2.0.0",
+    "@types/node": "^13.9.4",
+    "@types/supertest": "^2.0.8",
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
+    "@typescript-eslint/parser": "^2.25.0",
+    "ava": "^3.5.1",
+    "eslint": "^6.8.0",
+    "eslint-import-resolver-typescript": "^2.0.0",
+    "eslint-plugin-ava": "^10.2.0",
+    "eslint-plugin-import": "^2.20.1",
+    "lerna": "^3.20.2",
+    "mockdate": "^2.0.5",
+    "prettier": "^2.0.2",
+    "supertest": "^4.0.2",
+    "typescript": "^3.8.3"
+  }
+}

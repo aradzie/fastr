@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig-template.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "build",
+    "module": "esnext",
+    "incremental": true,
+    "tsBuildInfoFile": "build/.tsbuildcache"
+  }
+}

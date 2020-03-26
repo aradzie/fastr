@@ -1,0 +1,5 @@
+*.snap
+lib
+lib-cjs
+lib-esm
+tmp
