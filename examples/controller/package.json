@@ -1,0 +1,28 @@
+{
+  "name": "@fastr/example-controller",
+  "version": "0.0.12",
+  "private": true,
+  "homepage": "https://github.com/aradzie/fastr#readme",
+  "repository": "aradzie/fastr",
+  "license": "MIT",
+  "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
+  "exports": null,
+  "scripts": {
+    "clean": "rm -fr lib",
+    "compile": "tsc",
+    "start": "node ./lib/index.js"
+  },
+  "dependencies": {
+    "@fastr/controller": "^0.0.12",
+    "@fastr/core": "^0.0.12",
+    "@fastr/invert": "^0.0.12",
+    "@fastr/middleware-compress": "^0.0.12",
+    "@fastr/middleware-conditional": "^0.0.12",
+    "@fastr/middleware-router": "^0.0.12",
+    "tslib": "^2.5.2",
+    "zod": "^3.21.4"
+  },
+  "engines": {
+    "node": ">=18.12"
+  }
+}

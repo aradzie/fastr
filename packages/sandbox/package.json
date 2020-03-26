@@ -1,0 +1,23 @@
+{
+  "name": "@fastr/sandbox",
+  "version": "0.0.12",
+  "private": true,
+  "homepage": "https://github.com/aradzie/fastr#readme",
+  "repository": "aradzie/fastr",
+  "license": "MIT",
+  "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
+  "scripts": {
+    "clean": "rm -fr lib",
+    "compile": "tsc"
+  },
+  "dependencies": {
+    "@sinclair/typebox": "^0.28.11",
+    "reflect-metadata": "^0.1.13",
+    "ts-runtime-checks": "^0.1.3",
+    "tslib": "^2.5.2",
+    "zod": "^3.21.4"
+  },
+  "engines": {
+    "node": ">=18.12"
+  }
+}

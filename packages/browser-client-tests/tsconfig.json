@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig-template.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "lib": ["es2022", "dom", "dom.iterable"],
+    "module": "es2022",
+    "target": "es2022",
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

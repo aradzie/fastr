@@ -1,0 +1,25 @@
+### Send GET request
+GET http://localhost:8080/
+Accept: text/plain
+
+### Send GET request with path
+GET http://localhost:8080/path/to/resource
+Accept: text/plain
+
+
+### POST request with json body
+POST http://localhost:8080/
+Content-Type: application/json
+
+{
+  "id": 999,
+  "value": "content"
+}
+
+### Send POST request with urlencoded body
+POST http://localhost:8080/
+Content-Type: application/x-www-form-urlencoded
+
+id=999&value=content
+
+###

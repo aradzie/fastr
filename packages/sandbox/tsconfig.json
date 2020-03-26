@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig-template.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "module": "commonjs",
+    "experimentalDecorators": false,
+    "emitDecoratorMetadata": false
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig-template.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib-esm",
+    "target": "es2022",
+    "module": "esnext",
+    "declaration": false,
+    "incremental": true,
+    "tsBuildInfoFile": "lib-esm/.tsbuildcache"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "**/test/*",
+    "**/*.test.*"
+  ]
+}

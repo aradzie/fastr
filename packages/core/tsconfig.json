@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig-template.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "target": "es2022",
+    "module": "commonjs",
+    "incremental": true,
+    "tsBuildInfoFile": "lib/.tsbuildcache"
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
