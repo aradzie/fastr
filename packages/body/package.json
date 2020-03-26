@@ -1,0 +1,29 @@
+{
+  "name": "@fastr/body",
+  "version": "0.0.0",
+  "homepage": "https://github.com/aradzie/fastr#readme",
+  "repository": "aradzie/fastr",
+  "license": "MIT",
+  "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
+  "main": "lib/index.js",
+  "module": "lib-esm/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "clean": "rm -fr lib lib-esm",
+    "compile": "tsc && tsc -b tsconfig-esm.json",
+    "test": "ava"
+  },
+  "dependencies": {
+    "@fastr/errors": "^0.0.0",
+    "@fastr/headers": "^0.0.0",
+    "@fastr/json": "^0.0.0",
+    "@fastr/mediatypes": "^0.0.0",
+    "@types/qs": "^6.9.7",
+    "qs": "^6.11.0",
+    "reflect-metadata": "^0.1.13",
+    "tslib": "^2.4.1"
+  },
+  "engines": {
+    "node": ">=18.12"
+  }
+}

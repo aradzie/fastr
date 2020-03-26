@@ -1,0 +1,21 @@
+{
+  "name": "@fastr/oauth-adapter-fake",
+  "version": "0.0.0",
+  "homepage": "https://github.com/aradzie/fastr#readme",
+  "repository": "aradzie/fastr",
+  "license": "MIT",
+  "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
+  "main": "lib/index.js",
+  "module": "lib-esm/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "clean": "rm -fr lib lib-esm",
+    "compile": "tsc && tsc -b tsconfig-esm.json"
+  },
+  "dependencies": {
+    "@fastr/oauth-client": "^0.0.0"
+  },
+  "engines": {
+    "node": ">=18.12"
+  }
+}

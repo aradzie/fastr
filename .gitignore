@@ -1,0 +1,22 @@
+# Compiled output
+build/
+dist/
+out/
+lib/
+lib-cjs/
+lib-esm/
+
+# Other
+node_modules/
+tmp/
+sandbox/
+backup/
+.cache/
+.vscode/
+.idea/
+.nyc_output/
+*.log
+*.tgz
+*.tsbuildinfo
+*~
+.DS_Store

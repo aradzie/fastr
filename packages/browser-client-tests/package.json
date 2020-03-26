@@ -1,0 +1,35 @@
+{
+  "name": "@fastr/browser-client-tests",
+  "version": "0.0.0",
+  "private": true,
+  "homepage": "https://github.com/aradzie/fastr#readme",
+  "repository": "aradzie/fastr",
+  "license": "MIT",
+  "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "rm -fr lib",
+    "compile": "tsc && webpack",
+    "start": "node lib/start-server.js"
+  },
+  "dependencies": {
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "@fastr/body": "^0.0.0",
+    "@fastr/browser-client": "^0.0.0",
+    "@fastr/headers": "^0.0.0",
+    "@fastr/url": "^0.0.0",
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.1",
+    "@types/serve-static": "^1.15.0",
+    "babel-loader": "^9.1.0",
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "tslib": "^2.4.1",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
+  },
+  "engines": {
+    "node": ">=18.12"
+  }
+}

@@ -1,0 +1,8 @@
+build/
+dist/
+out/
+lib/
+lib-cjs/
+lib-esm/
+tmp/
+*.snap

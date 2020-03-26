@@ -1,0 +1,32 @@
+{
+  "name": "@fastr/root",
+  "version": "0.0.1",
+  "private": true,
+  "homepage": "https://github.com/aradzie/fastr#readme",
+  "repository": "aradzie/fastr",
+  "license": "MIT",
+  "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
+  "scripts": {
+    "postinstall": "lerna bootstrap",
+    "clean": "lerna run clean",
+    "compile": "lerna run compile",
+    "test": "lerna run test",
+    "lint": "eslint . --ext .ts",
+    "lint-fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write '**/*.ts'"
+  },
+  "devDependencies": {
+    "@ava/typescript": "^3.0.1",
+    "@types/node": "^18.11.18",
+    "@typescript-eslint/eslint-plugin": "^5.46.1",
+    "@typescript-eslint/parser": "^5.46.1",
+    "ava": "^5.1.0",
+    "eslint": "^8.30.0",
+    "eslint-plugin-ava": "^13.2.0",
+    "eslint-plugin-n": "^15.6.0",
+    "lerna": "^6.3.0",
+    "mockdate": "^3.0.5",
+    "prettier": "^2.8.1",
+    "typescript": "^4.9.4"
+  }
+}
