@@ -1,6 +1,6 @@
+import { RequestRedirectError } from "@webfx/request-error";
 import { URL } from "url";
 import { isStreamBody } from "../body";
-import { RedirectError } from "../errors";
 import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
 import { toURL } from "../util";
 
@@ -64,7 +64,7 @@ export function followRedirects({
               return response;
             case "error":
               response.abort();
-              throw new RedirectError("Redirect response detected");
+              throw new RequestRedirectError("Redirect response detected");
             case "follow":
             default:
               response.abort();
@@ -89,15 +89,15 @@ export function followRedirects({
       function followLocation(response: HttpResponse): void {
         const location = response.headers.get("Location");
         if (location == null) {
-          throw new RedirectError("Redirect has no location");
+          throw new RequestRedirectError("Redirect has no location");
         }
         url = new URL(location, url);
         const str = String(url);
         if (visited.has(str)) {
-          throw new RedirectError("Redirect loop detected");
+          throw new RequestRedirectError("Redirect loop detected");
         }
         if (visited.size === follow) {
-          throw new RedirectError("Too many redirects");
+          throw new RequestRedirectError("Too many redirects");
         }
         visited.add(str);
       }

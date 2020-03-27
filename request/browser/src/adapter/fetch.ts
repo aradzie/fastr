@@ -1,5 +1,5 @@
 import { Headers as HttpHeaders } from "@webfx-http/headers";
-import { RequestAbortedError } from "../errors";
+import { RequestAbortedError } from "@webfx/request-error";
 import type { HttpRequest, HttpResponse } from "../types";
 
 export async function fetchAdapter(

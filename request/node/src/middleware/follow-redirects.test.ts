@@ -1,10 +1,11 @@
+import { RequestRedirectError } from "@webfx/request-error";
 import test from "ava";
 import {
   fakeNotFoundResponse,
   fakeOkResponse,
   fakeRedirectResponse,
 } from "../fakes";
-import { Adapter, HttpRequest, HttpResponse } from "../types";
+import type { Adapter, HttpRequest, HttpResponse } from "../types";
 import { followRedirects } from "./follow-redirects";
 
 test("pass through if response status is not redirect", async (t) => {
@@ -86,7 +87,7 @@ test("throw error if the redirect option is error", async (t) => {
       });
     },
     {
-      name: "RedirectError",
+      instanceOf: RequestRedirectError,
       message: "Redirect response detected",
     },
   );
@@ -108,7 +109,7 @@ test("throw error if too many redirects", async (t) => {
       });
     },
     {
-      name: "RedirectError",
+      instanceOf: RequestRedirectError,
       message: "Too many redirects",
     },
   );
@@ -130,7 +131,7 @@ test("throw error if redirect loop detected", async (t) => {
       });
     },
     {
-      name: "RedirectError",
+      instanceOf: RequestRedirectError,
       message: "Redirect loop detected",
     },
   );

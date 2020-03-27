@@ -12,12 +12,13 @@
     "node": ">=12"
   },
   "dependencies": {
-    "@webfx/request-json": "*",
     "@webfx-http/body": "*",
     "@webfx-http/error": "*",
     "@webfx-http/headers": "*",
     "@webfx-http/mimetype": "*",
     "@webfx-http/status": "*",
+    "@webfx/request-error": "^0.0.1",
+    "@webfx/request-json": "*",
     "tslib": "^1.11.1"
   },
   "scripts": {

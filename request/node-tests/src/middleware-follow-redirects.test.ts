@@ -3,8 +3,8 @@ import {
   followRedirects,
   HasMiddleware,
   HttpRequest,
-  RedirectError,
   request,
+  RequestRedirectError,
 } from "@webfx/node-request";
 import { test } from "./util";
 
@@ -138,7 +138,7 @@ test("on redirect throw", async (t) => {
       await request(init);
     },
     {
-      instanceOf: RedirectError,
+      instanceOf: RequestRedirectError,
       message: "Redirect response detected",
     },
   );
@@ -166,7 +166,7 @@ test("handle no redirect location", async (t) => {
       await request(init);
     },
     {
-      instanceOf: RedirectError,
+      instanceOf: RequestRedirectError,
       message: "Redirect has no location",
     },
   );
@@ -201,7 +201,7 @@ test("handle redirect loop", async (t) => {
       await request(init);
     },
     {
-      instanceOf: RedirectError,
+      instanceOf: RequestRedirectError,
       message: "Redirect loop detected",
     },
   );
@@ -246,7 +246,7 @@ test("handle too many redirects", async (t) => {
       await request(init);
     },
     {
-      instanceOf: RedirectError,
+      instanceOf: RequestRedirectError,
       message: "Too many redirects",
     },
   );

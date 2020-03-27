@@ -15,4 +15,4 @@ export {
   RequestAbortedError,
   RequestNetworkError,
   RequestTimeoutError,
-} from "./errors";
+} from "@webfx/request-error";

@@ -1,5 +1,5 @@
 {
-  "name": "@webfx/browser-request",
+  "name": "@webfx/request-error",
   "version": "0.0.1",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "homepage": "https://github.com/aradzie/webfx#readme",
@@ -12,12 +12,6 @@
     "node": ">=12"
   },
   "dependencies": {
-    "@webfx-http/error": "*",
-    "@webfx-http/headers": "*",
-    "@webfx-http/status": "*",
-    "@webfx/request-error": "^0.0.1",
-    "@webfx/request-json": "*",
-    "@webfx/request-url": "*",
     "tslib": "^1.11.1"
   },
   "scripts": {

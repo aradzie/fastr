@@ -4,7 +4,7 @@ import {
   RequestAbortedError,
   RequestNetworkError,
   RequestTimeoutError,
-} from "../errors";
+} from "@webfx/request-error";
 import type { HttpRequest, HttpResponse, ProgressListener } from "../types";
 
 const sendListeners: ProgressListener[] = [];
