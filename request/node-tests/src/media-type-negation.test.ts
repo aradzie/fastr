@@ -8,7 +8,7 @@ test("negotiate media type", async (t) => {
   // Arrange.
 
   server.addRoute("GET", "/test", (req, res) => {
-    const accept = Headers.fromJSON(req.headers).accept() ?? Accept.ANY;
+    const accept = Headers.of(req.headers).accept() ?? Accept.ANY;
 
     if (accept.accepts("text/plain")) {
       res.statusCode = 200;

@@ -1,5 +1,7 @@
 export type StringOr<T> = T | string;
 
+export type NameValueEntries = readonly (readonly [string, unknown])[];
+
 export interface HeadersJson {
   readonly "accept"?: string;
   readonly "accept-language"?: string;

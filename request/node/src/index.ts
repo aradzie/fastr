@@ -1,5 +1,6 @@
 export type {
   Adapter,
+  Instance,
   Middleware,
   HasMiddleware,
   HttpRequest,

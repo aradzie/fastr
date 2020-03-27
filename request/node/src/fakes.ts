@@ -78,7 +78,7 @@ export class FakeResponse implements HttpResponse {
     this.status = status;
     this.statusText = statusText;
     this.url = url;
-    this.headers = Headers.fromJSON(headers);
+    this.headers = Headers.of(headers);
     this.body = Body.from(new FakeIncomingMessage(bodyData));
   }
 

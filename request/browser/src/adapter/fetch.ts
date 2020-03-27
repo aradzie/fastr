@@ -1,25 +1,38 @@
 import { Headers as HttpHeaders } from "@webfx-http/headers";
+import { RequestAbortedError } from "../errors";
 import type { HttpRequest, HttpResponse } from "../types";
 
 export async function fetchAdapter(
   request: HttpRequest,
 ): Promise<HttpResponse> {
-  const { url, method, headers, body, redirect } = request;
+  try {
+    return await fetchImpl(request);
+  } catch (ex) {
+    handleAborted(ex);
+    throw ex;
+  }
+}
+
+async function fetchImpl(request: HttpRequest): Promise<HttpResponse> {
+  const { url, method, headers, body, cache, credentials, redirect } = request;
   const controller = new AbortController();
   const { signal } = controller;
 
   const req = new Request(String(url), {
     method,
     headers: new Headers(headers?.toJSON()),
-    body: null,
+    body,
+    cache,
+    credentials,
     redirect,
     signal,
   });
+
   const res = await fetch(req);
 
   function checkAborted(): void {
     if (controller.signal.aborted) {
-      throw new Error("Request aborted");
+      throw new RequestAbortedError("Request aborted");
     }
   }
 
@@ -30,32 +43,67 @@ export async function fetchAdapter(
     readonly url = res.url;
     readonly headers = convertHeaders(res);
 
-    blob(): Promise<Blob> {
+    async blob(): Promise<Blob> {
       checkAborted();
       return res.blob();
     }
 
-    arrayBuffer(): Promise<ArrayBuffer> {
+    async arrayBuffer(): Promise<ArrayBuffer> {
       checkAborted();
-      return res.arrayBuffer();
+      try {
+        return await res.arrayBuffer();
+      } catch (ex) {
+        handleAborted(ex);
+        throw ex;
+      }
     }
 
-    text(): Promise<string> {
+    async text(): Promise<string> {
       checkAborted();
-      return res.text();
+      try {
+        return await res.text();
+      } catch (ex) {
+        handleAborted(ex);
+        throw ex;
+      }
+    }
+
+    async formData(): Promise<FormData> {
+      checkAborted();
+      try {
+        return res.formData();
+      } catch (ex) {
+        handleAborted(ex);
+        throw ex;
+      }
     }
 
     async json<T = unknown>(
       reviver?: (key: any, value: any) => any,
     ): Promise<T> {
       checkAborted();
-      return JSON.parse(await res.text(), reviver);
+      let text;
+      try {
+        text = await res.text();
+      } catch (ex) {
+        handleAborted(ex);
+        throw ex;
+      }
+      return JSON.parse(text, reviver);
     }
 
     abort(): void {
       controller.abort();
     }
   })();
+}
+
+// See https://fetch.spec.whatwg.org/#fetch-method
+function handleAborted(ex: Error): void {
+  if (ex.name === "AbortError") {
+    throw new RequestAbortedError("Request aborted");
+  }
+  throw ex;
 }
 
 function convertHeaders(res: Response): HttpHeaders {

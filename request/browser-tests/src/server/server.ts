@@ -23,9 +23,17 @@ export class Router {
   }
 
   handle(req: IncomingMessage, res: ServerResponse): void {
-    const { method, url } = req;
+    const method = req.method ?? "GET";
+    let url = req.url ?? "/";
+    const i = url.indexOf("?");
+    if (i !== -1) {
+      url = url.substring(0, i);
+    }
     for (const route of this.#routes) {
-      if (route.method === method && route.url === url) {
+      if (
+        (route.method === "*" || route.method === method) &&
+        route.url === url
+      ) {
         const result = route.listener(req, res);
         if (result instanceof Promise) {
           result.catch((err) => {
@@ -81,6 +89,9 @@ export function startServer({ port = 8080 } = {}): TestServer {
   const router = new Router();
   const server = http.createServer((req, res) => {
     router.handle(req, res);
+  });
+  server.on("error", (err) => {
+    console.error("Server error", err);
   });
   server.listen(port);
   const testServer = new TestServer(server, router);

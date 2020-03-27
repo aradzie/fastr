@@ -27,6 +27,7 @@ export function splitPair(
 /**
  * Splits the given input string into a list of substrings
  * on the all occurrences of the given separator.
+ * Empty substrings are ignored.
  * @param input The input string.
  * @param separator The separator.
  */
@@ -62,16 +63,59 @@ export function splitList(
   return items;
 }
 
+/**
+ * Splits the given input string into a list of lines
+ * on the all new line separators such as "\n" and "\r".
+ * Empty lines are ignored.
+ * @param input The input string.
+ */
+export function splitLines(input: string): readonly string[] {
+  const items: string[] = [];
+  const { length } = input;
+  let last = 0;
+  let pos = 0;
+  while (pos < length) {
+    const ch = input.charCodeAt(pos);
+    if (ch === 10 || ch === 13) {
+      if (pos > last) {
+        const item = trimSubstring(input, last, pos);
+        if (item.length > 0) {
+          items.push(item);
+        }
+      }
+      last = pos + 1;
+    }
+    pos += 1;
+  }
+  if (pos > last) {
+    const item = trimSubstring(input, last, pos);
+    if (item.length > 0) {
+      items.push(item);
+    }
+  }
+  return items;
+}
+
 function trimSubstring(
   input: string,
   begin: number,
   end: number = input.length,
 ): string {
-  while (begin < end && input.charCodeAt(begin) == 32) {
-    begin += 1;
+  while (begin < end) {
+    const ch = input.charCodeAt(begin);
+    if (ch === 32) {
+      begin += 1;
+    } else {
+      break;
+    }
   }
-  while (end > begin && input.charCodeAt(end - 1) == 32) {
-    end -= 1;
+  while (end > begin) {
+    const ch = input.charCodeAt(end - 1);
+    if (ch === 32) {
+      end -= 1;
+    } else {
+      break;
+    }
   }
   return input.substring(begin, end);
 }

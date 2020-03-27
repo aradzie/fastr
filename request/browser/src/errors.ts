@@ -1,39 +1,43 @@
-import { ApplicationError, ErrorBody } from "@webfx-http/error";
-import { HttpResponse } from "./types";
-
 export class RequestError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "RequestError";
   }
+
+  get [Symbol.toStringTag](): string {
+    return "RequestError";
+  }
 }
 
-export class ResponseError extends Error {
+export class RequestAbortedError extends RequestError {
   constructor(message: string) {
     super(message);
-    this.name = "ResponseError";
+    this.name = "RequestAbortedError";
+  }
+
+  get [Symbol.toStringTag](): string {
+    return "RequestAbortedError";
   }
 }
 
-/**
- * Rejects promise if the response has a failed HTTP status.
- * Attempts to extract error message from JSON error response, if any.
- */
-export async function checkStatus(
-  response: HttpResponse,
-): Promise<HttpResponse> {
-  if (
-    String(response.headers.contentType()) == String(ApplicationError.MIME_TYPE)
-  ) {
-    let message = "Unknown error";
-    const body = await response.json<ErrorBody>();
-    if (ApplicationError.isErrorBody(body)) {
-      message = body.error.message;
-    }
-    throw new ResponseError(message);
+export class RequestTimeoutError extends RequestError {
+  constructor(message: string) {
+    super(message);
+    this.name = "RequestTimeoutError";
   }
-  if (!response.ok) {
-    throw new ResponseError(response.statusText);
+
+  get [Symbol.toStringTag](): string {
+    return "RequestTimeoutError";
   }
-  return response;
+}
+
+export class RequestNetworkError extends RequestError {
+  constructor(message: string) {
+    super(message);
+    this.name = "RequestNetworkError";
+  }
+
+  get [Symbol.toStringTag](): string {
+    return "RequestNetworkError";
+  }
 }

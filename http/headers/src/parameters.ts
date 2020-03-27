@@ -1,4 +1,5 @@
 import { splitList, splitPair } from "./strings";
+import type { NameValueEntries } from "./types";
 
 const kMap = Symbol("kMap");
 
@@ -26,6 +27,7 @@ export class Parameters {
   readonly charset: string | null;
   readonly q: number | null;
 
+  // TODO Use NameValueEntries
   constructor(entries: Iterable<readonly [string, string]> | null = null) {
     this[kMap] = new Map(entries as [string, string][]);
     let v: string | null;

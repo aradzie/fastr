@@ -7,16 +7,23 @@ import type {
   HttpRequest,
   HttpRequestBody,
   HttpResponse,
+  Instance,
 } from "./types";
 
 let currentAdapter: Adapter = requestAdapter;
 
-export function request(
+export const request: Instance = (
   request: HttpRequest & HasMiddleware,
-): Promise<HttpResponse> {
+): Promise<HttpResponse> => {
   const { middleware = [], ...rest } = request;
   return compose(middleware)(currentAdapter)(rest);
-}
+};
+
+request.method = (
+  method: string,
+  url: URL | string,
+  body?: HttpRequestBody,
+): Promise<HttpResponse> => request({ method, url, body });
 
 request.get = (url: URL | string): Promise<HttpResponse> =>
   request({ method: "GET", url });
@@ -36,25 +43,23 @@ request.patch = (
   body: HttpRequestBody,
 ): Promise<HttpResponse> => request({ method: "PATCH", url, body });
 
-request.del = (url: URL | string): Promise<HttpResponse> =>
+request.delete = (url: URL | string): Promise<HttpResponse> =>
   request({ method: "DELETE", url });
 
 /**
  * Returns the current adapter.
  */
-function adapter(): Adapter;
+export function adapter(): Adapter;
 
 /**
  * Returns the current adapter and replaces it with the given one.
  */
-function adapter(newAdapter: Adapter): Adapter;
+export function adapter(newAdapter: Adapter): Adapter;
 
-function adapter(newAdapter?: Adapter): Adapter {
-  const lastAdapter = currentAdapter;
+export function adapter(newAdapter?: Adapter): Adapter {
+  const result = currentAdapter;
   if (newAdapter != null) {
     currentAdapter = newAdapter;
   }
-  return lastAdapter;
+  return result;
 }
-
-request.adapter = adapter;

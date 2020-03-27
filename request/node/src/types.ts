@@ -25,6 +25,49 @@ export interface HasMiddleware {
   readonly middleware?: readonly Middleware[];
 }
 
+export interface Instance {
+  (request: HttpRequest & HasMiddleware): Promise<HttpResponse>;
+  /**
+   * Sends HTTP request using the given HTTP method.
+   * @param method The HTTP method to use for the request.
+   * @param url A URL of the resource to request.
+   * @param body A body to send.
+   */
+  method: (
+    method: string,
+    url: URL | string,
+    body?: HttpRequestBody,
+  ) => Promise<HttpResponse>;
+  /**
+   * Sends HTTP request using the `GET` method.
+   * @param url A URL of the resource to request.
+   */
+  get: (url: URL | string) => Promise<HttpResponse>;
+  /**
+   * Sends HTTP request using the `POST` method.
+   * @param url A URL of the resource to request.
+   * @param body A body to send.
+   */
+  post: (url: URL | string, body: HttpRequestBody) => Promise<HttpResponse>;
+  /**
+   * Sends HTTP request using the `PUT` method.
+   * @param url A URL of the resource to request.
+   * @param body A body to send.
+   */
+  put: (url: URL | string, body: HttpRequestBody) => Promise<HttpResponse>;
+  /**
+   * Sends HTTP request using the `PATCH` method.
+   * @param url A URL of the resource to request.
+   * @param body A body to send.
+   */
+  patch: (url: URL | string, body: HttpRequestBody) => Promise<HttpResponse>;
+  /**
+   * Sends HTTP request using the `DELETE` method.
+   * @param url A URL of the resource to request.
+   */
+  delete: (url: URL | string) => Promise<HttpResponse>;
+}
+
 export interface HttpRequestOptions {
   readonly timeout?: number;
   readonly agent?: AnyAgent | ((url: URL) => AnyAgent);

@@ -87,7 +87,7 @@ export class MimeType {
   /**
    * The `multipart/form-data` mime type.
    */
-  static readonly MULTIPART_FORM_DATA = new MimeType("text", "html");
+  static readonly MULTIPART_FORM_DATA = new MimeType("multipart", "form-data");
 
   /**
    * Full name without parameters.

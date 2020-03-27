@@ -5,9 +5,9 @@ import { ETag } from "./etag";
 import { Link } from "./link";
 import { MimeType } from "./mimetype";
 import { SetCookie } from "./set-cookie";
-import { splitList, splitPair } from "./strings";
+import { splitLines, splitList, splitPair } from "./strings";
 import { parseDate, stringifyDate } from "./tokens";
-import type { HeadersJson } from "./types";
+import type { HeadersJson, NameValueEntries } from "./types";
 
 // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
 
@@ -265,9 +265,13 @@ export class Headers {
    * Creates a new Headers instance from the given JSON object
    * with key/value pairs.
    */
-  static fromJSON(json: HeadersJson): Headers {
+  static of(that: Headers | NameValueEntries | HeadersJson): Headers {
+    if (that instanceof Headers) {
+      return that;
+    }
     const builder = new HeadersBuilder();
-    for (const [name, value] of Object.entries(json)) {
+    const entries = Array.isArray(that) ? that : Object.entries(that);
+    for (const [name, value] of entries) {
       if (value != null) {
         if (Array.isArray(value)) {
           for (const item of value) {
@@ -287,7 +291,7 @@ export class Headers {
    */
   static parse(value: string): Headers {
     const builder = new HeadersBuilder();
-    for (const header of splitList(value, "\n")) {
+    for (const header of splitLines(value)) {
       const [name, value] = splitPair(header, ":");
       if (name && value) {
         builder.append(name, value);

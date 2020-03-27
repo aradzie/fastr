@@ -1,4 +1,4 @@
-import { HttpRequest, HttpResponse, request } from "@webfx/browser-request";
+import { adapter, HttpRequest, HttpResponse } from "@webfx/browser-request";
 
 export interface FakeRequest {
   readonly request: HttpRequest;
@@ -33,7 +33,7 @@ export class ExpectedResponse {
 
 const responses: ExpectedResponse[] = [];
 const requests: FakeRequest[] = [];
-let lastAdapter = request.adapter();
+let lastAdapter = adapter();
 
 /**
  * Creates a new fake response for the specified HTTP method and URL.
@@ -47,7 +47,7 @@ export function fakeRequest(
   url: string | RegExp,
   response: HttpResponse,
 ): void {
-  const currentAdapter = request.adapter(fakeAdapter);
+  const currentAdapter = adapter(fakeAdapter);
   if (currentAdapter !== fakeAdapter) {
     lastAdapter = currentAdapter;
   }
@@ -75,7 +75,7 @@ function reset(): void {
   requests.splice(0, requests.length);
 
   // Restore the real implementation.
-  request.adapter(lastAdapter);
+  adapter(lastAdapter);
 }
 
 fakeRequest.reset = reset;

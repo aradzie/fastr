@@ -201,6 +201,10 @@ export class FakeHttpResponse implements HttpResponse {
     return this.body;
   }
 
+  formData(): Promise<FormData> {
+    throw new Error("Method not implemented."); // TODO Implement.
+  }
+
   json<T = unknown>(reviver?: (key: any, value: any) => any): Promise<T> {
     return this.body;
   }
