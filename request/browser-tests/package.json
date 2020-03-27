@@ -18,7 +18,6 @@
     "@webfx-http/body": "*",
     "@webfx-http/headers": "*",
     "@webfx/browser-request": "*",
-    "@webfx/request-json": "*",
     "babel-loader": "^8.1.0",
     "chai": "^4.2.0",
     "mocha": "^7.1.1",

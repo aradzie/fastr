@@ -6,6 +6,7 @@ example().catch((err) => {
 });
 
 async function example(): Promise<void> {
+  // TODO Use request builder.
   const { ok, status, statusText, headers, body } = await request({
     method: "GET",
     url: "https://www.google.com/",

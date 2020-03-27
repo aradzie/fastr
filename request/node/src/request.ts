@@ -1,11 +1,11 @@
 import { URL } from "url";
 import { requestAdapter } from "./adapter";
+import { RequestBuilder } from "./builder";
 import { compose } from "./middleware";
 import type {
   Adapter,
   HasMiddleware,
   HttpRequest,
-  HttpRequestBody,
   HttpResponse,
   Instance,
 } from "./types";
@@ -19,32 +19,23 @@ export const request: Instance = (
   return compose(middleware)(currentAdapter)(rest);
 };
 
-request.method = (
-  method: string,
-  url: URL | string,
-  body?: HttpRequestBody,
-): Promise<HttpResponse> => request({ method, url, body });
+request.method = (method: string, url: URL | string): RequestBuilder =>
+  new RequestBuilder(request, method, url);
 
-request.get = (url: URL | string): Promise<HttpResponse> =>
-  request({ method: "GET", url });
+request.get = (url: URL | string): RequestBuilder =>
+  new RequestBuilder(request, "GET", url);
 
-request.post = (
-  url: URL | string,
-  body: HttpRequestBody,
-): Promise<HttpResponse> => request({ method: "POST", url, body });
+request.post = (url: URL | string): RequestBuilder =>
+  new RequestBuilder(request, "POST", url);
 
-request.put = (
-  url: URL | string,
-  body: HttpRequestBody,
-): Promise<HttpResponse> => request({ method: "PUT", url, body });
+request.put = (url: URL | string): RequestBuilder =>
+  new RequestBuilder(request, "PUT", url);
 
-request.patch = (
-  url: URL | string,
-  body: HttpRequestBody,
-): Promise<HttpResponse> => request({ method: "PATCH", url, body });
+request.patch = (url: URL | string): RequestBuilder =>
+  new RequestBuilder(request, "PATCH", url);
 
-request.delete = (url: URL | string): Promise<HttpResponse> =>
-  request({ method: "DELETE", url });
+request.delete = (url: URL | string): RequestBuilder =>
+  new RequestBuilder(request, "DELETE", url);
 
 /**
  * Returns the current adapter.

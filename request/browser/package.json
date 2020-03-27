@@ -16,7 +16,6 @@
     "@webfx-http/headers": "*",
     "@webfx-http/status": "*",
     "@webfx/request-error": "^0.0.1",
-    "@webfx/request-json": "*",
     "@webfx/request-url": "*",
     "tslib": "^1.11.1"
   },

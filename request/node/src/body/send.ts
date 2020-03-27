@@ -1,10 +1,10 @@
 import { MimeType } from "@webfx-http/headers";
-import { Json } from "@webfx/request-json";
 import { ClientRequest } from "http";
 import { pipeline, Readable } from "stream";
 import { URLSearchParams } from "url";
 import { createGzip } from "zlib";
-import { BodyDataType, HttpRequestBody } from "./types";
+import { BodyDataType, HttpRequestBody } from "../types";
+import { Json } from "./json";
 
 const GZIP_SIZE_THRESHOLD = 1024;
 

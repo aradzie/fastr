@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@webfx/node-request": "*",
-    "@webfx/request-json": "*",
     "@webfx-http/body": "*",
     "@webfx-http/error": "*",
     "@webfx-http/headers": "*",

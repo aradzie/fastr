@@ -1,7 +1,6 @@
 import { Body } from "@webfx-http/body";
 import { Headers } from "@webfx-http/headers";
-import { request } from "@webfx/node-request";
-import { Json } from "@webfx/request-json";
+import { Json, request } from "@webfx/node-request";
 import { IncomingMessage, ServerResponse } from "http";
 import { Readable } from "stream";
 import { URLSearchParams } from "url";

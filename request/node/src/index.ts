@@ -16,6 +16,8 @@ export {
   handleErrors,
   retryFailed,
 } from "./middleware";
+export { Json } from "./body/json";
+export { Streamable } from "./body/streamable";
 export type {
   FollowRedirectOptions,
   HandleErrorOptions,

@@ -2,6 +2,12 @@ import { Headers as HttpHeaders } from "@webfx-http/headers";
 import { RequestAbortedError } from "@webfx/request-error";
 import type { HttpRequest, HttpResponse } from "../types";
 
+/**
+ * An adapter which is implemented using the fetch API.
+ *
+ * See https://fetch.spec.whatwg.org/
+ * See https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
+ */
 export async function fetchAdapter(
   request: HttpRequest,
 ): Promise<HttpResponse> {

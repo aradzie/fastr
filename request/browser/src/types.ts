@@ -142,25 +142,3 @@ export interface HttpResponse {
    */
   abort(): void;
 }
-
-/**
- * Listens for progress made while doing some work.
- */
-export interface ProgressListener {
-  /**
-   * Listens for the work start event.
-   */
-  start(): void;
-
-  /**
-   * Listens for the work progress event.
-   * @param total The total amount of work to perform.
-   * @param current The amount of work completed so far.
-   */
-  step(total: number, current: number): void;
-
-  /**
-   * Listens for the work stop event.
-   */
-  stop(): void;
-}

@@ -2,7 +2,7 @@ import { Body } from "@webfx-http/body";
 import { Headers } from "@webfx-http/headers";
 import { isSuccess } from "@webfx-http/status";
 import { IncomingMessage, RequestOptions } from "http";
-import { sendBody } from "./body";
+import { sendBody } from "./body/send";
 import { selectTransport } from "./transport";
 import type { HttpRequest, HttpResponse } from "./types";
 import { toURL } from "./util";

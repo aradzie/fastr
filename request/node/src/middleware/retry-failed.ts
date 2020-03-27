@@ -1,5 +1,5 @@
 import { isServerError } from "@webfx-http/status";
-import { isStreamBody } from "../body";
+import { isStreamBody } from "../body/send";
 import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
 
 export interface RetryFailedOptions {

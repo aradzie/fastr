@@ -5,11 +5,14 @@ import {
   RequestNetworkError,
   RequestTimeoutError,
 } from "@webfx/request-error";
-import type { HttpRequest, HttpResponse, ProgressListener } from "../types";
+import type { HttpRequest, HttpResponse } from "../types";
 
-const sendListeners: ProgressListener[] = [];
-const receiveListeners: ProgressListener[] = [];
-
+/**
+ * An adapter which is implemented using the XMLHttpRequest API.
+ *
+ * See https://xhr.spec.whatwg.org/
+ * See https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+ */
 export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
   const { url, method, headers, body, cache, credentials, redirect } = request;
 
@@ -27,18 +30,10 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
   xhr.responseType = "blob";
 
   xhr.upload.onprogress = (event: ProgressEvent): void => {
-    if (event.lengthComputable) {
-      for (const listener of sendListeners) {
-        listener.step(event.total, event.loaded);
-      }
-    }
+    // TODO Send event.
   };
   xhr.onprogress = (event: ProgressEvent): void => {
-    if (event.lengthComputable) {
-      for (const listener of receiveListeners) {
-        listener.step(event.total, event.loaded);
-      }
-    }
+    // TODO Send event.
   };
 
   for (const { name, value } of HttpHeaders.of(headers ?? []).entries()) {
@@ -49,8 +44,7 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
     // Not implemented.
   }
   if (credentials != null) {
-    xhr.withCredentials =
-      credentials === "include" || credentials === "same-origin";
+    xhr.withCredentials = credentials === "include";
   }
   if (redirect != null) {
     // Not implemented.
@@ -69,11 +63,10 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
         resolve(makeResponse(xhr, body));
       }
       if (xhr.readyState === XMLHttpRequest.DONE) {
-        notifyStopped();
+        // TODO Send event.
       }
     };
 
-    notifyStarted();
     xhr.send(body);
   });
 
@@ -87,24 +80,6 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
     xhr.ontimeout = (): void => {
       reject(new RequestTimeoutError("Request timeout"));
     };
-  }
-
-  function notifyStarted(): void {
-    for (const listener of sendListeners) {
-      listener.start();
-    }
-    for (const listener of receiveListeners) {
-      listener.start();
-    }
-  }
-
-  function notifyStopped(): void {
-    for (const listener of sendListeners) {
-      listener.stop();
-    }
-    for (const listener of receiveListeners) {
-      listener.stop();
-    }
   }
 }
 

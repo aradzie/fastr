@@ -1,9 +1,10 @@
 import type { Body } from "@webfx-http/body";
 import type { Headers, MimeType } from "@webfx-http/headers";
-import type { Json } from "@webfx/request-json";
 import type { Readable } from "stream";
 import type { URL, URLSearchParams } from "url";
 import type { AnyAgent } from "./agent";
+import type { Json } from "./body/json";
+import type { RequestBuilder } from "./builder";
 
 /**
  * Adapter is a function which takes a request and returns a response promise.
@@ -31,41 +32,33 @@ export interface Instance {
    * Sends HTTP request using the given HTTP method.
    * @param method The HTTP method to use for the request.
    * @param url A URL of the resource to request.
-   * @param body A body to send.
    */
-  method: (
-    method: string,
-    url: URL | string,
-    body?: HttpRequestBody,
-  ) => Promise<HttpResponse>;
+  method: (method: string, url: URL | string) => RequestBuilder;
   /**
    * Sends HTTP request using the `GET` method.
    * @param url A URL of the resource to request.
    */
-  get: (url: URL | string) => Promise<HttpResponse>;
+  get: (url: URL | string) => RequestBuilder;
   /**
    * Sends HTTP request using the `POST` method.
    * @param url A URL of the resource to request.
-   * @param body A body to send.
    */
-  post: (url: URL | string, body: HttpRequestBody) => Promise<HttpResponse>;
+  post: (url: URL | string) => RequestBuilder;
   /**
    * Sends HTTP request using the `PUT` method.
    * @param url A URL of the resource to request.
-   * @param body A body to send.
    */
-  put: (url: URL | string, body: HttpRequestBody) => Promise<HttpResponse>;
+  put: (url: URL | string) => RequestBuilder;
   /**
    * Sends HTTP request using the `PATCH` method.
    * @param url A URL of the resource to request.
-   * @param body A body to send.
    */
-  patch: (url: URL | string, body: HttpRequestBody) => Promise<HttpResponse>;
+  patch: (url: URL | string) => RequestBuilder;
   /**
    * Sends HTTP request using the `DELETE` method.
    * @param url A URL of the resource to request.
    */
-  delete: (url: URL | string) => Promise<HttpResponse>;
+  delete: (url: URL | string) => RequestBuilder;
 }
 
 export interface HttpRequestOptions {
