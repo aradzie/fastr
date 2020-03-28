@@ -14,7 +14,7 @@ import type {
 // TODO Use mixins?
 export class RequestBuilder {
   private readonly _eventEmitter = new EventEmitter();
-  private _headers: Headers = Headers.of({});
+  private _headers: Headers = Headers.from({});
   private readonly _accept: (MimeType | string)[] = [];
   private readonly _middleware: Middleware[] = [];
 

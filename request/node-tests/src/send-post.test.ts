@@ -298,7 +298,7 @@ async function listener(
   req: IncomingMessage,
   res: ServerResponse,
 ): Promise<void> {
-  const headers = Headers.of(req.headers)
+  const headers = Headers.from(req.headers)
     .toBuilder()
     .delete("host")
     .delete("connection")

@@ -12,21 +12,21 @@ export class MimeDb {
    * Test if the specified mime type is of JSON category.
    */
   static isJson(mimeType: MimeType | string): boolean {
-    return match(jsonTypes, MimeType.of(mimeType));
+    return match(jsonTypes, MimeType.from(mimeType));
   }
 
   /**
    * Test if the specified mime type is of text category.
    */
   static isText(mimeType: MimeType | string): boolean {
-    return match(textTypes, MimeType.of(mimeType));
+    return match(textTypes, MimeType.from(mimeType));
   }
 
   /**
    * Test if the specified mime type is of binary category.
    */
   static isBinary(mimeType: MimeType | string): boolean {
-    return match(binaryTypes, MimeType.of(mimeType));
+    return match(binaryTypes, MimeType.from(mimeType));
   }
 
   /**

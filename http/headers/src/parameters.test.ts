@@ -2,12 +2,12 @@ import test from "ava";
 import { Parameters } from "./parameters";
 
 test("parse", (t) => {
-  const params1 = Parameters.of("  ");
+  const params1 = Parameters.from("  ");
   t.deepEqual([...params1], []);
   t.is(params1.charset, null);
   t.is(params1.q, null);
 
-  const params2 = Parameters.of("charset=utf-8; q=0.1; A = X ; B = Y ");
+  const params2 = Parameters.from("charset=utf-8; q=0.1; A = X ; B = Y ");
   t.deepEqual(
     [...params2],
     [

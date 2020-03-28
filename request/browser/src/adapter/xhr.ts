@@ -37,7 +37,7 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
 
   listen(xhr, new EventEmitter());
 
-  for (const { name, value } of HttpHeaders.of(headers ?? []).entries()) {
+  for (const { name, value } of HttpHeaders.from(headers ?? {}).entries()) {
     xhr.setRequestHeader(name, String(value));
   }
 

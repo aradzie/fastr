@@ -1,5 +1,5 @@
 export class ETag {
-  static of(value: ETag | string): ETag {
+  static from(value: ETag | string): ETag {
     if (typeof value === "string") {
       return new ETag(value);
     } else {

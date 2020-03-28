@@ -2,7 +2,7 @@ import { Parameters } from "./parameters";
 import { splitPair } from "./strings";
 
 export class MimeType {
-  static of(value: MimeType | string): MimeType {
+  static from(value: MimeType | string): MimeType {
     if (typeof value === "string") {
       return MimeType.parse(value);
     } else {
@@ -36,7 +36,7 @@ export class MimeType {
         return new MimeType(
           type.toLowerCase(),
           subtype.toLowerCase(),
-          tail ? Parameters.of(tail) : null,
+          tail ? Parameters.from(tail) : null,
         );
       }
     }
@@ -118,7 +118,7 @@ export class MimeType {
   }
 
   matches(that: MimeType | string): boolean {
-    that = MimeType.of(that);
+    that = MimeType.from(that);
     return (
       (this.type === "*" || //
         that.type === "*" ||

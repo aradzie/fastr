@@ -20,7 +20,7 @@ export function expectType(
   return (adapter: Adapter): Adapter => {
     return async (request: HttpRequest): Promise<HttpResponse> => {
       // Update request headers.
-      const headers = Headers.of(request.headers ?? {})
+      const headers = Headers.from(request.headers ?? {})
         .toBuilder()
         .accept(accept)
         .build();

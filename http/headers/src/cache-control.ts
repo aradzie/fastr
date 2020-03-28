@@ -14,7 +14,7 @@ export interface CacheControlInit {
 }
 
 export class CacheControl {
-  static of(value: CacheControl | string): CacheControl {
+  static from(value: CacheControl | string): CacheControl {
     if (typeof value === "string") {
       return CacheControl.parse(value);
     } else {

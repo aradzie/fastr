@@ -17,7 +17,7 @@ export interface CookieInit {
  * RFC 2109 specifies the legal characters for name, value, path and domain.
  */
 export class Cookie {
-  static of(value: Cookie | string): Cookie {
+  static from(value: Cookie | string): Cookie {
     if (typeof value === "string") {
       return Cookie.parse(value);
     } else {

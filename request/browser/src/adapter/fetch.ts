@@ -42,7 +42,7 @@ async function fetchImpl(request: HttpRequest): Promise<HttpResponse> {
     readonly status = res.status;
     readonly statusText = res.statusText;
     readonly url = res.url;
-    readonly headers = HttpHeaders.of([...res.headers]);
+    readonly headers = HttpHeaders.from([...res.headers]);
 
     async blob(): Promise<Blob> {
       checkAborted();

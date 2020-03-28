@@ -2,7 +2,7 @@ import { splitPair } from "./strings";
 import { parseTokens } from "./tokens";
 
 export class Link {
-  static of(value: Link | string): Link {
+  static from(value: Link | string): Link {
     if (typeof value === "string") {
       return Link.parse(value);
     } else {

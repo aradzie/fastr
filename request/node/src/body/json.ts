@@ -1,5 +1,5 @@
 export class Json {
-  static of(value: any, replacer?: any): Json {
+  static from(value: any, replacer?: any): Json {
     return new Json(value, replacer);
   }
 

@@ -51,7 +51,7 @@ test("copy headers", (t) => {
 });
 
 test("fromJSON", (t) => {
-  const headers = Headers.of({
+  const headers = Headers.from({
     "date": "Thu, 01 Jan 1970 00:00:01 GMT",
     "cache-control": "private, max-age=0",
     "content-type": "text/html; charset=UTF-8",

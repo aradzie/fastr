@@ -4,7 +4,7 @@ import type { NameValueEntries } from "./types";
 const kMap = Symbol("kMap");
 
 export class Parameters {
-  static of(value: Parameters | string): Parameters {
+  static from(value: Parameters | string): Parameters {
     if (typeof value === "string") {
       return Parameters.parse(value);
     } else {
@@ -27,7 +27,7 @@ export class Parameters {
   readonly charset: string | null;
   readonly q: number | null;
 
-  // TODO Use NameValueEntries
+  // TODO Use NameValueEntries, Object or Map
   constructor(entries: Iterable<readonly [string, string]> | null = null) {
     this[kMap] = new Map(entries as [string, string][]);
     let v: string | null;

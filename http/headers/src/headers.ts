@@ -265,7 +265,7 @@ export class Headers {
    * Creates a new Headers instance from the given JSON object
    * with key/value pairs.
    */
-  static of(that: Headers | NameValueEntries | HeadersJson): Headers {
+  static from(that: Headers | NameValueEntries | HeadersJson): Headers {
     if (that instanceof Headers) {
       return that;
     }

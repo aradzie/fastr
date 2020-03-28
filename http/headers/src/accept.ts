@@ -3,7 +3,7 @@ import { splitList } from "./strings";
 import type { StringOr } from "./types";
 
 export class Accept {
-  static of(value: Accept | string): Accept {
+  static from(value: Accept | string): Accept {
     if (typeof value === "string") {
       return Accept.parse(value);
     } else {
@@ -26,7 +26,7 @@ export class Accept {
     // Sort the given types in the descending order
     // compared by the `q` parameter.
     this.types = types
-      .map((v) => MimeType.of(v))
+      .map((v) => MimeType.from(v))
       .sort((a, b) => (b?.parameters?.q ?? 1) - (a?.parameters?.q ?? 1));
   }
 
@@ -36,7 +36,7 @@ export class Accept {
    * @return Whether the candidate media type is accepted.
    */
   accepts(candidate: StringOr<MimeType>): boolean | number {
-    candidate = MimeType.of(candidate);
+    candidate = MimeType.from(candidate);
     if (this.types.length === 0) {
       return true;
     }
@@ -58,7 +58,7 @@ export class Accept {
     let best: MimeType | null = null;
     let bq = 0;
     for (let candidate of candidates) {
-      candidate = MimeType.of(candidate);
+      candidate = MimeType.from(candidate);
       const q = this.accepts(candidate);
       if (q === true || q > bq) {
         best = candidate;
