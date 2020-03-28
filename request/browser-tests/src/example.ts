@@ -1,4 +1,4 @@
-import { expectType, request } from "@webfx/browser-request";
+import { expectType, handleErrors, request } from "@webfx/browser-request";
 
 run().catch((err) => {
   console.error(err);
@@ -15,9 +15,8 @@ async function run(): Promise<void> {
     })
     .query("a", 1)
     .query("b", 2)
-    .accept("text/plain")
-    .header("x-foo", "bar")
     .use(expectType("text/plain"))
+    .use(handleErrors())
     .sendBody("request body");
   const { status, statusText, headers } = response;
   console.log({ status, statusText, headers });

@@ -43,3 +43,27 @@ test("throw error if response status is not successful", async (t) => {
     },
   );
 });
+
+test("pass through error", async (t) => {
+  // Arrange.
+
+  const error = new Error("omg");
+  const underTest = handleErrors();
+  const adapter = underTest(async () => {
+    throw error;
+  });
+
+  // Assert.
+
+  await t.throwsAsync(
+    async () => {
+      await adapter({
+        url: "http://test/",
+        method: "GET",
+      });
+    },
+    {
+      is: error,
+    },
+  );
+});

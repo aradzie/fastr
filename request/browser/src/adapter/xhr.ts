@@ -5,7 +5,13 @@ import {
   RequestNetworkError,
   RequestTimeoutError,
 } from "@webfx/request-error";
-import type { HttpRequest, HttpResponse } from "../types";
+import { EventEmitter } from "events";
+import type {
+  DownloadProgressEvent,
+  HttpRequest,
+  HttpResponse,
+  UploadProgressEvent,
+} from "../types";
 
 /**
  * An adapter which is implemented using the XMLHttpRequest API.
@@ -29,25 +35,24 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
   xhr.open(method, String(url), true);
   xhr.responseType = "blob";
 
-  xhr.upload.onprogress = (event: ProgressEvent): void => {
-    // TODO Send event.
-  };
-  xhr.onprogress = (event: ProgressEvent): void => {
-    // TODO Send event.
-  };
+  listen(xhr, new EventEmitter());
 
   for (const { name, value } of HttpHeaders.of(headers ?? []).entries()) {
     xhr.setRequestHeader(name, String(value));
   }
 
   if (cache != null) {
-    // Not implemented.
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("The `cache` option is ignored by the XHR adapter.");
+    }
   }
   if (credentials != null) {
     xhr.withCredentials = credentials === "include";
   }
   if (redirect != null) {
-    // Not implemented.
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("The `redirect` option is ignored by the XHR adapter.");
+    }
   }
 
   return new Promise<HttpResponse>((resolve, reject) => {
@@ -143,6 +148,25 @@ function makeResponse(xhr: XMLHttpRequest, body: Promise<Blob>): HttpResponse {
   async function readText(): Promise<string> {
     return readBlobAsText(await readBody());
   }
+}
+
+function listen(xhr: XMLHttpRequest, eventEmitter: EventEmitter): void {
+  xhr.upload.onprogress = (event: ProgressEvent): void => {
+    const ev: UploadProgressEvent = {
+      type: "upload",
+      loaded: event.loaded,
+      total: event.lengthComputable ? event.total : null,
+    };
+    eventEmitter.emit(ev.type, ev);
+  };
+  xhr.onprogress = (event: ProgressEvent): void => {
+    const ev: DownloadProgressEvent = {
+      type: "download",
+      loaded: event.loaded,
+      total: event.lengthComputable ? event.total : null,
+    };
+    eventEmitter.emit(ev.type, ev);
+  };
 }
 
 function readBlobAsArrayBuffer(blob: Blob): Promise<ArrayBuffer> {

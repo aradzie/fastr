@@ -23,7 +23,7 @@ export class RequestRedirectError extends RequestError {
 }
 
 export class RequestAbortedError extends RequestError {
-  name = "RequestAbortedError";
+  readonly name = "RequestAbortedError";
 
   constructor(message: string) {
     super(message);
@@ -35,7 +35,7 @@ export class RequestAbortedError extends RequestError {
 }
 
 export class RequestTimeoutError extends RequestError {
-  name = "RequestTimeoutError";
+  readonly name = "RequestTimeoutError";
 
   constructor(message: string) {
     super(message);
@@ -47,7 +47,7 @@ export class RequestTimeoutError extends RequestError {
 }
 
 export class RequestNetworkError extends RequestError {
-  name = "RequestNetworkError";
+  readonly name = "RequestNetworkError";
 
   constructor(message: string) {
     super(message);

@@ -153,4 +153,16 @@ export interface HttpResponse {
   abort(): void;
 }
 
+export interface UploadProgressEvent {
+  readonly type: "upload";
+  readonly loaded: number;
+  readonly total: number | null;
+}
+
+export interface DownloadProgressEvent {
+  readonly type: "download";
+  readonly loaded: number;
+  readonly total: number | null;
+}
+
 export type NameValueEntries = readonly (readonly [string, unknown])[];

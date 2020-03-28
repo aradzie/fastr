@@ -26,6 +26,7 @@ export class ApplicationError extends Error {
     return false;
   }
 
+  name = "ApplicationError";
   readonly status: number;
   readonly body: ErrorBody;
 
@@ -44,7 +45,6 @@ export class ApplicationError extends Error {
     } = {},
   ) {
     super(message);
-    this.name = "ApplicationError";
     this.status = status;
     this.body = body;
     const fn = Error.captureStackTrace;

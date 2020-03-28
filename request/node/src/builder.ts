@@ -9,6 +9,7 @@ import type {
   NameValueEntries,
 } from "./types";
 
+// TODO Use mixins?
 export class RequestBuilder {
   private _headers: Headers = Headers.of({});
   private readonly _accept: (MimeType | string)[] = [];
@@ -78,6 +79,12 @@ export class RequestBuilder {
 
     throw new TypeError();
   }
+
+  // TODO
+  // header(name: string, value: unknown): this;
+  // header(params: Map<string, unknown>): this;
+  // header(entries: NameValueEntries): this;
+  // header(values: Record<string, unknown>): this;
 
   /**
    * Appends a new HTTP header with the given name and value.

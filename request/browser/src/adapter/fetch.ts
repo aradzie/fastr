@@ -11,12 +11,7 @@ import type { HttpRequest, HttpResponse } from "../types";
 export async function fetchAdapter(
   request: HttpRequest,
 ): Promise<HttpResponse> {
-  try {
-    return await fetchImpl(request);
-  } catch (ex) {
-    handleAborted(ex);
-    throw ex;
-  }
+  return handleErrors(() => fetchImpl(request));
 }
 
 async function fetchImpl(request: HttpRequest): Promise<HttpResponse> {
@@ -51,51 +46,29 @@ async function fetchImpl(request: HttpRequest): Promise<HttpResponse> {
 
     async blob(): Promise<Blob> {
       checkAborted();
-      return res.blob();
+      return handleErrors(() => res.blob());
     }
 
     async arrayBuffer(): Promise<ArrayBuffer> {
       checkAborted();
-      try {
-        return await res.arrayBuffer();
-      } catch (ex) {
-        handleAborted(ex);
-        throw ex;
-      }
+      return handleErrors(() => res.arrayBuffer());
     }
 
     async text(): Promise<string> {
       checkAborted();
-      try {
-        return await res.text();
-      } catch (ex) {
-        handleAborted(ex);
-        throw ex;
-      }
+      return handleErrors(() => res.text());
     }
 
     async formData(): Promise<FormData> {
       checkAborted();
-      try {
-        return res.formData();
-      } catch (ex) {
-        handleAborted(ex);
-        throw ex;
-      }
+      return handleErrors(() => res.formData());
     }
 
     async json<T = unknown>(
       reviver?: (key: any, value: any) => any,
     ): Promise<T> {
       checkAborted();
-      let text;
-      try {
-        text = await res.text();
-      } catch (ex) {
-        handleAborted(ex);
-        throw ex;
-      }
-      return JSON.parse(text, reviver);
+      return JSON.parse(await handleErrors(() => res.text()), reviver);
     }
 
     abort(): void {
@@ -104,10 +77,14 @@ async function fetchImpl(request: HttpRequest): Promise<HttpResponse> {
   })();
 }
 
-// See https://fetch.spec.whatwg.org/#fetch-method
-function handleAborted(ex: Error): void {
-  if (ex.name === "AbortError") {
-    throw new RequestAbortedError("Request aborted");
+async function handleErrors<T>(action: () => T): Promise<T> {
+  try {
+    return await action();
+  } catch (ex) {
+    // See https://fetch.spec.whatwg.org/#fetch-method
+    if (ex.name === "AbortError") {
+      throw new RequestAbortedError("Request aborted");
+    }
+    throw ex;
   }
-  throw ex;
 }

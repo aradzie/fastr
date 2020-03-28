@@ -65,6 +65,30 @@ test("return failing response if too many retries", async (t) => {
   t.is(await response.body.text(), "b");
 });
 
+test("pass through error", async (t) => {
+  // Arrange.
+
+  const error = new Error("omg");
+  const underTest = retryFailed();
+  const adapter = underTest(async () => {
+    throw error;
+  });
+
+  // Assert.
+
+  await t.throwsAsync(
+    async () => {
+      await adapter({
+        url: "http://test/",
+        method: "GET",
+      });
+    },
+    {
+      is: error,
+    },
+  );
+});
+
 export function fakeEventualOkResponse(): Adapter {
   let index = 0;
   return async (request: HttpRequest): Promise<HttpResponse> => {

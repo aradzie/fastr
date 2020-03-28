@@ -137,6 +137,30 @@ test("throw error if redirect loop detected", async (t) => {
   );
 });
 
+test("pass through error", async (t) => {
+  // Arrange.
+
+  const error = new Error("omg");
+  const underTest = followRedirects();
+  const adapter = underTest(async () => {
+    throw error;
+  });
+
+  // Assert.
+
+  await t.throwsAsync(
+    async () => {
+      await adapter({
+        url: "http://test/",
+        method: "GET",
+      });
+    },
+    {
+      is: error,
+    },
+  );
+});
+
 export function fakeRedirectingAdapter(): Adapter {
   return async (request: HttpRequest): Promise<HttpResponse> => {
     switch (String(request.url)) {

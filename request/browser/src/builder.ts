@@ -1,15 +1,19 @@
 import { Accept, Headers, MimeType } from "@webfx-http/headers";
+import { EventEmitter } from "events";
 import { compose } from "./middleware";
 import type {
   Adapter,
+  DownloadProgressEvent,
   HttpRequest,
   HttpResponse,
   Middleware,
   NameValueEntries,
+  UploadProgressEvent,
 } from "./types";
 
 // TODO Use mixins?
 export class RequestBuilder {
+  private readonly _eventEmitter = new EventEmitter();
   private _headers: Headers = Headers.of({});
   private readonly _accept: (MimeType | string)[] = [];
   private readonly _middleware: Middleware[] = [];
@@ -27,6 +31,13 @@ export class RequestBuilder {
    */
   use(middleware: Middleware): this {
     this._middleware.push(middleware);
+    return this;
+  }
+
+  on(event: "upload", listener: (event: UploadProgressEvent) => void): this;
+  on(event: "download", listener: (event: DownloadProgressEvent) => void): this;
+  on(event: string | symbol, listener: (...args: any[]) => void): this {
+    this._eventEmitter.on(event, listener);
     return this;
   }
 

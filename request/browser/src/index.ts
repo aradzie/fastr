@@ -1,9 +1,12 @@
 export type {
   Adapter,
+  Middleware,
   Instance,
   HttpRequest,
   HttpResponse,
   BodyDataType,
+  UploadProgressEvent,
+  DownloadProgressEvent,
   NameValueEntries,
 } from "./types";
 export { adapter, request } from "./request";
