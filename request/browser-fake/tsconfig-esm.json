@@ -1,10 +1,11 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
-  "extends": "../../tsconfig-template.json",
+  "extends": "../../tsconfig-browser.json",
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "lib-esm",
     "module": "esnext",
+    "declaration": false,
     "incremental": true,
     "tsBuildInfoFile": "lib-esm/.tsbuildcache"
   }

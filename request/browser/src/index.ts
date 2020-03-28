@@ -16,3 +16,5 @@ export {
   RequestNetworkError,
   RequestTimeoutError,
 } from "@webfx/request-error";
+export { compose, expectType, handleErrors } from "./middleware";
+export type { HandleErrorOptions } from "./middleware";

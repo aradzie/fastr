@@ -1,20 +1,88 @@
 import { Accept, Headers, MimeType } from "@webfx-http/headers";
+import { compose } from "./middleware";
 import type {
   Adapter,
   HttpRequest,
   HttpResponse,
+  Middleware,
   NameValueEntries,
 } from "./types";
 
+// TODO Use mixins?
 export class RequestBuilder {
   private _headers: Headers = Headers.of({});
   private readonly _accept: (MimeType | string)[] = [];
+  private readonly _middleware: Middleware[] = [];
 
   constructor(
     readonly adapter: Adapter,
     readonly method: string,
     readonly url: URL | string,
   ) {}
+
+  /**
+   * Apply the given middleware to a request.
+   *
+   * TODO Middleware order.
+   */
+  use(middleware: Middleware): this {
+    this._middleware.push(middleware);
+    return this;
+  }
+
+  query(name: string, value: unknown): this;
+  query(params: URLSearchParams): this;
+  query(params: Map<string, unknown>): this;
+  query(entries: NameValueEntries): this;
+  query(values: Record<string, unknown>): this;
+  query(...args: unknown[]): this {
+    const update = new URLSearchParams();
+
+    const { length } = args;
+    const [arg0, arg1] = args;
+
+    if (length === 2 && typeof arg0 === "string" && arg1 != null) {
+      // query(name: string, value: unknown): this;
+      update.append(name, String(arg1));
+      return this;
+    }
+
+    if (length === 1) {
+      if (arg0 instanceof URLSearchParams) {
+        // query(params: URLSearchParams): this;
+        for (const [name, value] of arg0) {
+          update.append(name, value);
+        }
+        return this;
+      }
+
+      if (arg0 instanceof Map) {
+        // query(params: Map<string, unknown>): this;
+        for (const [name, value] of arg0) {
+          update.append(name, value);
+        }
+        return this;
+      }
+
+      if (Array.isArray(arg0)) {
+        // query(entries: NameValueEntries): this;
+        for (const [name, value] of arg0) {
+          update.append(name, String(value));
+        }
+        return this;
+      }
+
+      if (typeof arg0 === "object" && arg0 != null) {
+        // query(values: Record<string, unknown>): this;
+        for (const [name, value] of Object.entries(arg0)) {
+          update.append(name, String(value));
+        }
+        return this;
+      }
+    }
+
+    throw new TypeError();
+  }
 
   /**
    * Appends a new HTTP header with the given name and value.
@@ -42,7 +110,7 @@ export class RequestBuilder {
    * Sends an HTTP request without body.
    */
   send(): Promise<HttpResponse> {
-    return this.adapter({
+    return this.call({
       method: this.method,
       url: this.url,
       headers: this.makeHeaders(),
@@ -74,13 +142,14 @@ export class RequestBuilder {
     body: string | Blob | ArrayBuffer | ArrayBufferView,
     contentType?: string,
   ): Promise<HttpResponse> {
-    return this.adapter(this.makeRequest(body, contentType));
+    return this.call(this.makeRequest(body, contentType));
   }
 
   makeRequest(
     body: string | Blob | ArrayBuffer | ArrayBufferView,
     contentType?: string,
   ): HttpRequest {
+    // TODO Mime type from blob.
     return {
       method: this.method,
       url: this.url,
@@ -117,7 +186,7 @@ export class RequestBuilder {
       | NameValueEntries
       | Record<string, unknown>,
   ): Promise<HttpResponse> {
-    return this.adapter(this.makeFormRequest(body));
+    return this.call(this.makeFormRequest(body));
   }
 
   makeFormRequest(
@@ -146,7 +215,7 @@ export class RequestBuilder {
    * The `Content-Type` header will be set to `application/json`.
    */
   sendJson(body: unknown, contentType?: string): Promise<HttpResponse> {
-    return this.adapter(this.makeJsonRequest(contentType, body));
+    return this.call(this.makeJsonRequest(contentType, body));
   }
 
   makeJsonRequest(contentType: string | undefined, body: any): HttpRequest {
@@ -156,6 +225,13 @@ export class RequestBuilder {
       headers: this.makeHeaders(contentType ?? "application/json"),
       body: RequestBuilder.serializeJson(body),
     };
+  }
+
+  /**
+   * Calls the adapter using the collected list of middleware.
+   */
+  call(request: HttpRequest): Promise<HttpResponse> {
+    return compose(this._middleware)(this.adapter)(request);
   }
 
   makeHeaders(contentType?: string): Headers {

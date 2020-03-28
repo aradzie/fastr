@@ -1,7 +1,4 @@
-export interface UrlParams {
-  readonly params?: Map<string, any> | Record<string, any>;
-  readonly query?: Map<string, any> | Record<string, any>;
-}
+import type { UrlParams } from "./types";
 
 export function toUrl(
   template: string,

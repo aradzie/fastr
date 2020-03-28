@@ -47,7 +47,7 @@ async function fetchImpl(request: HttpRequest): Promise<HttpResponse> {
     readonly status = res.status;
     readonly statusText = res.statusText;
     readonly url = res.url;
-    readonly headers = convertHeaders(res);
+    readonly headers = HttpHeaders.of([...res.headers]);
 
     async blob(): Promise<Blob> {
       checkAborted();
@@ -110,12 +110,4 @@ function handleAborted(ex: Error): void {
     throw new RequestAbortedError("Request aborted");
   }
   throw ex;
-}
-
-function convertHeaders(res: Response): HttpHeaders {
-  const builder = HttpHeaders.builder();
-  res.headers.forEach((value, name) => {
-    builder.append(name, value);
-  });
-  return builder.build();
 }

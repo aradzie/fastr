@@ -1,1 +1,2 @@
-export { UrlParams, toUrl } from "./url";
+export type { UrlParams } from "./types";
+export { toUrl } from "./url";

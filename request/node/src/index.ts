@@ -9,6 +9,8 @@ export type {
   BodyDataType,
 } from "./types";
 export { request } from "./request";
+export { RequestBuilder } from "./builder";
+export { Json, Streamable, FileStreamable } from "./body";
 export {
   compose,
   followRedirects,
@@ -16,8 +18,6 @@ export {
   handleErrors,
   retryFailed,
 } from "./middleware";
-export { Json } from "./body/json";
-export { Streamable } from "./body/streamable";
 export type {
   FollowRedirectOptions,
   HandleErrorOptions,

@@ -1,8 +1,20 @@
 import type { Headers } from "@webfx-http/headers";
 import type { RequestBuilder } from "./builder";
 
+/**
+ * Adapter is a function which takes a request and returns a response promise.
+ */
 export interface Adapter {
   (request: HttpRequest): Promise<HttpResponse>;
+}
+
+/**
+ * Middleware is a function which takes one adapter and returns another.
+ *
+ * The returned adapter must call the original adapter.
+ */
+export interface Middleware {
+  (adapter: Adapter): Adapter;
 }
 
 export interface Instance extends Adapter {
@@ -85,8 +97,6 @@ export type BodyDataType =
   | ArrayBuffer
   | ArrayBufferView;
 
-export type NameValueEntries = readonly (readonly [string, unknown])[];
-
 /**
  * Represents response of a web request, if completed and parsed successfully.
  */
@@ -142,3 +152,5 @@ export interface HttpResponse {
    */
   abort(): void;
 }
+
+export type NameValueEntries = readonly (readonly [string, unknown])[];

@@ -19,7 +19,7 @@ export class HttpError extends Error {
     this.expose = clientError;
     const fn = Error.captureStackTrace;
     if (typeof fn === "function") {
-      fn(this, this.constructor);
+      fn(this, this.constructor); // TODO Investigate.
     }
   }
 }

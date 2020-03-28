@@ -25,9 +25,5 @@ export function parseFormData(input: string): FormData {
 }
 
 export function formDataEntries(formData: FormData): string[][] {
-  const entries: string[][] = [];
-  formData.forEach((value, name) => {
-    entries.push([name, String(value)]);
-  });
-  return entries;
+  return [...formData].map(([name, value]) => [name, String(value)]);
 }

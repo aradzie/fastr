@@ -7,6 +7,9 @@ export interface ErrorBody {
   };
 }
 
+/**
+ * See https://tools.ietf.org/html/rfc7807
+ */
 export class ApplicationError extends Error {
   static readonly MIME_TYPE = new MimeType("application", "error+json");
 

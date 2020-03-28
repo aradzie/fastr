@@ -2,9 +2,11 @@ import type { Body } from "@webfx-http/body";
 import type { Headers, MimeType } from "@webfx-http/headers";
 import type { Readable } from "stream";
 import type { URL, URLSearchParams } from "url";
-import type { AnyAgent } from "./agent";
-import type { Json } from "./body/json";
+import { Streamable } from "./body";
+import type { Json } from "./body";
 import type { RequestBuilder } from "./builder";
+import type { Agent as HttpAgent } from "http";
+import type { Agent as HttpsAgent } from "https";
 
 /**
  * Adapter is a function which takes a request and returns a response promise.
@@ -107,12 +109,13 @@ export interface HttpRequestBody {
 
 export type BodyDataType =
   | string
-  | Json
   | URLSearchParams
   | Buffer
   | ArrayBuffer
   | ArrayBufferView
-  | Readable;
+  | Readable
+  | Json
+  | Streamable;
 
 /**
  * Represents response of a web request, if completed and parsed successfully.
@@ -153,3 +156,7 @@ export interface HttpResponse {
    */
   abort(): void;
 }
+
+export type NameValueEntries = readonly (readonly [string, unknown])[];
+
+export type AnyAgent = HttpAgent | HttpsAgent | boolean;

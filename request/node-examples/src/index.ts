@@ -1,5 +1,11 @@
 import { Headers } from "@webfx-http/headers";
-import { followRedirects, handleErrors, request } from "@webfx/node-request";
+import {
+  expectType,
+  followRedirects,
+  handleErrors,
+  request,
+  retryFailed,
+} from "@webfx/node-request";
 
 example().catch((err) => {
   console.error(err);
@@ -7,6 +13,18 @@ example().catch((err) => {
 
 async function example(): Promise<void> {
   // TODO Use request builder.
+  request
+    .get("https://www.google.com/")
+    .query("name", "value")
+    .accept("text/html")
+    .header("Accept-Encoding", "gzip")
+    .header("Accept-Encoding", "br")
+    .use(expectType("text/plain"))
+    .use(handleErrors())
+    .use(followRedirects())
+    .use(retryFailed())
+    .send();
+
   const { ok, status, statusText, headers, body } = await request({
     method: "GET",
     url: "https://www.google.com/",
@@ -15,7 +33,6 @@ async function example(): Promise<void> {
       .append("Accept-Encoding", "gzip")
       .append("Accept-Encoding", "br")
       .build(),
-    middleware: [followRedirects(), handleErrors()],
   });
   console.log({
     ok,
