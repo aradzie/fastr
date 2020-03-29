@@ -1,8 +1,15 @@
-import { Accept, Headers, MimeType } from "@webfx-http/headers";
+import {
+  Accept,
+  Headers,
+  HeadersBuilder,
+  MimeType,
+  multiEntries,
+} from "@webfx-http/headers";
 import { EventEmitter } from "events";
 import { compose } from "./middleware";
 import type {
   Adapter,
+  BodyDataType,
   DownloadProgressEvent,
   HttpRequest,
   HttpResponse,
@@ -10,19 +17,23 @@ import type {
   NameValueEntries,
   UploadProgressEvent,
 } from "./types";
+import { mergeSearchParams } from "./url";
 
-// TODO Use mixins?
 export class RequestBuilder {
-  private readonly _eventEmitter = new EventEmitter();
-  private _headers: Headers = Headers.from({});
-  private readonly _accept: (MimeType | string)[] = [];
+  readonly adapter: Adapter;
+  readonly method: string;
+  readonly url: string;
   private readonly _middleware: Middleware[] = [];
+  private readonly _eventEmitter = new EventEmitter();
+  private readonly _query = new URLSearchParams();
+  private readonly _headers: HeadersBuilder = Headers.builder();
+  private readonly _accept: (MimeType | string)[] = [];
 
-  constructor(
-    readonly adapter: Adapter,
-    readonly method: string,
-    readonly url: URL | string,
-  ) {}
+  constructor(adapter: Adapter, method: string, url: URL | string) {
+    this.adapter = adapter;
+    this.method = method.toUpperCase();
+    this.url = String(url);
+  }
 
   /**
    * Apply the given middleware to a request.
@@ -44,17 +55,15 @@ export class RequestBuilder {
   query(name: string, value: unknown): this;
   query(params: URLSearchParams): this;
   query(params: Map<string, unknown>): this;
-  query(entries: NameValueEntries): this;
   query(values: Record<string, unknown>): this;
+  query(entries: NameValueEntries): this;
   query(...args: unknown[]): this {
-    const update = new URLSearchParams();
-
     const { length } = args;
     const [arg0, arg1] = args;
 
     if (length === 2 && typeof arg0 === "string" && arg1 != null) {
       // query(name: string, value: unknown): this;
-      update.append(name, String(arg1));
+      this._query.append(arg0, String(arg1));
       return this;
     }
 
@@ -62,50 +71,57 @@ export class RequestBuilder {
       if (arg0 instanceof URLSearchParams) {
         // query(params: URLSearchParams): this;
         for (const [name, value] of arg0) {
-          update.append(name, value);
+          this._query.append(name, String(value));
         }
         return this;
       }
 
-      if (arg0 instanceof Map) {
-        // query(params: Map<string, unknown>): this;
-        for (const [name, value] of arg0) {
-          update.append(name, value);
-        }
-        return this;
+      // query(params: Map<string, unknown>): this;
+      // query(values: Record<string, unknown>): this;
+      // query(entries: NameValueEntries): this;
+      for (const [name, value] of multiEntries(arg0 as Map<string, unknown>)) {
+        this._query.append(name, String(value));
       }
-
-      if (Array.isArray(arg0)) {
-        // query(entries: NameValueEntries): this;
-        for (const [name, value] of arg0) {
-          update.append(name, String(value));
-        }
-        return this;
-      }
-
-      if (typeof arg0 === "object" && arg0 != null) {
-        // query(values: Record<string, unknown>): this;
-        for (const [name, value] of Object.entries(arg0)) {
-          update.append(name, String(value));
-        }
-        return this;
-      }
+      return this;
     }
 
     throw new TypeError();
   }
 
-  /**
-   * Appends a new HTTP header with the given name and value.
-   * @param name Header name.
-   * @param value Header value.
-   */
-  header(name: string, value: unknown): this {
-    this._headers = this._headers
-      .toBuilder()
-      .append(name, String(value))
-      .build();
-    return this;
+  header(name: string, value: unknown): this;
+  header(headers: Headers): this;
+  header(headers: Map<string, unknown>): this;
+  header(headers: Record<string, unknown>): this;
+  header(headers: NameValueEntries): this;
+  header(...args: any[]): this {
+    const { length } = args;
+    const [arg0, arg1] = args;
+
+    if (length === 2 && typeof arg0 === "string" && arg1 != null) {
+      // header(name: string, value: unknown): this;
+      this._headers.append(arg0, String(arg1));
+      return this;
+    }
+
+    if (length === 1) {
+      if (arg0 instanceof Headers) {
+        // header(headers: Headers): this;
+        for (const { name, value } of arg0.entries()) {
+          this._headers.append(name, String(value));
+        }
+        return this;
+      }
+
+      // header(headers: Map<string, unknown>): this;
+      // header(headers: Record<string, unknown>): this;
+      // header(headers: NameValueEntries): this;
+      for (const [name, value] of multiEntries(arg0 as Map<string, unknown>)) {
+        this._headers.append(name, String(value));
+      }
+      return this;
+    }
+
+    throw new TypeError();
   }
 
   /**
@@ -121,11 +137,7 @@ export class RequestBuilder {
    * Sends an HTTP request without body.
    */
   send(): Promise<HttpResponse> {
-    return this.call({
-      method: this.method,
-      url: this.url,
-      headers: this.makeHeaders(),
-    });
+    return this._call(this._makeRequest(null));
   }
 
   /**
@@ -151,26 +163,9 @@ export class RequestBuilder {
 
   sendBody(
     body: string | Blob | ArrayBuffer | ArrayBufferView,
-    contentType?: string,
+    contentType = guessContentType(body),
   ): Promise<HttpResponse> {
-    return this.call(this.makeRequest(body, contentType));
-  }
-
-  makeRequest(
-    body: string | Blob | ArrayBuffer | ArrayBufferView,
-    contentType?: string,
-  ): HttpRequest {
-    // TODO Mime type from blob.
-    return {
-      method: this.method,
-      url: this.url,
-      headers: this.makeHeaders(
-        contentType ?? typeof body === "string"
-          ? "text/plain"
-          : "application/octet-stream",
-      ),
-      body,
-    };
+    return this._call(this._makeRequest(body, contentType));
   }
 
   /**
@@ -187,37 +182,23 @@ export class RequestBuilder {
    * to `application/x-www-form-urlencoded`.
    */
   sendForm(
-    body: URLSearchParams | NameValueEntries | Record<string, unknown>,
+    body:
+      | URLSearchParams
+      | Map<string, unknown>
+      | Record<string, unknown>
+      | NameValueEntries,
   ): Promise<HttpResponse>;
 
   sendForm(
     body:
       | FormData
       | URLSearchParams
-      | NameValueEntries
-      | Record<string, unknown>,
+      | Map<string, unknown>
+      | Record<string, unknown>
+      | NameValueEntries,
   ): Promise<HttpResponse> {
-    return this.call(this.makeFormRequest(body));
-  }
-
-  makeFormRequest(
-    body:
-      | FormData
-      | URLSearchParams
-      | NameValueEntries
-      | Record<string, unknown>,
-  ): HttpRequest {
-    const formData = RequestBuilder.toFormData(body);
-    return {
-      method: this.method,
-      url: this.url,
-      headers: this.makeHeaders(
-        formData instanceof FormData
-          ? "multipart/form-data"
-          : "application/x-www-form-urlencoded",
-      ),
-      body: formData,
-    };
+    const [formData, contentType] = toFormData(body);
+    return this._call(this._makeRequest(formData, contentType));
   }
 
   /**
@@ -225,64 +206,66 @@ export class RequestBuilder {
    *
    * The `Content-Type` header will be set to `application/json`.
    */
-  sendJson(body: unknown, contentType?: string): Promise<HttpResponse> {
-    return this.call(this.makeJsonRequest(contentType, body));
+  sendJson(
+    body: unknown,
+    contentType = "application/json",
+  ): Promise<HttpResponse> {
+    return this._call(this._makeRequest(JSON.stringify(body), contentType));
   }
 
-  makeJsonRequest(contentType: string | undefined, body: any): HttpRequest {
-    return {
-      method: this.method,
-      url: this.url,
-      headers: this.makeHeaders(contentType ?? "application/json"),
-      body: RequestBuilder.serializeJson(body),
-    };
-  }
-
-  /**
-   * Calls the adapter using the collected list of middleware.
-   */
-  call(request: HttpRequest): Promise<HttpResponse> {
-    return compose(this._middleware)(this.adapter)(request);
-  }
-
-  makeHeaders(contentType?: string): Headers {
-    let headers = this._headers;
-    if (headers.contentType() == null && contentType != null) {
-      headers = headers.toBuilder().contentType(contentType).build();
+  private _makeRequest(
+    body: BodyDataType | null,
+    contentType: string | null = null,
+  ): HttpRequest {
+    const url = mergeSearchParams(this.url, this._query);
+    if (contentType != null) {
+      this._headers.contentType(contentType);
     }
     if (this._accept.length > 0) {
-      headers = headers.toBuilder().accept(new Accept(this._accept)).build();
+      this._headers.accept(new Accept(this._accept));
     }
-    return headers;
+    const headers = this._headers.build();
+    return { method: this.method, url, headers, body };
   }
 
-  static toFormData(
-    body:
-      | FormData
-      | URLSearchParams
-      | NameValueEntries
-      | Record<string, unknown>,
-  ): FormData | URLSearchParams {
-    if (body instanceof FormData) {
-      return body;
-    }
-    if (body instanceof URLSearchParams) {
-      return body;
-    }
-    let init;
-    if (Array.isArray(body)) {
-      init = stringifyValues(body);
-    } else {
-      init = stringifyValues(Object.entries(body));
-    }
-    return new URLSearchParams(init);
-  }
-
-  static serializeJson(body: unknown): string {
-    return JSON.stringify(body);
+  private _call(request: HttpRequest): Promise<HttpResponse> {
+    return compose(this._middleware)(this.adapter)(request);
   }
 }
 
-function stringifyValues(entries: NameValueEntries): string[][] {
-  return entries.map(([name, value]) => [name, String(value)]);
+function toFormData(
+  body:
+    | FormData
+    | URLSearchParams
+    | Map<string, unknown>
+    | Record<string, unknown>
+    | NameValueEntries,
+): [FormData | URLSearchParams, string] {
+  if (body instanceof FormData) {
+    return [body, "multipart/form-data"];
+  }
+  if (!(body instanceof URLSearchParams)) {
+    body = new URLSearchParams([...multiEntries(body as Map<string, unknown>)]);
+  }
+  return [body, "application/x-www-form-urlencoded"];
+}
+
+function guessContentType(body: any): string {
+  if (typeof body === "string") {
+    return "text/plain";
+  }
+  if (body instanceof FormData) {
+    return "multipart/form-data";
+  }
+  if (body instanceof URLSearchParams) {
+    return "application/x-www-form-urlencoded";
+  }
+  let type;
+  if (body instanceof Blob && (type = body.type)) {
+    return type;
+  }
+  // Blob
+  // ArrayBuffer
+  // ArrayBufferView
+  return "application/octet-stream";
 }

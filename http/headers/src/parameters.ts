@@ -1,5 +1,6 @@
 import { splitList, splitPair } from "./strings";
-import type { NameValueEntries } from "./types";
+import { NameValueEntries } from "./types";
+import { entries } from "./util";
 
 const kMap = Symbol("kMap");
 
@@ -16,9 +17,7 @@ export class Parameters {
     const entries: [string, string][] = [];
     for (const item of splitList(value, ";")) {
       const [name, value] = splitPair(item, "=");
-      if (name && value) {
-        entries.push([name.toLowerCase(), value]);
-      }
+      entries.push([name, value]);
     }
     return new Parameters(entries);
   }
@@ -27,9 +26,10 @@ export class Parameters {
   readonly charset: string | null;
   readonly q: number | null;
 
-  // TODO Use NameValueEntries, Object or Map
-  constructor(entries: Iterable<readonly [string, string]> | null = null) {
-    this[kMap] = new Map(entries as [string, string][]);
+  constructor(
+    arg: Map<string, unknown> | Record<string, unknown> | NameValueEntries = {},
+  ) {
+    this[kMap] = new Map(entries(arg as Map<string, unknown>));
     let v: string | null;
     let charset;
     if ((v = this.get("charset")) != null && (charset = v) !== "") {

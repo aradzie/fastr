@@ -1,4 +1,4 @@
-import { Headers as HttpHeaders } from "@webfx-http/headers";
+import { Headers as HttpHeaders, MimeType } from "@webfx-http/headers";
 import { isSuccess } from "@webfx-http/status";
 import {
   RequestAbortedError,
@@ -32,15 +32,11 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
   }
 
   const xhr = new XMLHttpRequest();
-  xhr.open(method, String(url), true);
+  xhr.open(method, url, true);
   xhr.responseType = "blob";
-
-  listen(xhr, new EventEmitter());
-
   for (const { name, value } of HttpHeaders.from(headers ?? {}).entries()) {
     xhr.setRequestHeader(name, String(value));
   }
-
   if (cache != null) {
     if (process.env.NODE_ENV !== "production") {
       console.warn("The `cache` option is ignored by the XHR adapter.");
@@ -54,6 +50,7 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
       console.warn("The `redirect` option is ignored by the XHR adapter.");
     }
   }
+  listen(xhr, new EventEmitter());
 
   return new Promise<HttpResponse>((resolve, reject) => {
     handleErrors(reject);
@@ -67,11 +64,7 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
         });
         resolve(makeResponse(xhr, body));
       }
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        // TODO Send event.
-      }
     };
-
     xhr.send(body);
   });
 
@@ -87,6 +80,17 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
     };
   }
 }
+
+xhrAdapter.parseMultipartFormData = function fakeParseMultipartFormData(
+  contentType: MimeType,
+  blob: Blob,
+): Promise<FormData> {
+  throw new Error(
+    process.env.NODE_ENV !== "production"
+      ? "Implement your own 'multipart/form-data' parser."
+      : "",
+  );
+};
 
 function makeResponse(xhr: XMLHttpRequest, body: Promise<Blob>): HttpResponse {
   const { status, statusText, responseURL: url } = xhr;
@@ -107,21 +111,29 @@ function makeResponse(xhr: XMLHttpRequest, body: Promise<Blob>): HttpResponse {
     }
 
     async arrayBuffer(): Promise<ArrayBuffer> {
-      return await readArrayBuffer();
+      return await readAsArrayBuffer(await readBody());
     }
 
     async text(): Promise<string> {
-      return await readText();
+      return await readAsText(await readBody());
     }
 
     async formData(): Promise<FormData> {
-      throw new Error("Not implemented"); // TODO Implement.
+      const body = await readBody();
+      const contentType =
+        headers.contentType() ?? MimeType.APPLICATION_OCTET_STREAM;
+      switch (contentType.name) {
+        case "application/x-www-form-urlencoded":
+          return parseUrlEncodedFormData(await readAsText(body));
+        case "multipart/form-data":
+          return xhrAdapter.parseMultipartFormData(contentType, body);
+        default:
+          throw new TypeError(`Invalid content type ${contentType}`);
+      }
     }
 
-    async json<T = unknown>(
-      reviver?: (key: any, value: any) => any,
-    ): Promise<T> {
-      return JSON.parse(await readText(), reviver) as T;
+    async json<T = unknown>(): Promise<T> {
+      return JSON.parse(await readAsText(await readBody())) as T;
     }
 
     abort(): void {
@@ -135,18 +147,10 @@ function makeResponse(xhr: XMLHttpRequest, body: Promise<Blob>): HttpResponse {
       throw new RequestAbortedError("Request aborted");
     }
     if (bodyUsed) {
-      throw new Error("Body has already been consumed");
+      throw new TypeError("Body has already been consumed.");
     }
     bodyUsed = true;
     return body;
-  }
-
-  async function readArrayBuffer(): Promise<ArrayBuffer> {
-    return readBlobAsArrayBuffer(await readBody());
-  }
-
-  async function readText(): Promise<string> {
-    return readBlobAsText(await readBody());
   }
 }
 
@@ -169,14 +173,14 @@ function listen(xhr: XMLHttpRequest, eventEmitter: EventEmitter): void {
   };
 }
 
-function readBlobAsArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
+function readAsArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
   const reader = new FileReader();
   const promise = promisifyFileReader<ArrayBuffer>(reader);
   reader.readAsArrayBuffer(blob);
   return promise;
 }
 
-function readBlobAsText(blob: Blob): Promise<string> {
+function readAsText(blob: Blob): Promise<string> {
   const reader = new FileReader();
   const promise = promisifyFileReader<string>(reader);
   reader.readAsText(blob);
@@ -194,4 +198,12 @@ function promisifyFileReader<T extends string | ArrayBuffer>(
       resolve(reader.result as T);
     };
   });
+}
+
+function parseUrlEncodedFormData(input: string): FormData {
+  const formData = new FormData();
+  for (const [name, value] of new URLSearchParams(input)) {
+    formData.append(name, value);
+  }
+  return formData;
 }

@@ -120,13 +120,14 @@ function sendBuffer(
   if (type != null) {
     req.setHeader("Content-Type", String(type));
   }
+  const stream = Readable.from([buffer]);
   const { length } = buffer;
   if (compressible && length > GZIP_SIZE_THRESHOLD) {
     req.setHeader("Content-Encoding", "gzip");
-    pipeline(Readable.from([buffer]), createGzip(), req, callback);
+    pipeline(stream, createGzip(), req, callback);
   } else {
     req.setHeader("Content-Length", length);
-    pipeline(Readable.from([buffer]), req, callback);
+    pipeline(stream, req, callback);
   }
 }
 

@@ -7,3 +7,4 @@ export { Link } from "./link";
 export { MimeType } from "./mimetype";
 export { Parameters } from "./parameters";
 export { SetCookie } from "./set-cookie";
+export { entries, multiEntries } from "./util";

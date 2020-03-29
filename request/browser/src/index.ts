@@ -7,7 +7,6 @@ export type {
   BodyDataType,
   UploadProgressEvent,
   DownloadProgressEvent,
-  NameValueEntries,
 } from "./types";
 export { adapter, request } from "./request";
 export { xhrAdapter } from "./adapter/xhr";

@@ -5,9 +5,10 @@ import { ETag } from "./etag";
 import { Link } from "./link";
 import { MimeType } from "./mimetype";
 import { SetCookie } from "./set-cookie";
-import { splitLines, splitList, splitPair } from "./strings";
+import { splitLines, splitPair } from "./strings";
 import { parseDate, stringifyDate } from "./tokens";
-import type { HeadersJson, NameValueEntries } from "./types";
+import type { NameValueEntries } from "./types";
+import { multiEntries } from "./util";
 
 // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
 
@@ -72,10 +73,24 @@ export class HeadersBuilder {
   /**
    * Creates a new builder with values copied from the given headers.
    */
-  static from(headers: Headers): HeadersBuilder {
+  static from(
+    headers:
+      | Headers
+      | Map<string, unknown>
+      | Record<string, unknown>
+      | NameValueEntries,
+  ): HeadersBuilder {
     const builder = new HeadersBuilder();
-    for (const { name, value } of headers.entries()) {
-      builder.append(name, value);
+    if (headers instanceof Headers) {
+      for (const { name, value } of headers.entries()) {
+        builder.append(name, value);
+      }
+    } else {
+      for (const [name, value] of multiEntries(
+        headers as Map<string, unknown>,
+      )) {
+        builder.append(name, value);
+      }
     }
     return builder;
   }
@@ -265,24 +280,18 @@ export class Headers {
    * Creates a new Headers instance from the given JSON object
    * with key/value pairs.
    */
-  static from(that: Headers | NameValueEntries | HeadersJson): Headers {
-    if (that instanceof Headers) {
-      return that;
+  static from(
+    headers:
+      | Headers
+      | Map<string, unknown>
+      | Record<string, unknown>
+      | NameValueEntries,
+  ): Headers {
+    if (headers instanceof Headers) {
+      return headers;
+    } else {
+      return HeadersBuilder.from(headers).build();
     }
-    const builder = new HeadersBuilder();
-    const entries = Array.isArray(that) ? that : Object.entries(that);
-    for (const [name, value] of entries) {
-      if (value != null) {
-        if (Array.isArray(value)) {
-          for (const item of value) {
-            builder.append(name, String(item));
-          }
-        } else {
-          builder.append(name, String(value));
-        }
-      }
-    }
-    return builder.build();
   }
 
   /**

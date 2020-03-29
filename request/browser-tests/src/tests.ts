@@ -8,7 +8,7 @@ import {
   xhrAdapter,
 } from "@webfx/browser-request";
 import { expect } from "chai";
-import { formDataEntries, parseFormData } from "./browser-util";
+import { formDataEntries, parseFormData } from "./util";
 
 mocha.setup({
   ui: "bdd",
@@ -47,7 +47,6 @@ function makeTests(underTest: Adapter): void {
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
       expect(headers.contentType()?.name).to.eq("text/plain");
-
       const body = await response.blob();
       expect(body).to.instanceof(Blob);
       expect(body.type).to.eq("text/plain");
@@ -61,7 +60,6 @@ function makeTests(underTest: Adapter): void {
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
       expect(headers.contentType()?.name).to.eq("text/plain");
-
       const body = await response.arrayBuffer();
       expect(body).to.instanceof(ArrayBuffer);
       expect(body.byteLength).to.eq(9);
@@ -77,43 +75,51 @@ function makeTests(underTest: Adapter): void {
       expect(await response.text()).to.eq("some text");
     });
 
-    if (underTest === xhrAdapter) {
-      it.skip("get body as multipart form data");
-    } else {
-      it("get body as multipart form data", async () => {
-        const response = await request
-          .get("/test/multipart-form-data-type")
-          .send();
-        const { status, statusText, headers } = response;
-        expect(status).to.eq(200);
-        expect(statusText).to.eq("OK");
-        expect(headers.contentType()?.name).to.eq("multipart/form-data");
+    it("get body as multipart form data", async () => {
+      const response = await request
+        .get("/test/multipart-form-data-type")
+        .send();
+      const { status, statusText, headers } = response;
+      expect(status).to.eq(200);
+      expect(statusText).to.eq("OK");
+      expect(headers.contentType()?.name).to.eq("multipart/form-data");
+      if (underTest === xhrAdapter) {
+        // The XHR adapter cannot read multipart form data.
+        try {
+          await response.formData();
+        } catch (ex) {
+          expect(ex.message).to.eq(
+            process.env.NODE_ENV !== "production"
+              ? "Implement your own 'multipart/form-data' parser."
+              : "",
+          );
+          return;
+        }
+        expect.fail("Should throw error");
+      } else {
+        // The fetch adapter will read form data.
         expect(formDataEntries(await response.formData())).to.deep.eq([
           ["a", "1"],
           ["b", "2"],
           ["c", "3"],
         ]);
-      });
-    }
+      }
+    });
 
-    if (underTest === xhrAdapter) {
-      it.skip("get body as urlencoded form data");
-    } else {
-      it("get body as urlencoded form data", async () => {
-        const response = await request.get("/test/form-urlencoded-type").send();
-        const { status, statusText, headers } = response;
-        expect(status).to.eq(200);
-        expect(statusText).to.eq("OK");
-        expect(headers.contentType()?.name).to.eq(
-          "application/x-www-form-urlencoded",
-        );
-        expect(formDataEntries(await response.formData())).to.deep.eq([
-          ["a", "1"],
-          ["b", "2"],
-          ["c", "3"],
-        ]);
-      });
-    }
+    it("get body as urlencoded form data", async () => {
+      const response = await request.get("/test/form-urlencoded-type").send();
+      const { status, statusText, headers } = response;
+      expect(status).to.eq(200);
+      expect(statusText).to.eq("OK");
+      expect(headers.contentType()?.name).to.eq(
+        "application/x-www-form-urlencoded",
+      );
+      expect(formDataEntries(await response.formData())).to.deep.eq([
+        ["a", "1"],
+        ["b", "2"],
+        ["c", "3"],
+      ]);
+    });
 
     it("get body as json", async () => {
       const response = await request.get("/test/json-type").send();
@@ -262,6 +268,22 @@ function makeTests(underTest: Adapter): void {
       });
     });
 
+    it("read body twice", async () => {
+      const response = await request.get("/test/text-type").send();
+      const { status, statusText } = response;
+      expect(status).to.eq(200);
+      expect(statusText).to.eq("OK");
+      expect(await response.text()).to.eq("some text");
+      try {
+        await response.blob();
+      } catch (ex) {
+        expect(ex).to.instanceof(TypeError);
+        expect(ex.message).to.contain("Body has already been consumed.");
+        return;
+      }
+      expect.fail("Should throw error");
+    });
+
     it("ignore body", async () => {
       // TODO In Chrome dev tools:
       //   Uncaught (in promise) RequestAbortedError: Request aborted
@@ -333,6 +355,13 @@ function makeTests(underTest: Adapter): void {
         return;
       }
       expect.fail("Should throw error");
+    });
+
+    it("data url", async () => {
+      const response = await request
+        .get("data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==")
+        .send();
+      expect(await response.text()).to.eq("Hello, World!");
     });
   });
 }

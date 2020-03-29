@@ -19,7 +19,7 @@ async function fetchImpl(request: HttpRequest): Promise<HttpResponse> {
   const controller = new AbortController();
   const { signal } = controller;
 
-  const req = new Request(String(url), {
+  const req = new Request(url, {
     method,
     headers: new Headers(headers?.toJSON()),
     body,
@@ -64,11 +64,9 @@ async function fetchImpl(request: HttpRequest): Promise<HttpResponse> {
       return handleErrors(() => res.formData());
     }
 
-    async json<T = unknown>(
-      reviver?: (key: any, value: any) => any,
-    ): Promise<T> {
+    async json<T = unknown>(): Promise<T> {
       checkAborted();
-      return JSON.parse(await handleErrors(() => res.text()), reviver);
+      return JSON.parse(await handleErrors(() => res.text()));
     }
 
     abort(): void {

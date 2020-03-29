@@ -27,8 +27,8 @@ test("parse", (t) => {
   t.is(t2.type, "text");
   t.is(t2.subtype, "plain");
   t.is(t2.parameters?.get("charset"), "utf-8");
-  t.is(t2.parameters?.get("a"), "1");
-  t.is(t2.parameters?.get("b"), "2");
+  t.is(t2.parameters?.get("A"), "1");
+  t.is(t2.parameters?.get("B"), "2");
 
   t.is(MimeType.parse("illegal garbage"), MimeType.APPLICATION_OCTET_STREAM);
 });
