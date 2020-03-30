@@ -66,6 +66,20 @@ export async function launch(): Promise<void> {
       });
   });
 
+  // Respond with custom status.
+  server.addRoute("*", "/test/want-status", (req, res) => {
+    const { url = "/" } = req;
+    res.statusCode = Number(url.substring(url.indexOf("?") + 1));
+    res.setHeader("Content-Type", "application/json");
+    res.end('{"type":"json"}');
+  });
+
+  // Respond with status 204 No Content.
+  server.addRoute("*", "/test/status/204", (req, res) => {
+    res.statusCode = 204;
+    res.end();
+  });
+
   // Respond with some text.
   server.addRoute("GET", "/test/text-type", (req, res) => {
     res.setHeader("Content-Type", "text/plain");
@@ -97,14 +111,6 @@ export async function launch(): Promise<void> {
 
   // Respond with some json.
   server.addRoute("GET", "/test/json-type", (req, res) => {
-    res.setHeader("Content-Type", "application/json");
-    res.end('{"type":"json"}');
-  });
-
-  // Respond with custom status.
-  server.addRoute("GET", "/test/want-status", (req, res) => {
-    const { url = "/" } = req;
-    res.statusCode = Number(url.substring(url.indexOf("?") + 1));
     res.setHeader("Content-Type", "application/json");
     res.end('{"type":"json"}');
   });
@@ -169,6 +175,24 @@ export async function launch(): Promise<void> {
   server.addRoute("GET", "/test/abort-response", (req, res) => {
     res.flushHeaders();
     res.write("data");
+    res.destroy();
+  });
+
+  // Send unknown content-encoding.
+  server.addRoute("GET", "/test/unknown-content-encoding", (req, res) => {
+    res.setHeader("Content-Encoding", "omg");
+    res.write("what is this\n");
+    res.write("what is this\n");
+    res.write("what is this\n");
+    res.destroy();
+  });
+
+  // Send invalid content-encoding.
+  server.addRoute("GET", "/test/invalid-content-encoding", (req, res) => {
+    res.setHeader("Content-Encoding", "gzip");
+    res.write("invalid gzip data\n");
+    res.write("invalid gzip data\n");
+    res.write("invalid gzip data\n");
     res.destroy();
   });
 }

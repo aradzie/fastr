@@ -23,6 +23,13 @@ function makeTests(underTest: Adapter): void {
       adapter(underTest);
     });
 
+    it("data url", async () => {
+      const response = await request
+        .get("data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==")
+        .send();
+      expect(await response.text()).to.eq("Hello, World!");
+    });
+
     it("get with client error status", async () => {
       const response = await request.get("/test/want-status?400").send();
       const { status, statusText, headers } = response;
@@ -39,6 +46,15 @@ function makeTests(underTest: Adapter): void {
       expect(statusText).to.eq("Internal Server Error");
       expect(headers.contentType()?.name).to.eq("application/json");
       expect(await response.json()).to.deep.eq({ type: "json" });
+    });
+
+    it("get no content", async () => {
+      const response = await request.get("/test/status/204").send();
+      const { status, statusText, headers } = response;
+      expect(status).to.eq(204);
+      expect(statusText).to.eq("No Content");
+      expect(headers.contentType()).to.eq(null);
+      expect(await response.text()).to.eq("");
     });
 
     it("get body as blob", async () => {
@@ -357,11 +373,31 @@ function makeTests(underTest: Adapter): void {
       expect.fail("Should throw error");
     });
 
-    it("data url", async () => {
-      const response = await request
-        .get("data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==")
-        .send();
-      expect(await response.text()).to.eq("Hello, World!");
+    it("unknown content encoding", async () => {
+      try {
+        await request.get("/test/unknown-content-encoding").send();
+      } catch (ex) {
+        if (underTest === xhrAdapter) {
+          expect(ex).to.instanceof(RequestNetworkError);
+        } else {
+          expect(ex).to.instanceof(TypeError);
+        }
+        return;
+      }
+      expect.fail("Should throw error");
+    });
+
+    it("invalid content encoding", async () => {
+      try {
+        await request.get("/test/invalid-content-encoding").send();
+      } catch (ex) {
+        if (underTest === xhrAdapter) {
+          expect(ex).to.instanceof(RequestNetworkError);
+        } else {
+          expect(ex).to.instanceof(TypeError);
+        }
+        return;
+      }
     });
   });
 }
