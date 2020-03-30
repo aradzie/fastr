@@ -7,6 +7,9 @@ import type {
   HttpResponse,
   UploadProgressEvent,
 } from "../types";
+import { polyfillBlobApi } from "./polyfills";
+
+polyfillBlobApi();
 
 /**
  * An adapter which is implemented using the XMLHttpRequest API.
@@ -106,11 +109,11 @@ function makeResponse(xhr: XMLHttpRequest, body: Promise<Blob>): HttpResponse {
     }
 
     async arrayBuffer(): Promise<ArrayBuffer> {
-      return await readAsArrayBuffer(await readBody());
+      return await (await readBody()).arrayBuffer();
     }
 
     async text(): Promise<string> {
-      return await readAsText(await readBody());
+      return await (await readBody()).text();
     }
 
     async formData(): Promise<FormData> {
@@ -119,7 +122,7 @@ function makeResponse(xhr: XMLHttpRequest, body: Promise<Blob>): HttpResponse {
         headers.contentType() ?? MimeType.APPLICATION_OCTET_STREAM;
       switch (contentType.name) {
         case "application/x-www-form-urlencoded":
-          return parseUrlEncodedFormData(await readAsText(body));
+          return parseUrlEncodedFormData(await body.text());
         case "multipart/form-data":
           return xhrAdapter.parseMultipartFormData(contentType, body);
         default:
@@ -128,7 +131,7 @@ function makeResponse(xhr: XMLHttpRequest, body: Promise<Blob>): HttpResponse {
     }
 
     async json<T = unknown>(): Promise<T> {
-      return JSON.parse(await readAsText(await readBody())) as T;
+      return JSON.parse(await (await readBody()).text()) as T;
     }
 
     abort(): void {
@@ -166,33 +169,6 @@ function listen(xhr: XMLHttpRequest, eventEmitter: EventEmitter): void {
     };
     eventEmitter.emit(ev.type, ev);
   };
-}
-
-function readAsArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
-  const reader = new FileReader();
-  const promise = promisifyFileReader<ArrayBuffer>(reader);
-  reader.readAsArrayBuffer(blob);
-  return promise;
-}
-
-function readAsText(blob: Blob): Promise<string> {
-  const reader = new FileReader();
-  const promise = promisifyFileReader<string>(reader);
-  reader.readAsText(blob);
-  return promise;
-}
-
-function promisifyFileReader<T extends string | ArrayBuffer>(
-  reader: FileReader,
-): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    reader.onerror = (): void => {
-      reject(reader.error);
-    };
-    reader.onload = (): void => {
-      resolve(reader.result as T);
-    };
-  });
 }
 
 function parseUrlEncodedFormData(input: string): FormData {
