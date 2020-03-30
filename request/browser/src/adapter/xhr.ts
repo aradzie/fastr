@@ -88,7 +88,7 @@ xhrAdapter.parseMultipartFormData = function fakeParseMultipartFormData(
   throw new Error(
     process.env.NODE_ENV !== "production"
       ? "Implement your own 'multipart/form-data' parser."
-      : "",
+      : undefined,
   );
 };
 

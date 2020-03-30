@@ -107,7 +107,7 @@ function makeTests(underTest: Adapter): void {
           expect(ex.message).to.eq(
             process.env.NODE_ENV !== "production"
               ? "Implement your own 'multipart/form-data' parser."
-              : "",
+              : undefined,
           );
           return;
         }
