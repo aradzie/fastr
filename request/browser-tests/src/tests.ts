@@ -3,8 +3,6 @@ import {
   adapter,
   fetchAdapter,
   request,
-  RequestAbortedError,
-  RequestNetworkError,
   xhrAdapter,
 } from "@webfx/browser-request";
 import { expect } from "chai";
@@ -294,7 +292,6 @@ function makeTests(underTest: Adapter): void {
         await response.blob();
       } catch (ex) {
         expect(ex).to.instanceof(TypeError);
-        expect(ex.message).to.contain("Body has already been consumed.");
         return;
       }
       expect.fail("Should throw error");
@@ -308,7 +305,8 @@ function makeTests(underTest: Adapter): void {
       try {
         await response.text();
       } catch (ex) {
-        expect(ex).to.instanceof(RequestAbortedError);
+        expect(ex).to.instanceof(DOMException);
+        expect(ex.code).to.eq(DOMException.ABORT_ERR);
         return;
       }
       expect.fail("Should throw error");
@@ -322,7 +320,8 @@ function makeTests(underTest: Adapter): void {
       try {
         await response.text();
       } catch (ex) {
-        expect(ex).to.instanceof(RequestAbortedError);
+        expect(ex).to.instanceof(DOMException);
+        expect(ex.code).to.eq(DOMException.ABORT_ERR);
         return;
       }
       expect.fail("Should throw error");
@@ -333,11 +332,7 @@ function makeTests(underTest: Adapter): void {
         const response = await request.get("/test/abort-request").send();
         await response.text();
       } catch (ex) {
-        if (underTest === xhrAdapter) {
-          expect(ex).to.instanceof(RequestNetworkError);
-        } else {
-          expect(ex).to.instanceof(TypeError);
-        }
+        expect(ex).to.instanceof(TypeError);
         return;
       }
       expect.fail("Should throw error");
@@ -348,11 +343,7 @@ function makeTests(underTest: Adapter): void {
         const response = await request.get("/test/abort-response").send();
         await response.text();
       } catch (ex) {
-        if (underTest === xhrAdapter) {
-          expect(ex).to.instanceof(RequestNetworkError);
-        } else {
-          expect(ex).to.instanceof(TypeError);
-        }
+        expect(ex).to.instanceof(TypeError);
         return;
       }
       expect.fail("Should throw error");
@@ -363,11 +354,7 @@ function makeTests(underTest: Adapter): void {
         const response = await request.get("http://localhost:1/").send();
         await response.text();
       } catch (ex) {
-        if (underTest === xhrAdapter) {
-          expect(ex).to.instanceof(RequestNetworkError);
-        } else {
-          expect(ex).to.instanceof(TypeError);
-        }
+        expect(ex).to.instanceof(TypeError);
         return;
       }
       expect.fail("Should throw error");
@@ -377,11 +364,7 @@ function makeTests(underTest: Adapter): void {
       try {
         await request.get("/test/unknown-content-encoding").send();
       } catch (ex) {
-        if (underTest === xhrAdapter) {
-          expect(ex).to.instanceof(RequestNetworkError);
-        } else {
-          expect(ex).to.instanceof(TypeError);
-        }
+        expect(ex).to.instanceof(TypeError);
         return;
       }
       expect.fail("Should throw error");
@@ -391,11 +374,7 @@ function makeTests(underTest: Adapter): void {
       try {
         await request.get("/test/invalid-content-encoding").send();
       } catch (ex) {
-        if (underTest === xhrAdapter) {
-          expect(ex).to.instanceof(RequestNetworkError);
-        } else {
-          expect(ex).to.instanceof(TypeError);
-        }
+        expect(ex).to.instanceof(TypeError);
         return;
       }
     });

@@ -1,10 +1,5 @@
 import { Headers as HttpHeaders, MimeType } from "@webfx-http/headers";
 import { isSuccess } from "@webfx-http/status";
-import {
-  RequestAbortedError,
-  RequestNetworkError,
-  RequestTimeoutError,
-} from "@webfx/request-error";
 import { EventEmitter } from "events";
 import type {
   DownloadProgressEvent,
@@ -70,13 +65,13 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
 
   function handleErrors(reject: (reason?: any) => void): void {
     xhr.onerror = (): void => {
-      reject(new RequestNetworkError("Network error"));
+      reject(new TypeError("Network error"));
     };
     xhr.onabort = (): void => {
-      reject(new RequestAbortedError("Request aborted"));
+      reject(new DOMException("Request aborted", "AbortError"));
     };
     xhr.ontimeout = (): void => {
-      reject(new RequestTimeoutError("Request timeout"));
+      reject(new DOMException("Request timeout", "TimeoutError"));
     };
   }
 }
@@ -144,7 +139,7 @@ function makeResponse(xhr: XMLHttpRequest, body: Promise<Blob>): HttpResponse {
 
   function readBody(): Promise<Blob> {
     if (aborted) {
-      throw new RequestAbortedError("Request aborted");
+      throw new DOMException("Request aborted", "AbortError");
     }
     if (bodyUsed) {
       throw new TypeError("Body has already been consumed.");
