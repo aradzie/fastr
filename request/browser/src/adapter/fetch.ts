@@ -1,4 +1,5 @@
 import { Headers as HttpHeaders } from "@webfx-http/headers";
+import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "../events";
 import type { HttpRequest, HttpResponse } from "../types";
 
 /**
@@ -10,7 +11,28 @@ import type { HttpRequest, HttpResponse } from "../types";
 export async function fetchAdapter(
   request: HttpRequest,
 ): Promise<HttpResponse> {
-  const { url, method, headers, body, cache, credentials, redirect } = request;
+  const {
+    url,
+    method,
+    headers,
+    body,
+    eventEmitter,
+    cache,
+    credentials,
+    redirect,
+  } = request;
+
+  if (process.env.NODE_ENV !== "production") {
+    if (eventEmitter != null) {
+      if (
+        eventEmitter.listenerCount(EV_UPLOAD_PROGRESS) > 0 ||
+        eventEmitter.listenerCount(EV_DOWNLOAD_PROGRESS) > 0
+      ) {
+        console.error("Fetch adapter does not support events");
+      }
+    }
+  }
+
   const controller = new AbortController();
   const { signal } = controller;
 

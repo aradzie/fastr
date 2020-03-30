@@ -1,4 +1,9 @@
-import { expectType, handleErrors, request } from "@webfx/browser-request";
+import {
+  DownloadProgressEvent,
+  expectType,
+  request,
+  UploadProgressEvent,
+} from "@webfx/browser-request";
 
 run().catch((err) => {
   console.error(err);
@@ -7,16 +12,16 @@ run().catch((err) => {
 async function run(): Promise<void> {
   const response = await request
     .post("http://localhost:3456/")
-    .on("upload", (ev) => {
+    .on("upload-progress", (ev: UploadProgressEvent): void => {
       console.log(ev);
     })
-    .on("download", (ev) => {
+    .on("download-progress", (ev: DownloadProgressEvent): void => {
       console.log(ev);
     })
     .query("a", 1)
     .query("b", 2)
+    .header("x-foo", "bar")
     .use(expectType("text/plain"))
-    .use(handleErrors())
     .sendBody("request body");
   const { status, statusText, headers } = response;
   console.log({ status, statusText, headers });

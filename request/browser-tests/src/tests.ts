@@ -22,6 +22,8 @@ mocha.run();
 
 function makeRequestBuilderTests(): void {
   describe("RequestBuilder", () => {
+    // TODO Test middleware.
+
     it("build url query string", async () => {
       const response = {} as HttpResponse;
       let request!: HttpRequest;

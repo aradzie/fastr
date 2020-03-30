@@ -1,12 +1,9 @@
 import { Headers as HttpHeaders, MimeType } from "@webfx-http/headers";
 import { isSuccess } from "@webfx-http/status";
 import { EventEmitter } from "events";
-import type {
-  DownloadProgressEvent,
-  HttpRequest,
-  HttpResponse,
-  UploadProgressEvent,
-} from "../types";
+import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "../events";
+import type { HttpRequest, HttpResponse, UploadProgressEvent } from "../types";
+import { DownloadProgressEvent } from "../types";
 import { polyfillBlobApi } from "./polyfills";
 
 polyfillBlobApi();
@@ -18,7 +15,16 @@ polyfillBlobApi();
  * See https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
  */
 export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
-  const { url, method, headers, body, cache, credentials, redirect } = request;
+  const {
+    url,
+    method,
+    headers,
+    body,
+    eventEmitter,
+    cache,
+    credentials,
+    redirect,
+  } = request;
 
   switch (method.toUpperCase()) {
     case "HEAD":
@@ -48,7 +54,9 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
       console.warn("The `redirect` option is ignored by the XHR adapter.");
     }
   }
-  listen(xhr, new EventEmitter());
+  if (eventEmitter != null) {
+    addEventListeners(xhr, eventEmitter);
+  }
 
   return new Promise<HttpResponse>((resolve, reject) => {
     handleErrors(reject);
@@ -152,23 +160,24 @@ function makeResponse(xhr: XMLHttpRequest, body: Promise<Blob>): HttpResponse {
   }
 }
 
-function listen(xhr: XMLHttpRequest, eventEmitter: EventEmitter): void {
-  xhr.upload.onprogress = (event: ProgressEvent): void => {
-    const ev: UploadProgressEvent = {
+function addEventListeners(
+  xhr: XMLHttpRequest,
+  eventEmitter: EventEmitter,
+): void {
+  xhr.upload.addEventListener("progress", (event: ProgressEvent): void => {
+    eventEmitter.emit(EV_UPLOAD_PROGRESS, {
       type: "upload",
       loaded: event.loaded,
       total: event.lengthComputable ? event.total : null,
-    };
-    eventEmitter.emit(ev.type, ev);
-  };
-  xhr.onprogress = (event: ProgressEvent): void => {
-    const ev: DownloadProgressEvent = {
+    } as UploadProgressEvent);
+  });
+  xhr.addEventListener("progress", (event: ProgressEvent): void => {
+    eventEmitter.emit(EV_DOWNLOAD_PROGRESS, {
       type: "download",
       loaded: event.loaded,
       total: event.lengthComputable ? event.total : null,
-    };
-    eventEmitter.emit(ev.type, ev);
-  };
+    } as DownloadProgressEvent);
+  });
 }
 
 function parseUrlEncodedFormData(input: string): FormData {

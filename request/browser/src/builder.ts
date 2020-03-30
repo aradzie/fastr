@@ -1,11 +1,6 @@
-import {
-  Accept,
-  Headers,
-  HeadersBuilder,
-  MimeType,
-  multiEntries,
-} from "@webfx-http/headers";
+import { Accept, Headers, MimeType, multiEntries } from "@webfx-http/headers";
 import { EventEmitter } from "events";
+import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "./events";
 import { compose } from "./middleware";
 import type {
   Adapter,
@@ -26,7 +21,7 @@ export class RequestBuilder {
   private readonly _middleware: Middleware[] = [];
   private readonly _eventEmitter = new EventEmitter();
   private readonly _query = new URLSearchParams();
-  private readonly _headers: HeadersBuilder = Headers.builder();
+  private readonly _headers = Headers.builder();
   private readonly _accept: (MimeType | string)[] = [];
 
   constructor(adapter: Adapter, method: string, url: URL | string) {
@@ -45,8 +40,20 @@ export class RequestBuilder {
     return this;
   }
 
-  on(event: "upload", listener: (event: UploadProgressEvent) => void): this;
-  on(event: "download", listener: (event: DownloadProgressEvent) => void): this;
+  /**
+   * Adds a listener to be notified of upload progress.
+   */
+  on(
+    event: typeof EV_UPLOAD_PROGRESS,
+    listener: (event: UploadProgressEvent) => void,
+  ): this;
+  /**
+   * Adds a listener to be notified of download progress.
+   */
+  on(
+    event: typeof EV_DOWNLOAD_PROGRESS,
+    listener: (event: DownloadProgressEvent) => void,
+  ): this;
   on(event: string | symbol, listener: (...args: any[]) => void): this {
     this._eventEmitter.on(event, listener);
     return this;
@@ -225,7 +232,13 @@ export class RequestBuilder {
       this._headers.accept(new Accept(this._accept));
     }
     const headers = this._headers.build();
-    return { method: this.method, url, headers, body };
+    return {
+      method: this.method,
+      url,
+      headers,
+      body,
+      eventEmitter: this._eventEmitter,
+    };
   }
 
   private _call(request: HttpRequest): Promise<HttpResponse> {

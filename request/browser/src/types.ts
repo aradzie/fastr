@@ -1,4 +1,5 @@
 import type { Headers } from "@webfx-http/headers";
+import type { EventEmitter } from "events";
 import type { RequestBuilder } from "./builder";
 
 /**
@@ -61,7 +62,7 @@ export interface HttpRequest {
    */
   readonly url: string;
   /**
-   * The HTTP method to use for request.
+   * The HTTP method to use for a request.
    */
   readonly method: string;
   /**
@@ -72,6 +73,10 @@ export interface HttpRequest {
    * The request body.
    */
   readonly body?: BodyDataType | null;
+  /**
+   * The event emitter to be notified of request or response events.
+   */
+  readonly eventEmitter?: EventEmitter | null;
   /**
    * A string indicating how the request will interact with the browser's cache
    * to set request's cache.
