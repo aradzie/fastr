@@ -64,14 +64,14 @@ export interface Instance {
 
 export interface HttpRequestOptions {
   readonly timeout?: number;
-  readonly agent?: AnyAgent | ((url: URL) => AnyAgent);
+  readonly agent?: AnyAgent | ((url: string) => AnyAgent);
 }
 
 export interface HttpRequest {
   /**
    * The URL of a resource to request.
    */
-  readonly url: URL | string;
+  readonly url: string;
   /**
    * The HTTP method to use for request.
    */

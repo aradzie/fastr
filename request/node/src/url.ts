@@ -1,13 +1,4 @@
-import { URL, URLSearchParams } from "url";
-
-/** @deprecated */
-export function toURL(url: URL | string): URL {
-  if (typeof url === "string") {
-    return new URL(url);
-  } else {
-    return url;
-  }
-}
+import { URLSearchParams } from "url";
 
 export function mergeSearchParams(
   url: string,

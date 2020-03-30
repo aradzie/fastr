@@ -2,7 +2,6 @@ import { RequestRedirectError } from "@webfx/request-error";
 import { URL } from "url";
 import { isStreamBody } from "../body/send";
 import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
-import { toURL } from "../url";
 
 export interface FollowRedirectOptions {
   /**
@@ -38,7 +37,7 @@ export function followRedirects({
       }
 
       // The current url to visit which is updated after each redirect response.
-      let url = toURL(request.url);
+      let url = new URL(request.url);
       // The set of already visited urls for the loop detection purposes.
       const visited = new Set<string>();
 
@@ -46,7 +45,7 @@ export function followRedirects({
         // Send request with a new url.
         const response = await adapter({
           ...request,
-          url,
+          url: String(url),
         });
 
         // Test if we got a redirect response.
@@ -73,7 +72,7 @@ export function followRedirects({
                 // Update request, change method to GET and delete body.
                 const { headers } = request;
                 request = {
-                  url,
+                  url: String(url),
                   method: "GET",
                   headers,
                 };

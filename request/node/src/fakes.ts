@@ -28,7 +28,7 @@ export function fakeResponse(init?: ResponseInit): Adapter {
   return async (request: HttpRequest): Promise<HttpResponse> => {
     return new FakeResponse({
       ...init,
-      url: String(request.url),
+      url: request.url,
     });
   };
 }
@@ -37,7 +37,7 @@ export function fakeOkResponse(init?: ResponseInit): Adapter {
   return async (request: HttpRequest): Promise<HttpResponse> =>
     new FakeResponse({
       ...init,
-      url: String(request.url),
+      url: request.url,
       status: 200,
     });
 }
@@ -48,7 +48,7 @@ export function fakeRedirectResponse(
 ): Adapter {
   return async (request: HttpRequest): Promise<HttpResponse> =>
     new FakeResponse({
-      url: String(request.url),
+      url: request.url,
       status,
       headers: {
         location: location,
@@ -61,7 +61,7 @@ export function fakeNotFoundResponse(init?: ResponseInit): Adapter {
   return async (request: HttpRequest): Promise<HttpResponse> =>
     new FakeResponse({
       ...init,
-      url: String(request.url),
+      url: request.url,
       status: 404,
       bodyData: "not found",
     });

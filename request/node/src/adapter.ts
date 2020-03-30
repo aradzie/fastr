@@ -5,13 +5,11 @@ import { IncomingMessage, RequestOptions } from "http";
 import { sendBody } from "./body/send";
 import { selectTransport } from "./transport";
 import type { HttpRequest, HttpResponse } from "./types";
-import { toURL } from "./url";
 
 export async function requestAdapter(
   request: HttpRequest,
 ): Promise<HttpResponse> {
-  const url = toURL(request.url);
-  const { method, headers, body, options = {} } = request;
+  const { method, url, headers, body, options = {} } = request;
   let { agent } = options;
   if (typeof agent === "function") {
     agent = agent(url);

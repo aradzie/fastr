@@ -1,20 +1,18 @@
 import http, { ClientRequest, IncomingMessage, RequestOptions } from "http";
 import https from "https";
-import { URL } from "url";
 
 export function selectTransport(
-  url: URL,
+  url: string,
 ): (
-  url: URL,
+  url: string,
   options: RequestOptions,
   callback: (res: IncomingMessage) => void,
 ) => ClientRequest {
-  switch (url.protocol) {
-    case "https:":
-      return https.request;
-    case "http:":
-      return http.request;
-    default:
-      throw new Error(`Invalid protocol [${url.protocol}]`);
+  if (url.startsWith("https:")) {
+    return https.request;
   }
+  if (url.startsWith("http:")) {
+    return http.request;
+  }
+  throw new Error(`Invalid URL protocol [${url}]`);
 }
