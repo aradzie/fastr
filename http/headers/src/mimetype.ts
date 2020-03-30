@@ -11,6 +11,8 @@ export class MimeType {
   }
 
   static parse(value: string): MimeType {
+    // See https://mimesniff.spec.whatwg.org/#parsing-a-mime-type
+    // See https://tools.ietf.org/html/rfc7231#section-3.1.1.1
     switch (value) {
       case "*/*":
         return MimeType.ANY;

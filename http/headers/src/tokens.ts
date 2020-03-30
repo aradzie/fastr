@@ -4,6 +4,8 @@
 
 import { splitList, splitPair } from "./strings";
 
+// TODO Add quoted strings https://fetch.spec.whatwg.org/#collect-an-http-quoted-string
+
 export type Token = {
   readonly name: string;
   readonly value: string | null;
@@ -67,4 +69,67 @@ export function parseCookieValue(value: string): string {
 
 export function stringifyCookieValue(value: string): string {
   return encodeURIComponent(value);
+}
+
+export class Scanner {
+  readonly input: string;
+  readonly length: number;
+  pos: number;
+
+  constructor(input: string, pos = 0) {
+    this.input = input;
+    this.length = input.length;
+    this.pos = pos;
+  }
+
+  skipWs(): void {
+    // TODO Implement me.
+  }
+
+  readUntil(ch: number): string {
+    const { input, length } = this;
+    const start = this.pos;
+    while (this.pos < length && !this.eat(ch)) {
+      this.pos += 1;
+    }
+    return input.substring(start, this.pos);
+  }
+
+  readToken(): string | null {
+    return null; // TODO Implement me.
+  }
+
+  /**
+   * See https://fetch.spec.whatwg.org/#collect-an-http-quoted-string
+   */
+  readQuotedString(): string | null {
+    if (!this.eat(/* `"` */ 0x22)) {
+      return null;
+    }
+    const { input, length } = this;
+    const result = new Array<number>();
+    while (this.pos < length) {
+      if (this.eat(/* `"` */ 0x22)) {
+        break;
+      }
+      if (this.eat(/* `\` */ 0x5c)) {
+        if (this.pos === length) {
+          result.push(0x5c);
+          break;
+        }
+      }
+      result.push(input.charCodeAt(this.pos));
+      this.pos += 1;
+    }
+    return String.fromCharCode(...result);
+  }
+
+  eat(ch: number): boolean {
+    if (this.input.charCodeAt(this.pos) === ch) {
+      this.pos += 1;
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

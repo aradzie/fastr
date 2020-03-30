@@ -14,10 +14,12 @@ export class Parameters {
   }
 
   static parse(value: string): Parameters {
+    // See https://mimesniff.spec.whatwg.org/#parsing-a-mime-type
+    // TODO Make spec compliant, parse quoted strings.
     const entries: [string, string][] = [];
     for (const item of splitList(value, ";")) {
       const [name, value] = splitPair(item, "=");
-      entries.push([name, value]);
+      entries.push([name.toLowerCase(), value]);
     }
     return new Parameters(entries);
   }
@@ -74,6 +76,7 @@ export class Parameters {
   }
 
   toString(): string {
+    // TODO Use quoted strings https://mimesniff.spec.whatwg.org/#serializing-a-mime-type
     return [...this.entries()]
       .map(([name, value]) => `${name}=${value}`)
       .join("; ");

@@ -1,5 +1,5 @@
 import test from "ava";
-import { parseTokens, stringifyTokens, Token } from "./tokens";
+import { parseTokens, Scanner, stringifyTokens, Token } from "./tokens";
 
 test("parse", (t) => {
   t.deepEqual(parseTokens(""), []);
@@ -37,4 +37,21 @@ test("escape special characters", (t) => {
     { name: "c", value: "3" },
   ];
   t.deepEqual(parseTokens(stringifyTokens(tokens)), tokens);
+});
+
+test("read quoted string", (t) => {
+  // Not a quoted string.
+  t.is(new Scanner(``).readQuotedString(), null);
+  t.is(new Scanner(`abc`).readQuotedString(), null);
+
+  // A quoted string.
+  t.is(new Scanner(`""`).readQuotedString(), ``);
+  t.is(new Scanner(`",;="`).readQuotedString(), `,;=`);
+  t.is(new Scanner(`" abc "`).readQuotedString(), ` abc `);
+  t.is(new Scanner(`"\\"abc\\""`).readQuotedString(), `"abc"`);
+
+  // Not properly terminated.
+  t.is(new Scanner(`"`).readQuotedString(), ``);
+  t.is(new Scanner(`"\\`).readQuotedString(), `\\`);
+  t.is(new Scanner(`"\\"`).readQuotedString(), `"`);
 });

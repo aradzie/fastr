@@ -101,6 +101,7 @@ function trimSubstring(
   begin: number,
   end: number = input.length,
 ): string {
+  // TODO https://fetch.spec.whatwg.org/#http-whitespace
   while (begin < end) {
     const ch = input.charCodeAt(begin);
     if (ch === 32) {

@@ -13,8 +13,8 @@ test("parse", (t) => {
     [
       ["charset", "utf-8"],
       ["q", "0.1"],
-      ["A", "X"],
-      ["B", "Y"],
+      ["a", "X"],
+      ["b", "Y"],
     ],
   );
   t.is(params2.charset, "utf-8");
