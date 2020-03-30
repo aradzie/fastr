@@ -11,7 +11,7 @@ export function mergeSearchParams(
   const i = url.indexOf("?");
   if (i !== -1) {
     base = url.substring(0, i);
-    q = new URLSearchParams(base.substring(i + 1));
+    q = new URLSearchParams(url.substring(i + 1));
   } else {
     base = url;
     q = new URLSearchParams();

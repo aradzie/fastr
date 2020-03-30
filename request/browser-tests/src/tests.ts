@@ -1,8 +1,12 @@
+import { Headers } from "@webfx-http/headers";
 import {
   Adapter,
   adapter,
   fetchAdapter,
+  HttpRequest,
+  HttpResponse,
   request,
+  RequestBuilder,
   xhrAdapter,
 } from "@webfx/browser-request";
 import { expect } from "chai";
@@ -11,11 +15,312 @@ import { formDataEntries, parseFormData } from "./util";
 mocha.setup({
   ui: "bdd",
 });
-makeTests(xhrAdapter);
-makeTests(fetchAdapter);
+makeRequestBuilderTests();
+makeAdapterTests(xhrAdapter);
+makeAdapterTests(fetchAdapter);
 mocha.run();
 
-function makeTests(underTest: Adapter): void {
+function makeRequestBuilderTests(): void {
+  describe("RequestBuilder", () => {
+    it("build url query string", async () => {
+      const response = {} as HttpResponse;
+      let request!: HttpRequest;
+
+      const builder = new RequestBuilder(
+        async (arg: HttpRequest) => {
+          request = arg;
+          return response;
+        },
+        "get",
+        "/url?a=1",
+      )
+        .query("a", 2)
+        .query(new URLSearchParams("b=3"))
+        .query(new Map([["c", 4]]))
+        .query({ d: 5 })
+        .query([["e", 6]]);
+
+      expect(await builder.send()).to.eq(response);
+      expect(request.method).to.eq("GET");
+      expect(request.url).to.eq("/url?a=1&a=2&b=3&c=4&d=5&e=6");
+    });
+
+    it("build headers", async () => {
+      const response = {} as HttpResponse;
+      let request!: HttpRequest;
+
+      const builder = new RequestBuilder(
+        async (arg: HttpRequest) => {
+          request = arg;
+          return response;
+        },
+        "put",
+        "/url",
+      )
+        .accept("text/plain")
+        .accept("text/*")
+        .header("a", 1)
+        .header(Headers.from({ b: 2 }))
+        .header(new Map([["c", 3]]))
+        .header({ d: 4 })
+        .header([["e", 5]]);
+
+      expect(await builder.send()).to.eq(response);
+      expect(request.method).to.eq("PUT");
+      expect(request.url).to.eq("/url");
+      expect(request.headers?.toJSON()).to.deep.eq({
+        Accept: "text/plain, text/*",
+        a: "1",
+        b: "2",
+        c: "3",
+        d: "4",
+        e: "5",
+      });
+    });
+
+    it("send empty body", async () => {
+      const response = {} as HttpResponse;
+      let request!: HttpRequest;
+
+      const builder = new RequestBuilder(
+        async (arg: HttpRequest) => {
+          request = arg;
+          return response;
+        },
+        "get",
+        "/url",
+      );
+
+      expect(await builder.send()).to.eq(response);
+
+      expect(request.body).to.eq(null);
+    });
+
+    it("send string body", async () => {
+      const response = {} as HttpResponse;
+      let request!: HttpRequest;
+
+      const builder = new RequestBuilder(
+        async (arg: HttpRequest) => {
+          request = arg;
+          return response;
+        },
+        "put",
+        "/url",
+      );
+
+      expect(await builder.sendBody("some text")).to.eq(response);
+      expect(request.body).to.eq("some text");
+      expect(request.headers?.contentType()?.name).to.eq("text/plain");
+    });
+
+    it("send string body with custom content type", async () => {
+      const response = {} as HttpResponse;
+      let request!: HttpRequest;
+
+      const builder = new RequestBuilder(
+        async (arg: HttpRequest) => {
+          request = arg;
+          return response;
+        },
+        "put",
+        "/url",
+      );
+
+      expect(await builder.sendBody("some text", "text/html")).to.eq(response);
+      expect(request.body).to.eq("some text");
+      expect(request.headers?.contentType()?.name).to.eq("text/html");
+    });
+
+    it("send blob body", async () => {
+      const response = {} as HttpResponse;
+      let request!: HttpRequest;
+
+      const builder = new RequestBuilder(
+        async (arg: HttpRequest) => {
+          request = arg;
+          return response;
+        },
+        "put",
+        "/url",
+      );
+
+      const blob = new Blob(["some text"]);
+
+      expect(await builder.sendBody(blob)).to.eq(response);
+      expect(request.body).to.eq(blob);
+      expect(request.headers?.contentType()?.name).to.eq(
+        "application/octet-stream",
+      );
+    });
+
+    it("send blob body with content type in blob", async () => {
+      const response = {} as HttpResponse;
+      let request!: HttpRequest;
+
+      const builder = new RequestBuilder(
+        async (arg: HttpRequest) => {
+          request = arg;
+          return response;
+        },
+        "put",
+        "/url",
+      );
+
+      const blob = new Blob(["some text"], { type: "foo/bar" });
+
+      expect(await builder.sendBody(blob)).to.eq(response);
+      expect(request.body).to.eq(blob);
+      expect(request.headers?.contentType()?.name).to.eq("foo/bar");
+    });
+
+    it("send blob body with custom content type", async () => {
+      const response = {} as HttpResponse;
+      let request!: HttpRequest;
+
+      const builder = new RequestBuilder(
+        async (arg: HttpRequest) => {
+          request = arg;
+          return response;
+        },
+        "put",
+        "/url",
+      );
+
+      const blob = new Blob(["some text"]);
+
+      expect(await builder.sendBody(blob, "foo/bar")).to.eq(response);
+      expect(request.body).to.eq(blob);
+      expect(request.headers?.contentType()?.name).to.eq("foo/bar");
+    });
+
+    it("send array buffer body", async () => {
+      const response = {} as HttpResponse;
+      let request!: HttpRequest;
+
+      const builder = new RequestBuilder(
+        async (arg: HttpRequest) => {
+          request = arg;
+          return response;
+        },
+        "put",
+        "/url",
+      );
+
+      const body = await new Blob(["some text"]).arrayBuffer();
+
+      expect(await builder.sendBody(body)).to.eq(response);
+      expect(request.body).to.eq(body);
+      expect(request.headers?.contentType()?.name).to.eq(
+        "application/octet-stream",
+      );
+    });
+
+    it("send array buffer body with custom content type", async () => {
+      const response = {} as HttpResponse;
+      let request!: HttpRequest;
+
+      const builder = new RequestBuilder(
+        async (arg: HttpRequest) => {
+          request = arg;
+          return response;
+        },
+        "put",
+        "/url",
+      );
+
+      const body = await new Blob(["some text"]).arrayBuffer();
+
+      expect(await builder.sendBody(body, "foo/bar")).to.eq(response);
+      expect(request.body).to.eq(body);
+      expect(request.headers?.contentType()?.name).to.eq("foo/bar");
+    });
+
+    it("send multipart form body", async () => {
+      const response = {} as HttpResponse;
+      let request!: HttpRequest;
+
+      const builder = new RequestBuilder(
+        async (arg: HttpRequest) => {
+          request = arg;
+          return response;
+        },
+        "post",
+        "/url",
+      );
+
+      const body = new FormData();
+
+      expect(await builder.sendForm(body)).to.eq(response);
+      expect(request.body).to.eq(body);
+      expect(request.headers?.contentType()?.name).to.eq("multipart/form-data");
+    });
+
+    it("send url-encoded form body", async () => {
+      const response = {} as HttpResponse;
+      let request!: HttpRequest;
+
+      const builder = new RequestBuilder(
+        async (arg: HttpRequest) => {
+          request = arg;
+          return response;
+        },
+        "post",
+        "/url",
+      );
+
+      const body = new URLSearchParams();
+
+      expect(await builder.sendForm(body)).to.eq(response);
+      expect(request.body).to.eq(body);
+      expect(request.headers?.contentType()?.name).to.eq(
+        "application/x-www-form-urlencoded",
+      );
+    });
+
+    it("send json body", async () => {
+      const response = {} as HttpResponse;
+      let request!: HttpRequest;
+
+      const builder = new RequestBuilder(
+        async (arg: HttpRequest) => {
+          request = arg;
+          return response;
+        },
+        "put",
+        "/url",
+      );
+
+      expect(await builder.sendJson({ type: "json" })).to.eq(response);
+      expect(request.body).to.eq('{"type":"json"}');
+      expect(request.headers?.contentType()?.name).to.eq("application/json");
+    });
+
+    it("send json body with custom content type", async () => {
+      const response = {} as HttpResponse;
+      let request!: HttpRequest;
+
+      const builder = new RequestBuilder(
+        async (arg: HttpRequest) => {
+          request = arg;
+          return response;
+        },
+        "put",
+        "/url",
+      );
+
+      expect(
+        await builder.sendJson({ type: "json" }, "application/foo+json"),
+      ).to.eq(response);
+      expect(request.body).to.eq('{"type":"json"}');
+      expect(request.headers?.contentType()?.name).to.eq(
+        "application/foo+json",
+      );
+    });
+  });
+}
+
+function makeAdapterTests(underTest: Adapter): void {
   describe(`Adapter [${underTest.name}]`, () => {
     beforeEach(() => {
       adapter(underTest);
