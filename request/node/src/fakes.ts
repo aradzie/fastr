@@ -3,7 +3,12 @@ import { Headers } from "@webfx-http/headers";
 import { isSuccess, statusCodes } from "@webfx-http/status";
 import type { IncomingHttpHeaders } from "http";
 import { Readable } from "stream";
-import type { Adapter, HttpRequest, HttpResponse } from "./types";
+import type {
+  Adapter,
+  HttpRequest,
+  HttpResponse,
+  NameValueEntries,
+} from "./types";
 
 export type BodyData = string | Buffer | Error;
 
@@ -11,7 +16,11 @@ export type ResponseInit = {
   readonly url?: string;
   readonly status?: number;
   readonly statusText?: string;
-  readonly headers?: Record<string, any>;
+  readonly headers?:
+    | Headers
+    | Map<string, unknown>
+    | Record<string, unknown>
+    | NameValueEntries;
   readonly bodyData?: BodyData;
 };
 

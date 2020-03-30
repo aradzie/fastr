@@ -1,12 +1,11 @@
 import type { Body } from "@webfx-http/body";
 import type { Headers, MimeType } from "@webfx-http/headers";
-import type { Readable } from "stream";
-import type { URL, URLSearchParams } from "url";
-import { Streamable } from "./body";
-import type { Json } from "./body";
-import type { RequestBuilder } from "./builder";
 import type { Agent as HttpAgent } from "http";
 import type { Agent as HttpsAgent } from "https";
+import type { Readable } from "stream";
+import type { URL, URLSearchParams } from "url";
+import type { Json, Streamable } from "./body";
+import type { RequestBuilder } from "./builder";
 
 /**
  * Adapter is a function which takes a request and returns a response promise.
@@ -155,6 +154,18 @@ export interface HttpResponse {
    * body and throw an error.
    */
   abort(): void;
+}
+
+export interface UploadProgressEvent {
+  readonly type: "upload";
+  readonly loaded: number;
+  readonly total: number | null;
+}
+
+export interface DownloadProgressEvent {
+  readonly type: "download";
+  readonly loaded: number;
+  readonly total: number | null;
 }
 
 export type NameValueEntries = readonly (readonly [string, unknown])[];

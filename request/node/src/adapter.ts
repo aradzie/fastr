@@ -5,7 +5,7 @@ import { IncomingMessage, RequestOptions } from "http";
 import { sendBody } from "./body/send";
 import { selectTransport } from "./transport";
 import type { HttpRequest, HttpResponse } from "./types";
-import { toURL } from "./util";
+import { toURL } from "./url";
 
 export async function requestAdapter(
   request: HttpRequest,
