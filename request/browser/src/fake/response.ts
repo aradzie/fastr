@@ -5,7 +5,7 @@ import type {
   BodyDataType,
   HttpRequest,
   HttpResponse,
-} from "@webfx/browser-request";
+} from "../types";
 
 // TODO Body type.
 

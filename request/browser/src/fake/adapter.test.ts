@@ -1,5 +1,5 @@
-import { request } from "@webfx/browser-request";
 import test from "ava";
+import { request } from "../request";
 import { fakeAdapter } from "./adapter";
 import { FakeHttpResponse } from "./response";
 

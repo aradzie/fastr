@@ -1,5 +1,5 @@
-import type { Adapter } from "@webfx/browser-request";
-import { adapter, HttpRequest, HttpResponse } from "@webfx/browser-request";
+import { adapter } from "../request";
+import type { Adapter, HttpRequest, HttpResponse } from "../types";
 import { FakeHttpResponse } from "./response";
 import type { FakeAdapter } from "./types";
 

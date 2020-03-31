@@ -1,3 +1,1 @@
-export type { FakeAdapter } from "./types";
-export { fakeAdapter } from "./adapter";
-export { FakeHttpResponse } from "./response";
+export * from "@webfx/browser-request/lib/fake";

@@ -1,4 +1,4 @@
-import type { Adapter, HttpRequest } from "@webfx/browser-request";
+import type { Adapter, HttpRequest } from "../types";
 
 export interface FakeAdapter extends Adapter {
   /**
