@@ -1,4 +1,5 @@
 import { Accept, Headers, MimeType, multiEntries } from "@webfx-http/headers";
+import { mergeSearchParams } from "@webfx/request-url";
 import { EventEmitter } from "events";
 import { URL, URLSearchParams } from "url";
 import { Json } from "./body";
@@ -6,15 +7,15 @@ import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "./events";
 import { compose } from "./middleware";
 import type {
   Adapter,
+  BodyDataType,
   DownloadProgressEvent,
   HttpRequest,
+  HttpRequestBody,
   HttpResponse,
   Middleware,
   NameValueEntries,
   UploadProgressEvent,
 } from "./types";
-import { BodyDataType, HttpRequestBody } from "./types";
-import { mergeSearchParams } from "./url";
 
 export class RequestBuilder {
   readonly adapter: Adapter;

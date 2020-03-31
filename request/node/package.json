@@ -18,6 +18,7 @@
     "@webfx-http/mimetype": "^0.0.2-alpha.0",
     "@webfx-http/status": "^0.0.2-alpha.0",
     "@webfx/request-error": "^0.0.2-alpha.0",
+    "@webfx/request-url": "^0.0.2-alpha.0",
     "tslib": "^1.11.1"
   },
   "scripts": {
