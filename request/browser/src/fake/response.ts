@@ -7,8 +7,6 @@ import type {
   HttpResponse,
 } from "../types";
 
-// TODO Body type.
-
 export interface ResponseInit {
   readonly url?: string;
   readonly status?: number;
@@ -18,10 +16,11 @@ export interface ResponseInit {
     | Map<string, string>
     | Record<string, string>
     | NameValueEntries;
-  readonly body?: Promise<BodyDataType> | null;
+  readonly body?: Promise<Blob> | null;
+  readonly onBodyResolve?: () => void;
 }
 
-export interface Tmp {
+export interface BodyMethodInit {
   readonly status?: number;
   readonly statusText?: string;
   readonly headers?:
@@ -29,6 +28,7 @@ export interface Tmp {
     | Map<string, string>
     | Record<string, string>
     | NameValueEntries;
+  readonly onBodyResolve?: () => void;
 }
 
 export class FakeHttpResponse implements HttpResponse {
@@ -49,10 +49,17 @@ export class FakeHttpResponse implements HttpResponse {
    * @param statusText HTTP response status text. If not provided will be
    *                   inferred from the code automatically.
    * @param headers HTTP headers to send with the response.
+   * @param onBodyResolve A callback which will be called after a resolved body
+   *                      promise is returned.
    */
-  static body(
-    body: BodyDataType,
-    { status = 200, statusText = statusTextOf(status), headers }: Tmp = {},
+  static withBody(
+    body: BodyDataType, // TODO or Promise<BodyDataType>
+    {
+      status = 200,
+      statusText = statusTextOf(status),
+      headers,
+      onBodyResolve,
+    }: BodyMethodInit = {},
   ): Adapter {
     const blob = toBlob(body);
     return ({ url }: HttpRequest): Promise<HttpResponse> =>
@@ -63,6 +70,7 @@ export class FakeHttpResponse implements HttpResponse {
           statusText,
           headers,
           body: Promise.resolve(blob),
+          onBodyResolve,
         }),
       );
   }
@@ -74,10 +82,17 @@ export class FakeHttpResponse implements HttpResponse {
    * @param statusText HTTP response status text. If not provided will be
    *                   inferred from the code automatically.
    * @param headers HTTP headers to send with the response.
+   * @param onBodyResolve A callback which will be called after a resolved body
+   *                      promise is returned.
    */
-  static jsonBody(
-    json: unknown,
-    { status = 200, statusText = statusTextOf(status), headers }: Tmp = {},
+  static withJsonBody(
+    json: unknown, // TODO or Promise<BodyDataType>
+    {
+      status = 200,
+      statusText = statusTextOf(status),
+      headers,
+      onBodyResolve,
+    }: BodyMethodInit = {},
   ): Adapter {
     const blob = toBlob(JSON.stringify(json), "application/json");
     return ({ url }: HttpRequest): Promise<HttpResponse> =>
@@ -88,6 +103,7 @@ export class FakeHttpResponse implements HttpResponse {
           statusText,
           headers,
           body: Promise.resolve(blob),
+          onBodyResolve,
         }),
       );
   }
@@ -99,12 +115,15 @@ export class FakeHttpResponse implements HttpResponse {
    * @param statusText HTTP response status text. If not provided will be
    *                   inferred from the code automatically.
    * @param headers HTTP headers to send with the response.
+   * @param onBodyResolve A callback which will be called after a resolved body
+   *                      promise is returned.
    */
-  static emptyBody({
+  static withEmptyBody({
     status = 204,
     statusText = statusTextOf(status),
     headers,
-  }: Tmp = {}): Adapter {
+    onBodyResolve,
+  }: BodyMethodInit = {}): Adapter {
     return ({ url }: HttpRequest): Promise<HttpResponse> =>
       Promise.resolve(
         new FakeHttpResponse({
@@ -113,6 +132,7 @@ export class FakeHttpResponse implements HttpResponse {
           statusText,
           headers,
           body: Promise.resolve(new Blob()),
+          onBodyResolve,
         }),
       );
   }
@@ -123,6 +143,7 @@ export class FakeHttpResponse implements HttpResponse {
   readonly statusText: string;
   readonly headers: Headers;
   readonly body: Promise<Blob>;
+  readonly onBodyResolve: () => void;
   bodyUsed = false;
   aborted = false;
 
@@ -132,18 +153,20 @@ export class FakeHttpResponse implements HttpResponse {
     statusText = statusTextOf(status),
     headers = Headers.from({}),
     body = null,
+    onBodyResolve = noop,
   }: ResponseInit) {
-    // TODO headers["Content-Type"] = String(contentType);
+    // TODO Set `Content-Type` header.
 
     this.url = url;
     this.ok = isSuccess(status);
     this.status = status;
     this.statusText = statusText;
     this.headers = Headers.from(headers);
-    this.body = Promise.resolve(new Blob(["todo update me"])); // TODO
+    this.body = body ?? Promise.resolve(new Blob());
+    this.onBodyResolve = onBodyResolve;
   }
 
-  async blob(): Promise<Blob> {
+  private _readBlob(): Promise<Blob> {
     if (this.aborted) {
       throw new DOMException("Request aborted", "AbortError");
     }
@@ -153,20 +176,28 @@ export class FakeHttpResponse implements HttpResponse {
     return this.body;
   }
 
+  async blob(): Promise<Blob> {
+    const result = await this._readBlob();
+    return resolveBody(result, this.onBodyResolve);
+  }
+
   async arrayBuffer(): Promise<ArrayBuffer> {
-    return (await this.blob()).arrayBuffer();
+    const result = (await this._readBlob()).arrayBuffer();
+    return resolveBody(result, this.onBodyResolve);
   }
 
   async text(): Promise<string> {
-    return (await this.blob()).text();
+    const result = (await this._readBlob()).text();
+    return resolveBody(result, this.onBodyResolve);
   }
 
-  formData(): Promise<FormData> {
+  async formData(): Promise<FormData> {
     throw new DOMException("NOT_SUPPORTED_ERR", "NotSupportedError");
   }
 
   async json<T = unknown>(): Promise<T> {
-    return JSON.parse(await (await this.blob()).text());
+    const result = JSON.parse(await (await this._readBlob()).text());
+    return resolveBody(result, this.onBodyResolve);
   }
 
   abort(): void {
@@ -175,9 +206,38 @@ export class FakeHttpResponse implements HttpResponse {
 }
 
 function toBlob(body: BodyDataType, contentType: string | null = null): Blob {
-  return new Blob(["body"], {
-    type: contentType ?? "application/octet-stream",
-  });
+  if (typeof body === "string") {
+    return new Blob([body], { type: contentType ?? "text/plain" });
+  }
+
+  if (body instanceof Blob) {
+    return body;
+  }
+
+  if (body instanceof ArrayBuffer || ArrayBuffer.isView(body)) {
+    new Blob([body], {
+      type: contentType ?? "application/octet-stream",
+    });
+  }
+
+  if (body instanceof FormData) {
+    throw new TypeError("FormData body is not supported");
+  }
+
+  if (body instanceof URLSearchParams) {
+    throw new TypeError("URLSearchParams body is not supported");
+  }
+
+  throw new TypeError("Unsupported body type");
+}
+
+function resolveBody<T>(result: T, callback: () => void): T {
+  setTimeout(callback);
+  return result;
+}
+
+function noop(): void {
+  //
 }
 
 function statusTextOf(statusCode: number): string {
