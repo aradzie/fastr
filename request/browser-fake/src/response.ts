@@ -1,161 +1,120 @@
-import { ApplicationError, ErrorBody } from "@webfx-http/error";
 import { Headers } from "@webfx-http/headers";
-import { statusCodes } from "@webfx-http/status";
-import { HttpResponse } from "@webfx/browser-request";
+import { isSuccess, statusCodes } from "@webfx-http/status";
+import type {
+  Adapter,
+  BodyDataType,
+  HttpRequest,
+  HttpResponse,
+} from "@webfx/browser-request";
 
-export interface Template {
+// TODO Body type.
+
+export interface ResponseInit {
   readonly url?: string;
   readonly status?: number;
   readonly statusText?: string;
-  readonly headers?: Headers | Record<string, string>;
+  readonly headers?:
+    | Headers
+    | Map<string, string>
+    | Record<string, string>
+    | NameValueEntries;
+  readonly body?: Promise<BodyDataType> | null;
+}
+
+export interface Tmp {
+  readonly status?: number;
+  readonly statusText?: string;
+  readonly headers?:
+    | Headers
+    | Map<string, string>
+    | Record<string, string>
+    | NameValueEntries;
 }
 
 export class FakeHttpResponse implements HttpResponse {
   /**
-   * Creates and returns a new empty response.
+   * Returns an adapter which, when called, will throw the given error.
+   * @param error An error to throw.
    */
-  static empty(headers?: Headers | Record<string, string>): FakeHttpResponse {
-    return new FakeHttpResponse(
-      {
-        status: 204,
-        statusText: "No Content",
-        url: "http://localhost/",
-        headers: headers ?? {},
-      },
-      Promise.resolve(new Blob()),
-    );
+  static throwError(error: Error): Adapter {
+    return async () => {
+      throw error;
+    };
   }
 
   /**
-   * Creates and returns a new error response.
-   *
-   * @param message Error message.
-   * @param url URL of the response.
-   * @param status HTTP status code.
-   * @param statusText HTTP status text.
-   * @param headers HTTP headers.
+   * Returns an adapter which, when called, will return the given body.
+   * @param body A body to return in the HTTP response.
+   * @param status HTTP response status code. The default is 200 `OK`.
+   * @param statusText HTTP response status text. If not provided will be
+   *                   inferred from the code automatically.
+   * @param headers HTTP headers to send with the response.
    */
-  static error(
-    message: string,
-    {
-      status = 400,
-      statusText = statusTextOf(status),
-      url = "http://localhost/",
-      headers = {},
-    }: Template = {},
-  ): HttpResponse {
-    const body: ErrorBody = { error: { message } };
-    const blob = new Blob([JSON.stringify(body)], {
-      type: String(ApplicationError.MIME_TYPE),
-    });
-    return new FakeHttpResponse(
-      {
-        url,
-        status,
-        statusText,
-        headers,
-      },
-      Promise.resolve(blob),
-    );
+  static body(
+    body: BodyDataType,
+    { status = 200, statusText = statusTextOf(status), headers }: Tmp = {},
+  ): Adapter {
+    const blob = toBlob(body);
+    return ({ url }: HttpRequest): Promise<HttpResponse> =>
+      Promise.resolve(
+        new FakeHttpResponse({
+          url,
+          status,
+          statusText,
+          headers,
+          body: Promise.resolve(blob),
+        }),
+      );
   }
 
   /**
-   * Creates and returns a new binary response.
-   *
-   * @param arrayBuffer The buffer to provide in the response.
-   * @param url URL of the response.
-   * @param status HTTP status code.
-   * @param statusText HTTP status text.
-   * @param headers HTTP headers.
-   * @param contentType HTTP content type.
+   * Returns an adapter which, when called, will return the given JSON body.
+   * @param json A JSON body to return in the HTTP response.
+   * @param status HTTP response status code. The default is 200 `OK`.
+   * @param statusText HTTP response status text. If not provided will be
+   *                   inferred from the code automatically.
+   * @param headers HTTP headers to send with the response.
    */
-  static binary(
-    arrayBuffer: ArrayBufferLike | ArrayBufferView,
-    {
-      status = 200,
-      statusText = statusTextOf(status),
-      url = "http://localhost/",
-      headers = {},
-    }: Template = {},
-  ): HttpResponse {
-    const blob = new Blob([arrayBuffer], {
-      type: String("application/octet-stream"), // TODO
-    });
-    return new FakeHttpResponse(
-      {
-        url,
-        status,
-        statusText,
-        headers,
-      },
-      Promise.resolve(blob),
-    );
+  static jsonBody(
+    json: unknown,
+    { status = 200, statusText = statusTextOf(status), headers }: Tmp = {},
+  ): Adapter {
+    const blob = toBlob(JSON.stringify(json), "application/json");
+    return ({ url }: HttpRequest): Promise<HttpResponse> =>
+      Promise.resolve(
+        new FakeHttpResponse({
+          url,
+          status,
+          statusText,
+          headers,
+          body: Promise.resolve(blob),
+        }),
+      );
   }
 
   /**
-   * Creates and returns a new text response.
-   *
-   * @param text The text String to provide in the response.
-   * @param url URL of the response.
-   * @param status HTTP status code.
-   * @param statusText HTTP status text.
-   * @param headers HTTP headers.
-   * @param contentType HTTP content type.
+   * Returns an adapter which, when called, will return a HTTP response with
+   * empty body.
+   * @param status HTTP response status code. The default is 204 `No Content`.
+   * @param statusText HTTP response status text. If not provided will be
+   *                   inferred from the code automatically.
+   * @param headers HTTP headers to send with the response.
    */
-  static text(
-    text: string,
-    {
-      status = 200,
-      statusText = statusTextOf(status),
-      url = "http://localhost/",
-      headers = {},
-    }: Template = {},
-  ): HttpResponse {
-    const blob = new Blob([text], {
-      type: String("application/octet-stream"), // TODO
-    });
-    return new FakeHttpResponse(
-      {
-        status,
-        statusText,
-        url,
-        headers,
-      },
-      Promise.resolve(blob),
-    );
-  }
-
-  /**
-   * Creates and returns a new JSON response.
-   *
-   * @param json The JSON object to provide in the response.
-   * @param url URL of the response.
-   * @param status HTTP status code.
-   * @param statusText HTTP status text.
-   * @param headers HTTP headers.
-   * @param contentType HTTP content type.
-   */
-  static json(
-    json: any,
-    {
-      status = 200,
-      statusText = statusTextOf(status),
-      url = "http://localhost/",
-      headers = {},
-    }: Template = {},
-  ): HttpResponse {
-    const blob = new Blob([JSON.stringify(json)], {
-      type: String("application/octet-stream"), // TODO
-    });
-    return new FakeHttpResponse(
-      {
-        status,
-        statusText,
-        url,
-        headers,
-      },
-      Promise.resolve(blob),
-    );
+  static emptyBody({
+    status = 204,
+    statusText = statusTextOf(status),
+    headers,
+  }: Tmp = {}): Adapter {
+    return ({ url }: HttpRequest): Promise<HttpResponse> =>
+      Promise.resolve(
+        new FakeHttpResponse({
+          url,
+          status,
+          statusText,
+          headers,
+          body: Promise.resolve(new Blob()),
+        }),
+      );
   }
 
   readonly url: string;
@@ -163,70 +122,66 @@ export class FakeHttpResponse implements HttpResponse {
   readonly status: number;
   readonly statusText: string;
   readonly headers: Headers;
-  readonly body: Promise<any>;
+  readonly body: Promise<Blob>;
+  bodyUsed = false;
+  aborted = false;
 
-  constructor(
-    {
-      status,
-      statusText,
-      url,
-      headers,
-    }: {
-      status: number;
-      statusText: string;
-      url: string;
-      headers: Headers | Record<string, string | readonly string[]>;
-    },
-    body: Promise<any>,
-  ) {
-    // headers["Content-Type"] = String(contentType);
+  constructor({
+    url = "http://fake/",
+    status = 200,
+    statusText = statusTextOf(status),
+    headers = Headers.from({}),
+    body = null,
+  }: ResponseInit) {
+    // TODO headers["Content-Type"] = String(contentType);
 
-    this.ok = true;
+    this.url = url;
+    this.ok = isSuccess(status);
     this.status = status;
     this.statusText = statusText;
-    this.url = url;
-    this.headers = convertHeaders(headers);
-    this.body = body;
+    this.headers = Headers.from(headers);
+    this.body = Promise.resolve(new Blob(["todo update me"])); // TODO
   }
 
-  blob(): Promise<Blob> {
+  async blob(): Promise<Blob> {
+    if (this.aborted) {
+      throw new DOMException("Request aborted", "AbortError");
+    }
+    if (this.bodyUsed) {
+      throw new TypeError("Body has already been consumed.");
+    }
     return this.body;
   }
 
-  arrayBuffer(): Promise<ArrayBuffer> {
-    return this.body;
+  async arrayBuffer(): Promise<ArrayBuffer> {
+    return (await this.blob()).arrayBuffer();
   }
 
-  text(): Promise<string> {
-    return this.body;
+  async text(): Promise<string> {
+    return (await this.blob()).text();
   }
 
   formData(): Promise<FormData> {
-    throw new Error("Method not implemented."); // TODO Implement.
+    throw new DOMException("NOT_SUPPORTED_ERR", "NotSupportedError");
   }
 
-  json<T = unknown>(reviver?: (key: any, value: any) => any): Promise<T> {
-    return this.body;
+  async json<T = unknown>(): Promise<T> {
+    return JSON.parse(await (await this.blob()).text());
   }
 
   abort(): void {
-    //
+    this.aborted = true;
   }
+}
+
+function toBlob(body: BodyDataType, contentType: string | null = null): Blob {
+  return new Blob(["body"], {
+    type: contentType ?? "application/octet-stream",
+  });
 }
 
 function statusTextOf(statusCode: number): string {
   return statusCodes[statusCode] ?? "Unknown";
 }
 
-function convertHeaders(
-  headers: Headers | Record<string, string | readonly string[]>,
-): Headers {
-  if (headers instanceof Headers) {
-    return headers;
-  }
-  const builder = Headers.builder();
-  for (const [name, value] of Object.entries(headers)) {
-    builder.set(name, value);
-  }
-  return builder.build();
-}
+declare type NameValueEntries = readonly (readonly [string, unknown])[];

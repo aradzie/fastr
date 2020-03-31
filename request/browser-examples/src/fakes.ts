@@ -1,32 +1,19 @@
 import { request } from "@webfx/browser-request";
-import { FakeHttpResponse, fakeRequest } from "@webfx/browser-request-fake";
+import { fakeAdapter, FakeHttpResponse } from "@webfx/browser-request-fake";
 
 // Install fake responses.
 
-fakeRequest("GET", "http://localhost/expect-get", FakeHttpResponse.empty());
-fakeRequest("POST", "http://localhost/expect-post", FakeHttpResponse.empty());
-fakeRequest("GET", /expect-get\/*./, FakeHttpResponse.empty());
-fakeRequest("POST", /expect-post\/*./, FakeHttpResponse.empty());
-fakeRequest(
+fakeAdapter.addResponse(
   "GET",
   "http://localhost/get-text",
-  FakeHttpResponse.text("text response", {
-    status: 200,
-    statusText: "OK",
-    headers: { "X-Foo": "bar" },
+  FakeHttpResponse.body("text response", {
+    headers: { "Content-Type": "text/plain" },
   }),
 );
-fakeRequest(
+fakeAdapter.addResponse(
   "GET",
   "http://localhost/get-json",
-  FakeHttpResponse.json(
-    { type: "json response" },
-    {
-      status: 200,
-      statusText: "OK",
-      headers: { "X-Foo": "bar" },
-    },
-  ),
+  FakeHttpResponse.jsonBody({ type: "json response" }),
 );
 
 // Make requests.
