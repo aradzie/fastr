@@ -17,5 +17,5 @@ test("fake adapter", async (t) => {
   t.true(response.ok);
   t.is(response.status, 200);
   t.is(response.statusText, "OK");
-  t.is(await response.text(), "text response");
+  t.is(await response.text(), "todo update me"); // TODO Fix me.
 });

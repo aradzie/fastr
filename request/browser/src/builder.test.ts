@@ -1,10 +1,7 @@
 import { Headers } from "@webfx-http/headers";
 import test from "ava";
-import { polyfillBlobApi } from "./adapter/polyfills";
 import { RequestBuilder } from "./builder";
 import { Adapter, HttpRequest, HttpResponse } from "./types";
-
-polyfillBlobApi(); // As it turns out jsdom still needs these polyfills.
 
 test("build url query string", async (t) => {
   // Arrange.

@@ -2,11 +2,14 @@ import { Headers as HttpHeaders, MimeType } from "@webfx-http/headers";
 import { isSuccess } from "@webfx-http/status";
 import { EventEmitter } from "events";
 import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "../events";
-import type { HttpRequest, HttpResponse, UploadProgressEvent } from "../types";
-import { DownloadProgressEvent } from "../types";
-import { polyfillBlobApi } from "./polyfills";
+import type {
+  DownloadProgressEvent,
+  HttpRequest,
+  HttpResponse,
+  UploadProgressEvent,
+} from "../types";
 
-polyfillBlobApi();
+import "./polyfills"; // Automatically install the necessary polyfills.
 
 /**
  * An adapter which is implemented using the XMLHttpRequest API.

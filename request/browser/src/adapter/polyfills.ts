@@ -1,5 +1,8 @@
-// See https://developer.mozilla.org/en-US/docs/Web/API/Blob
-export function polyfillBlobApi(): void {
+export const dummy = null; // Fix compilation error.
+
+polyfillBlob(); // Some day we will get rid of this.
+
+function polyfillBlob(): void {
   // See https://developer.mozilla.org/en-US/docs/Web/API/Blob/arrayBuffer
   define(Blob.prototype, "arrayBuffer", arrayBuffer);
   // See https://developer.mozilla.org/en-US/docs/Web/API/Blob/text
