@@ -1,6 +1,6 @@
 {
   "name": "@webfx-http/body",
-  "version": "0.0.2-alpha.2",
+  "version": "0.0.2-alpha.3",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "homepage": "https://github.com/aradzie/webfx#readme",
   "repository": "aradzie/webfx",
@@ -13,9 +13,9 @@
   },
   "dependencies": {
     "@types/qs": "^6.9.1",
-    "@webfx-http/error": "^0.0.2-alpha.2",
-    "@webfx-http/headers": "^0.0.2-alpha.2",
-    "@webfx-http/mimetype": "^0.0.2-alpha.2",
+    "@webfx-http/error": "^0.0.2-alpha.3",
+    "@webfx-http/headers": "^0.0.2-alpha.3",
+    "@webfx-http/mimetype": "^0.0.2-alpha.3",
     "qs": "^6.9.1",
     "reflect-metadata": "^0.1.13",
     "tslib": "^1.11.1"
