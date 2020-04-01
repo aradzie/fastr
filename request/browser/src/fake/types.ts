@@ -1,5 +1,9 @@
 import type { Adapter, HttpRequest } from "../types";
 
+/**
+ * The fake adapter extends the base interface with additional method for adding
+ * fake routes and building fake responses.
+ */
 export interface FakeAdapter extends Adapter {
   on: RouteBuilder;
 
@@ -7,6 +11,9 @@ export interface FakeAdapter extends Adapter {
    * Provides low-level access to the fake adapter. All routes are tested in the
    * order they were added. The first route matching a request will be called to
    * generate a response.
+   * @param matcher A matcher to test a request.
+   * @param adapter An adapter to call to generate response
+   *                if the matcher matched.
    */
   addRoute(matcher: RequestMatcher, adapter: Adapter): FakeAdapter;
 

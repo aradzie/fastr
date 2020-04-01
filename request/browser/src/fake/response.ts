@@ -215,7 +215,7 @@ function toBlob(body: BodyDataType, contentType: string | null = null): Blob {
   }
 
   if (body instanceof ArrayBuffer || ArrayBuffer.isView(body)) {
-    new Blob([body], {
+    return new Blob([body], {
       type: contentType ?? "application/octet-stream",
     });
   }

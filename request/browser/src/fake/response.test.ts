@@ -32,3 +32,35 @@ test("text body", async (t) => {
   t.deepEqual(response.headers.toJSON(), { foo: "bar" });
   t.is(await response.text(), "something");
 });
+
+test("ArrayBuffer body", async (t) => {
+  const body = await new Blob(["something"]).arrayBuffer();
+  const adapter = FakeHttpResponse.withBody(body, {
+    status: 201,
+    headers: Headers.from({ foo: "bar" }),
+  });
+
+  const response = await adapter({} as HttpRequest);
+
+  t.true(response.ok);
+  t.is(response.status, 201);
+  t.is(response.statusText, "Created");
+  t.deepEqual(response.headers.toJSON(), { foo: "bar" });
+  t.is(await response.text(), "something");
+});
+
+test("ArrayBufferView body", async (t) => {
+  const body = new Uint8Array(await new Blob(["something"]).arrayBuffer());
+  const adapter = FakeHttpResponse.withBody(body, {
+    status: 201,
+    headers: Headers.from({ foo: "bar" }),
+  });
+
+  const response = await adapter({} as HttpRequest);
+
+  t.true(response.ok);
+  t.is(response.status, 201);
+  t.is(response.statusText, "Created");
+  t.deepEqual(response.headers.toJSON(), { foo: "bar" });
+  t.is(await response.text(), "something");
+});
