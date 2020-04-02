@@ -1,4 +1,6 @@
-import type { Adapter, HttpRequest } from "../types";
+import type { Adapter, BodyDataType, HttpRequest } from "../types";
+import type { Recorder } from "./recorder";
+import type { BodyMethodInit } from "./response";
 
 /**
  * The fake adapter extends the base interface with additional method for adding
@@ -64,7 +66,15 @@ export interface RouteBuilder {
 
 export interface ReplyBuilder {
   /** Invokes the given adapter to generate response. */
-  reply(adapter: Adapter): FakeAdapter;
+  reply(adapter: Adapter, recorder?: Recorder): FakeAdapter;
+  /** Creates an adapter which replies with the given body. */
+  replyWith(
+    body: BodyDataType,
+    init?: BodyMethodInit,
+    recorder?: Recorder,
+  ): FakeAdapter;
+  /** Creates an adapter which throws the given error. */
+  throwError(error: Error, recorder?: Recorder): FakeAdapter;
 }
 
 export interface RequestMatcher {

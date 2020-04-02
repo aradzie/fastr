@@ -1,6 +1,5 @@
 import { Headers } from "@webfx-http/headers";
 import test from "ava";
-import type { HttpRequest } from "../types";
 import { FakeHttpResponse } from "./response";
 
 test("throw error", async (t) => {
@@ -10,7 +9,7 @@ test("throw error", async (t) => {
 
   await t.throwsAsync(
     async () => {
-      await adapter({} as HttpRequest);
+      await adapter({ method: "GET", url: "/" });
     },
     {
       is: error,
@@ -24,7 +23,7 @@ test("text body", async (t) => {
     headers: Headers.from({ foo: "bar" }),
   });
 
-  const response = await adapter({} as HttpRequest);
+  const response = await adapter({ method: "GET", url: "/" });
 
   t.true(response.ok);
   t.is(response.status, 201);
@@ -40,7 +39,7 @@ test("ArrayBuffer body", async (t) => {
     headers: Headers.from({ foo: "bar" }),
   });
 
-  const response = await adapter({} as HttpRequest);
+  const response = await adapter({ method: "GET", url: "/" });
 
   t.true(response.ok);
   t.is(response.status, 201);
@@ -56,7 +55,7 @@ test("ArrayBufferView body", async (t) => {
     headers: Headers.from({ foo: "bar" }),
   });
 
-  const response = await adapter({} as HttpRequest);
+  const response = await adapter({ method: "GET", url: "/" });
 
   t.true(response.ok);
   t.is(response.status, 201);

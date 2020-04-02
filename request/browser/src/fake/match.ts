@@ -44,3 +44,14 @@ export function match(method: string, url: string | RegExp): RequestMatcher {
 
   return matcher;
 }
+
+/**
+ * Returns a new matcher which only succeeds if all the specified matchers
+ * also succeed.
+ */
+match.all = (...matchers: readonly RequestMatcher[]): RequestMatcher => {
+  const all = [...matchers];
+  return (request: HttpRequest): boolean => {
+    return all.every((m) => m(request));
+  };
+};

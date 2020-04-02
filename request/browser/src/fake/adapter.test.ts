@@ -1,7 +1,6 @@
 import test from "ava";
 import { request } from "../request";
 import { fakeAdapter } from "./adapter";
-import { FakeHttpResponse } from "./response";
 
 test.beforeEach(() => {
   fakeAdapter.reset();
@@ -14,10 +13,10 @@ test.afterEach(() => {
 test("fake adapter", async (t) => {
   // Arrange.
 
-  fakeAdapter.on.get("/url1").reply(FakeHttpResponse.withBody("GET /url1"));
-  fakeAdapter.on.get("/url2").reply(FakeHttpResponse.withBody("GET /url2"));
-  fakeAdapter.on.post("/url1").reply(FakeHttpResponse.withBody("POST /url1"));
-  fakeAdapter.on.post("/url2").reply(FakeHttpResponse.withBody("POST /url2"));
+  fakeAdapter.on.get("/url1").replyWith("GET /url1");
+  fakeAdapter.on.get("/url2").replyWith("GET /url2");
+  fakeAdapter.on.post("/url1").replyWith("POST /url1");
+  fakeAdapter.on.post("/url2").replyWith("POST /url2");
 
   {
     // Act.

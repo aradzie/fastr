@@ -1,10 +1,17 @@
 import { adapter } from "../request";
-import type { Adapter, HttpRequest, HttpResponse } from "../types";
+import type {
+  Adapter,
+  BodyDataType,
+  HttpRequest,
+  HttpResponse,
+} from "../types";
 import { match } from "./match";
-import { FakeHttpResponse } from "./response";
+import { Recorder } from "./recorder";
+import { BodyMethodInit, FakeHttpResponse } from "./response";
 import type { FakeAdapter, ReplyBuilder, RequestMatcher } from "./types";
 
 // TODO Better request filter.
+// TODO Intercept requests to assert request parameters.
 // TODO Record sent requests.
 // TODO Multiple responses.
 // TODO Resolved handle.
@@ -36,9 +43,24 @@ fakeAdapter.addRoute = addRoute;
 fakeAdapter.reset = reset;
 
 function on(method: string, url: string | RegExp): ReplyBuilder {
-  return new (class implements ReplyBuilder {
-    reply(adapter: Adapter): FakeAdapter {
+  return new (class ReplyBuilderImpl implements ReplyBuilder {
+    reply(adapter: Adapter, recorder?: Recorder): FakeAdapter {
+      if (recorder != null) {
+        adapter = recorder.record(adapter);
+      }
       fakeAdapter.addRoute(match(method, url), adapter);
+      return fakeAdapter;
+    }
+    replyWith(
+      body: BodyDataType,
+      init?: BodyMethodInit,
+      recorder?: Recorder,
+    ): FakeAdapter {
+      this.reply(FakeHttpResponse.withBody(body, init), recorder);
+      return fakeAdapter;
+    }
+    throwError(error: Error, recorder?: Recorder): FakeAdapter {
+      this.reply(FakeHttpResponse.throwError(error), recorder);
       return fakeAdapter;
     }
   })();
