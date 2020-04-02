@@ -15,11 +15,11 @@ test("detect middleware class and object", (t) => {
 
   t.false(isMiddlewareClass({}));
   t.false(isMiddlewareClass(() => {}));
-  t.false(isMiddlewareClass(function() {}));
+  t.false(isMiddlewareClass(function () {}));
   t.false(isMiddlewareClass(class Foo {}));
 
   t.true(isMiddlewareObject(new Middleware1()));
   t.false(isMiddlewareObject(() => {}));
-  t.false(isMiddlewareObject(function() {}));
+  t.false(isMiddlewareObject(function () {}));
   t.false(isMiddlewareObject(new (class Foo {})()));
 });

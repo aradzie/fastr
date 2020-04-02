@@ -1,5 +1,7 @@
 *.snap
-lib
-lib-cjs
-lib-esm
-tmp
+build/
+out/
+lib/
+lib-cjs/
+lib-esm/
+tmp/

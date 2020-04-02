@@ -1,14 +1,12 @@
 # Compiled output
+build/
+out/
 lib/
 lib-cjs/
 lib-esm/
 
 # Other
 node_modules/
-vendor/
-target/
-build/
-out/
 tmp/
 sandbox/
 backup/

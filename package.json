@@ -10,9 +10,9 @@
     "postinstall": "lerna bootstrap",
     "compile": "lerna run compile",
     "test": "lerna run test",
-    "lint": "eslint packages --ext .ts",
-    "lint-fix": "eslint packages --ext .ts --fix",
-    "format": "prettier --write 'packages/*/src/**/*.ts'"
+    "lint": "eslint . --ext .ts",
+    "lint-fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write '**/*.ts'"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
@@ -29,6 +29,7 @@
     "eslint-import-resolver-typescript": "^2.0.0",
     "eslint-plugin-ava": "^10.2.0",
     "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-node": "^11.1.0",
     "lerna": "^3.20.2",
     "mockdate": "^2.0.5",
     "prettier": "^2.0.2",
