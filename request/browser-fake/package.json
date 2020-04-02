@@ -1,6 +1,6 @@
 {
   "name": "@webfx/browser-request-fake",
-  "version": "0.0.2-alpha.3",
+  "version": "0.0.2-alpha.4",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "homepage": "https://github.com/aradzie/webfx#readme",
   "repository": "aradzie/webfx",
@@ -12,7 +12,7 @@
     "node": ">=12"
   },
   "dependencies": {
-    "@webfx/browser-request": "^0.0.2-alpha.3",
+    "@webfx/browser-request": "^0.0.2-alpha.4",
     "tslib": "^1.11.1"
   },
   "scripts": {
