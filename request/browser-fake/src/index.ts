@@ -1,1 +1,1 @@
-export * from "@webfx/browser-request/lib/fake";
+export * from "@webfx-request/browser/lib/fake";

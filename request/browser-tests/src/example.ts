@@ -3,7 +3,7 @@ import {
   expectType,
   request,
   UploadProgressEvent,
-} from "@webfx/browser-request";
+} from "@webfx-request/browser";
 
 run().catch((err) => {
   console.error(err);

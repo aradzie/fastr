@@ -4,7 +4,7 @@ import {
   fetchAdapter,
   request,
   xhrAdapter,
-} from "@webfx/browser-request";
+} from "@webfx-request/browser";
 import { expect } from "chai";
 import { formDataEntries, parseFormData } from "./util";
 
