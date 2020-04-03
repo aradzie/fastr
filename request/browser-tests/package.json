@@ -8,7 +8,7 @@
   "license": "MIT",
   "main": "lib/index.js",
   "engines": {
-    "node": ">=12"
+    "node": ">=12.16"
   },
   "dependencies": {
     "@types/chai": "^4.2.11",
