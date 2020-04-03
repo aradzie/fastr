@@ -29,4 +29,4 @@ export {
   RequestNetworkError,
   RequestRedirectError,
   RequestTimeoutError,
-} from "@webfx/request-error";
+} from "@webfx-request/error";

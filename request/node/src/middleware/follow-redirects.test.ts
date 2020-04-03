@@ -1,4 +1,4 @@
-import { RequestRedirectError } from "@webfx/request-error";
+import { RequestRedirectError } from "@webfx-request/error";
 import test from "ava";
 import {
   fakeNotFoundResponse,
