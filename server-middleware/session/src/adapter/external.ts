@@ -13,13 +13,13 @@ export class External extends Adapter<string> {
   constructor(cookies: Cookies, options: ParsedOptions) {
     super(cookies, options);
     const { store } = options;
-    if (store == "cookie") {
+    if (store === "cookie") {
       throw new TypeError();
     }
     this.store = store;
   }
 
-  async load() {
+  async load(): Promise<void> {
     const id = this.getCookie();
     if (id == null) {
       return;
@@ -39,7 +39,7 @@ export class External extends Adapter<string> {
     this.init(id, expires, data);
   }
 
-  async commit() {
+  async commit(): Promise<void> {
     const { oldId, id, oldExpires, expires, changed } = this;
     if (id == null) {
       if (oldId != null) {
@@ -47,10 +47,10 @@ export class External extends Adapter<string> {
         await this.store.destroy(oldId);
       }
     } else {
-      if (oldId != null && oldId != id) {
+      if (oldId != null && oldId !== id) {
         await this.store.destroy(oldId);
       }
-      if (oldId != id || oldExpires != expires || changed) {
+      if (oldId !== id || oldExpires !== expires || changed) {
         const data = Object.fromEntries(this.data);
         this.setCookie(id, expires);
         await this.store.store(id, { expires, data });
@@ -58,11 +58,11 @@ export class External extends Adapter<string> {
     }
   }
 
-  protected parseCookie(val: string) {
+  protected parseCookie(val: string): string | null {
     return val.match(/^[a-zA-Z0-9]+$/) ? val : null;
   }
 
-  protected stringifyCookie(data: string) {
+  protected stringifyCookie(data: string): string {
     return data;
   }
 }

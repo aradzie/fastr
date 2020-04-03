@@ -32,21 +32,21 @@ export class MimeDb {
   /**
    * Add known JSON mime type. Wildcards subtypes are supported, e.g. "text/*".
    */
-  static addJsonType(mimeType: string) {
+  static addJsonType(mimeType: string): void {
     jsonTypes.add(mimeType);
   }
 
   /**
    * Add known text mime type. Wildcards subtypes are supported, e.g. "text/*".
    */
-  static addTextType(mimeType: string) {
+  static addTextType(mimeType: string): void {
     textTypes.add(mimeType);
   }
 
   /**
    * Add known binary mime type. Wildcards subtypes are supported, e.g. "image/*".
    */
-  static addBinaryType(mimeType: string) {
+  static addBinaryType(mimeType: string): void {
     binaryTypes.add(mimeType);
   }
 }

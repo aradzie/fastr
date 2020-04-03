@@ -49,7 +49,10 @@ module.exports = {
     {
       files: ["*.test.ts"],
       rules: {
-        "node/no-extraneous-import": ["error", { allowModules: ["ava"] }],
+        "node/no-extraneous-import": [
+          "error",
+          { allowModules: ["ava", "mockdate"] },
+        ],
         "ava/no-ignored-test-files": "off",
       },
     },

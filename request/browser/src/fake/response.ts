@@ -37,7 +37,7 @@ export class FakeHttpResponse implements HttpResponse {
    * @param error An error to throw.
    */
   static throwError(error: Error): Adapter {
-    return async () => {
+    return async (): Promise<HttpResponse> => {
       throw error;
     };
   }

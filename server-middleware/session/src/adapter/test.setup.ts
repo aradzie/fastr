@@ -38,7 +38,7 @@ export class Setup {
     });
   }
 
-  handle(session: Session<SessionTypes>) {
+  handle(session: Session<SessionTypes>): void {
     session.set("count", (session.get("count") ?? 0) + 1);
   }
 }

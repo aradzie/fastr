@@ -8,7 +8,7 @@ export function parse(path: string): Segment[] {
     throw new Error("Path does not start with the slash character");
   }
 
-  if (path == "/") {
+  if (path === "/") {
     return [
       {
         type: "literal",
@@ -33,7 +33,7 @@ export function parse(path: string): Segment[] {
       continue;
     }
     if (eat(123 /* "{" */)) {
-      let s = pos;
+      const s = pos;
       while (pos < path.length) {
         if (eat(125 /* "}" */)) {
           const [name, p] = parseParam(path.substring(s, pos - 1));
@@ -58,7 +58,7 @@ export function parse(path: string): Segment[] {
 
   return segments;
 
-  function push(literal: string) {
+  function push(literal: string): void {
     if (names.length > 0) {
       segments.push({
         type: "pattern",
@@ -80,7 +80,7 @@ export function parse(path: string): Segment[] {
 
   function eat(expected: number): boolean {
     const ch = path.charCodeAt(pos);
-    if (ch == expected) {
+    if (ch === expected) {
       pos++;
       return true;
     } else {
@@ -91,7 +91,7 @@ export function parse(path: string): Segment[] {
 
 function parseParam(param: string): [string, string] {
   const i = param.indexOf(":");
-  if (i != -1) {
+  if (i !== -1) {
     const name = param.substring(0, i);
     const pattern = param.substring(i + 1);
     return [name, pattern];
@@ -100,7 +100,7 @@ function parseParam(param: string): [string, string] {
   }
 }
 
-function escapePattern(ch: string) {
+function escapePattern(ch: string): string {
   switch (ch) {
     case ".":
     case "*":

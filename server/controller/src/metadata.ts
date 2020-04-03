@@ -43,7 +43,7 @@ const kParameter = newMetadataKey<ParameterMetadata[]>(
 export function addControllerUse(
   target: Function,
   ...middleware: MiddlewareId[]
-) {
+): void {
   Metadata.forClass(target).update(kUseMiddleware, (list = []) => {
     list.unshift(...middleware);
     return list;
@@ -58,7 +58,7 @@ export function addHandlerUse(
   target: object,
   propertyKey: string | symbol,
   ...middleware: MiddlewareId[]
-) {
+): void {
   Metadata.forProperty(target, propertyKey).update(
     kUseMiddleware,
     (list = []) => {
@@ -78,7 +78,7 @@ export function getHandlerUse(
 export function setControllerMetadata(
   target: Function,
   metadata: ControllerMetadata,
-) {
+): void {
   Metadata.forClass(target).set(kController, metadata);
 }
 
@@ -92,7 +92,7 @@ export function setHandlerMetadata(
   target: object,
   propertyKey: string | symbol,
   metadata: HandlerMetadata,
-) {
+): void {
   Metadata.forProperty(target, propertyKey).set(kHandler, metadata);
 }
 
@@ -107,7 +107,7 @@ export function setParameterMetadata(
   target: object,
   propertyKey: string | symbol,
   metadata: ParameterMetadata,
-) {
+): void {
   Metadata.forProperty(target, propertyKey).update(kParameter, (list = []) => {
     list[metadata.parameterIndex] = metadata;
     return list;

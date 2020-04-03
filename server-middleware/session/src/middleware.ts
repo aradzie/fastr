@@ -10,7 +10,10 @@ export function session(app: Koa, options: Options): Koa.Middleware {
 }
 
 function sessionImpl(app: Koa, options: ParsedOptions): Koa.Middleware {
-  const session = async (ctx: Koa.ExtendableContext, next: Koa.Next) => {
+  const session = async (
+    ctx: Koa.ExtendableContext,
+    next: Koa.Next,
+  ): Promise<void> => {
     const adapter = makeAdapter(ctx);
     await adapter.load();
     if (options.autoStart) {
@@ -26,7 +29,7 @@ function sessionImpl(app: Koa, options: ParsedOptions): Koa.Middleware {
   return session;
 
   function makeAdapter({ cookies }: Koa.ExtendableContext): Adapter {
-    if (options.store == "cookie") {
+    if (options.store === "cookie") {
       return new Cookie(cookies, options);
     } else {
       return new External(cookies, options);

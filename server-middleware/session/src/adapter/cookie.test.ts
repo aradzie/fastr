@@ -2,7 +2,7 @@ import test from "ava";
 import MockDate from "mockdate";
 import { Setup } from "./test.setup";
 
-test.beforeEach((t) => {
+test.beforeEach(() => {
   MockDate.set(new Date("2001-01-01T00:00:00Z"));
 });
 
@@ -22,7 +22,7 @@ test.serial("manually start session", async (t) => {
 
   // Act.
 
-  setup.handle = (session) => {
+  setup.handle = (session): void => {
     session.start();
   };
   const response2 = await setup.agent.get("/");
@@ -108,7 +108,7 @@ test.serial("regenerate session", async (t) => {
 
   // Act.
 
-  setup.handle = (session) => {
+  setup.handle = (session): void => {
     session.regenerate();
   };
   const response2 = await setup.agent.get("/");
@@ -152,7 +152,7 @@ test.serial("delete session", async (t) => {
 
   // Act.
 
-  setup.handle = (session) => {
+  setup.handle = (session): void => {
     session.destroy();
   };
   const response2 = await setup.agent.get("/");

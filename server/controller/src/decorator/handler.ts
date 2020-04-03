@@ -104,13 +104,13 @@ function makeOptions(
 } {
   let path = "/";
   let name = null;
-  if (typeof options == "string") {
+  if (typeof options === "string") {
     path = options;
-  } else if (typeof options == "object" && options != null) {
-    if (typeof options.path == "string") {
+  } else if (typeof options === "object" && options != null) {
+    if (typeof options.path === "string") {
       path = options.path;
     }
-    if (typeof options.name == "string") {
+    if (typeof options.name === "string") {
       name = options.name;
     }
   }

@@ -4,7 +4,7 @@ import { pseudoRandomBytes } from "crypto";
 export function randomString(
   length: number,
   options: { readonly alphabet?: string } = {},
-) {
+): string {
   const { alphabet = randomString.standardAlphabet } = options;
   const buffer = pseudoRandomBytes(length);
   for (let i = 0; i < buffer.length; i++) {
@@ -13,10 +13,10 @@ export function randomString(
   return String.fromCharCode(...buffer);
 }
 
-export namespace randomString {
-  export const standardAlphabet =
-    "0123456789" + "abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-}
+randomString.standardAlphabet =
+  "0123456789" + //
+  "abcdefghijklmnopqrstuvwxyz" + //
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export function encode(value: any): string {
   return Buffer.from(serialize(value)).toString("base64");
@@ -30,6 +30,6 @@ export function decode(value: string): any {
   }
 }
 
-export function now() {
+export function now(): number {
   return Math.floor(Date.now() / 1000);
 }

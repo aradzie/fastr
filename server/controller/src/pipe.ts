@@ -6,9 +6,9 @@ export interface IPipe {
 }
 
 export function isPipeClass(target: any): target is Type<IPipe> {
-  return typeof target?.prototype?.transform == "function";
+  return typeof target?.prototype?.transform === "function";
 }
 
 export function isPipeObject(target: any): target is IPipe {
-  return typeof target?.transform == "function";
+  return typeof target?.transform === "function";
 }

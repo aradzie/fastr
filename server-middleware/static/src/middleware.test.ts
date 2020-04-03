@@ -107,7 +107,7 @@ test("cache control", async (t) => {
 });
 
 function compress(method: "gzip" | "br", input: string | Buffer): Buffer {
-  if (typeof input == "string") {
+  if (typeof input === "string") {
     input = Buffer.from(input);
   }
   switch (method) {

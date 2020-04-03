@@ -45,14 +45,14 @@ export class Builder {
     };
   }
 
-  use(app: Koa, ...ids: MiddlewareId[]) {
+  use(app: Koa, ...ids: MiddlewareId[]): this {
     for (const middleware of this.resolveMiddleware(ids)) {
       app.use(middleware);
     }
     return this;
   }
 
-  add(router: Router, ...controllers: Constructor[]) {
+  add(router: Router, ...controllers: Constructor[]): this {
     for (const controller of controllers) {
       if (this.options.autoBind && !this.container.isBound(controller)) {
         this.container.bind(controller).toSelf();
@@ -62,9 +62,11 @@ export class Builder {
     return this;
   }
 
-  build() {}
+  build(): void {
+    /* Empty. */
+  }
 
-  private registerController(router: Router, controller: Constructor) {
+  private registerController(router: Router, controller: Constructor): void {
     const controllerMetadata = getControllerMetadata(controller);
     if (controllerMetadata == null) {
       throw new Error("Not a controller class");
@@ -74,10 +76,10 @@ export class Builder {
     );
     const descriptors = Object.getOwnPropertyDescriptors(controller.prototype);
     for (const [propertyKey, descriptor] of Object.entries(descriptors)) {
-      if (propertyKey == "constructor") {
+      if (propertyKey === "constructor") {
         continue;
       }
-      if (typeof descriptor.value != "function") {
+      if (typeof descriptor.value !== "function") {
         continue;
       }
       const handlerMetadata = getHandlerMetadata(
@@ -114,7 +116,7 @@ export class Builder {
     }
   }
 
-  private getContainer(ctx: RouterContext) {
+  private getContainer(ctx: RouterContext): Container {
     const { app, request, response, router } = ctx;
     let container = ctx[kContainer];
     if (container == null) {
@@ -155,7 +157,7 @@ export class Builder {
     propertyKey: string | symbol,
     parameterMetadata: readonly ParameterMetadata[],
   ): RouterMiddleware {
-    return async (ctx: RouterContext, next: Koa.Next) => {
+    return async (ctx: RouterContext, next: Koa.Next): Promise<void> => {
       const container = this.getContainer(ctx);
       const instance = container.get<any>(controller);
       const handler = instance[propertyKey] as Function;
@@ -189,11 +191,11 @@ export class Builder {
   }
 }
 
-function joinPaths(prefix: string, suffix: string) {
-  if (prefix == "" || prefix == "/") {
+function joinPaths(prefix: string, suffix: string): string {
+  if (prefix === "" || prefix === "/") {
     return suffix;
   }
-  if (suffix == "" || suffix == "/") {
+  if (suffix === "" || suffix === "/") {
     return prefix;
   }
   return prefix + suffix;

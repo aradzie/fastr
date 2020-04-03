@@ -8,7 +8,7 @@ import {
 
 test("detect middleware class and object", (t) => {
   class Middleware1 implements IMiddleware {
-    handle(ctx: Koa.Context, next: Koa.Next) {}
+    async handle(ctx: Koa.Context, next: Koa.Next): Promise<void> {}
   }
 
   t.true(isMiddlewareClass(Middleware1));

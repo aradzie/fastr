@@ -12,7 +12,7 @@ export class Prefix {
   readonly segments: readonly Segment[];
 
   constructor(prefix: string) {
-    if (prefix == "/") {
+    if (prefix === "/") {
       throw new Error("Empty prefix");
     }
     if (!prefix.startsWith("/")) {

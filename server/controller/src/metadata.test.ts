@@ -33,12 +33,12 @@ import {
   getParameterMetadata,
 } from "./metadata";
 
-function middleware1(ctx: RouterContext, next: Koa.Next) {
+function middleware1(ctx: RouterContext, next: Koa.Next): Promise<void> {
   return next();
 }
 
 class Middleware1 implements IMiddleware {
-  handle(ctx: RouterContext, next: Koa.Next) {
+  handle(ctx: RouterContext, next: Koa.Next): Promise<void> {
     return next();
   }
 }

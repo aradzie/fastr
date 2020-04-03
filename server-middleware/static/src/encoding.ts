@@ -30,6 +30,6 @@ export class Encoding {
   constructor(readonly name: string, readonly ext: string) {}
 
   isAccepted(request: Koa.Request) {
-    return request.acceptsEncodings(this.name, "identity") == this.name;
+    return request.acceptsEncodings(this.name, "identity") === this.name;
   }
 }

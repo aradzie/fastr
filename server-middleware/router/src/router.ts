@@ -40,7 +40,7 @@ export class Router<StateT = any, CustomT = {}> {
       caseSensitive = true,
       matchTrailingSlash = true,
     } = options;
-    if (prefix != "") {
+    if (prefix !== "") {
     }
     this.prefix = prefix ? new Prefix(prefix) : null;
     this.caseSensitive = caseSensitive;
@@ -84,8 +84,8 @@ export class Router<StateT = any, CustomT = {}> {
   get(...args: any[]): this {
     if (
       args.length > 2 &&
-      typeof args[0] == "string" &&
-      typeof args[1] == "string"
+      typeof args[0] === "string" &&
+      typeof args[1] === "string"
     ) {
       const [name, path, ...middlewares] = args;
       this.register({
@@ -96,7 +96,7 @@ export class Router<StateT = any, CustomT = {}> {
       });
       return this;
     }
-    if (args.length > 1 && typeof args[0] == "string") {
+    if (args.length > 1 && typeof args[0] === "string") {
       const [path, ...middlewares] = args;
       this.register({
         path,
@@ -131,8 +131,8 @@ export class Router<StateT = any, CustomT = {}> {
   post(...args: any[]): this {
     if (
       args.length > 2 &&
-      typeof args[0] == "string" &&
-      typeof args[1] == "string"
+      typeof args[0] === "string" &&
+      typeof args[1] === "string"
     ) {
       const [name, path, ...middlewares] = args;
       this.register({
@@ -143,7 +143,7 @@ export class Router<StateT = any, CustomT = {}> {
       });
       return this;
     }
-    if (args.length > 1 && typeof args[0] == "string") {
+    if (args.length > 1 && typeof args[0] === "string") {
       const [path, ...middlewares] = args;
       this.register({
         path,
@@ -178,8 +178,8 @@ export class Router<StateT = any, CustomT = {}> {
   put(...args: any[]): this {
     if (
       args.length > 2 &&
-      typeof args[0] == "string" &&
-      typeof args[1] == "string"
+      typeof args[0] === "string" &&
+      typeof args[1] === "string"
     ) {
       const [name, path, ...middlewares] = args;
       this.register({
@@ -190,7 +190,7 @@ export class Router<StateT = any, CustomT = {}> {
       });
       return this;
     }
-    if (args.length > 1 && typeof args[0] == "string") {
+    if (args.length > 1 && typeof args[0] === "string") {
       const [path, ...middlewares] = args;
       this.register({
         path,
@@ -225,8 +225,8 @@ export class Router<StateT = any, CustomT = {}> {
   delete(...args: any[]): this {
     if (
       args.length > 2 &&
-      typeof args[0] == "string" &&
-      typeof args[1] == "string"
+      typeof args[0] === "string" &&
+      typeof args[1] === "string"
     ) {
       const [name, path, ...middlewares] = args;
       this.register({
@@ -237,7 +237,7 @@ export class Router<StateT = any, CustomT = {}> {
       });
       return this;
     }
-    if (args.length > 1 && typeof args[0] == "string") {
+    if (args.length > 1 && typeof args[0] === "string") {
       const [path, ...middlewares] = args;
       this.register({
         path,
@@ -272,8 +272,8 @@ export class Router<StateT = any, CustomT = {}> {
   patch(...args: any[]): this {
     if (
       args.length > 2 &&
-      typeof args[0] == "string" &&
-      typeof args[1] == "string"
+      typeof args[0] === "string" &&
+      typeof args[1] === "string"
     ) {
       const [name, path, ...middlewares] = args;
       this.register({
@@ -284,7 +284,7 @@ export class Router<StateT = any, CustomT = {}> {
       });
       return this;
     }
-    if (args.length > 1 && typeof args[0] == "string") {
+    if (args.length > 1 && typeof args[0] === "string") {
       const [path, ...middlewares] = args;
       this.register({
         path,
@@ -319,8 +319,8 @@ export class Router<StateT = any, CustomT = {}> {
   any(...args: any[]): this {
     if (
       args.length > 2 &&
-      typeof args[0] == "string" &&
-      typeof args[1] == "string"
+      typeof args[0] === "string" &&
+      typeof args[1] === "string"
     ) {
       const [name, path, ...middlewares] = args;
       this.register({
@@ -331,7 +331,7 @@ export class Router<StateT = any, CustomT = {}> {
       });
       return this;
     }
-    if (args.length > 1 && typeof args[0] == "string") {
+    if (args.length > 1 && typeof args[0] === "string") {
       const [path, ...middlewares] = args;
       this.register({
         path,
@@ -386,12 +386,12 @@ export class Router<StateT = any, CustomT = {}> {
         [kRouterPath]: routerPath,
         [kRouterMethod]: routerMethod,
       } = ctx as any;
-      if (typeof routerPath == "string") {
+      if (typeof routerPath === "string") {
         path = routerPath;
       } else {
         (ctx as any)[kRouterPath] = path; // TODO Fix context type signature to allow symbols.
       }
-      if (typeof routerMethod == "string") {
+      if (typeof routerMethod === "string") {
         method = routerMethod;
       } else {
         (ctx as any)[kRouterMethod] = method; // TODO Fix context type signature to allow symbols.
@@ -411,10 +411,10 @@ export class Router<StateT = any, CustomT = {}> {
 
       // Find route.
       const match = Node.find(this.root, path, method, params);
-      if (match == kNotFound) {
+      if (match === kNotFound) {
         return next();
       }
-      if (match == kMethodNotAllowed) {
+      if (match === kMethodNotAllowed) {
         throw new MethodNotAllowedError();
       }
 

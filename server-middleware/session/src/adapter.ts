@@ -61,7 +61,7 @@ export abstract class Adapter<CookieData = {}> {
   /**
    * Starts new session if not already started.
    */
-  start() {
+  start(): void {
     if (this.id == null) {
       this.regenerate();
     }
@@ -70,7 +70,7 @@ export abstract class Adapter<CookieData = {}> {
   /**
    * Destroys the current session, if any.
    */
-  destroy() {
+  destroy(): void {
     this.id = null;
     this.expires = null;
     this.data.clear();
@@ -79,7 +79,7 @@ export abstract class Adapter<CookieData = {}> {
   /**
    * Regenerates session id.
    */
-  regenerate() {
+  regenerate(): void {
     this.id = this.options.generateId();
     this.touch();
   }
@@ -87,21 +87,21 @@ export abstract class Adapter<CookieData = {}> {
   /**
    * Extends session expiration time.
    */
-  touch() {
+  touch(): void {
     const { maxAge } = this.options;
-    if (maxAge == "session") {
+    if (maxAge === "session") {
       this.expires = null;
     } else {
       this.expires = now() + maxAge;
     }
   }
 
-  init(id: string | null, expires: number | null, data: {}) {
+  init(id: string | null, expires: number | null, data: {}): void {
     const { rolling, maxAge } = this.options;
     this.oldId = id;
     this.id = id;
     this.oldExpires = expires;
-    if (maxAge == "session") {
+    if (maxAge === "session") {
       this.expires = null;
     } else if (rolling) {
       this.expires = now() + maxAge;
@@ -115,8 +115,8 @@ export abstract class Adapter<CookieData = {}> {
     this.hash = sha1(this.data);
   }
 
-  get changed() {
-    return this.hash != sha1(this.data);
+  get changed(): boolean {
+    return this.hash !== sha1(this.data);
   }
 
   /**
@@ -139,7 +139,7 @@ export abstract class Adapter<CookieData = {}> {
     }
   }
 
-  protected setCookie(data: CookieData | null, expires: number | null) {
+  protected setCookie(data: CookieData | null, expires: number | null): void {
     const { key } = this.options;
     const setOption = { ...this.setOption };
     if (data != null) {

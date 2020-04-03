@@ -1,5 +1,7 @@
-lib
-lib-cjs
-lib-esm
-node_modules
-tmp
+build/
+out/
+lib/
+lib-cjs/
+lib-esm/
+node_modules/
+tmp/

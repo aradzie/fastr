@@ -21,9 +21,9 @@ export class Canonical implements IMiddleware {
     const { protocol, hostname, port } = this;
     let url = ctx.request.URL as URL;
     if (
-      url.protocol != protocol ||
-      url.hostname != hostname ||
-      url.port != port
+      url.protocol !== protocol ||
+      url.hostname !== hostname ||
+      url.port !== port
     ) {
       url = new URL(String(url));
       url.protocol = protocol;

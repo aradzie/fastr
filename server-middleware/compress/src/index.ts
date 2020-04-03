@@ -12,27 +12,27 @@ export function compress({
   threshold = 1024,
   filter = compressible,
 }: Options = {}): Koa.Middleware {
-  const compress = async (ctx: Koa.Context, next: Koa.Next) => {
+  const compress = async (ctx: Koa.Context, next: Koa.Next): Promise<void> => {
     ctx.response.vary("Content-Encoding");
 
     await next();
 
     if (
-      ctx.compress == false ||
-      ctx.request.method == "HEAD" ||
-      ctx.response.status == 204 ||
-      ctx.response.status == 205 ||
-      ctx.response.status == 304 ||
+      ctx.compress === false ||
+      ctx.request.method === "HEAD" ||
+      ctx.response.status === 204 ||
+      ctx.response.status === 205 ||
+      ctx.response.status === 304 ||
       ctx.response.get("Content-Encoding")
     ) {
       return;
     }
 
-    if (!(ctx.compress == true || filter(ctx.response.type))) {
+    if (!(ctx.compress === true || filter(ctx.response.type))) {
       return;
     }
 
-    if (ctx.request.acceptsEncodings("gzip", "identity") == "gzip") {
+    if (ctx.request.acceptsEncodings("gzip", "identity") === "gzip") {
       transform(ctx, "gzip", createGzip());
     }
   };
@@ -41,7 +41,11 @@ export function compress({
   });
   return compress;
 
-  function transform(ctx: Koa.Context, encoding: string, transform: Transform) {
+  function transform(
+    ctx: Koa.Context,
+    encoding: string,
+    transform: Transform,
+  ): void {
     const { body } = ctx.response;
     if (body instanceof Stream) {
       replace(ctx, encoding, body.pipe(transform));
@@ -55,7 +59,11 @@ export function compress({
     }
   }
 
-  function replace(ctx: Koa.Context, encoding: string, transform: Transform) {
+  function replace(
+    ctx: Koa.Context,
+    encoding: string,
+    transform: Transform,
+  ): void {
     ctx.response.set("Content-Encoding", encoding);
     ctx.response.remove("Content-Length");
     const { etag } = ctx.response;
@@ -65,7 +73,11 @@ export function compress({
     ctx.response.body = transform;
   }
 
-  function updateEtag(ctx: Koa.Context, etag: string, encoding: string) {
+  function updateEtag(
+    ctx: Koa.Context,
+    etag: string,
+    encoding: string,
+  ): string {
     if (etag.startsWith('W/"') && etag.endsWith('"')) {
       etag = etag.substring(3, etag.length - 1);
       return `W/"${etag}-${encoding}"`;
@@ -79,7 +91,7 @@ export function compress({
 }
 
 function toBuffer(body: any): Buffer {
-  if (typeof body == "string") {
+  if (typeof body === "string") {
     return Buffer.from(body);
   }
   if (Buffer.isBuffer(body)) {

@@ -29,14 +29,14 @@ export class Cookie extends Adapter<CookieData> {
   constructor(cookies: Cookies, options: ParsedOptions) {
     super(cookies, options);
     const { store } = options;
-    if (store != "cookie") {
+    if (store !== "cookie") {
       throw new TypeError();
     }
     this.encode = options.encode;
     this.decode = options.decode;
   }
 
-  async load() {
+  async load(): Promise<void> {
     const value = this.getCookie();
     if (value == null) {
       return;
@@ -47,14 +47,14 @@ export class Cookie extends Adapter<CookieData> {
     this.init(id, expires, data);
   }
 
-  async commit() {
+  async commit(): Promise<void> {
     const { oldId, id, oldExpires, expires, changed } = this;
     if (id == null) {
       if (oldId != null) {
         this.setCookie(null, null);
       }
     } else {
-      if (oldId != id || oldExpires != expires || changed) {
+      if (oldId !== id || oldExpires !== expires || changed) {
         const data = Object.fromEntries(this.data);
         this.setCookie(
           {
@@ -68,23 +68,25 @@ export class Cookie extends Adapter<CookieData> {
     }
   }
 
-  protected parseCookie(val: string) {
+  protected parseCookie(val: string): CookieData | null {
     try {
       const data = this.decode(val);
-      if (typeof data == "object") {
+      if (typeof data === "object") {
         const { [kId]: id, [kExpires]: expires } = data;
         if (
-          typeof id == "string" &&
-          (typeof expires == "number" || expires == null)
+          typeof id === "string" &&
+          (typeof expires === "number" || expires == null)
         ) {
           return data as CookieData;
         }
       }
-    } catch {}
+    } catch {
+      /* Ignore. */
+    }
     return null;
   }
 
-  protected stringifyCookie(data: CookieData) {
+  protected stringifyCookie(data: CookieData): string {
     return this.encode(data);
   }
 }

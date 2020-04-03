@@ -23,7 +23,7 @@ export class Node {
   >();
   private readonly routesByMethod = new Map<string, Route>();
 
-  private match(fragment: string, params: MatchedPathParams) {
+  private match(fragment: string, params: MatchedPathParams): Node | null {
     // Match against literal segments.
     const node = this.literalChildren.get(fragment);
     if (node != null) {
@@ -41,7 +41,7 @@ export class Node {
   /**
    * Inserts the given route into the root of the given tree creating new nodes as needed.
    */
-  static insert(root: Node, route: Route) {
+  static insert(root: Node, route: Route): void {
     // Build prefix tree.
     const { segments } = route;
     let node = root;
@@ -79,7 +79,7 @@ export class Node {
     Node.insertShortcuts(root, route);
   }
 
-  private static insertShortcuts(root: Node, route: Route) {
+  private static insertShortcuts(root: Node, route: Route): void {
     // Insert shortcuts for faster lookup by the whole suffix of a path.
     // The prefix tree must already be built in order for this function to work.
     const { segments } = route;
@@ -131,7 +131,7 @@ export class Node {
     // navigate the prefix tree from the root to the children
     // by consuming one segment at a time.
     let child: Node | null;
-    if (path == "/") {
+    if (path === "/") {
       child = node.literalChildren.get("/") ?? null;
       if (child == null) {
         return kNotFound;
@@ -150,8 +150,8 @@ export class Node {
 
         // Try to find a child level by level.
         let segment: string;
-        let i = path.indexOf("/", pos);
-        if (i != -1) {
+        const i = path.indexOf("/", pos);
+        if (i !== -1) {
           segment = path.substring(pos, i + 1);
           pos = i + 1;
         } else {
@@ -167,7 +167,7 @@ export class Node {
     }
 
     const { routesByMethod } = node;
-    if (routesByMethod.size == 0) {
+    if (routesByMethod.size === 0) {
       return kNotFound;
     }
     const route = routesByMethod.get(method) ?? routesByMethod.get("*") ?? null;

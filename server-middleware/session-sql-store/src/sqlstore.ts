@@ -69,7 +69,7 @@ export class SqlStore implements Store {
 
     // Update if existing.
     if (
-      (await this.newQueryBuilder().where("id", sessionId).update(row)) == 0
+      (await this.newQueryBuilder().where("id", sessionId).update(row)) === 0
     ) {
       // Insert if new.
       await this.newQueryBuilder().insert({ id: sessionId, ...row });

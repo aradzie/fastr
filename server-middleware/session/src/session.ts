@@ -70,16 +70,15 @@ export class Session implements SessionInterface {
 
   set(entries: { [key: string]: any }): void;
   set(key: string, value: any): void;
-  set(): void {
-    const args = arguments,
-      { length } = args;
-    if (length == 1 && typeof args[0] == "object" && args[0] != null) {
+  set(...args: unknown[]): void {
+    const { length } = args;
+    if (length === 1 && typeof args[0] === "object" && args[0] != null) {
       for (const [key, value] of Object.entries(args[0])) {
         this._setImpl(key, value);
       }
       return;
     }
-    if (length == 2 && typeof args[0] == "string") {
+    if (length === 2 && typeof args[0] === "string") {
       const [key, value] = args;
       this._setImpl(key, value);
       return;
@@ -107,7 +106,7 @@ export class Session implements SessionInterface {
     return Object.fromEntries(this[kAdapter].data);
   }
 
-  private _assertStarted() {
+  private _assertStarted(): void {
     if (!this.started) {
       throw new Error("Session not started");
     }

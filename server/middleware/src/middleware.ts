@@ -10,9 +10,9 @@ export interface IMiddleware {
 }
 
 export function isMiddlewareClass(target: any): target is Type<IMiddleware> {
-  return typeof target?.prototype?.handle == "function";
+  return typeof target?.prototype?.handle === "function";
 }
 
 export function isMiddlewareObject(target: any): target is IMiddleware {
-  return typeof target?.handle == "function";
+  return typeof target?.handle === "function";
 }

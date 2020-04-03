@@ -40,7 +40,7 @@ export class FileStore implements Store {
   }
 
   sessionFile(sessionId: string): File {
-    if (sessionId == "" || sessionId.includes("/")) {
+    if (sessionId === "" || sessionId.includes("/")) {
       throw new Error("Invalid session id");
     }
     return new File(
@@ -75,7 +75,7 @@ async function load(file: File): Promise<StoredSession | null> {
   }
 }
 
-async function store(file: File, session: StoredSession) {
+async function store(file: File, session: StoredSession): Promise<void> {
   const options: RetryOptions = {
     retryLimit: 3,
     delayer: exponentialDelay(10),

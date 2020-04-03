@@ -42,11 +42,11 @@ export type PatternSegment = {
 export type Segment = LiteralSegment | PatternSegment;
 
 export function isLiteral(segment: Segment): segment is LiteralSegment {
-  return segment.type == "literal";
+  return segment.type === "literal";
 }
 
 export function isPattern(segment: Segment): segment is PatternSegment {
-  return segment.type == "pattern";
+  return segment.type === "pattern";
 }
 
 export type MatchedPathParams = { [key: string]: string };
@@ -64,19 +64,23 @@ export function matchFragment(
 ): boolean {
   switch (segment.type) {
     case "literal":
-      if (fragment == segment.literal) {
-        return true;
+      {
+        if (fragment === segment.literal) {
+          return true;
+        }
       }
       break;
     case "pattern":
-      segment.pattern.lastIndex = 0;
-      const m = segment.pattern.exec(fragment);
-      if (m != null) {
-        const groups = m.groups!;
-        for (const name of segment.names) {
-          params[name] = groups[name];
+      {
+        segment.pattern.lastIndex = 0;
+        const m = segment.pattern.exec(fragment);
+        if (m != null) {
+          const groups = m.groups!;
+          for (const name of segment.names) {
+            params[name] = groups[name];
+          }
+          return true;
         }
-        return true;
       }
       break;
   }
@@ -100,12 +104,12 @@ export function matchPrefix(
   let pos = 1;
   let index = 0;
   for (const segment of segments) {
-    if (pos == path.length) {
+    if (pos === path.length) {
       return null;
     }
     let fragment: string;
     let i = path.indexOf("/", pos);
-    if (i != -1) {
+    if (i !== -1) {
       fragment = path.substring(pos, i + 1);
       pos = i + 1;
     } else {

@@ -9,7 +9,7 @@ export function normalizeUriPath(path: string): string {
   if (!path.startsWith("/")) {
     throw new BadRequestError();
   }
-  if (path == "/") {
+  if (path === "/") {
     return path;
   }
   const { length } = path;
@@ -19,7 +19,7 @@ export function normalizeUriPath(path: string): string {
     let i = path.indexOf("/", pos);
     let segment;
     let dir;
-    if (i != -1) {
+    if (i !== -1) {
       segment = path.substring(pos, i);
       pos = i + 1;
       dir = true;
@@ -28,11 +28,11 @@ export function normalizeUriPath(path: string): string {
       pos = length;
       dir = false;
     }
-    if (segment == "" || segment == ".") {
+    if (segment === "" || segment === ".") {
       // Empty segment.
       continue;
     }
-    if (segment == "..") {
+    if (segment === "..") {
       // Parent segment.
       if (stack.length > 0) {
         stack.pop();

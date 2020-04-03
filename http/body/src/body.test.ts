@@ -285,7 +285,7 @@ class FakeIncomingMessage extends Readable {
     if (data instanceof Error) {
       this.emit("error", data);
     } else {
-      if (typeof data == "string") {
+      if (typeof data === "string") {
         data = Buffer.from(data);
       }
       this.push(data);
@@ -298,7 +298,7 @@ class FakeIncomingMessage extends Readable {
 }
 
 function compress(method: "gzip" | "br", input: string | Buffer): Buffer {
-  if (typeof input == "string") {
+  if (typeof input === "string") {
     input = Buffer.from(input);
   }
   switch (method) {

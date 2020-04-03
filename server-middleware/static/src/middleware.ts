@@ -30,12 +30,15 @@ export function staticFiles(
     cacheControl = null,
   } = options;
 
-  const middleware = async (ctx: Koa.Context, next: Koa.Next) => {
+  const middleware = async (
+    ctx: Koa.Context,
+    next: Koa.Next,
+  ): Promise<void> => {
     let { method, path } = ctx.request;
 
     path = normalizeUriPath(path); // TODO This must be a part of Koa.
 
-    if (method != "HEAD" && method != "GET") {
+    if (method !== "HEAD" && method !== "GET") {
       return next();
     }
     if (include != null && !include.test(path)) {
@@ -60,7 +63,7 @@ export function staticFiles(
 
     if (tagger != null) {
       let etag = await tagger(variantPath, variantStats);
-      if (variantEncoding != Encoding.identity) {
+      if (variantEncoding !== Encoding.identity) {
         etag = etag + "-" + variantEncoding.name;
       }
       ctx.response.etag = etag;

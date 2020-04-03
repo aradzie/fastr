@@ -24,14 +24,14 @@ function makeOptions(
   readonly path: string;
 } {
   let path = "/";
-  if (typeof options == "string") {
+  if (typeof options === "string") {
     path = options;
   } else if (options) {
-    if (typeof options.path == "string") {
+    if (typeof options.path === "string") {
       path = options.path;
     }
   }
-  if (!path.startsWith("/") || (path != "/" && path.endsWith("/"))) {
+  if (!path.startsWith("/") || (path !== "/" && path.endsWith("/"))) {
     throw new Error(`Invalid path '${path}'`);
   }
   return { path };

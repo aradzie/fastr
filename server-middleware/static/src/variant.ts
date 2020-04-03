@@ -77,13 +77,15 @@ async function tryStat(path: string): Promise<Stats | null> {
     if (stats.isFile() && stats) {
       return stats;
     }
-  } catch {}
+  } catch {
+    // Ignore.
+  }
   return null;
 }
 
 function getType(path: string): string {
   const i = path.lastIndexOf(".");
-  if (i != -1) {
+  if (i !== -1) {
     return path.substring(i + 1);
   } else {
     return "application/octet-stream";
