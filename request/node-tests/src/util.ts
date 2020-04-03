@@ -2,7 +2,6 @@ import baseTest, { TestInterface } from "ava"; // eslint-disable-line
 import http, { IncomingMessage, ServerResponse } from "http";
 import https from "https";
 import net, { AddressInfo } from "net";
-import { URL } from "url";
 
 export const test = baseTest as TestInterface<Context>;
 

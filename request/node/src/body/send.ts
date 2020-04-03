@@ -1,7 +1,6 @@
 import { MimeType } from "@webfx-http/headers";
 import { ClientRequest } from "http";
 import { pipeline, Readable } from "stream";
-import { URLSearchParams } from "url";
 import { createGzip } from "zlib";
 import { BodyDataType, HttpRequestBody } from "../types";
 import { Json } from "./json";

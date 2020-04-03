@@ -1,7 +1,9 @@
+/// <reference lib="dom" /> make URL iterable
+/// <reference lib="dom.iterable" /> make URL iterable
+
 import { Accept, Headers, MimeType, multiEntries } from "@webfx-http/headers";
 import { mergeSearchParams } from "@webfx/request-url";
 import { EventEmitter } from "events";
-import { URL, URLSearchParams } from "url";
 import { Json } from "./body";
 import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "./events";
 import { compose } from "./middleware";

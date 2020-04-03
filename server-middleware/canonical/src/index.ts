@@ -2,7 +2,6 @@ import { RouterContext } from "@webfx-middleware/router";
 import { IMiddleware } from "@webfx/middleware";
 import { inject, injectable } from "inversify";
 import Koa from "koa";
-import { URL } from "url";
 
 @injectable()
 export class Canonical implements IMiddleware {
@@ -20,7 +19,7 @@ export class Canonical implements IMiddleware {
 
   async handle(ctx: RouterContext, next: Koa.Next): Promise<any> {
     const { protocol, hostname, port } = this;
-    let url = ctx.request.URL;
+    let url = ctx.request.URL as URL;
     if (
       url.protocol != protocol ||
       url.hostname != hostname ||

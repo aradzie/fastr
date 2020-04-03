@@ -1,4 +1,3 @@
-import { URL } from "url";
 import { requestAdapter } from "./adapter";
 import { RequestBuilder } from "./builder";
 import { compose } from "./middleware";

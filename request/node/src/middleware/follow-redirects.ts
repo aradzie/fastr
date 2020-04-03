@@ -1,5 +1,4 @@
 import { RequestRedirectError } from "@webfx/request-error";
-import { URL } from "url";
 import { isStreamBody } from "../body/send";
 import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
 

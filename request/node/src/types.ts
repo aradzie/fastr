@@ -3,7 +3,6 @@ import type { Headers, MimeType } from "@webfx-http/headers";
 import type { Agent as HttpAgent } from "http";
 import type { Agent as HttpsAgent } from "https";
 import type { Readable } from "stream";
-import type { URL, URLSearchParams } from "url";
 import type { Json, Streamable } from "./body";
 import type { RequestBuilder } from "./builder";
 

@@ -3,7 +3,6 @@ import { Headers } from "@webfx-http/headers";
 import { Json, request } from "@webfx/node-request";
 import { IncomingMessage, ServerResponse } from "http";
 import { Readable } from "stream";
-import { URLSearchParams } from "url";
 import { test } from "./util";
 
 const largePayload = "large payload\n".repeat(1000);
