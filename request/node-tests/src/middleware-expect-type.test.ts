@@ -3,7 +3,7 @@ import {
   HasMiddleware,
   HttpRequest,
   request,
-} from "@webfx/node-request";
+} from "@webfx-request/node";
 import { test } from "./util";
 
 test("return response if content type matches", async (t) => {

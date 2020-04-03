@@ -5,7 +5,7 @@ import {
   HttpRequest,
   request,
   RequestRedirectError,
-} from "@webfx/node-request";
+} from "@webfx-request/node";
 import { test } from "./util";
 
 const payload = "server response\n".repeat(1000);

@@ -1,5 +1,5 @@
 import { MimeType } from "@webfx-http/headers";
-import { request } from "@webfx/node-request";
+import { request } from "@webfx-request/node";
 import { test } from "./util";
 
 test("get buffer", async (t) => {

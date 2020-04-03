@@ -1,4 +1,4 @@
-import { request } from "@webfx/node-request";
+import { request } from "@webfx-request/node";
 import { Readable } from "stream";
 import { test } from "./util";
 

@@ -1,6 +1,6 @@
 import { Body } from "@webfx-http/body";
 import { Headers } from "@webfx-http/headers";
-import { Json, request } from "@webfx/node-request";
+import { Json, request } from "@webfx-request/node";
 import { IncomingMessage, ServerResponse } from "http";
 import { Readable } from "stream";
 import { test } from "./util";
