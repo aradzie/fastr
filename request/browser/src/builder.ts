@@ -1,5 +1,5 @@
 import { Accept, Headers, MimeType, multiEntries } from "@webfx-http/headers";
-import { mergeSearchParams } from "@webfx/request-url";
+import { mergeSearchParams } from "@webfx-http/url";
 import { EventEmitter } from "events";
 import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "./events";
 import { compose } from "./middleware";
