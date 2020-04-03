@@ -1,6 +1,6 @@
 {
   "name": "@webfx-middleware/canonical",
-  "version": "0.0.2-alpha.5",
+  "version": "0.0.2-alpha.6",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "homepage": "https://github.com/aradzie/webfx#readme",
   "repository": "aradzie/webfx",
@@ -12,15 +12,15 @@
     "node": ">=12.16"
   },
   "dependencies": {
-    "@webfx-middleware/router": "^0.0.2-alpha.5",
-    "@webfx/middleware": "^0.0.2-alpha.5",
+    "@webfx-middleware/router": "^0.0.2-alpha.6",
+    "@webfx/middleware": "^0.0.2-alpha.6",
     "inversify": "^5.0.1",
     "reflect-metadata": "^0.1.13",
     "tslib": "^1.11.1"
   },
   "devDependencies": {
     "@types/koa": "^2.11.2",
-    "@webfx/controller": "^0.0.2-alpha.5",
+    "@webfx/controller": "^0.0.2-alpha.6",
     "koa": "^2.11.0"
   },
   "scripts": {
