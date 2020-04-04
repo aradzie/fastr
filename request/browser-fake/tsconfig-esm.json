@@ -8,5 +8,9 @@
     "declaration": false,
     "incremental": true,
     "tsBuildInfoFile": "lib-esm/.tsbuildcache"
-  }
+  },
+  "exclude": [
+    "**/test/*",
+    "**/*.test.*"
+  ]
 }

@@ -9,6 +9,4 @@
 # Ignore certain files in the above directories
 **/test/*
 **/*.test.*
-**/spec/*
-**/*.spec.*
 .tsbuildcache

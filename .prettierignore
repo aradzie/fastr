@@ -1,7 +1,7 @@
-*.snap
 build/
 out/
 lib/
 lib-cjs/
 lib-esm/
 tmp/
+*.snap
