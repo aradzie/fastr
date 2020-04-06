@@ -2,6 +2,16 @@ import { BadRequestError } from "@webfx-http/error";
 import Joi from "joi";
 import Koa from "koa";
 
+declare module "koa" {
+  // TODO Remove this.
+  interface Request {
+    buffer: Buffer;
+    text: string;
+    json: any;
+    form: any;
+  }
+}
+
 export interface Spec {
   readonly headers?: Joi.SchemaLike;
   readonly query?: Joi.SchemaLike;
