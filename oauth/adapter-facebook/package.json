@@ -1,0 +1,30 @@
+{
+  "name": "@webfx-oauth/adapter-facebook",
+  "version": "0.0.2-alpha.9",
+  "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
+  "homepage": "https://github.com/aradzie/webfx#readme",
+  "repository": "aradzie/webfx",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "module": "lib-esm/index.js",
+  "engines": {
+    "node": ">=12.16"
+  },
+  "dependencies": {
+    "@webfx-oauth/core": "^0.0.2-alpha.9"
+  },
+  "devDependencies": {
+    "axios": "^0.19.2",
+    "axios-mock-adapter": "^1.17.0"
+  },
+  "scripts": {
+    "compile": "rm -fr lib; rm -fr lib-esm; tsc; tsc -b tsconfig-esm.json",
+    "test": "ava"
+  },
+  "ava": {
+    "files": [
+      "lib/**/*.test.js"
+    ]
+  }
+}

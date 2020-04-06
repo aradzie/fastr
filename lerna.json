@@ -2,8 +2,9 @@
   "packages": [
     "http/*",
     "request/*",
+    "server/*",
     "server-middleware/*",
-    "server/*"
+    "oauth/*"
   ],
   "version": "0.0.2-alpha.9"
 }
