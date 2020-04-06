@@ -1,10 +1,10 @@
 {
   "packages": [
     "http/*",
+    "oauth/*",
     "request/*",
-    "server/*",
     "server-middleware/*",
-    "oauth/*"
+    "server/*"
   ],
-  "version": "0.0.2-alpha.9"
+  "version": "0.0.2-alpha.10"
 }
