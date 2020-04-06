@@ -19,8 +19,13 @@
     "test": "ava"
   },
   "ava": {
+    "typescript": {
+      "rewritePaths": {
+        "src/": "lib/"
+      }
+    },
     "files": [
-      "lib/**/*.test.js"
+      "src/**/*.test.ts"
     ]
   }
 }

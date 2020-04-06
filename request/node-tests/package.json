@@ -23,8 +23,13 @@
     "test": "ava"
   },
   "ava": {
+    "typescript": {
+      "rewritePaths": {
+        "src/": "build/"
+      }
+    },
     "files": [
-      "build/**/*.test.js"
+      "src/**/*.test.ts"
     ]
   }
 }

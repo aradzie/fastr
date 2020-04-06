@@ -30,8 +30,13 @@
     "test": "ava"
   },
   "ava": {
+    "typescript": {
+      "rewritePaths": {
+        "src/": "build/"
+      }
+    },
     "files": [
-      "build/**/*.test.js"
+      "src/**/*.test.ts"
     ],
     "require": [
       "reflect-metadata"
