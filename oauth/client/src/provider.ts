@@ -1,26 +1,8 @@
 import { AxiosRequestConfig } from "axios";
-import { Client, ClientCredentials } from "./client";
-import { ResourceOwner } from "./profile";
+import { Client } from "./client";
+import type { ResourceOwner } from "./profile";
 import { AccessToken } from "./token";
-
-export interface ClientConfig extends ClientCredentials {
-  readonly clientId: string;
-  readonly clientSecret: string;
-  readonly redirectUri: string;
-  readonly scope: string;
-}
-
-export interface ProviderConfig {
-  readonly authorizationUri: string;
-  readonly tokenUri: string;
-  readonly profileUri: string;
-}
-
-export interface TokenResponse {
-  readonly access_token: string;
-  readonly token_type: "bearer";
-  readonly expires_in: number;
-}
+import type { ClientConfig, ProviderConfig, TokenResponse } from "./types";
 
 export abstract class AbstractProvider {
   protected readonly clientId: string;

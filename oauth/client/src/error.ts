@@ -12,21 +12,6 @@ Facebook:
      code: 101 } }
 */
 
-// See https://tools.ietf.org/html/rfc6749#section-5.2
-
-export type ErrorCode =
-  | "invalid_request"
-  | "invalid_client"
-  | "invalid_grant"
-  | "invalid_scope"
-  | "unauthorized_client";
-
-export interface ErrorResponse {
-  readonly error: ErrorCode;
-  readonly error_description?: string;
-  readonly error_uri?: string;
-}
-
 export class ClientError extends Error {
   name = "ClientError";
 

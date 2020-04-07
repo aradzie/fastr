@@ -1,10 +1,8 @@
-import { AccessToken, axios, OAuthError } from "@webfx-oauth/core";
+import { AccessToken, axios, OAuthError } from "@webfx-oauth/client";
 import test from "ava";
 import MockAdapter from "axios-mock-adapter";
 import { FacebookProvider } from "./facebook";
 import type { FacebookErrorResponse, FacebookProfileResponse } from "./types";
-
-/* eslint-disable @typescript-eslint/camelcase */
 
 const provider = new FacebookProvider({
   clientId: "client_id",

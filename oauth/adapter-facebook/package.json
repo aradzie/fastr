@@ -12,7 +12,7 @@
     "node": ">=12.16"
   },
   "dependencies": {
-    "@webfx-oauth/core": "^0.0.2-alpha.10"
+    "@webfx-oauth/client": "^0.0.2-alpha.10"
   },
   "devDependencies": {
     "axios": "^0.19.2",

@@ -2,7 +2,7 @@ import {
   AbstractProvider,
   AccessToken,
   ResourceOwner,
-} from "@webfx-oauth/core";
+} from "@webfx-oauth/client";
 
 export class FakeProvider extends AbstractProvider {
   owner: ResourceOwner = {

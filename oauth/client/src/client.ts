@@ -1,11 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { ClientError, ErrorResponse, OAuthError } from "./error";
+import { ClientError, OAuthError } from "./error";
 import { AccessToken } from "./token";
-
-export interface ClientCredentials {
-  readonly clientId: string;
-  readonly clientSecret: string;
-}
+import type { ClientCredentials, ErrorResponse } from "./types";
 
 export class Client implements ClientCredentials {
   readonly clientId: string;

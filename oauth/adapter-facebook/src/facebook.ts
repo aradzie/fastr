@@ -3,11 +3,9 @@ import {
   Client,
   ClientConfig,
   ResourceOwner,
-} from "@webfx-oauth/core";
+} from "@webfx-oauth/client";
 import { FacebookClient } from "./client";
 import type { FacebookProfileResponse } from "./types";
-
-/* eslint-disable @typescript-eslint/camelcase */
 
 // See https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/
 // See https://developers.facebook.com/docs/graph-api/using-graph-api/error-handling

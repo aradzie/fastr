@@ -2,10 +2,8 @@ import {
   AbstractProvider,
   ClientConfig,
   ResourceOwner,
-} from "@webfx-oauth/core";
+} from "@webfx-oauth/client";
 import type { GoogleProfileResponse } from "./types";
-
-/* eslint-disable @typescript-eslint/camelcase */
 
 // See https://developers.google.com/identity/protocols/OpenIDConnect
 // See https://accounts.google.com/.well-known/openid-configuration

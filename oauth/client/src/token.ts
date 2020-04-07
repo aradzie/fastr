@@ -1,4 +1,4 @@
-import { TokenResponse } from "./provider";
+import type { TokenResponse } from "./types";
 
 export class AccessToken {
   public readonly token: string;

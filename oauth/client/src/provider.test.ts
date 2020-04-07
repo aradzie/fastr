@@ -1,8 +1,9 @@
 import test from "ava";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import { ResourceOwner } from "./profile";
-import { AbstractProvider, ClientConfig, ProviderConfig } from "./provider";
+import type { ResourceOwner } from "./profile";
+import { AbstractProvider } from "./provider";
+import type { ClientConfig, ProviderConfig } from "./types";
 
 class TestProvider extends AbstractProvider {
   constructor(clientConfig: ClientConfig, providerConfig: ProviderConfig) {

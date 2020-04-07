@@ -1,9 +1,7 @@
-import { AccessToken, Client, OAuthError } from "@webfx-oauth/core";
+import { AccessToken, Client, OAuthError } from "@webfx-oauth/client";
 import { AxiosRequestConfig } from "axios";
 import crypto from "crypto";
 import type { FacebookErrorResponse } from "./types";
-
-/* eslint-disable @typescript-eslint/camelcase */
 
 export class FacebookClient extends Client {
   protected signRequest(

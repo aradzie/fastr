@@ -1,10 +1,8 @@
-import { AccessToken, axios } from "@webfx-oauth/core";
+import { AccessToken, axios } from "@webfx-oauth/client";
 import test from "ava";
 import MockAdapter from "axios-mock-adapter";
 import { GoogleProvider } from "./google";
 import type { GoogleProfileResponse } from "./types";
-
-/* eslint-disable @typescript-eslint/camelcase */
 
 const provider = new GoogleProvider({
   clientId: "client_id",

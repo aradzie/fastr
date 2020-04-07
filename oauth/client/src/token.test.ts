@@ -12,7 +12,7 @@ test.afterEach(() => {
   MockDate.reset();
 });
 
-test("should construct token from response", (t) => {
+test("construct token from response", (t) => {
   const token = new AccessToken({
     access_token: "token",
     token_type: "bearer",

@@ -12,7 +12,7 @@
     "node": ">=12.16"
   },
   "dependencies": {
-    "@webfx-oauth/core": "^0.0.2-alpha.10"
+    "@webfx-oauth/client": "^0.0.2-alpha.10"
   },
   "scripts": {
     "compile": "rm -fr lib; rm -fr lib-esm; tsc; tsc -b tsconfig-esm.json"
