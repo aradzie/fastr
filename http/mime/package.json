@@ -1,6 +1,6 @@
 {
   "name": "@webfx-http/mimetype",
-  "version": "0.0.2-alpha.11",
+  "version": "0.0.3-alpha.0",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "homepage": "https://github.com/aradzie/webfx#readme",
   "repository": "aradzie/webfx",
@@ -12,7 +12,7 @@
     "node": ">=12.16"
   },
   "dependencies": {
-    "@webfx-http/headers": "^0.0.2-alpha.11",
+    "@webfx-http/headers": "^0.0.3-alpha.0",
     "tslib": "^1.11.1"
   },
   "scripts": {
