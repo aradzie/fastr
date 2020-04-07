@@ -7,5 +7,8 @@
     "module": "commonjs",
     "incremental": true,
     "tsBuildInfoFile": "build/.tsbuildcache"
-  }
+  },
+  "include": [
+    "src/**/*"
+  ]
 }

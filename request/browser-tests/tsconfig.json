@@ -8,5 +8,8 @@
     "target": "es2019",
     "incremental": true,
     "tsBuildInfoFile": "build/.tsbuildcache"
-  }
+  },
+  "include": [
+    "src/**/*"
+  ]
 }
