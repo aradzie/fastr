@@ -1,1 +1,1 @@
-export { FakeProvider } from "./fakeprovider";
+export { FakeAdapter } from "./adapter";

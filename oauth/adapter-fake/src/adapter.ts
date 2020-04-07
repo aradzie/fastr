@@ -1,11 +1,14 @@
 import {
-  AbstractProvider,
+  AbstractAdapter,
   AccessToken,
   ResourceOwner,
 } from "@webfx-oauth/client";
 
-export class FakeProvider extends AbstractProvider {
+// TODO Error responses.
+
+export class FakeAdapter extends AbstractAdapter {
   owner: ResourceOwner = {
+    raw: {},
     provider: "fake",
     id: "123",
     email: "fake@keybr.com",
@@ -43,6 +46,6 @@ export class FakeProvider extends AbstractProvider {
   }
 
   protected parseProfileResponse(): ResourceOwner {
-    throw new Error("unreachable");
+    throw new Error("Unreachable");
   }
 }

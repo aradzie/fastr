@@ -1,8 +1,16 @@
+import type { ClientConfig } from "@webfx-oauth/client";
+
+export interface FacebookClientConfig extends ClientConfig {
+  readonly apiVersion?: string;
+  readonly profileFields?: readonly string[];
+}
+
 export interface FacebookErrorResponse {
   readonly error: {
     readonly message: string;
     readonly type: "OAuthException";
     readonly code: number;
+    readonly error_subcode: number;
   };
 }
 

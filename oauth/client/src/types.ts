@@ -10,7 +10,7 @@ export interface ClientConfig extends ClientCredentials {
   readonly scope: string;
 }
 
-export interface ProviderConfig {
+export interface AdapterConfig {
   readonly authorizationUri: string;
   readonly tokenUri: string;
   readonly profileUri: string;
@@ -35,7 +35,7 @@ export interface TokenResponse {
    * The type of the token issued.  Value is case insensitive.
    * REQUIRED.
    */
-  readonly token_type: "bearer" | string;
+  readonly token_type: string;
   /**
    * The lifetime in seconds of the access token.
    * RECOMMENDED.
@@ -117,7 +117,7 @@ export interface ErrorResponse {
  * URI used in the authorization request, or was issued to
  * another client.
  *
- * #unauthorized_client
+ * # unauthorized_client
  *
  * The authenticated client is not authorized to use this
  * authorization grant type.

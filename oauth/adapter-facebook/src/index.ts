@@ -1,1 +1,6 @@
-export { FacebookProvider } from "./facebook";
+export type {
+  FacebookClientConfig,
+  FacebookErrorResponse,
+  FacebookProfileResponse,
+} from "./types";
+export { FacebookAdapter } from "./adapter";

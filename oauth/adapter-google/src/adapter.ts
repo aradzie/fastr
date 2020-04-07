@@ -1,5 +1,5 @@
 import {
-  AbstractProvider,
+  AbstractAdapter,
   ClientConfig,
   ResourceOwner,
 } from "@webfx-oauth/client";
@@ -8,7 +8,7 @@ import type { GoogleProfileResponse } from "./types";
 // See https://developers.google.com/identity/protocols/OpenIDConnect
 // See https://accounts.google.com/.well-known/openid-configuration
 
-export class GoogleProvider extends AbstractProvider {
+export class GoogleAdapter extends AbstractAdapter {
   constructor(config: ClientConfig) {
     super(config, {
       authorizationUri: "https://accounts.google.com/o/oauth2/v2/auth",
@@ -17,13 +17,12 @@ export class GoogleProvider extends AbstractProvider {
     });
   }
 
-  protected parseProfileResponse({
-    sub,
-    name,
-    picture,
-    email,
-  }: GoogleProfileResponse): ResourceOwner {
+  protected parseProfileResponse(
+    response: GoogleProfileResponse,
+  ): ResourceOwner<GoogleProfileResponse> {
+    const { sub, name, picture, email } = response;
     return {
+      raw: response,
       provider: "google",
       id: sub,
       email: email ?? null,

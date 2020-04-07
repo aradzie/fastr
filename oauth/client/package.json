@@ -12,10 +12,12 @@
     "node": ">=12.16"
   },
   "dependencies": {
-    "axios": "^0.19.2"
+    "@webfx-http/headers": "^0.0.2-alpha.10",
+    "@webfx-http/status": "^0.0.2-alpha.10",
+    "@webfx-request/node": "^0.0.2-alpha.10"
   },
   "devDependencies": {
-    "axios-mock-adapter": "^1.18.1"
+    "@webfx-request/node-fake": "^0.0.2-alpha.10"
   },
   "scripts": {
     "compile": "rm -fr lib; rm -fr lib-esm; tsc; tsc -b tsconfig-esm.json",

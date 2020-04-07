@@ -1,13 +1,11 @@
 import test from "ava";
-import axios from "axios";
-import MockAdapter from "axios-mock-adapter";
+import { AbstractAdapter } from "./adapter";
 import type { ResourceOwner } from "./profile";
-import { AbstractProvider } from "./provider";
-import type { ClientConfig, ProviderConfig } from "./types";
+import type { AdapterConfig, ClientConfig } from "./types";
 
-class TestProvider extends AbstractProvider {
-  constructor(clientConfig: ClientConfig, providerConfig: ProviderConfig) {
-    super(clientConfig, providerConfig);
+class TestAdapter extends AbstractAdapter {
+  constructor(clientConfig: ClientConfig, adapterConfig: AdapterConfig) {
+    super(clientConfig, adapterConfig);
   }
 
   protected parseProfileResponse(): ResourceOwner {
@@ -18,7 +16,7 @@ class TestProvider extends AbstractProvider {
 const authorizationUri = "http://authorization/";
 const tokenUri = "http://token/";
 const profileUri = "http://profile/";
-const provider = new TestProvider(
+const adapter = new TestAdapter(
   {
     clientId: "client_id",
     clientSecret: "client_secret",
@@ -34,7 +32,7 @@ const provider = new TestProvider(
 
 test("should generate authorization url", (t) => {
   t.is(
-    provider.getAuthorizationUrl({ state: "state" }),
+    adapter.getAuthorizationUrl({ state: "state" }),
     "http://authorization/" +
       "?response_type=code" +
       "&client_id=client_id" +
@@ -45,17 +43,15 @@ test("should generate authorization url", (t) => {
 });
 
 test("should fetch access token", async (t) => {
-  const mock = new MockAdapter(axios);
+  // const mock = new MockAdapter(axios);
+  //
+  // mock.onAny(tokenUri).reply(200, {
+  //   access_token: "random token",
+  //   token_type: "bearer",
+  //   expires_in: 3600,
+  // });
 
-  mock.onAny(tokenUri).reply(200, {
-    access_token: "random token",
-    token_type: "bearer",
-    expires_in: 3600,
-  });
-
-  const token = await provider.getAccessToken({ code: "code" });
+  const token = await adapter.getAccessToken({ code: "code" });
   t.is(token.token, "random token");
   t.is(token.type, "bearer");
-
-  mock.restore();
 });
