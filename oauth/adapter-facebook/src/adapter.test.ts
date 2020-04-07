@@ -8,8 +8,8 @@ const adapter = new FacebookAdapter({
   scope: "scope",
 });
 
-test("should load user profile", async (t) => {
-  // const mock = new MockAdapter(axios);
+test.skip("should load user profile", async (t) => {
+  // const mock = new MockAdapter();
   //
   // mock.onAny().reply(200, {
   //   id: "id",
@@ -41,14 +41,10 @@ test("should load user profile", async (t) => {
   //   url: "https://www.facebook.com/id",
   //   imageUrl: "https://graph.facebook.com/id/picture",
   // });
-
-  await "something";
-
-  t.pass();
 });
 
-test("should handle auth errors", async (t) => {
-  // const mock = new MockAdapter(axios);
+test.skip("should handle auth errors", async (t) => {
+  // const mock = new MockAdapter();
   //
   // mock.onAny("http://server/").reply(400, {
   //   error: {
@@ -67,8 +63,4 @@ test("should handle auth errors", async (t) => {
   //
   // t.true(err instanceof OAuthError);
   // t.is(err.message, "OAuth error: error description");
-
-  await "something";
-
-  t.pass();
 });

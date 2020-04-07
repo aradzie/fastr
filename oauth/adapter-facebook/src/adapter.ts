@@ -25,16 +25,7 @@ export class FacebookAdapter extends AbstractAdapter {
   constructor(config: FacebookClientConfig) {
     const {
       apiVersion = "v3.2",
-      profileFields = [
-        "id",
-        "name",
-        "first_name",
-        "last_name",
-        "email",
-        "picture.type(large){url,is_silhouette}",
-        "link",
-        "locale",
-      ],
+      profileFields = ["id", "name", "email"],
     } = config;
     const authorizationUri = `https://www.facebook.com/${apiVersion}/dialog/oauth`;
     const tokenUri = `https://graph.facebook.com/${apiVersion}/oauth/access_token`;
@@ -51,15 +42,15 @@ export class FacebookAdapter extends AbstractAdapter {
   protected parseProfileResponse(
     response: FacebookProfileResponse,
   ): ResourceOwner<FacebookProfileResponse> {
-    const { id, email, name } = response;
+    const { id, name, email } = response;
     return {
       raw: response,
       provider: "facebook",
       id: id,
-      email: email ?? null,
-      name: name,
+      name: name ?? "Unknown",
       url: `https://www.facebook.com/${id}`,
       imageUrl: `https://graph.facebook.com/${id}/picture`,
+      email: email ?? null,
     };
   }
 
@@ -86,8 +77,8 @@ export class FacebookAdapter extends AbstractAdapter {
     return (adapter: Adapter): Adapter => {
       return async (request: HttpRequest): Promise<HttpResponse> => {
         const url = new URL(request.url);
-        url.searchParams.append("access_token", token);
-        url.searchParams.append("appsecret_proof", proof);
+        url.searchParams.set("access_token", token);
+        url.searchParams.set("appsecret_proof", proof);
         return adapter({
           ...request,
           url: String(url),
@@ -97,23 +88,11 @@ export class FacebookAdapter extends AbstractAdapter {
   }
 
   /**
-   * Example:
-   *
-   * ```json
-   * { error:
-   *   { message: 'Error validating application. Invalid application ID.',
-   *     type: 'OAuthException',
-   *     code: 101 } }
-   * ```
+   * Translates Facebook error response to [[OAuthError]].
    */
   static translateError(response: FacebookErrorResponse): Error {
     const {
-      error: {
-        type,
-        code,
-        error_subcode: subcode,
-        message = "Unknown error",
-      } = {},
+      error: { message, type, code, error_subcode: subcode },
     } = response;
     if (type === "OAuthException") {
       if (code === 102) {
@@ -127,28 +106,30 @@ export class FacebookAdapter extends AbstractAdapter {
           // Name: App Not Installed
           // The User has not logged into your app.
           // Reauthenticate the User.
-          return new OAuthError("invalid_client", message, response);
+          return new OAuthError(message, "invalid_client", response);
         }
 
         if (subcode === 467) {
           // Name: Invalid Access Token
           // Access token has expired, been revoked,
           // or is otherwise invalid.
-          return new OAuthError("invalid_grant", message, response);
+          return new OAuthError(message, "invalid_request", response);
         }
 
-        return new OAuthError("invalid_grant", message, response);
+        return new OAuthError(message, "invalid_request", response);
       }
 
       if (code === 190) {
         // Name: Access token has expired
-        return new OAuthError("invalid_grant", message, response);
+        return new OAuthError(message, "invalid_request", response);
       }
 
-      return new OAuthError("invalid_request", message, response);
+      // We don't know how to translate this error exactly.
+      return new OAuthError(message, "invalid_request", response);
     } else {
       return new TypeError(
-        `Unknown Facebook error, type=[${type}], ` +
+        `Unknown Facebook error, ` +
+          `type=[${type}], ` +
           `code=[${code}], ` +
           `subcode=[${subcode}], ` +
           `message=[${message}]`,

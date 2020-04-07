@@ -25,10 +25,10 @@ export class GoogleAdapter extends AbstractAdapter {
       raw: response,
       provider: "google",
       id: sub,
-      email: email ?? null,
       name: name ?? null,
       url: null,
       imageUrl: picture ?? null,
+      email: email ?? null,
     };
   }
 }

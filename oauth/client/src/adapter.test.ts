@@ -1,11 +1,15 @@
 import test from "ava";
 import { AbstractAdapter } from "./adapter";
-import type { ResourceOwner } from "./profile";
-import type { AdapterConfig, ClientConfig } from "./types";
+import type { ResourceOwner } from "./resource-owner";
+import type { ClientConfig } from "./types";
 
 class TestAdapter extends AbstractAdapter {
-  constructor(clientConfig: ClientConfig, adapterConfig: AdapterConfig) {
-    super(clientConfig, adapterConfig);
+  constructor(clientConfig: ClientConfig) {
+    super(clientConfig, {
+      authorizationUri: "https://test/authorization/",
+      tokenUri: "https://test/token/",
+      profileUri: "https://test/profile/",
+    });
   }
 
   protected parseProfileResponse(): ResourceOwner {
@@ -13,37 +17,27 @@ class TestAdapter extends AbstractAdapter {
   }
 }
 
-const authorizationUri = "http://authorization/";
-const tokenUri = "http://token/";
-const profileUri = "http://profile/";
-const adapter = new TestAdapter(
-  {
-    clientId: "client_id",
-    clientSecret: "client_secret",
-    redirectUri: "redirect_uri",
-    scope: "scope",
-  },
-  {
-    authorizationUri,
-    tokenUri,
-    profileUri,
-  },
-);
+const adapter = new TestAdapter({
+  clientId: "client_id1",
+  clientSecret: "client_secret1",
+  redirectUri: "redirect_uri1",
+  scope: "scope1",
+});
 
 test("should generate authorization url", (t) => {
   t.is(
-    adapter.getAuthorizationUrl({ state: "state" }),
-    "http://authorization/" +
+    adapter.getAuthorizationUrl({ state: "state1" }),
+    "https://test/authorization/" +
       "?response_type=code" +
-      "&client_id=client_id" +
-      "&scope=scope" +
-      "&redirect_uri=redirect_uri" +
-      "&state=state",
+      "&client_id=client_id1" +
+      "&scope=scope1" +
+      "&redirect_uri=redirect_uri1" +
+      "&state=state1",
   );
 });
 
-test("should fetch access token", async (t) => {
-  // const mock = new MockAdapter(axios);
+test.skip("should fetch access token", async (t) => {
+  // const mock = new MockAdapter();
   //
   // mock.onAny(tokenUri).reply(200, {
   //   access_token: "random token",

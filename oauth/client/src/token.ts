@@ -10,4 +10,8 @@ export class AccessToken {
     this.type = token_type;
     this.expiresAt = new Date(Date.now() + expires_in * 1000);
   }
+
+  expired(padding = 60): boolean {
+    return Date.now() >= this.expiresAt.getTime() - padding * 1000;
+  }
 }

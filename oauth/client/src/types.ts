@@ -1,9 +1,4 @@
-export interface ClientCredentials {
-  readonly clientId: string;
-  readonly clientSecret: string;
-}
-
-export interface ClientConfig extends ClientCredentials {
+export interface ClientConfig {
   readonly clientId: string;
   readonly clientSecret: string;
   readonly redirectUri: string;

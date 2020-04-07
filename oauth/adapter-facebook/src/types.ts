@@ -16,14 +16,14 @@ export interface FacebookErrorResponse {
 
 export interface FacebookProfileResponse {
   readonly id: string;
-  readonly name: string;
-  readonly first_name: string;
-  readonly last_name: string;
-  readonly email?: string;
-  readonly picture: {
-    readonly data: {
-      readonly url: string;
-      readonly is_silhouette: boolean;
+  readonly name?: string;
+  readonly first_name?: string;
+  readonly last_name?: string;
+  readonly picture?: {
+    readonly data?: {
+      readonly url?: string;
+      readonly is_silhouette?: boolean;
     };
   };
+  readonly email?: string;
 }

@@ -10,7 +10,7 @@ import {
   request,
 } from "@webfx-request/node";
 import { OAuthError } from "./errors";
-import type { ResourceOwner } from "./profile";
+import type { ResourceOwner } from "./resource-owner";
 import { AccessToken } from "./token";
 import type {
   AdapterConfig,
@@ -60,9 +60,9 @@ export abstract class AbstractAdapter {
   async getAccessToken({ code }: { code: string }): Promise<AccessToken> {
     const response = await request
       .post(this.tokenUri)
-      .use(this.handleErrors())
-      .use(handleErrors())
       .use(expectType("application/json"))
+      .use(handleErrors())
+      .use(this.handleErrors())
       .sendJson({
         grant_type: "authorization_code",
         client_id: this.clientId,
@@ -77,10 +77,10 @@ export abstract class AbstractAdapter {
   async getProfile(accessToken: AccessToken): Promise<ResourceOwner> {
     const response = await request
       .get(this.profileUri)
-      .use(this.authenticateRequest(accessToken))
-      .use(this.handleErrors())
-      .use(handleErrors())
       .use(expectType("application/json"))
+      .use(handleErrors())
+      .use(this.handleErrors())
+      .use(this.authenticateRequest(accessToken))
       .send();
     const body = await response.body.json<{}>();
     return this.parseProfileResponse(body);

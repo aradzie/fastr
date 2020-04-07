@@ -8,8 +8,8 @@ const adapter = new GoogleAdapter({
   scope: "scope",
 });
 
-test("should load user profile", async (t) => {
-  // const mock = new MockAdapter(axios);
+test.skip("should load user profile", async (t) => {
+  // const mock = new MockAdapter();
   //
   // mock.onAny().reply(200, {
   //   sub: "id",
@@ -38,8 +38,4 @@ test("should load user profile", async (t) => {
   //   url: null,
   //   imageUrl: "imageUrl",
   // });
-
-  await "something";
-
-  t.pass();
 });
