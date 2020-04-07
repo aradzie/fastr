@@ -116,14 +116,14 @@ export class Body {
    * @throws PayloadTooLargeError If received body size is above the configured
    *                              limit.
    */
-  async json(
+  async json<T extends unknown>(
     reviver?: (this: any, key: string, value: any) => any,
-  ): Promise<any> {
+  ): Promise<T> {
     const text = await this.text();
     try {
       return JSON.parse(text, reviver);
     } catch {
-      throw new BadRequestError();
+      throw new BadRequestError(); // TODO Client side body in a request.
     }
   }
 
@@ -140,7 +140,7 @@ export class Body {
     try {
       return parse(text, options);
     } catch {
-      throw new BadRequestError();
+      throw new BadRequestError(); // TODO Client side body in a request.
     }
   }
 
