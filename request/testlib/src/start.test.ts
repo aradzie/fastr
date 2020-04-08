@@ -7,8 +7,8 @@ import { cert, key } from "./test/cert";
 
 test("start with a listener function", async (t) => {
   const response = await request //
-    .get("/")
     .use(start(listener))
+    .get("/")
     .send();
 
   t.is(response.status, 200);
@@ -19,8 +19,8 @@ test("start with a listener function", async (t) => {
 test("start with a HTTP server", async (t) => {
   const server = http.createServer({}, listener);
   const response = await request //
-    .get("/")
     .use(start(server))
+    .get("/")
     .options({})
     .send();
 
@@ -32,8 +32,8 @@ test("start with a HTTP server", async (t) => {
 test("start with a HTTPS server", async (t) => {
   const server = https.createServer({ key, cert }, listener);
   const response = await request //
-    .get("/")
     .use(start(server))
+    .get("/")
     .options({ rejectUnauthorized: false })
     .send();
 

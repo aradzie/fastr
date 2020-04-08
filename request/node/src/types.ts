@@ -23,12 +23,12 @@ export interface Middleware {
   (adapter: Adapter): Adapter;
 }
 
-export interface HasMiddleware {
-  readonly middleware?: readonly Middleware[];
-}
-
-export interface Instance {
-  (request: HttpRequest & HasMiddleware): Promise<HttpResponse>;
+export interface BuildableRequest extends Adapter {
+  (request: HttpRequest): Promise<HttpResponse>;
+  /**
+   * Returns a new instance which uses the specified middleware.
+   */
+  use: (middleware: Middleware) => BuildableRequest;
   /**
    * Sends HTTP request using the given HTTP method.
    * @param method The HTTP method to use for the request.
@@ -40,6 +40,11 @@ export interface Instance {
    * @param url A URL of the resource to request.
    */
   get: (url: URL | string) => RequestBuilder;
+  /**
+   * Sends HTTP request using the `HEAD` method.
+   * @param url A URL of the resource to request.
+   */
+  head: (url: URL | string) => RequestBuilder;
   /**
    * Sends HTTP request using the `POST` method.
    * @param url A URL of the resource to request.

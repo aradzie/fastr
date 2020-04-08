@@ -7,16 +7,12 @@ import { cookies } from "./cookies";
 import { start } from "./start";
 
 test("update cookie", async (t) => {
-  const server = start(listener);
   const jar = new CookieJar();
+  const req = request.use(start(listener)).use(cookies(jar));
 
   // First request with no cookies.
   {
-    const { status, headers, body } = await request
-      .get("/create")
-      .use(server)
-      .use(cookies(jar))
-      .send();
+    const { status, headers, body } = await req.get("/create").send();
 
     t.is(status, 200);
     t.deepEqual(headers.allSetCookies(), [new SetCookie("x", "abc")]);
@@ -26,11 +22,7 @@ test("update cookie", async (t) => {
 
   // Second request with cookies from the previous response.
   {
-    const { status, headers, body } = await request
-      .get("/update")
-      .use(server)
-      .use(cookies(jar))
-      .send();
+    const { status, headers, body } = await req.get("/update").send();
 
     t.is(status, 200);
     t.deepEqual(headers.allSetCookies(), [new SetCookie("x", "xyz")]);
@@ -40,11 +32,7 @@ test("update cookie", async (t) => {
 
   // Delete cookies.
   {
-    const { status, headers, body } = await request
-      .get("/clear")
-      .use(server)
-      .use(cookies(jar))
-      .send();
+    const { status, headers, body } = await req.get("/clear").send();
 
     t.is(status, 200);
     t.deepEqual(headers.allSetCookies(), [new SetCookie("x", "")]);

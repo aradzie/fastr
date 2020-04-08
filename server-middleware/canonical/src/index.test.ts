@@ -16,13 +16,14 @@ test("redirect to canonical url", async (t) => {
   new Builder(container).use(app, Canonical).use(app, (ctx) => {
     ctx.response.body = "ok";
   });
+  const req = request.use(start(app.callback()));
 
   // Match canonical URL.
+
   t.is(
     (
-      await request
+      await req
         .get("/foo/bar?a=b#x")
-        .use(start(app.callback()))
         .header("X-Forwarded-Host", "www.example.com")
         .header("X-Forwarded-Proto", "https")
         .send()
@@ -33,9 +34,8 @@ test("redirect to canonical url", async (t) => {
   // Change domain name.
   t.is(
     (
-      await request
+      await req
         .get("/foo/bar?a=b#x")
-        .use(start(app.callback()))
         .header("X-Forwarded-Host", "example.com")
         .header("X-Forwarded-Proto", "https")
         .send()
@@ -46,9 +46,8 @@ test("redirect to canonical url", async (t) => {
   // Change protocol.
   t.is(
     (
-      await request
+      await req
         .get("/foo/bar?a=b#x")
-        .use(start(app.callback()))
         .header("X-Forwarded-Host", "www.example.com")
         .header("X-Forwarded-Proto", "http")
         .send()
@@ -59,9 +58,8 @@ test("redirect to canonical url", async (t) => {
   // Change domain name and protocol.
   t.is(
     (
-      await request
+      await req
         .get("/foo/bar?a=b#x")
-        .use(start(app.callback()))
         .header("X-Forwarded-Host", "example.com")
         .header("X-Forwarded-Proto", "http")
         .send()

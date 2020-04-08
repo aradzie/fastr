@@ -17,8 +17,8 @@ test("should compress with gzip", async (t) => {
   });
 
   const response = await request
-    .get("/")
     .use(start(app.callback()))
+    .get("/")
     .header("Accept-Encoding", "gzip, br, identity")
     .send();
 
@@ -41,8 +41,8 @@ test("should compress strings", async (t) => {
   });
 
   const response = await request
-    .get("/")
     .use(start(app.callback()))
+    .get("/")
     .header("Accept-Encoding", "gzip, identity")
     .send();
 
@@ -65,8 +65,8 @@ test("should compress buffers", async (t) => {
   });
 
   const response = await request
-    .get("/")
     .use(start(app.callback()))
+    .get("/")
     .header("Accept-Encoding", "gzip, identity")
     .send();
 
@@ -92,8 +92,8 @@ test("should compress streams", async (t) => {
   });
 
   const response = await request
-    .get("/")
     .use(start(app.callback()))
+    .get("/")
     .header("Accept-Encoding", "gzip, identity")
     .send();
 
@@ -115,8 +115,8 @@ test("should compress JSON", async (t) => {
   });
 
   const response = await request
-    .get("/")
     .use(start(app.callback()))
+    .get("/")
     .header("Accept-Encoding", "gzip, identity")
     .send();
 
@@ -140,8 +140,8 @@ test("should update etag", async (t) => {
   });
 
   const response = await request
-    .get("/")
     .use(start(app.callback()))
+    .get("/")
     .header("Accept-Encoding", "gzip, identity")
     .send();
 
@@ -166,8 +166,8 @@ test("should update weak etag", async (t) => {
   });
 
   const response = await request
-    .get("/")
     .use(start(app.callback()))
+    .get("/")
     .header("Accept-Encoding", "gzip, identity")
     .send();
 
@@ -191,8 +191,8 @@ test("should tolerate unknown request encoding", async (t) => {
   });
 
   const response = await request
-    .get("/")
     .use(start(app.callback()))
+    .get("/")
     .header("Accept-Encoding", "unknown")
     .send();
 
@@ -215,8 +215,8 @@ test("should not compress non-compressible responses", async (t) => {
   });
 
   const response = await request
-    .get("/")
     .use(start(app.callback()))
+    .get("/")
     .header("Accept-Encoding", "gzip, identity")
     .send();
 
@@ -238,8 +238,8 @@ test("should not compress HEAD requests", async (t) => {
   });
 
   const response = await request
-    .method("HEAD", "/")
     .use(start(app.callback()))
+    .head("/")
     .header("Accept-Encoding", "gzip, identity")
     .send();
 
@@ -262,8 +262,8 @@ test("should not compress empty responses", async (t) => {
   });
 
   const response = await request
-    .get("/")
     .use(start(app.callback()))
+    .get("/")
     .header("Accept-Encoding", "gzip, identity")
     .send();
 
@@ -286,8 +286,8 @@ test("should not compress below size threshold", async (t) => {
   });
 
   const response = await request
-    .get("/")
     .use(start(app.callback()))
+    .get("/")
     .header("Accept-Encoding", "gzip, identity")
     .send();
 
@@ -311,8 +311,8 @@ test("should not compress when Content-Encoding is already set", async (t) => {
   });
 
   const response = await request
-    .get("/")
     .use(start(app.callback()))
+    .get("/")
     .header("Accept-Encoding", "gzip, identity")
     .send();
 
@@ -336,8 +336,8 @@ test("should honor ctx.compress = false", async (t) => {
   });
 
   const response = await request
-    .get("/")
     .use(start(app.callback()))
+    .get("/")
     .header("Accept-Encoding", "gzip, identity")
     .send();
 
@@ -361,8 +361,8 @@ test("should honor ctx.compress = true", async (t) => {
   });
 
   const response = await request
-    .get("/")
     .use(start(app.callback()))
+    .get("/")
     .header("Accept-Encoding", "gzip, identity")
     .send();
 

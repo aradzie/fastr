@@ -1,4 +1,5 @@
-import { start } from "@webfx-request/testlib";
+import { request } from "@webfx-request/node";
+import { CookieJar, cookies, start } from "@webfx-request/testlib";
 import Koa from "koa";
 import { session } from "../../middleware";
 import { Options } from "../../options";
@@ -8,7 +9,9 @@ type SessionTypes = { count: number };
 
 export class Helper {
   readonly app = new Koa();
-  readonly server = start(this.app.listen());
+  readonly request = request
+    .use(start(this.app.listen()))
+    .use(cookies(new CookieJar()));
 
   constructor(options: Options) {
     this.app.use(

@@ -18,11 +18,11 @@ test("validate query", async (t) => {
   app.use(async (ctx) => {
     ctx.response.body = {};
   });
-  const srv = start(app.callback());
+  const req = request.use(start(app.callback()));
 
-  t.is((await request.post("/").use(srv).send()).status, 400);
-  t.is((await request.post("/?extra=fail").use(srv).send()).status, 400);
-  t.is((await request.post("/?value=ok").use(srv).send()).status, 200);
+  t.is((await req.post("/").send()).status, 400);
+  t.is((await req.post("/?extra=fail").send()).status, 400);
+  t.is((await req.post("/?value=ok").send()).status, 200);
 });
 
 test("validate json body", async (t) => {
@@ -38,26 +38,10 @@ test("validate json body", async (t) => {
   app.use(async (ctx) => {
     ctx.response.body = {};
   });
-  const srv = start(app.callback());
+  const req = request.use(start(app.callback()));
 
-  t.is(
-    (
-      await request //
-        .post("/")
-        .use(srv)
-        .sendJson({ extra: "fail" })
-    ).status,
-    400,
-  );
-  t.is(
-    (
-      await request //
-        .post("/")
-        .use(srv)
-        .sendJson({ value: "ok" })
-    ).status,
-    200,
-  );
+  t.is((await req.post("/").sendJson({ extra: "fail" })).status, 400);
+  t.is((await req.post("/").sendJson({ value: "ok" })).status, 200);
 });
 
 test("validate form body", async (t) => {
@@ -73,22 +57,20 @@ test("validate form body", async (t) => {
   app.use(async (ctx) => {
     ctx.response.body = {};
   });
-  const srv = start(app.callback());
+  const req = request.use(start(app.callback()));
 
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send(new URLSearchParams("extra=fail"))
     ).status,
     400,
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send(new URLSearchParams("value=ok"))
     ).status,
     200,

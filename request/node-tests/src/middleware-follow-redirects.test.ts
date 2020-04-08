@@ -1,7 +1,6 @@
 import { MimeType } from "@webfx-http/headers";
 import {
   followRedirects,
-  HasMiddleware,
   HttpRequest,
   request,
   RequestRedirectError,
@@ -34,10 +33,11 @@ test("on redirect follow", async (t) => {
 
   // Act.
 
-  const { ok, status, statusText, url, headers, body } = await request({
+  const { ok, status, statusText, url, headers, body } = await request.use(
+    followRedirects({ redirect: "follow" }),
+  )({
     url: server.url("/a"),
     method: "GET",
-    middleware: [followRedirects({ redirect: "follow" })],
   });
 
   // Assert.
@@ -69,10 +69,11 @@ test("on redirect follow to not found", async (t) => {
 
   // Act.
 
-  const { ok, status, statusText, url, headers, body } = await request({
+  const { ok, status, statusText, url, headers, body } = await request.use(
+    followRedirects({ redirect: "follow" }),
+  )({
     url: server.url("/a"),
     method: "GET",
-    middleware: [followRedirects({ redirect: "follow" })],
   });
 
   // Assert.
@@ -99,10 +100,11 @@ test("on redirect return", async (t) => {
 
   // Act.
 
-  const { ok, status, statusText, url, headers, body } = await request({
+  const { ok, status, statusText, url, headers, body } = await request.use(
+    followRedirects({ redirect: "manual" }),
+  )({
     url: server.url("/a"),
     method: "GET",
-    middleware: [followRedirects({ redirect: "manual" })],
   });
 
   // Assert.
@@ -128,14 +130,14 @@ test("on redirect throw", async (t) => {
 
   // Assert.
 
-  const init: HttpRequest & HasMiddleware = {
+  const init: HttpRequest = {
     url: server.url("/a"),
     method: "GET",
-    middleware: [followRedirects({ redirect: "error" })],
   };
+  const req = request.use(followRedirects({ redirect: "error" }));
   await t.throwsAsync(
     async () => {
-      await request(init);
+      await req(init);
     },
     {
       instanceOf: RequestRedirectError,
@@ -156,14 +158,14 @@ test("handle no redirect location", async (t) => {
 
   // Assert.
 
-  const init: HttpRequest & HasMiddleware = {
+  const init: HttpRequest = {
     url: server.url("/a"),
     method: "GET",
-    middleware: [followRedirects({ redirect: "follow" })],
   };
+  const req = request.use(followRedirects({ redirect: "follow" }));
   await t.throwsAsync(
     async () => {
-      await request(init);
+      await req(init);
     },
     {
       instanceOf: RequestRedirectError,
@@ -191,14 +193,14 @@ test("handle redirect loop", async (t) => {
 
   // Assert.
 
-  const init: HttpRequest & HasMiddleware = {
+  const init: HttpRequest = {
     url: server.url("/a"),
     method: "GET",
-    middleware: [followRedirects({ redirect: "follow" })],
   };
+  const req = request.use(followRedirects({ redirect: "follow" }));
   await t.throwsAsync(
     async () => {
-      await request(init);
+      await req(init);
     },
     {
       instanceOf: RequestRedirectError,
@@ -236,14 +238,14 @@ test("handle too many redirects", async (t) => {
 
   // Assert.
 
-  const init: HttpRequest & HasMiddleware = {
+  const init: HttpRequest = {
     url: server.url("/a"),
     method: "GET",
-    middleware: [followRedirects({ redirect: "follow" })],
   };
+  const req = request.use(followRedirects({ redirect: "follow" }));
   await t.throwsAsync(
     async () => {
-      await request(init);
+      await req(init);
     },
     {
       instanceOf: RequestRedirectError,

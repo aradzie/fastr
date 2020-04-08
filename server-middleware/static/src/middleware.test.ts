@@ -30,7 +30,7 @@ test("unknown file", async (t) => {
   app.use((ctx) => (ctx.response.body = "ok"));
   const srv = start(app.listen());
 
-  const response = await request.get("/unknown.txt").use(srv).send();
+  const response = await request.use(srv).get("/unknown.txt").send();
 
   t.is(response.status, 200);
   t.is(await response.body.text(), "ok");
@@ -42,8 +42,8 @@ test("select identity variant", async (t) => {
   const srv = start(app.listen());
 
   const response = await request
-    .get("/file.txt")
     .use(srv)
+    .get("/file.txt")
     .header("Accept-Encoding", "identity")
     .send();
 
@@ -64,8 +64,8 @@ test("select gzip variant", async (t) => {
   const srv = start(app.listen());
 
   const response = await request
-    .get("/file.txt")
     .use(srv)
+    .get("/file.txt")
     .header("Accept-Encoding", "gzip, identity")
     .send();
 
@@ -86,8 +86,8 @@ test("select brotli variant", async (t) => {
   const srv = start(app.listen());
 
   const response = await request
-    .get("/file.txt")
     .use(srv)
+    .get("/file.txt")
     .header("Accept-Encoding", "br, identity")
     .send();
 
@@ -114,8 +114,8 @@ test("cache control", async (t) => {
   const srv = start(app.listen());
 
   const response = await request
-    .get("/file.txt")
     .use(srv)
+    .get("/file.txt")
     .header("Accept-Encoding", "identity")
     .send();
 

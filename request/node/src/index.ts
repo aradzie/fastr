@@ -1,8 +1,7 @@
 export type {
   Adapter,
-  Instance,
+  BuildableRequest,
   Middleware,
-  HasMiddleware,
   HttpRequest,
   HttpResponse,
   HttpRequestBody,

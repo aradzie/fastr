@@ -1,5 +1,5 @@
 import { Router } from "@webfx-middleware/router";
-import { Middleware } from "@webfx-request/node";
+import { BuildableRequest, request } from "@webfx-request/node";
 import { start } from "@webfx-request/testlib";
 import { Builder } from "@webfx/controller";
 import { MiddlewareId } from "@webfx/middleware";
@@ -17,8 +17,7 @@ export function makeHelper({
   middlewares?: MiddlewareId[];
   controllers?: Constructor[];
 }): {
-  app: Koa;
-  server: Middleware;
+  request: BuildableRequest;
 } {
   const app = new Koa();
   const router = new Router();
@@ -27,6 +26,5 @@ export function makeHelper({
     .use(app, ...middlewares)
     .use(app, router.middleware())
     .build();
-  const server = start(app.listen());
-  return { app, server };
+  return { request: request.use(start(app.listen())) };
 }

@@ -11,40 +11,36 @@ test("expect buffer", async (t) => {
   app.use((ctx) => {
     ctx.response.body = "ok";
   });
-  const srv = start(app.callback());
+  const req = request.use(start(app.callback()));
 
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("something", "application/octet-stream")
     ).status,
     200,
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("text", "text/plain")
     ).status,
     415,
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("{}", "application/json")
     ).status,
     415,
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("a=1", "application/x-www-form-urlencoded")
     ).status,
     415,
@@ -57,40 +53,36 @@ test("expect text", async (t) => {
   app.use((ctx) => {
     ctx.response.body = "ok";
   });
-  const srv = start(app.callback());
+  const req = request.use(start(app.callback()));
 
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("something", "application/octet-stream")
     ).status,
     415,
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("text", "text/plain")
     ).status,
     200,
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("{}", "application/json")
     ).status,
     415,
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("a=1", "application/x-www-form-urlencoded")
     ).status,
     415,
@@ -103,40 +95,36 @@ test("expect json", async (t) => {
   app.use((ctx) => {
     ctx.response.body = "ok";
   });
-  const srv = start(app.callback());
+  const req = request.use(start(app.callback()));
 
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("something", "application/octet-stream")
     ).status,
     415,
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("text", "text/plain")
     ).status,
     415,
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("{}", "application/json")
     ).status,
     200,
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("a=1", "application/x-www-form-urlencoded")
     ).status,
     415,
@@ -149,40 +137,36 @@ test("expect form", async (t) => {
   app.use((ctx) => {
     ctx.response.body = "ok";
   });
-  const srv = start(app.callback());
+  const req = request.use(start(app.callback()));
 
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("something", "application/octet-stream")
     ).status,
     415,
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("text", "text/plain")
     ).status,
     415,
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("{}", "application/json")
     ).status,
     415,
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("a=1", "application/x-www-form-urlencoded")
     ).status,
     200,
@@ -195,13 +179,12 @@ test("validate json", async (t) => {
   app.use((ctx) => {
     ctx.response.body = "ok";
   });
-  const srv = start(app.callback());
+  const req = request.use(start(app.callback()));
 
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("not json", "application/json")
     ).status,
     400,
@@ -214,13 +197,12 @@ test("honor body limit", async (t) => {
   app.use((ctx) => {
     ctx.response.body = "ok";
   });
-  const srv = start(app.callback());
+  const req = request.use(start(app.callback()));
 
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .send("body", "text/plain")
     ).status,
     413,
@@ -233,13 +215,12 @@ test("decompress", async (t) => {
   app.use((ctx) => {
     ctx.response.body = "ok";
   });
-  const srv = start(app.callback());
+  const req = request.use(start(app.callback()));
 
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .header("content-encoding", "identity")
         .send("text", "text/plain")
     ).status,
@@ -247,9 +228,8 @@ test("decompress", async (t) => {
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .header("content-encoding", "invalid")
         .send("text", "text/plain")
     ).status,
@@ -257,9 +237,8 @@ test("decompress", async (t) => {
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .header("content-encoding", "gzip")
         .send("invalid", "text/plain")
     ).status,
@@ -267,9 +246,8 @@ test("decompress", async (t) => {
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .header("content-encoding", "deflate")
         .send("invalid", "text/plain")
     ).status,
@@ -277,9 +255,8 @@ test("decompress", async (t) => {
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .header("content-encoding", "br")
         .send("invalid", "text/plain")
     ).status,
@@ -287,9 +264,8 @@ test("decompress", async (t) => {
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .header("content-encoding", "gzip")
         .send(gzipSync("data"), "text/plain")
     ).status,
@@ -297,9 +273,8 @@ test("decompress", async (t) => {
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .header("content-encoding", "deflate")
         .send(gzipSync("data"), "text/plain")
     ).status,
@@ -307,9 +282,8 @@ test("decompress", async (t) => {
   );
   t.is(
     (
-      await request //
+      await req //
         .post("/")
-        .use(srv)
         .header("content-encoding", "br")
         .send(brotliCompressSync("data"), "text/plain")
     ).status,

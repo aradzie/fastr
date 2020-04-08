@@ -1,9 +1,4 @@
-import {
-  expectType,
-  HasMiddleware,
-  HttpRequest,
-  request,
-} from "@webfx-request/node";
+import { expectType, HttpRequest, request } from "@webfx-request/node";
 import { test } from "./util";
 
 test("return response if content type matches", async (t) => {
@@ -19,10 +14,11 @@ test("return response if content type matches", async (t) => {
 
   // Act.
 
-  const { ok, status, statusText } = await request({
+  const { ok, status, statusText } = await request.use(
+    expectType("text/plain"),
+  )({
     url: server.url("/test"),
     method: "GET",
-    middleware: [expectType("text/plain")],
   });
 
   // Assert.
@@ -45,14 +41,13 @@ test("throw error if content type does not match", async (t) => {
 
   // Assert.
 
-  const init: HttpRequest & HasMiddleware = {
+  const init: HttpRequest = {
     url: server.url("/test"),
     method: "GET",
-    middleware: [expectType("text/plain")],
   };
   await t.throwsAsync(
     async () => {
-      await request(init);
+      await request.use(expectType("text/plain"))(init);
     },
     {
       name: "UnsupportedMediaTypeError",

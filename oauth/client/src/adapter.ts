@@ -59,10 +59,10 @@ export abstract class AbstractAdapter {
 
   async getAccessToken({ code }: { code: string }): Promise<AccessToken> {
     const response = await request
-      .post(this.tokenUri)
-      .use(expectType("application/json"))
-      .use(handleErrors())
       .use(this.handleErrors())
+      .use(handleErrors())
+      .use(expectType("application/json"))
+      .post(this.tokenUri)
       .sendJson({
         grant_type: "authorization_code",
         client_id: this.clientId,
@@ -76,11 +76,11 @@ export abstract class AbstractAdapter {
 
   async getProfile(accessToken: AccessToken): Promise<ResourceOwner> {
     const response = await request
-      .get(this.profileUri)
-      .use(expectType("application/json"))
-      .use(handleErrors())
-      .use(this.handleErrors())
       .use(this.authenticateRequest(accessToken))
+      .use(this.handleErrors())
+      .use(handleErrors())
+      .use(expectType("application/json"))
+      .get(this.profileUri)
       .send();
     const body = await response.body.json<{}>();
     return this.parseProfileResponse(body);

@@ -1,5 +1,4 @@
 import { RouterContext } from "@webfx-middleware/router";
-import { request } from "@webfx-request/node";
 import { controller, http, use } from "@webfx/controller";
 import { IMiddleware } from "@webfx/middleware";
 import test from "ava";
@@ -63,7 +62,7 @@ test("should use injectable middlewares", async (t) => {
   }
 
   const container = new Container();
-  const { server } = makeHelper({
+  const { request } = makeHelper({
     container,
     middlewares: [Middleware1],
     controllers: [Controller1],
@@ -71,7 +70,7 @@ test("should use injectable middlewares", async (t) => {
 
   // Act.
 
-  const { body } = await request.get("/").use(server).send();
+  const { body } = await request.get("/").send();
 
   // Assert.
 
@@ -108,7 +107,7 @@ test("should use function middlewares", async (t) => {
   }
 
   const container = new Container();
-  const { server } = makeHelper({
+  const { request } = makeHelper({
     container,
     middlewares: [middleware1],
     controllers: [Controller1],
@@ -116,7 +115,7 @@ test("should use function middlewares", async (t) => {
 
   // Act.
 
-  const { body } = await request.get("/").use(server).send();
+  const { body } = await request.get("/").send();
 
   // Assert.
 

@@ -1,5 +1,3 @@
-import { request } from "@webfx-request/node";
-import { CookieJar, cookies } from "@webfx-request/testlib";
 import test from "ava";
 import MockDate from "mockdate";
 import { Helper } from "./test/helper";
@@ -12,15 +10,10 @@ test.serial("manually start session", async (t) => {
   // Arrange.
 
   const helper = new Helper({ store: "cookie", autoStart: false });
-  const cookieJar = new CookieJar();
 
   // Act.
 
-  const response1 = await request
-    .get("/")
-    .use(cookies(cookieJar))
-    .use(helper.server)
-    .send();
+  const response1 = await helper.request.get("/").send();
 
   // Assert.
 
@@ -32,11 +25,7 @@ test.serial("manually start session", async (t) => {
   helper.handle = (session): void => {
     session.start();
   };
-  const response2 = await request
-    .get("/")
-    .use(cookies(cookieJar))
-    .use(helper.server)
-    .send();
+  const response2 = await helper.request.get("/").send();
 
   // Assert.
 
@@ -56,16 +45,11 @@ test.serial("update session", async (t) => {
   // Arrange.
 
   const helper = new Helper({ store: "cookie", autoStart: true });
-  const cookieJar = new CookieJar();
 
   // Act.
 
   MockDate.set(new Date("2001-01-01T00:00:00Z"));
-  const response1 = await request
-    .get("/")
-    .use(cookies(cookieJar))
-    .use(helper.server)
-    .send();
+  const response1 = await helper.request.get("/").send();
 
   // Assert.
 
@@ -83,11 +67,7 @@ test.serial("update session", async (t) => {
   // Act.
 
   MockDate.set(new Date("2001-01-01T00:01:00Z"));
-  const response2 = await request
-    .get("/")
-    .use(cookies(cookieJar))
-    .use(helper.server)
-    .send();
+  const response2 = await helper.request.get("/").send();
 
   // Assert.
 
@@ -107,16 +87,11 @@ test.serial("regenerate session", async (t) => {
   // Arrange.
 
   const helper = new Helper({ store: "cookie", autoStart: true });
-  const cookieJar = new CookieJar();
 
   // Act.
 
   MockDate.set(new Date("2001-01-01T00:00:00Z"));
-  const response1 = await request
-    .get("/")
-    .use(cookies(cookieJar))
-    .use(helper.server)
-    .send();
+  const response1 = await helper.request.get("/").send();
 
   // Assert.
 
@@ -136,11 +111,7 @@ test.serial("regenerate session", async (t) => {
   helper.handle = (session): void => {
     session.regenerate();
   };
-  const response2 = await request
-    .get("/")
-    .use(cookies(cookieJar))
-    .use(helper.server)
-    .send();
+  const response2 = await helper.request.get("/").send();
 
   // Assert.
 
@@ -160,16 +131,11 @@ test.serial("delete session", async (t) => {
   // Arrange.
 
   const helper = new Helper({ store: "cookie", autoStart: true });
-  const cookieJar = new CookieJar();
 
   // Act.
 
   MockDate.set(new Date("2001-01-01T00:00:00Z"));
-  const response1 = await request
-    .get("/")
-    .use(cookies(cookieJar))
-    .use(helper.server)
-    .send();
+  const response1 = await helper.request.get("/").send();
 
   // Assert.
 
@@ -189,11 +155,7 @@ test.serial("delete session", async (t) => {
   helper.handle = (session): void => {
     session.destroy();
   };
-  const response2 = await request
-    .get("/")
-    .use(cookies(cookieJar))
-    .use(helper.server)
-    .send();
+  const response2 = await helper.request.get("/").send();
 
   // Assert.
 
@@ -210,9 +172,8 @@ test.serial("ignore invalid session id", async (t) => {
 
   // Act.
 
-  const response1 = await request
+  const response1 = await helper.request
     .get("/")
-    .use(helper.server)
     .header("Cookie", "session=invalid")
     .send();
 
@@ -229,9 +190,8 @@ test.serial("ignore invalid session id in autostart session", async (t) => {
 
   // Act.
 
-  const response1 = await request
+  const response1 = await helper.request
     .get("/")
-    .use(helper.server)
     .header("Cookie", "session=invalid")
     .send();
 

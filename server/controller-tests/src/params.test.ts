@@ -1,5 +1,4 @@
 import { expectText } from "@webfx-middleware/body";
-import { request as httpRequest } from "@webfx-request/node";
 import {
   body,
   context,
@@ -38,15 +37,14 @@ test("should provide standard objects", async (t) => {
   }
 
   const container = new Container();
-  const { server } = makeHelper({
+  const { request: httpRequest } = makeHelper({
     container,
-    middlewares: [],
     controllers: [Controller1],
   });
 
   // Act.
 
-  const { body } = await httpRequest.get("/").use(server).send();
+  const { body } = await httpRequest.get("/").send();
 
   // Assert.
 
@@ -87,9 +85,8 @@ test("should provide parameters", async (t) => {
   }
 
   const container = new Container();
-  const { server } = makeHelper({
+  const { request: httpRequest } = makeHelper({
     container,
-    middlewares: [],
     controllers: [Controller1],
   });
 
@@ -99,7 +96,6 @@ test("should provide parameters", async (t) => {
     await (
       await httpRequest //
         .post("/body")
-        .use(server)
         .send("BodyValue", "text/plain")
     ).body.text(),
     "body=[BodyValue]",
@@ -108,7 +104,6 @@ test("should provide parameters", async (t) => {
     await (
       await httpRequest //
         .get("/path/ParamValue")
-        .use(server)
         .send()
     ).body.text(),
     "pathParam=[ParamValue]",
@@ -117,7 +112,6 @@ test("should provide parameters", async (t) => {
     await (
       await httpRequest //
         .get("/query")
-        .use(server)
         .send()
     ).body.text(),
     "queryParam=null",
@@ -126,7 +120,6 @@ test("should provide parameters", async (t) => {
     await (
       await httpRequest //
         .get("/query")
-        .use(server)
         .query({ Name: "QueryValue" })
         .send()
     ).body.text(),
@@ -136,7 +129,6 @@ test("should provide parameters", async (t) => {
     await (
       await httpRequest //
         .get("/header")
-        .use(server)
         .send()
     ).body.text(),
     "headerParam=null",
@@ -145,7 +137,6 @@ test("should provide parameters", async (t) => {
     await (
       await httpRequest //
         .get("/header")
-        .use(server)
         .header("X-Header-Name", "HeaderValue")
         .send()
     ).body.text(),
@@ -155,7 +146,6 @@ test("should provide parameters", async (t) => {
     await (
       await httpRequest //
         .get("/cookie")
-        .use(server)
         .send()
     ).body.text(),
     "cookieParam=null",
@@ -164,7 +154,6 @@ test("should provide parameters", async (t) => {
     await (
       await httpRequest //
         .get("/cookie")
-        .use(server)
         .header("Cookie", "Name=CookieValue")
         .send()
     ).body.text(),

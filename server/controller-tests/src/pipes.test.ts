@@ -1,5 +1,4 @@
 import { RouterContext } from "@webfx-middleware/router";
-import { request } from "@webfx-request/node";
 import { controller, http, IPipe, queryParam } from "@webfx/controller";
 import test from "ava";
 import { Container, injectable } from "inversify";
@@ -26,9 +25,8 @@ test("should pass through pipes", async (t) => {
 
   const container = new Container();
   container.bind(ParseInt).toSelf();
-  const { server } = makeHelper({
+  const { request } = makeHelper({
     container,
-    middlewares: [],
     controllers: [Controller1],
   });
 
@@ -38,7 +36,6 @@ test("should pass through pipes", async (t) => {
     await (
       await request //
         .get("/")
-        .use(server)
         .send()
     ).body.json(),
     {
@@ -50,7 +47,6 @@ test("should pass through pipes", async (t) => {
     await (
       await request //
         .get("/?value=123")
-        .use(server)
         .send()
     ).body.json(),
     {

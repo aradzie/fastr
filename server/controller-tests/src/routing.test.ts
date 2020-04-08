@@ -1,4 +1,3 @@
-import { request } from "@webfx-request/node";
 import { controller, http, response } from "@webfx/controller";
 import test from "ava";
 import { Container, injectable } from "inversify";
@@ -41,9 +40,8 @@ test("should handle HTTP methods", async (t) => {
   }
 
   const container = new Container();
-  const { server } = makeHelper({
+  const { request } = makeHelper({
     container,
-    middlewares: [],
     controllers: [Controller1, Controller2],
   });
 
@@ -53,7 +51,6 @@ test("should handle HTTP methods", async (t) => {
     (
       await request //
         .get("/x")
-        .use(server)
         .send()
     ).headers.get("X-Result"),
     "/x/index",
@@ -62,7 +59,6 @@ test("should handle HTTP methods", async (t) => {
     (
       await request //
         .get("/x/a")
-        .use(server)
         .send()
     ).headers.get("X-Result"),
     "/x/a",
@@ -71,7 +67,6 @@ test("should handle HTTP methods", async (t) => {
     (
       await request //
         .get("/y")
-        .use(server)
         .send()
     ).headers.get("X-Result"),
     "/y/index",
@@ -80,7 +75,6 @@ test("should handle HTTP methods", async (t) => {
     (
       await request //
         .get("/y/b")
-        .use(server)
         .send()
     ).headers.get("X-Result"),
     "/y/b",

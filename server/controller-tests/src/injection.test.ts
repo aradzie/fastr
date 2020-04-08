@@ -1,5 +1,4 @@
 import { Router, RouterContext } from "@webfx-middleware/router";
-import { request } from "@webfx-request/node";
 import {
   controller,
   http,
@@ -50,15 +49,14 @@ test("should inject arbitrary dependencies", async (t) => {
 
   const container = new Container();
   container.bind(Service1).toSelf();
-  const { server } = makeHelper({
+  const { request } = makeHelper({
     container,
-    middlewares: [],
     controllers: [Controller1],
   });
 
   // Act.
 
-  const { body } = await request.get("/").use(server).send();
+  const { body } = await request.get("/").send();
 
   // Assert.
 
@@ -92,15 +90,14 @@ test("should inject framework objects", async (t) => {
   }
 
   const container = new Container();
-  const { server } = makeHelper({
+  const { request } = makeHelper({
     container,
-    middlewares: [],
     controllers: [Controller1],
   });
 
   // Act.
 
-  const { body } = await request.get("/").use(server).send();
+  const { body } = await request.get("/").send();
 
   // Assert.
 
