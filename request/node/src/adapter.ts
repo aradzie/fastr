@@ -1,29 +1,24 @@
 import { Body } from "@webfx-http/body";
 import { Headers } from "@webfx-http/headers";
 import { isSuccess } from "@webfx-http/status";
-import { IncomingMessage, RequestOptions } from "http";
+import http, { ClientRequest, IncomingMessage } from "http";
+import https from "https";
 import { sendBody } from "./body/send";
-import { selectTransport } from "./transport";
 import type { HttpRequest, HttpResponse } from "./types";
 
-export async function requestAdapter(
-  request: HttpRequest,
-): Promise<HttpResponse> {
-  const { method, url, headers, body, options = {} } = request;
-  let { agent } = options;
-  if (typeof agent === "function") {
-    agent = agent(url);
-  }
+export function requestAdapter(request: HttpRequest): Promise<HttpResponse> {
+  const { url, body } = request;
   const transport = selectTransport(url);
-  const requestOptions: RequestOptions = {
-    method: method.toUpperCase(),
-    headers: headers?.toJSON(),
-    agent: agent ?? false,
-  };
-  const res = await new Promise<IncomingMessage>((resolve, reject) => {
-    const req = transport(url, requestOptions, (res) => {
-      resolve(res);
-    }).on("error", (err) => {
+  const options = makeOptions(request);
+  return new Promise<HttpResponse>((resolve, reject) => {
+    const req = transport(url, options, (res) => {
+      try {
+        resolve(makeResponse(request, res));
+      } catch (err) {
+        reject(err);
+      }
+    });
+    req.on("error", (err) => {
       reject(err);
     });
     if (body != null) {
@@ -36,7 +31,38 @@ export async function requestAdapter(
       req.end();
     }
   });
-  return makeResponse(request, res);
+}
+
+function selectTransport(
+  url: string,
+): (
+  url: string,
+  options: http.RequestOptions & https.RequestOptions,
+  callback: (res: IncomingMessage) => void,
+) => ClientRequest {
+  if (url.startsWith("https:")) {
+    return https.request;
+  }
+  if (url.startsWith("http:")) {
+    return http.request;
+  }
+  throw new Error(`Invalid URL protocol [${url}]`);
+}
+
+function makeOptions(
+  request: HttpRequest,
+): http.RequestOptions & https.RequestOptions {
+  const { method, url, headers, options = {} } = request;
+  let { agent } = options;
+  if (typeof agent === "function") {
+    agent = agent(url);
+  }
+  return {
+    ...options,
+    method: method.toUpperCase(),
+    headers: headers?.toJSON(),
+    agent: agent ?? false,
+  };
 }
 
 function makeResponse(

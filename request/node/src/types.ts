@@ -3,6 +3,7 @@ import type { Headers, MimeType } from "@webfx-http/headers";
 import type { Agent as HttpAgent } from "http";
 import type { Agent as HttpsAgent } from "https";
 import type { Readable } from "stream";
+import type { SecureContextOptions } from "tls";
 import type { Json, Streamable } from "./body";
 import type { RequestBuilder } from "./builder";
 
@@ -61,9 +62,10 @@ export interface Instance {
   delete: (url: URL | string) => RequestBuilder;
 }
 
-export interface HttpRequestOptions {
+export interface HttpRequestOptions extends SecureContextOptions {
   readonly timeout?: number;
   readonly agent?: AnyAgent | ((url: string) => AnyAgent);
+  readonly rejectUnauthorized?: boolean;
 }
 
 export interface HttpRequest {

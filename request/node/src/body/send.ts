@@ -116,7 +116,7 @@ function sendBuffer(
   { type, buffer, compressible }: BufferPayload,
   callback: (err: Error | null) => void,
 ): void {
-  if (type != null) {
+  if (type != null && req.getHeader("Content-Type") == null) {
     req.setHeader("Content-Type", String(type));
   }
   const stream = Readable.from([buffer]);
@@ -138,7 +138,7 @@ function sendStream(
   if (stream.destroyed) {
     throw new Error("Stream destroyed");
   }
-  if (type != null) {
+  if (type != null && req.getHeader("Content-Type") == null) {
     req.setHeader("Content-Type", String(type));
   }
   if (compressible) {

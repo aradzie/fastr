@@ -9,10 +9,12 @@ import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "./events";
 import { compose } from "./middleware";
 import type {
   Adapter,
+  AnyAgent,
   BodyDataType,
   DownloadProgressEvent,
   HttpRequest,
   HttpRequestBody,
+  HttpRequestOptions,
   HttpResponse,
   Middleware,
   NameValueEntries,
@@ -28,6 +30,7 @@ export class RequestBuilder {
   private readonly _query = new URLSearchParams();
   private readonly _headers = Headers.builder();
   private readonly _accept: (MimeType | string)[] = [];
+  private readonly _options: HttpRequestOptions = {};
 
   constructor(adapter: Adapter, method: string, url: URL | string) {
     this.adapter = adapter;
@@ -145,12 +148,33 @@ export class RequestBuilder {
     return this;
   }
 
-  send(body: any = null): Promise<HttpResponse> {
-    return this._call(this._makeRequest(body));
+  options(options: HttpRequestOptions): this {
+    Object.assign(this._options, options);
+    return this;
   }
 
-  sendJson(body: any): Promise<HttpResponse> {
-    return this.send(new Json(body));
+  timeout(timeout: number): this {
+    this.options({ timeout });
+    return this;
+  }
+
+  agent(agent: AnyAgent | ((url: string) => AnyAgent)): this {
+    this.options({ agent });
+    return this;
+  }
+
+  send(
+    body: any = null,
+    contentType: string | null = null,
+  ): Promise<HttpResponse> {
+    return this._call(this._makeRequest(body, contentType));
+  }
+
+  sendJson(
+    body: any,
+    contentType: string | null = null,
+  ): Promise<HttpResponse> {
+    return this.send(new Json(body), contentType);
   }
 
   private _makeRequest(
@@ -170,6 +194,7 @@ export class RequestBuilder {
       url,
       headers,
       body,
+      options: this._options,
     };
   }
 
