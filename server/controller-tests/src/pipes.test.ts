@@ -1,8 +1,9 @@
 import { RouterContext } from "@webfx-middleware/router";
+import { request } from "@webfx-request/node";
 import { controller, http, IPipe, queryParam } from "@webfx/controller";
 import test from "ava";
 import { Container, injectable } from "inversify";
-import { newSuperTest } from "./util";
+import { makeHelper } from "./helper";
 
 test("should pass through pipes", async (t) => {
   // Arrange.
@@ -25,7 +26,7 @@ test("should pass through pipes", async (t) => {
 
   const container = new Container();
   container.bind(ParseInt).toSelf();
-  const { agent } = newSuperTest({
+  const { server } = makeHelper({
     container,
     middlewares: [],
     controllers: [Controller1],
@@ -33,12 +34,28 @@ test("should pass through pipes", async (t) => {
 
   // Act. Assert.
 
-  t.deepEqual((await agent.get("/").send()).body, {
-    type: "object",
-    value: null,
-  });
-  t.deepEqual((await agent.get("/?value=123").send()).body, {
-    type: "number",
-    value: 123,
-  });
+  t.deepEqual(
+    await (
+      await request //
+        .get("/")
+        .use(server)
+        .send()
+    ).body.json(),
+    {
+      type: "object",
+      value: null,
+    },
+  );
+  t.deepEqual(
+    await (
+      await request //
+        .get("/?value=123")
+        .use(server)
+        .send()
+    ).body.json(),
+    {
+      type: "number",
+      value: 123,
+    },
+  );
 });

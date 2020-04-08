@@ -1,9 +1,10 @@
 import { mkdir, removeDir, writeFile } from "@aradzie/fsx";
+import { request } from "@webfx-request/node";
+import { start } from "@webfx-request/testlib";
 import test from "ava";
 import Koa from "koa";
 import { join } from "path";
-import supertest from "supertest";
-import zlib from "zlib";
+import { brotliCompressSync, gzipSync } from "zlib";
 import { preciseTagger } from "./etag";
 import { staticFiles } from "./middleware";
 
@@ -11,7 +12,7 @@ const dir = "/tmp/static-files-middleware/";
 
 const content = "data\n".repeat(1000);
 
-test.before(async (t) => {
+test.before(async () => {
   await removeDir(dir);
   await mkdir(dir, { recursive: true });
   await writeFile(join(dir, "file.txt"), content);
@@ -19,7 +20,7 @@ test.before(async (t) => {
   await writeFile(join(dir, "file.txt.br"), compress("br", "br." + content));
 });
 
-test.after(async (t) => {
+test.after(async () => {
   await removeDir(dir);
 });
 
@@ -27,64 +28,77 @@ test("unknown file", async (t) => {
   const app = new Koa();
   app.use(staticFiles(dir, { tagger: preciseTagger }));
   app.use((ctx) => (ctx.response.body = "ok"));
+  const srv = start(app.listen());
 
-  const response = await supertest(app.listen()).get("/unknown.txt");
+  const response = await request.get("/unknown.txt").use(srv).send();
 
   t.is(response.status, 200);
-  t.is(response.text, "ok");
+  t.is(await response.body.text(), "ok");
 });
 
-test("select brotli variant", async (t) => {
+test("select identity variant", async (t) => {
   const app = new Koa();
   app.use(staticFiles(dir, { tagger: preciseTagger }));
-  app.use((ctx) => (ctx.response.body = "ok"));
+  const srv = start(app.listen());
 
-  const response = await supertest(app.listen())
+  const response = await request
     .get("/file.txt")
-    .set("Accept-Encoding", "br, identity");
+    .use(srv)
+    .header("Accept-Encoding", "identity")
+    .send();
 
-  t.is(response.status, 200);
-  t.is(response.get("Content-Type"), "text/plain; charset=utf-8");
-  t.is(response.get("Content-Length"), "27");
-  t.is(response.get("Content-Encoding"), "br");
-  t.is(response.get("Vary"), "Content-Encoding");
-  t.is(response.get("ETag"), '"3c23d24ca83efb39718f-br"');
-  // TODO t.is(response.text, "br." + styleData);
+  const { status, headers } = response;
+  t.is(status, 200);
+  t.is(headers.get("Content-Type"), "text/plain; charset=utf-8");
+  t.is(headers.get("Content-Length"), "5000");
+  t.is(headers.get("Content-Encoding"), "identity");
+  t.is(headers.get("Vary"), "Content-Encoding");
+  t.is(headers.get("ETag"), '"97da7fce962eee2e9f73"');
+  t.is(await response.body.text(), content);
 });
 
 test("select gzip variant", async (t) => {
   const app = new Koa();
   app.use(staticFiles(dir, { tagger: preciseTagger }));
   app.use((ctx) => (ctx.response.body = "ok"));
+  const srv = start(app.listen());
 
-  const response = await supertest(app.listen())
+  const response = await request
     .get("/file.txt")
-    .set("Accept-Encoding", "gzip, identity");
+    .use(srv)
+    .header("Accept-Encoding", "gzip, identity")
+    .send();
 
-  t.is(response.status, 200);
-  t.is(response.get("Content-Type"), "text/plain; charset=utf-8");
-  t.is(response.get("Content-Length"), "54");
-  t.is(response.get("Content-Encoding"), "gzip");
-  t.is(response.get("Vary"), "Content-Encoding");
-  t.is(response.get("ETag"), '"224ec329618d0ef9acdf-gzip"');
-  t.is(response.text, "gz." + content);
+  const { status, headers } = response;
+  t.is(status, 200);
+  t.is(headers.get("Content-Type"), "text/plain; charset=utf-8");
+  t.is(headers.get("Content-Length"), "54");
+  t.is(headers.get("Content-Encoding"), "gzip");
+  t.is(headers.get("Vary"), "Content-Encoding");
+  t.is(headers.get("ETag"), '"224ec329618d0ef9acdf-gzip"');
+  t.is(await response.body.text(), "gz." + content);
 });
 
-test("select identity variant", async (t) => {
+test("select brotli variant", async (t) => {
   const app = new Koa();
   app.use(staticFiles(dir, { tagger: preciseTagger }));
+  app.use((ctx) => (ctx.response.body = "ok"));
+  const srv = start(app.listen());
 
-  const response = await supertest(app.listen())
+  const response = await request
     .get("/file.txt")
-    .set("Accept-Encoding", "identity");
+    .use(srv)
+    .header("Accept-Encoding", "br, identity")
+    .send();
 
-  t.is(response.status, 200);
-  t.is(response.get("Content-Type"), "text/plain; charset=utf-8");
-  t.is(response.get("Content-Length"), "5000");
-  t.is(response.get("Content-Encoding"), "identity");
-  t.is(response.get("Vary"), "Content-Encoding");
-  t.is(response.get("ETag"), '"97da7fce962eee2e9f73"');
-  t.is(response.text, content);
+  const { status, headers } = response;
+  t.is(status, 200);
+  t.is(headers.get("Content-Type"), "text/plain; charset=utf-8");
+  t.is(headers.get("Content-Length"), "27");
+  t.is(headers.get("Content-Encoding"), "br");
+  t.is(headers.get("Vary"), "Content-Encoding");
+  t.is(headers.get("ETag"), '"3c23d24ca83efb39718f-br"');
+  t.is(await response.body.text(), "br." + content);
 });
 
 test("cache control", async (t) => {
@@ -97,13 +111,17 @@ test("cache control", async (t) => {
       },
     }),
   );
+  const srv = start(app.listen());
 
-  const response = await supertest(app.listen())
+  const response = await request
     .get("/file.txt")
-    .set("Accept-Encoding", "identity");
+    .use(srv)
+    .header("Accept-Encoding", "identity")
+    .send();
 
-  t.is(response.status, 200);
-  t.is(response.get("Cache-Control"), "public, max-age=3600, immutable");
+  const { status, headers } = response;
+  t.is(status, 200);
+  t.is(headers.get("Cache-Control"), "public, max-age=3600, immutable");
 });
 
 function compress(method: "gzip" | "br", input: string | Buffer): Buffer {
@@ -112,8 +130,8 @@ function compress(method: "gzip" | "br", input: string | Buffer): Buffer {
   }
   switch (method) {
     case "gzip":
-      return zlib.gzipSync(input);
+      return gzipSync(input);
     case "br":
-      return zlib.brotliCompressSync(input);
+      return brotliCompressSync(input);
   }
 }

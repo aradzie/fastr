@@ -1,10 +1,11 @@
 import { RouterContext } from "@webfx-middleware/router";
+import { request } from "@webfx-request/node";
 import { controller, http, use } from "@webfx/controller";
 import { IMiddleware } from "@webfx/middleware";
 import test from "ava";
 import { Container, injectable } from "inversify";
 import Koa from "koa";
-import { newSuperTest } from "./util";
+import { makeHelper } from "./helper";
 
 test("should use injectable middlewares", async (t) => {
   // Arrange.
@@ -62,7 +63,7 @@ test("should use injectable middlewares", async (t) => {
   }
 
   const container = new Container();
-  const { agent } = newSuperTest({
+  const { server } = makeHelper({
     container,
     middlewares: [Middleware1],
     controllers: [Controller1],
@@ -70,11 +71,11 @@ test("should use injectable middlewares", async (t) => {
 
   // Act.
 
-  const { text } = await agent.get("/").send();
+  const { body } = await request.get("/").use(server).send();
 
   // Assert.
 
-  t.is(text, "1>2>3>4>5>result");
+  t.is(await body.text(), "1>2>3>4>5>result");
 });
 
 test("should use function middlewares", async (t) => {
@@ -107,7 +108,7 @@ test("should use function middlewares", async (t) => {
   }
 
   const container = new Container();
-  const { agent } = newSuperTest({
+  const { server } = makeHelper({
     container,
     middlewares: [middleware1],
     controllers: [Controller1],
@@ -115,9 +116,9 @@ test("should use function middlewares", async (t) => {
 
   // Act.
 
-  const { text } = await agent.get("/").send();
+  const { body } = await request.get("/").use(server).send();
 
   // Assert.
 
-  t.is(text, "1>2>3>result");
+  t.is(await body.text(), "1>2>3>result");
 });

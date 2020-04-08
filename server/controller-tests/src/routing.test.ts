@@ -1,8 +1,9 @@
+import { request } from "@webfx-request/node";
 import { controller, http, response } from "@webfx/controller";
 import test from "ava";
 import { Container, injectable } from "inversify";
 import Koa from "koa";
-import { newSuperTest } from "./util";
+import { makeHelper } from "./helper";
 
 test("should handle HTTP methods", async (t) => {
   // Arrange.
@@ -40,7 +41,7 @@ test("should handle HTTP methods", async (t) => {
   }
 
   const container = new Container();
-  const { agent } = newSuperTest({
+  const { server } = makeHelper({
     container,
     middlewares: [],
     controllers: [Controller1, Controller2],
@@ -48,8 +49,40 @@ test("should handle HTTP methods", async (t) => {
 
   // Act. Assert.
 
-  t.is((await agent.get("/x").send()).get("X-Result"), "/x/index");
-  t.is((await agent.get("/x/a").send()).get("X-Result"), "/x/a");
-  t.is((await agent.get("/y").send()).get("X-Result"), "/y/index");
-  t.is((await agent.get("/y/b").send()).get("X-Result"), "/y/b");
+  t.is(
+    (
+      await request //
+        .get("/x")
+        .use(server)
+        .send()
+    ).headers.get("X-Result"),
+    "/x/index",
+  );
+  t.is(
+    (
+      await request //
+        .get("/x/a")
+        .use(server)
+        .send()
+    ).headers.get("X-Result"),
+    "/x/a",
+  );
+  t.is(
+    (
+      await request //
+        .get("/y")
+        .use(server)
+        .send()
+    ).headers.get("X-Result"),
+    "/y/index",
+  );
+  t.is(
+    (
+      await request //
+        .get("/y/b")
+        .use(server)
+        .send()
+    ).headers.get("X-Result"),
+    "/y/b",
+  );
 });

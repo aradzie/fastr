@@ -1,4 +1,5 @@
 import { expectText } from "@webfx-middleware/body";
+import { request as httpRequest } from "@webfx-request/node";
 import {
   body,
   context,
@@ -15,7 +16,7 @@ import {
 import test from "ava";
 import { Container, injectable } from "inversify";
 import Koa from "koa";
-import { newSuperTest } from "./util";
+import { makeHelper } from "./helper";
 
 test("should provide standard objects", async (t) => {
   // Arrange.
@@ -37,7 +38,7 @@ test("should provide standard objects", async (t) => {
   }
 
   const container = new Container();
-  const { agent } = newSuperTest({
+  const { server } = makeHelper({
     container,
     middlewares: [],
     controllers: [Controller1],
@@ -45,11 +46,11 @@ test("should provide standard objects", async (t) => {
 
   // Act.
 
-  const { text } = await agent.get("/").send();
+  const { body } = await httpRequest.get("/").use(server).send();
 
   // Assert.
 
-  t.is(text, "ok");
+  t.is(await body.text(), "ok");
 });
 
 test("should provide parameters", async (t) => {
@@ -86,7 +87,7 @@ test("should provide parameters", async (t) => {
   }
 
   const container = new Container();
-  const { agent } = newSuperTest({
+  const { server } = makeHelper({
     container,
     middlewares: [],
     controllers: [Controller1],
@@ -95,32 +96,83 @@ test("should provide parameters", async (t) => {
   // Act. Assert.
 
   t.is(
-    (await agent.post("/body").type("text").send("BodyValue")).text,
+    await (
+      await httpRequest //
+        .post("/body")
+        .use(server)
+        .send("BodyValue", "text/plain")
+    ).body.text(),
     "body=[BodyValue]",
   );
   t.is(
-    (await agent.get("/path/ParamValue").send()).text,
+    await (
+      await httpRequest //
+        .get("/path/ParamValue")
+        .use(server)
+        .send()
+    ).body.text(),
     "pathParam=[ParamValue]",
   );
-  t.is((await agent.get("/query").send()).text, "queryParam=null");
   t.is(
-    (await agent.get("/query").query({ Name: "QueryValue" }).send()).text,
+    await (
+      await httpRequest //
+        .get("/query")
+        .use(server)
+        .send()
+    ).body.text(),
+    "queryParam=null",
+  );
+  t.is(
+    await (
+      await httpRequest //
+        .get("/query")
+        .use(server)
+        .query({ Name: "QueryValue" })
+        .send()
+    ).body.text(),
     "queryParam=[QueryValue]",
   );
-  t.is((await agent.get("/header").send()).text, "headerParam=null");
   t.is(
-    (await agent.get("/header").set("X-Header-Name", "HeaderValue").send())
-      .text,
+    await (
+      await httpRequest //
+        .get("/header")
+        .use(server)
+        .send()
+    ).body.text(),
+    "headerParam=null",
+  );
+  t.is(
+    await (
+      await httpRequest //
+        .get("/header")
+        .use(server)
+        .header("X-Header-Name", "HeaderValue")
+        .send()
+    ).body.text(),
     "headerParam=[HeaderValue]",
   );
-  t.is((await agent.get("/cookie").send()).text, "cookieParam=null");
   t.is(
-    (await agent.get("/cookie").set("Cookie", "Name=CookieValue").send()).text,
+    await (
+      await httpRequest //
+        .get("/cookie")
+        .use(server)
+        .send()
+    ).body.text(),
+    "cookieParam=null",
+  );
+  t.is(
+    await (
+      await httpRequest //
+        .get("/cookie")
+        .use(server)
+        .header("Cookie", "Name=CookieValue")
+        .send()
+    ).body.text(),
     "cookieParam=[CookieValue]",
   );
 });
 
-function format(value: string | null) {
+function format(value: string | null): string {
   if (value == null) {
     return `null`;
   } else {

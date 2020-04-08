@@ -1,13 +1,14 @@
 import { Router } from "@webfx-middleware/router";
+import { Middleware } from "@webfx-request/node";
+import { start } from "@webfx-request/testlib";
 import { Builder } from "@webfx/controller";
 import { MiddlewareId } from "@webfx/middleware";
 import { Container } from "inversify";
 import Koa from "koa";
-import supertest from "supertest";
 
 type Constructor = { new (...args: any[]): object };
 
-export function newSuperTest({
+export function makeHelper({
   container,
   middlewares = [],
   controllers = [],
@@ -15,7 +16,10 @@ export function newSuperTest({
   container: Container;
   middlewares?: MiddlewareId[];
   controllers?: Constructor[];
-}) {
+}): {
+  app: Koa;
+  server: Middleware;
+} {
   const app = new Koa();
   const router = new Router();
   new Builder(container)
@@ -23,6 +27,6 @@ export function newSuperTest({
     .use(app, ...middlewares)
     .use(app, router.middleware())
     .build();
-  const agent = supertest.agent(app.listen());
-  return { app, agent };
+  const server = start(app.listen());
+  return { app, server };
 }

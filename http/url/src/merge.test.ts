@@ -1,6 +1,3 @@
-/// <reference lib="dom" /> make URL iterable
-/// <reference lib="dom.iterable" /> make URL iterable
-
 import test from "ava";
 import { mergeSearchParams } from "./merge";
 

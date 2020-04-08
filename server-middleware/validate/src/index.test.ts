@@ -1,8 +1,9 @@
 import { expectForm, expectJson } from "@webfx-middleware/body";
+import { request } from "@webfx-request/node";
+import { start } from "@webfx-request/testlib";
 import test from "ava";
 import Joi from "joi";
 import Koa from "koa";
-import supertest from "supertest";
 import { validate } from "./index";
 
 test("validate query", async (t) => {
@@ -17,12 +18,11 @@ test("validate query", async (t) => {
   app.use(async (ctx) => {
     ctx.response.body = {};
   });
+  const srv = start(app.callback());
 
-  const agent = supertest.agent(app.listen());
-
-  t.is((await agent.post("/")).status, 400);
-  t.is((await agent.post("/?extra=fail")).status, 400);
-  t.is((await agent.post("/?value=ok")).status, 200);
+  t.is((await request.post("/").use(srv).send()).status, 400);
+  t.is((await request.post("/?extra=fail").use(srv).send()).status, 400);
+  t.is((await request.post("/?value=ok").use(srv).send()).status, 200);
 });
 
 test("validate json body", async (t) => {
@@ -38,11 +38,26 @@ test("validate json body", async (t) => {
   app.use(async (ctx) => {
     ctx.response.body = {};
   });
+  const srv = start(app.callback());
 
-  const agent = supertest.agent(app.listen());
-
-  t.is((await agent.post("/").send({ extra: "fail" })).status, 400);
-  t.is((await agent.post("/").send({ value: "ok" })).status, 200);
+  t.is(
+    (
+      await request //
+        .post("/")
+        .use(srv)
+        .sendJson({ extra: "fail" })
+    ).status,
+    400,
+  );
+  t.is(
+    (
+      await request //
+        .post("/")
+        .use(srv)
+        .sendJson({ value: "ok" })
+    ).status,
+    200,
+  );
 });
 
 test("validate form body", async (t) => {
@@ -58,12 +73,24 @@ test("validate form body", async (t) => {
   app.use(async (ctx) => {
     ctx.response.body = {};
   });
-
-  const agent = supertest.agent(app.listen());
+  const srv = start(app.callback());
 
   t.is(
-    (await agent.post("/").type("form").send({ extra: "fail" })).status,
+    (
+      await request //
+        .post("/")
+        .use(srv)
+        .send(new URLSearchParams("extra=fail"))
+    ).status,
     400,
   );
-  t.is((await agent.post("/").type("form").send({ value: "ok" })).status, 200);
+  t.is(
+    (
+      await request //
+        .post("/")
+        .use(srv)
+        .send(new URLSearchParams("value=ok"))
+    ).status,
+    200,
+  );
 });

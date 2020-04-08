@@ -1,6 +1,7 @@
+import { request } from "@webfx-request/node";
+import { start } from "@webfx-request/testlib";
 import test from "ava";
 import Koa from "koa";
-import supertest from "supertest";
 import { brotliCompressSync, gzipSync } from "zlib";
 import { expectBinary, expectForm, expectJson, expectText } from "./middleware";
 
@@ -10,14 +11,14 @@ test("expect buffer", async (t) => {
   app.use((ctx) => {
     ctx.response.body = "ok";
   });
-  const request = supertest(app.listen());
+  const srv = start(app.callback());
 
   t.is(
     (
       await request //
         .post("/")
-        .type("application/octet-stream")
-        .send("something")
+        .use(srv)
+        .send("something", "application/octet-stream")
     ).status,
     200,
   );
@@ -25,8 +26,8 @@ test("expect buffer", async (t) => {
     (
       await request //
         .post("/")
-        .type("text/plain")
-        .send("text")
+        .use(srv)
+        .send("text", "text/plain")
     ).status,
     415,
   );
@@ -34,8 +35,8 @@ test("expect buffer", async (t) => {
     (
       await request //
         .post("/")
-        .type("application/json")
-        .send("{}")
+        .use(srv)
+        .send("{}", "application/json")
     ).status,
     415,
   );
@@ -43,8 +44,8 @@ test("expect buffer", async (t) => {
     (
       await request //
         .post("/")
-        .type("application/x-www-form-urlencoded")
-        .send("a=1")
+        .use(srv)
+        .send("a=1", "application/x-www-form-urlencoded")
     ).status,
     415,
   );
@@ -56,14 +57,14 @@ test("expect text", async (t) => {
   app.use((ctx) => {
     ctx.response.body = "ok";
   });
-  const request = supertest(app.listen());
+  const srv = start(app.callback());
 
   t.is(
     (
       await request //
         .post("/")
-        .type("application/octet-stream")
-        .send("something")
+        .use(srv)
+        .send("something", "application/octet-stream")
     ).status,
     415,
   );
@@ -71,8 +72,8 @@ test("expect text", async (t) => {
     (
       await request //
         .post("/")
-        .type("text/plain")
-        .send("text")
+        .use(srv)
+        .send("text", "text/plain")
     ).status,
     200,
   );
@@ -80,8 +81,8 @@ test("expect text", async (t) => {
     (
       await request //
         .post("/")
-        .type("application/json")
-        .send("{}")
+        .use(srv)
+        .send("{}", "application/json")
     ).status,
     415,
   );
@@ -89,8 +90,8 @@ test("expect text", async (t) => {
     (
       await request //
         .post("/")
-        .type("application/x-www-form-urlencoded")
-        .send("a=1")
+        .use(srv)
+        .send("a=1", "application/x-www-form-urlencoded")
     ).status,
     415,
   );
@@ -102,14 +103,14 @@ test("expect json", async (t) => {
   app.use((ctx) => {
     ctx.response.body = "ok";
   });
-  const request = supertest(app.listen());
+  const srv = start(app.callback());
 
   t.is(
     (
       await request //
         .post("/")
-        .type("application/octet-stream")
-        .send("something")
+        .use(srv)
+        .send("something", "application/octet-stream")
     ).status,
     415,
   );
@@ -117,8 +118,8 @@ test("expect json", async (t) => {
     (
       await request //
         .post("/")
-        .type("text/plain")
-        .send("text")
+        .use(srv)
+        .send("text", "text/plain")
     ).status,
     415,
   );
@@ -126,8 +127,8 @@ test("expect json", async (t) => {
     (
       await request //
         .post("/")
-        .type("application/json")
-        .send("{}")
+        .use(srv)
+        .send("{}", "application/json")
     ).status,
     200,
   );
@@ -135,8 +136,8 @@ test("expect json", async (t) => {
     (
       await request //
         .post("/")
-        .type("application/x-www-form-urlencoded")
-        .send("a=1")
+        .use(srv)
+        .send("a=1", "application/x-www-form-urlencoded")
     ).status,
     415,
   );
@@ -148,14 +149,14 @@ test("expect form", async (t) => {
   app.use((ctx) => {
     ctx.response.body = "ok";
   });
-  const request = supertest(app.listen());
+  const srv = start(app.callback());
 
   t.is(
     (
       await request //
         .post("/")
-        .type("application/octet-stream")
-        .send("something")
+        .use(srv)
+        .send("something", "application/octet-stream")
     ).status,
     415,
   );
@@ -163,8 +164,8 @@ test("expect form", async (t) => {
     (
       await request //
         .post("/")
-        .type("text/plain")
-        .send("text")
+        .use(srv)
+        .send("text", "text/plain")
     ).status,
     415,
   );
@@ -172,8 +173,8 @@ test("expect form", async (t) => {
     (
       await request //
         .post("/")
-        .type("application/json")
-        .send("{}")
+        .use(srv)
+        .send("{}", "application/json")
     ).status,
     415,
   );
@@ -181,8 +182,8 @@ test("expect form", async (t) => {
     (
       await request //
         .post("/")
-        .type("application/x-www-form-urlencoded")
-        .send("a=1")
+        .use(srv)
+        .send("a=1", "application/x-www-form-urlencoded")
     ).status,
     200,
   );
@@ -194,14 +195,14 @@ test("validate json", async (t) => {
   app.use((ctx) => {
     ctx.response.body = "ok";
   });
-  const request = supertest(app.listen());
+  const srv = start(app.callback());
 
   t.is(
     (
       await request //
         .post("/")
-        .type("application/json")
-        .send("not json")
+        .use(srv)
+        .send("not json", "application/json")
     ).status,
     400,
   );
@@ -213,14 +214,14 @@ test("honor body limit", async (t) => {
   app.use((ctx) => {
     ctx.response.body = "ok";
   });
-  const request = supertest(app.listen());
+  const srv = start(app.callback());
 
   t.is(
     (
       await request //
         .post("/")
-        .type("text/plain")
-        .send("body")
+        .use(srv)
+        .send("body", "text/plain")
     ).status,
     413,
   );
@@ -232,15 +233,15 @@ test("decompress", async (t) => {
   app.use((ctx) => {
     ctx.response.body = "ok";
   });
-  const request = supertest(app.listen());
+  const srv = start(app.callback());
 
   t.is(
     (
       await request //
         .post("/")
-        .type("text/plain")
-        .set("content-encoding", "identity")
-        .send("text")
+        .use(srv)
+        .header("content-encoding", "identity")
+        .send("text", "text/plain")
     ).status,
     200,
   );
@@ -248,9 +249,9 @@ test("decompress", async (t) => {
     (
       await request //
         .post("/")
-        .type("text/plain")
-        .set("content-encoding", "invalid")
-        .send("text")
+        .use(srv)
+        .header("content-encoding", "invalid")
+        .send("text", "text/plain")
     ).status,
     400,
   );
@@ -258,9 +259,9 @@ test("decompress", async (t) => {
     (
       await request //
         .post("/")
-        .type("text/plain")
-        .set("content-encoding", "gzip")
-        .send("invalid")
+        .use(srv)
+        .header("content-encoding", "gzip")
+        .send("invalid", "text/plain")
     ).status,
     400,
   );
@@ -268,9 +269,9 @@ test("decompress", async (t) => {
     (
       await request //
         .post("/")
-        .type("text/plain")
-        .set("content-encoding", "deflate")
-        .send("invalid")
+        .use(srv)
+        .header("content-encoding", "deflate")
+        .send("invalid", "text/plain")
     ).status,
     400,
   );
@@ -278,9 +279,9 @@ test("decompress", async (t) => {
     (
       await request //
         .post("/")
-        .type("text/plain")
-        .set("content-encoding", "br")
-        .send("invalid")
+        .use(srv)
+        .header("content-encoding", "br")
+        .send("invalid", "text/plain")
     ).status,
     400,
   );
@@ -288,9 +289,9 @@ test("decompress", async (t) => {
     (
       await request //
         .post("/")
-        .type("text/plain")
-        .set("content-encoding", "gzip")
-        .send(gzipSync("data"))
+        .use(srv)
+        .header("content-encoding", "gzip")
+        .send(gzipSync("data"), "text/plain")
     ).status,
     200,
   );
@@ -298,9 +299,9 @@ test("decompress", async (t) => {
     (
       await request //
         .post("/")
-        .type("text/plain")
-        .set("content-encoding", "deflate")
-        .send(gzipSync("data"))
+        .use(srv)
+        .header("content-encoding", "deflate")
+        .send(gzipSync("data"), "text/plain")
     ).status,
     200,
   );
@@ -308,9 +309,9 @@ test("decompress", async (t) => {
     (
       await request //
         .post("/")
-        .type("text/plain")
-        .set("content-encoding", "br")
-        .send(brotliCompressSync("data"))
+        .use(srv)
+        .header("content-encoding", "br")
+        .send(brotliCompressSync("data"), "text/plain")
     ).status,
     200,
   );

@@ -1,6 +1,8 @@
+import { request } from "@webfx-request/node";
+import { CookieJar, cookies } from "@webfx-request/testlib";
 import test from "ava";
 import MockDate from "mockdate";
-import { Setup } from "./test.setup";
+import { Helper } from "./test/helper";
 
 test.beforeEach(() => {
   MockDate.set(new Date("2001-01-01T00:00:00Z"));
@@ -9,31 +11,40 @@ test.beforeEach(() => {
 test.serial("manually start session", async (t) => {
   // Arrange.
 
-  const setup = new Setup({ store: "cookie", autoStart: false });
+  const helper = new Helper({ store: "cookie", autoStart: false });
+  const cookieJar = new CookieJar();
 
   // Act.
 
-  const response1 = await setup.agent.get("/");
+  const response1 = await request
+    .get("/")
+    .use(cookies(cookieJar))
+    .use(helper.server)
+    .send();
 
   // Assert.
 
-  t.is(response1.get("Set-Cookie"), undefined);
-  t.deepEqual(response1.body, {});
+  t.deepEqual(response1.headers.getAll("Set-Cookie"), []);
+  t.deepEqual(await response1.body.json(), {});
 
   // Act.
 
-  setup.handle = (session): void => {
+  helper.handle = (session): void => {
     session.start();
   };
-  const response2 = await setup.agent.get("/");
+  const response2 = await request
+    .get("/")
+    .use(cookies(cookieJar))
+    .use(helper.server)
+    .send();
 
   // Assert.
 
-  t.deepEqual(response2.get("Set-Cookie"), [
+  t.deepEqual(response2.headers.getAll("Set-Cookie"), [
     "session=GQAAAAJAaQAEAAAAaWQxABBAZQCQ1k86AA==; " +
       "expires=Mon, 01 Jan 2001 01:00:00 GMT",
   ]);
-  t.deepEqual(response2.body, {
+  t.deepEqual(await response2.body.json(), {
     id: "id1",
     isNew: true,
     expires: "2001-01-01T01:00:00.000Z",
@@ -44,20 +55,25 @@ test.serial("manually start session", async (t) => {
 test.serial("update session", async (t) => {
   // Arrange.
 
-  const setup = new Setup({ store: "cookie", autoStart: true });
+  const helper = new Helper({ store: "cookie", autoStart: true });
+  const cookieJar = new CookieJar();
 
   // Act.
 
   MockDate.set(new Date("2001-01-01T00:00:00Z"));
-  const response1 = await setup.agent.get("/");
+  const response1 = await request
+    .get("/")
+    .use(cookies(cookieJar))
+    .use(helper.server)
+    .send();
 
   // Assert.
 
-  t.deepEqual(response1.get("Set-Cookie"), [
+  t.deepEqual(response1.headers.getAll("Set-Cookie"), [
     "session=JAAAABBjb3VudAABAAAAAkBpAAQAAABpZDEAEEBlAJDWTzoA; " +
       "expires=Mon, 01 Jan 2001 01:00:00 GMT",
   ]);
-  t.deepEqual(response1.body, {
+  t.deepEqual(await response1.body.json(), {
     id: "id1",
     isNew: true,
     expires: "2001-01-01T01:00:00.000Z",
@@ -67,15 +83,19 @@ test.serial("update session", async (t) => {
   // Act.
 
   MockDate.set(new Date("2001-01-01T00:01:00Z"));
-  const response2 = await setup.agent.get("/");
+  const response2 = await request
+    .get("/")
+    .use(cookies(cookieJar))
+    .use(helper.server)
+    .send();
 
   // Assert.
 
-  t.deepEqual(response2.get("Set-Cookie"), [
+  t.deepEqual(response2.headers.getAll("Set-Cookie"), [
     "session=JAAAABBjb3VudAACAAAAAkBpAAQAAABpZDEAEEBlAMzWTzoA; " +
       "expires=Mon, 01 Jan 2001 01:01:00 GMT",
   ]);
-  t.deepEqual(response2.body, {
+  t.deepEqual(await response2.body.json(), {
     id: "id1",
     isNew: false,
     expires: "2001-01-01T01:01:00.000Z",
@@ -86,20 +106,25 @@ test.serial("update session", async (t) => {
 test.serial("regenerate session", async (t) => {
   // Arrange.
 
-  const setup = new Setup({ store: "cookie", autoStart: true });
+  const helper = new Helper({ store: "cookie", autoStart: true });
+  const cookieJar = new CookieJar();
 
   // Act.
 
   MockDate.set(new Date("2001-01-01T00:00:00Z"));
-  const response1 = await setup.agent.get("/");
+  const response1 = await request
+    .get("/")
+    .use(cookies(cookieJar))
+    .use(helper.server)
+    .send();
 
   // Assert.
 
-  t.deepEqual(response1.get("Set-Cookie"), [
+  t.deepEqual(response1.headers.getAll("Set-Cookie"), [
     "session=JAAAABBjb3VudAABAAAAAkBpAAQAAABpZDEAEEBlAJDWTzoA; " +
       "expires=Mon, 01 Jan 2001 01:00:00 GMT",
   ]);
-  t.deepEqual(response1.body, {
+  t.deepEqual(await response1.body.json(), {
     id: "id1",
     isNew: true,
     expires: "2001-01-01T01:00:00.000Z",
@@ -108,18 +133,22 @@ test.serial("regenerate session", async (t) => {
 
   // Act.
 
-  setup.handle = (session): void => {
+  helper.handle = (session): void => {
     session.regenerate();
   };
-  const response2 = await setup.agent.get("/");
+  const response2 = await request
+    .get("/")
+    .use(cookies(cookieJar))
+    .use(helper.server)
+    .send();
 
   // Assert.
 
-  t.deepEqual(response2.get("Set-Cookie"), [
+  t.deepEqual(response2.headers.getAll("Set-Cookie"), [
     "session=JAAAABBjb3VudAABAAAAAkBpAAQAAABpZDIAEEBlAJDWTzoA; " +
       "expires=Mon, 01 Jan 2001 01:00:00 GMT",
   ]);
-  t.deepEqual(response2.body, {
+  t.deepEqual(await response2.body.json(), {
     id: "id2",
     isNew: false,
     expires: "2001-01-01T01:00:00.000Z",
@@ -130,20 +159,25 @@ test.serial("regenerate session", async (t) => {
 test.serial("delete session", async (t) => {
   // Arrange.
 
-  const setup = new Setup({ store: "cookie", autoStart: true });
+  const helper = new Helper({ store: "cookie", autoStart: true });
+  const cookieJar = new CookieJar();
 
   // Act.
 
   MockDate.set(new Date("2001-01-01T00:00:00Z"));
-  const response1 = await setup.agent.get("/");
+  const response1 = await request
+    .get("/")
+    .use(cookies(cookieJar))
+    .use(helper.server)
+    .send();
 
   // Assert.
 
-  t.deepEqual(response1.get("Set-Cookie"), [
+  t.deepEqual(response1.headers.getAll("Set-Cookie"), [
     "session=JAAAABBjb3VudAABAAAAAkBpAAQAAABpZDEAEEBlAJDWTzoA; " +
       "expires=Mon, 01 Jan 2001 01:00:00 GMT",
   ]);
-  t.deepEqual(response1.body, {
+  t.deepEqual(await response1.body.json(), {
     id: "id1",
     isNew: true,
     expires: "2001-01-01T01:00:00.000Z",
@@ -152,49 +186,62 @@ test.serial("delete session", async (t) => {
 
   // Act.
 
-  setup.handle = (session): void => {
+  helper.handle = (session): void => {
     session.destroy();
   };
-  const response2 = await setup.agent.get("/");
+  const response2 = await request
+    .get("/")
+    .use(cookies(cookieJar))
+    .use(helper.server)
+    .send();
 
   // Assert.
 
-  t.deepEqual(response2.get("Set-Cookie"), [
+  t.deepEqual(response2.headers.getAll("Set-Cookie"), [
     "session=; expires=Thu, 01 Jan 1970 00:00:00 GMT",
   ]);
+  t.deepEqual(await response2.body.json(), {}); // TODO Check body.
 });
 
 test.serial("ignore invalid session id", async (t) => {
   // Arrange.
 
-  const setup = new Setup({ store: "cookie", autoStart: false });
+  const helper = new Helper({ store: "cookie", autoStart: false });
 
   // Act.
 
-  const response1 = await setup.agent.get("/").set("Cookie", "session=invalid");
+  const response1 = await request
+    .get("/")
+    .use(helper.server)
+    .header("Cookie", "session=invalid")
+    .send();
 
   // Assert.
 
-  t.is(response1.get("Set-Cookie"), undefined);
-  t.deepEqual(response1.body, {});
+  t.deepEqual(response1.headers.getAll("Set-Cookie"), []);
+  t.deepEqual(await response1.body.json(), {});
 });
 
 test.serial("ignore invalid session id in autostart session", async (t) => {
   // Arrange.
 
-  const setup = new Setup({ store: "cookie", autoStart: true });
+  const helper = new Helper({ store: "cookie", autoStart: true });
 
   // Act.
 
-  const response1 = await setup.agent.get("/").set("Cookie", "session=invalid");
+  const response1 = await request
+    .get("/")
+    .use(helper.server)
+    .header("Cookie", "session=invalid")
+    .send();
 
   // Assert.
 
-  t.deepEqual(response1.get("Set-Cookie"), [
+  t.deepEqual(response1.headers.getAll("Set-Cookie"), [
     "session=JAAAABBjb3VudAABAAAAAkBpAAQAAABpZDEAEEBlAJDWTzoA; " +
       "expires=Mon, 01 Jan 2001 01:00:00 GMT",
   ]);
-  t.deepEqual(response1.body, {
+  t.deepEqual(await response1.body.json(), {
     id: "id1",
     isNew: true,
     expires: "2001-01-01T01:00:00.000Z",

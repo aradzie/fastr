@@ -1,8 +1,9 @@
+import { request } from "@webfx-request/node";
+import { start } from "@webfx-request/testlib";
 import { Builder } from "@webfx/controller";
 import test from "ava";
 import { Container } from "inversify";
 import Koa from "koa";
-import supertest from "supertest";
 import { Canonical } from "./index";
 
 test("redirect to canonical url", async (t) => {
@@ -15,49 +16,56 @@ test("redirect to canonical url", async (t) => {
   new Builder(container).use(app, Canonical).use(app, (ctx) => {
     ctx.response.body = "ok";
   });
-  const agent = supertest.agent(app.listen());
 
   // Match canonical URL.
   t.is(
     (
-      await agent
+      await request
         .get("/foo/bar?a=b#x")
-        .set("X-Forwarded-Host", "www.example.com")
-        .set("X-Forwarded-Proto", "https")
-    ).get("location"),
-    undefined,
+        .use(start(app.callback()))
+        .header("X-Forwarded-Host", "www.example.com")
+        .header("X-Forwarded-Proto", "https")
+        .send()
+    ).headers.get("location"),
+    null,
   );
 
   // Change domain name.
   t.is(
     (
-      await agent
+      await request
         .get("/foo/bar?a=b#x")
-        .set("X-Forwarded-Host", "example.com")
-        .set("X-Forwarded-Proto", "https")
-    ).get("location"),
+        .use(start(app.callback()))
+        .header("X-Forwarded-Host", "example.com")
+        .header("X-Forwarded-Proto", "https")
+        .send()
+    ).headers.get("location"),
     "https://www.example.com/foo/bar?a=b",
   );
 
   // Change protocol.
   t.is(
     (
-      await agent
+      await request
         .get("/foo/bar?a=b#x")
-        .set("X-Forwarded-Host", "www.example.com")
-        .set("X-Forwarded-Proto", "http")
-    ).get("location"),
+        .use(start(app.callback()))
+        .header("X-Forwarded-Host", "www.example.com")
+        .header("X-Forwarded-Proto", "http")
+        .send()
+    ).headers.get("location"),
     "https://www.example.com/foo/bar?a=b",
   );
 
   // Change domain name and protocol.
   t.is(
     (
-      await agent
+      await request
         .get("/foo/bar?a=b#x")
-        .set("X-Forwarded-Host", "example.com")
-        .set("X-Forwarded-Proto", "http")
-    ).get("location"),
+        .use(start(app.callback()))
+        .header("X-Forwarded-Host", "example.com")
+        .header("X-Forwarded-Proto", "http")
+        .send()
+    ).headers.get("location"),
     "https://www.example.com/foo/bar?a=b",
   );
 });

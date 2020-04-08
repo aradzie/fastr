@@ -1,14 +1,14 @@
+import { start } from "@webfx-request/testlib";
 import Koa from "koa";
-import supertest from "supertest";
-import { session } from "../middleware";
-import { Options } from "../options";
-import { Session } from "../types";
+import { session } from "../../middleware";
+import { Options } from "../../options";
+import { Session } from "../../types";
 
 type SessionTypes = { count: number };
 
-export class Setup {
+export class Helper {
   readonly app = new Koa();
-  readonly agent = supertest.agent(this.app.listen());
+  readonly server = start(this.app.listen());
 
   constructor(options: Options) {
     this.app.use(
@@ -38,7 +38,7 @@ export class Setup {
     });
   }
 
-  handle(session: Session<SessionTypes>): void {
+  handle = (session: Session<SessionTypes>): void => {
     session.set("count", (session.get("count") ?? 0) + 1);
-  }
+  };
 }

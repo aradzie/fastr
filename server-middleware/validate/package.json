@@ -21,6 +21,8 @@
   "devDependencies": {
     "@types/koa": "^2.11.2",
     "@webfx-middleware/body": "^0.0.3-alpha.0",
+    "@webfx-request/node": "^0.0.3-alpha.0",
+    "@webfx-request/testlib": "^0.0.3-alpha.0",
     "koa": "^2.11.0"
   },
   "scripts": {

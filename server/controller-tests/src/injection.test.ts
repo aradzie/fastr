@@ -1,4 +1,5 @@
 import { Router, RouterContext } from "@webfx-middleware/router";
+import { request } from "@webfx-request/node";
 import {
   controller,
   http,
@@ -12,7 +13,7 @@ import { IMiddleware } from "@webfx/middleware";
 import test from "ava";
 import { Container, inject, injectable } from "inversify";
 import Koa from "koa";
-import { newSuperTest } from "./util";
+import { makeHelper } from "./helper";
 
 test("should inject arbitrary dependencies", async (t) => {
   // Arrange.
@@ -49,7 +50,7 @@ test("should inject arbitrary dependencies", async (t) => {
 
   const container = new Container();
   container.bind(Service1).toSelf();
-  const { agent } = newSuperTest({
+  const { server } = makeHelper({
     container,
     middlewares: [],
     controllers: [Controller1],
@@ -57,11 +58,11 @@ test("should inject arbitrary dependencies", async (t) => {
 
   // Act.
 
-  const { text } = await agent.get("/").send();
+  const { body } = await request.get("/").use(server).send();
 
   // Assert.
 
-  t.is(text, "ok");
+  t.is(await body.text(), "ok");
 });
 
 test("should inject framework objects", async (t) => {
@@ -80,9 +81,9 @@ test("should inject framework objects", async (t) => {
     @http.get("/")
     async index() {
       if (
-        this.ctx.request != this.request ||
-        this.ctx.response != this.response ||
-        this.ctx.router != this.router
+        this.ctx.request !== this.request ||
+        this.ctx.response !== this.response ||
+        this.ctx.router !== this.router
       ) {
         throw new Error();
       }
@@ -91,7 +92,7 @@ test("should inject framework objects", async (t) => {
   }
 
   const container = new Container();
-  const { agent } = newSuperTest({
+  const { server } = makeHelper({
     container,
     middlewares: [],
     controllers: [Controller1],
@@ -99,9 +100,9 @@ test("should inject framework objects", async (t) => {
 
   // Act.
 
-  const { text } = await agent.get("/").send();
+  const { body } = await request.get("/").use(server).send();
 
   // Assert.
 
-  t.is(text, "ok");
+  t.is(await body.text(), "ok");
 });
