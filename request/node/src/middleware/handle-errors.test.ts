@@ -1,5 +1,5 @@
 import test from "ava";
-import { fakeNotFoundResponse, fakeOkResponse } from "../fakes";
+import { fakeNotFoundResponse, fakeOkResponse } from "../fake/fakes";
 import { handleErrors } from "./handle-errors";
 
 test("passes through if response status is successful", async (t) => {

@@ -4,7 +4,7 @@ import {
   fakeNotFoundResponse,
   fakeOkResponse,
   fakeRedirectResponse,
-} from "../fakes";
+} from "../fake/fakes";
 import type { Adapter, HttpRequest, HttpResponse } from "../types";
 import { followRedirects } from "./follow-redirects";
 

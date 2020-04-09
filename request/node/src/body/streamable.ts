@@ -1,21 +1,32 @@
-import { createReadStream, PathLike, stat } from "fs";
+import crypto from "crypto";
+import { createReadStream, PathLike, stat, Stats } from "fs";
 import { Readable } from "stream";
 import { promisify } from "util";
 
 const statAsync = promisify(stat);
 
+/**
+ * Streamable is a class which can open readable streams.
+ */
 export abstract class Streamable {
   /**
    * Tests if the given value is a streamable instance.
    */
   static isStreamable(value: any): value is Streamable {
-    return value instanceof Streamable || typeof value.open === "function";
+    return value instanceof Streamable;
+  }
+
+  /**
+   * Creates and returns a new streamable for the specified file path.
+   */
+  static fromFile(path: PathLike): Promise<FileStreamable> {
+    return FileStreamable.create(path);
   }
 
   /**
    * Gets readable stream length in bytes, if known.
    */
-  abstract length(): Promise<number | null>;
+  abstract length(): number | null;
 
   /**
    * Opens new readable stream.
@@ -27,13 +38,26 @@ export abstract class Streamable {
   }
 }
 
+/**
+ * A streamable which opens files for reading.
+ */
 export class FileStreamable extends Streamable {
-  constructor(readonly path: PathLike) {
-    super();
+  /**
+   * Creates file streamable for the given path.
+   */
+  static async create(path: PathLike): Promise<FileStreamable> {
+    return new FileStreamable(path, await statAsync(path));
   }
 
-  async length(): Promise<number | null> {
-    return (await statAsync(this.path)).size;
+  readonly etag: string;
+
+  private constructor(readonly path: PathLike, readonly stats: Stats) {
+    super();
+    this.etag = etag(stats);
+  }
+
+  length(): number | null {
+    return this.stats.size;
   }
 
   open(): Readable {
@@ -43,4 +67,11 @@ export class FileStreamable extends Streamable {
   get [Symbol.toStringTag](): string {
     return "FileStreamable";
   }
+}
+
+export function etag(stats: Stats): string {
+  const hash = crypto.createHash("md5");
+  hash.update(String(stats.size));
+  hash.update(String(stats.mtimeMs));
+  return hash.digest("hex");
 }

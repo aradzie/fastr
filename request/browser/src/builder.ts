@@ -2,12 +2,13 @@ import { Accept, Headers, MimeType, multiEntries } from "@webfx-http/headers";
 import { mergeSearchParams } from "@webfx-http/url";
 import { EventEmitter } from "events";
 import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "./events";
-import { compose } from "./middleware";
 import type {
   Adapter,
   BodyDataType,
+  BuildableRequest,
   DownloadProgressEvent,
   HttpRequest,
+  HttpRequestOptions,
   HttpResponse,
   Middleware,
   NameValueEntries,
@@ -18,26 +19,16 @@ export class RequestBuilder {
   readonly adapter: Adapter;
   readonly method: string;
   readonly url: string;
-  private readonly _middleware: Middleware[] = [];
   private readonly _eventEmitter = new EventEmitter();
   private readonly _query = new URLSearchParams();
   private readonly _headers = Headers.builder();
   private readonly _accept: (MimeType | string)[] = [];
+  private readonly _options: HttpRequestOptions = {};
 
   constructor(adapter: Adapter, method: string, url: URL | string) {
     this.adapter = adapter;
     this.method = method.toUpperCase();
     this.url = String(url);
-  }
-
-  /**
-   * Apply the given middleware to a request.
-   *
-   * TODO Middleware order.
-   */
-  use(middleware: Middleware): this {
-    this._middleware.push(middleware);
-    return this;
   }
 
   /**
@@ -140,6 +131,16 @@ export class RequestBuilder {
     return this;
   }
 
+  options(options: HttpRequestOptions): this {
+    Object.assign(this._options, options);
+    return this;
+  }
+
+  timeout(timeout: number): this {
+    this.options({ timeout });
+    return this;
+  }
+
   /**
    * Sends an HTTP request without body.
    */
@@ -238,11 +239,40 @@ export class RequestBuilder {
       headers,
       body,
       eventEmitter: this._eventEmitter,
+      options: this._options,
     };
   }
 
   private _call(request: HttpRequest): Promise<HttpResponse> {
-    return compose(this._middleware)(this.adapter)(request);
+    return this.adapter(request);
+  }
+
+  /**
+   * Appends request builder methods to the given adapter.
+   * @param adapter An adapter to extend with the builder methods.
+   * @readonly An adapter extended with the builder methods.
+   */
+  static extend(adapter: Adapter): BuildableRequest {
+    const request: BuildableRequest = (
+      request: HttpRequest,
+    ): Promise<HttpResponse> => adapter(request);
+    request.use = (middleware: Middleware): BuildableRequest =>
+      RequestBuilder.extend(middleware(adapter));
+    request.method = (method: string, url: URL | string): RequestBuilder =>
+      new RequestBuilder(adapter, method, url);
+    request.get = (url: URL | string): RequestBuilder =>
+      new RequestBuilder(adapter, "GET", url);
+    request.head = (url: URL | string): RequestBuilder =>
+      new RequestBuilder(adapter, "HEAD", url);
+    request.post = (url: URL | string): RequestBuilder =>
+      new RequestBuilder(adapter, "POST", url);
+    request.put = (url: URL | string): RequestBuilder =>
+      new RequestBuilder(adapter, "PUT", url);
+    request.patch = (url: URL | string): RequestBuilder =>
+      new RequestBuilder(adapter, "PATCH", url);
+    request.delete = (url: URL | string): RequestBuilder =>
+      new RequestBuilder(adapter, "DELETE", url);
+    return request;
   }
 }
 

@@ -1,5 +1,9 @@
 import test from "ava";
-import { fakeNotFoundResponse, fakeOkResponse, fakeResponse } from "../fakes";
+import {
+  fakeNotFoundResponse,
+  fakeOkResponse,
+  fakeResponse,
+} from "../fake/fakes";
 import type { Adapter, HttpRequest, HttpResponse } from "../types";
 import { retryFailed } from "./retry-failed";
 

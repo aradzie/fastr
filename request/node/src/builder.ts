@@ -1,7 +1,6 @@
 import { Accept, Headers, MimeType, multiEntries } from "@webfx-http/headers";
 import { mergeSearchParams } from "@webfx-http/url";
 import { EventEmitter } from "events";
-import { Json } from "./body";
 import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "./events";
 import type {
   Adapter,
@@ -151,16 +150,16 @@ export class RequestBuilder {
 
   send(
     body: any = null,
-    contentType: string | null = null,
+    contentType: string | null = guessContentType(body),
   ): Promise<HttpResponse> {
     return this._call(this._makeRequest(body, contentType));
   }
 
   sendJson(
     body: any,
-    contentType: string | null = null,
+    contentType: string | null = "application/json",
   ): Promise<HttpResponse> {
-    return this.send(new Json(body), contentType);
+    return this.send(JSON.stringify(body), contentType);
   }
 
   private _makeRequest(
@@ -215,4 +214,21 @@ export class RequestBuilder {
       new RequestBuilder(adapter, "DELETE", url);
     return request;
   }
+}
+
+function guessContentType(body: any): string | null {
+  if (typeof body === "string") {
+    return "text/plain";
+  }
+  if (body instanceof URLSearchParams) {
+    return "application/x-www-form-urlencoded";
+  }
+  if (
+    Buffer.isBuffer(body) ||
+    body instanceof ArrayBuffer ||
+    ArrayBuffer.isView(body)
+  ) {
+    return "application/octet-stream";
+  }
+  return null;
 }

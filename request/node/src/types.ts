@@ -24,9 +24,32 @@ export interface Middleware {
 }
 
 export interface BuildableRequest extends Adapter {
-  (request: HttpRequest): Promise<HttpResponse>;
   /**
    * Returns a new instance which uses the specified middleware.
+   * The middleware will be applied only to the returned object.
+   *
+   * Every next added middleware wrap the previous one. They handle requests
+   * in the reverse order, and responses in the direct order.
+   *
+   * If the middleware were added like this:
+   *
+   * ```
+   * request.use(A).use(B).get(...).send();
+   * ```
+   *
+   * Then the control flow is like this:
+   *
+   * ```
+   *            +---------------------------------+
+   *            | B  +-----------------------+    |
+   *            |    | A  +-------------+    |    |
+   * request  ----------> |             |    |    |
+   *            |    |    |   adapter   |    |    |
+   * response <---------- |             |    |    |
+   *            |    |    +-------------+    |    |
+   *            |    +-----------------------+    |
+   *            +---------------------------------+
+   * ```
    */
   use: (middleware: Middleware) => BuildableRequest;
   /**
@@ -67,19 +90,13 @@ export interface BuildableRequest extends Adapter {
   delete: (url: URL | string) => RequestBuilder;
 }
 
-export interface HttpRequestOptions extends SecureContextOptions {
-  readonly timeout?: number;
-  readonly agent?: AnyAgent | ((url: string) => AnyAgent);
-  readonly rejectUnauthorized?: boolean;
-}
-
 export interface HttpRequest {
   /**
    * The URL of a resource to request.
    */
   readonly url: string;
   /**
-   * The HTTP method to use for request.
+   * The HTTP method to use for a request.
    */
   readonly method: string;
   /**
@@ -93,7 +110,13 @@ export interface HttpRequest {
   /**
    * Any additional request options.
    */
-  readonly options?: HttpRequestOptions;
+  readonly options?: HttpRequestOptions | null;
+}
+
+export interface HttpRequestOptions extends SecureContextOptions {
+  readonly timeout?: number;
+  readonly agent?: AnyAgent | ((url: string) => AnyAgent);
+  readonly rejectUnauthorized?: boolean;
 }
 
 export interface HttpRequestBody {
@@ -140,11 +163,11 @@ export interface HttpResponse {
    */
   readonly statusText: string;
   /**
-   * Response URL after all redirections, if any, or the original URL.
+   * Response URL after all redirects, if any, or the original URL.
    */
   readonly url: string;
   /**
-   * The map of all response HTTP headers.
+   * The bag of all response headers.
    */
   readonly headers: Headers;
   /**

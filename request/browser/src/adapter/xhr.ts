@@ -18,16 +18,8 @@ import "./polyfills"; // Automatically install the necessary polyfills.
  * See https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
  */
 export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
-  const {
-    url,
-    method,
-    headers,
-    body,
-    eventEmitter,
-    cache,
-    credentials,
-    redirect,
-  } = request;
+  const { url, method, headers, body, eventEmitter, options } = request;
+  const { timeout, cache, credentials, redirect } = options ?? {};
 
   switch (method.toUpperCase()) {
     case "HEAD":
@@ -43,6 +35,9 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
   xhr.responseType = "blob";
   for (const { name, value } of HttpHeaders.from(headers ?? {}).entries()) {
     xhr.setRequestHeader(name, String(value));
+  }
+  if (timeout != null) {
+    xhr.timeout = timeout;
   }
   if (cache != null) {
     if (process.env.NODE_ENV !== "production") {
@@ -90,10 +85,10 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
   }
 }
 
-xhrAdapter.parseMultipartFormData = function fakeParseMultipartFormData(
+xhrAdapter.parseMultipartFormData = (
   contentType: MimeType,
   blob: Blob,
-): Promise<FormData> {
+): Promise<FormData> => {
   throw new Error(
     process.env.NODE_ENV !== "production"
       ? "Implement your own 'multipart/form-data' parser."

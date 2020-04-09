@@ -11,6 +11,7 @@ run().catch((err) => {
 
 async function run(): Promise<void> {
   const response = await request
+    .use(expectType("text/plain"))
     .post("http://localhost:3456/")
     .on("upload-progress", (ev: UploadProgressEvent): void => {
       console.log(ev);
@@ -21,7 +22,6 @@ async function run(): Promise<void> {
     .query("a", 1)
     .query("b", 2)
     .header("x-foo", "bar")
-    .use(expectType("text/plain"))
     .sendBody("request body");
   const { status, statusText, headers } = response;
   console.log({ status, statusText, headers });

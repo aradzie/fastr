@@ -11,16 +11,8 @@ import type { HttpRequest, HttpResponse } from "../types";
 export async function fetchAdapter(
   request: HttpRequest,
 ): Promise<HttpResponse> {
-  const {
-    url,
-    method,
-    headers,
-    body,
-    eventEmitter,
-    cache,
-    credentials,
-    redirect,
-  } = request;
+  const { url, method, headers, body, eventEmitter, options } = request;
+  const { timeout, cache, credentials, redirect } = options ?? {};
 
   if (process.env.NODE_ENV !== "production") {
     if (eventEmitter != null) {
@@ -30,6 +22,9 @@ export async function fetchAdapter(
       ) {
         console.error("Fetch adapter does not support events");
       }
+    }
+    if (timeout != null) {
+      console.warn("The `timeout` option is ignored by the fetch adapter.");
     }
   }
 

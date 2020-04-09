@@ -115,7 +115,7 @@ test("send string body", async (t) => {
 
   // Assert.
 
-  t.is(await builder.sendBody("some text"), res1);
+  t.is(await builder.send("some text"), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, "some text");
@@ -140,14 +140,14 @@ test("send string body with custom content type", async (t) => {
 
   // Assert.
 
-  t.is(await builder.sendBody("some text", "text/html"), res1);
+  t.is(await builder.send("some text", "text/html"), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, "some text");
   t.is(req1.headers?.contentType()?.name, "text/html");
 });
 
-test("send blob body", async (t) => {
+test("send Buffer body", async (t) => {
   // Arrange.
 
   const receivedRequests: HttpRequest[] = [];
@@ -158,7 +158,7 @@ test("send blob body", async (t) => {
     receivedRequests.push(request);
     return res1;
   };
-  const blob = new Blob(["some text"]);
+  const body: Buffer = await Buffer.from("some text");
 
   // Act.
 
@@ -166,92 +166,14 @@ test("send blob body", async (t) => {
 
   // Assert.
 
-  t.is(await builder.sendBody(blob), res1);
-  t.is(receivedRequests.length, 1);
-  const [req1] = receivedRequests;
-  t.is(req1.body, blob);
-  t.is(req1.headers?.contentType()?.name, "application/octet-stream");
-});
-
-test("send blob body with content type in blob", async (t) => {
-  // Arrange.
-
-  const receivedRequests: HttpRequest[] = [];
-  const res1 = {} as HttpResponse;
-  const testAdapter: Adapter = async (
-    request: HttpRequest,
-  ): Promise<HttpResponse> => {
-    receivedRequests.push(request);
-    return res1;
-  };
-  const blob = new Blob(["some text"], { type: "foo/bar" });
-
-  // Act.
-
-  const builder = new RequestBuilder(testAdapter, "put", "/url");
-
-  // Assert.
-
-  t.is(await builder.sendBody(blob), res1);
-  t.is(receivedRequests.length, 1);
-  const [req1] = receivedRequests;
-  t.is(req1.body, blob);
-  t.is(req1.headers?.contentType()?.name, "foo/bar");
-});
-
-test("send blob body with custom content type", async (t) => {
-  // Arrange.
-
-  const receivedRequests: HttpRequest[] = [];
-  const res1 = {} as HttpResponse;
-  const testAdapter: Adapter = async (
-    request: HttpRequest,
-  ): Promise<HttpResponse> => {
-    receivedRequests.push(request);
-    return res1;
-  };
-  const blob = new Blob(["some text"]);
-
-  // Act.
-
-  const builder = new RequestBuilder(testAdapter, "put", "/url");
-
-  // Assert.
-
-  t.is(await builder.sendBody(blob, "foo/bar"), res1);
-  t.is(receivedRequests.length, 1);
-  const [req1] = receivedRequests;
-  t.is(req1.body, blob);
-  t.is(req1.headers?.contentType()?.name, "foo/bar");
-});
-
-test("send array buffer body", async (t) => {
-  // Arrange.
-
-  const receivedRequests: HttpRequest[] = [];
-  const res1 = {} as HttpResponse;
-  const testAdapter: Adapter = async (
-    request: HttpRequest,
-  ): Promise<HttpResponse> => {
-    receivedRequests.push(request);
-    return res1;
-  };
-  const body = await new Blob(["some text"]).arrayBuffer();
-
-  // Act.
-
-  const builder = new RequestBuilder(testAdapter, "put", "/url");
-
-  // Assert.
-
-  t.is(await builder.sendBody(body), res1);
+  t.is(await builder.send(body), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
   t.is(req1.headers?.contentType()?.name, "application/octet-stream");
 });
 
-test("send array buffer body with custom content type", async (t) => {
+test("send Buffer body with custom content type", async (t) => {
   // Arrange.
 
   const receivedRequests: HttpRequest[] = [];
@@ -262,7 +184,7 @@ test("send array buffer body with custom content type", async (t) => {
     receivedRequests.push(request);
     return res1;
   };
-  const body = await new Blob(["some text"]).arrayBuffer();
+  const body: Buffer = await Buffer.from("some text");
 
   // Act.
 
@@ -270,14 +192,14 @@ test("send array buffer body with custom content type", async (t) => {
 
   // Assert.
 
-  t.is(await builder.sendBody(body, "foo/bar"), res1);
+  t.is(await builder.send(body, "foo/bar"), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
   t.is(req1.headers?.contentType()?.name, "foo/bar");
 });
 
-test("send multipart form body", async (t) => {
+test("send ArrayBuffer body", async (t) => {
   // Arrange.
 
   const receivedRequests: HttpRequest[] = [];
@@ -288,22 +210,48 @@ test("send multipart form body", async (t) => {
     receivedRequests.push(request);
     return res1;
   };
-  const body = new FormData();
+  const body: ArrayBuffer = await Buffer.from("some text").buffer;
 
   // Act.
 
-  const builder = new RequestBuilder(testAdapter, "post", "/url");
+  const builder = new RequestBuilder(testAdapter, "put", "/url");
 
   // Assert.
 
-  t.is(await builder.sendForm(body), res1);
+  t.is(await builder.send(body), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
-  t.is(req1.headers?.contentType()?.name, "multipart/form-data");
+  t.is(req1.headers?.contentType()?.name, "application/octet-stream");
 });
 
-test("send url-encoded form body", async (t) => {
+test("send ArrayBuffer body with custom content type", async (t) => {
+  // Arrange.
+
+  const receivedRequests: HttpRequest[] = [];
+  const res1 = {} as HttpResponse;
+  const testAdapter: Adapter = async (
+    request: HttpRequest,
+  ): Promise<HttpResponse> => {
+    receivedRequests.push(request);
+    return res1;
+  };
+  const body: ArrayBuffer = await Buffer.from("some text").buffer;
+
+  // Act.
+
+  const builder = new RequestBuilder(testAdapter, "put", "/url");
+
+  // Assert.
+
+  t.is(await builder.send(body, "foo/bar"), res1);
+  t.is(receivedRequests.length, 1);
+  const [req1] = receivedRequests;
+  t.is(req1.body, body);
+  t.is(req1.headers?.contentType()?.name, "foo/bar");
+});
+
+test("send URLSearchParams body", async (t) => {
   // Arrange.
 
   const receivedRequests: HttpRequest[] = [];
@@ -322,7 +270,7 @@ test("send url-encoded form body", async (t) => {
 
   // Assert.
 
-  t.is(await builder.sendForm(body), res1);
+  t.is(await builder.send(body), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);

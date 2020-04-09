@@ -18,12 +18,39 @@ export interface Middleware {
   (adapter: Adapter): Adapter;
 }
 
-export interface Instance extends Adapter {
+export interface BuildableRequest extends Adapter {
+  /**
+   * Returns a new instance which uses the specified middleware.
+   * The middleware will be applied only to the returned object.
+   *
+   * Every next added middleware wrap the previous one. They handle requests
+   * in the reverse order, and responses in the direct order.
+   *
+   * If the middleware were added like this:
+   *
+   * ```
+   * request.use(A).use(B).get(...).send();
+   * ```
+   *
+   * Then the control flow is like this:
+   *
+   * ```
+   *            +---------------------------------+
+   *            | B  +-----------------------+    |
+   *            |    | A  +-------------+    |    |
+   * request  ----------> |             |    |    |
+   *            |    |    |   adapter   |    |    |
+   * response <---------- |             |    |    |
+   *            |    |    +-------------+    |    |
+   *            |    +-----------------------+    |
+   *            +---------------------------------+
+   * ```
+   */
+  use: (middleware: Middleware) => BuildableRequest;
   /**
    * Sends HTTP request using the given HTTP method.
    * @param method The HTTP method to use for the request.
    * @param url A URL of the resource to request.
-   * @param body A body to send.
    */
   method: (method: string, url: URL | string) => RequestBuilder;
   /**
@@ -32,21 +59,23 @@ export interface Instance extends Adapter {
    */
   get: (url: URL | string) => RequestBuilder;
   /**
+   * Sends HTTP request using the `HEAD` method.
+   * @param url A URL of the resource to request.
+   */
+  head: (url: URL | string) => RequestBuilder;
+  /**
    * Sends HTTP request using the `POST` method.
    * @param url A URL of the resource to request.
-   * @param body A body to send.
    */
   post: (url: URL | string) => RequestBuilder;
   /**
    * Sends HTTP request using the `PUT` method.
    * @param url A URL of the resource to request.
-   * @param body A body to send.
    */
   put: (url: URL | string) => RequestBuilder;
   /**
    * Sends HTTP request using the `PATCH` method.
    * @param url A URL of the resource to request.
-   * @param body A body to send.
    */
   patch: (url: URL | string) => RequestBuilder;
   /**
@@ -78,6 +107,18 @@ export interface HttpRequest {
    */
   readonly eventEmitter?: EventEmitter | null;
   /**
+   * Any additional request options.
+   */
+  readonly options?: HttpRequestOptions | null;
+}
+
+export interface HttpRequestOptions {
+  /**
+   * When set to a non-zero value will cause fetching to terminate after
+   * the given time in milliseconds has passed.
+   */
+  readonly timeout?: number;
+  /**
    * A string indicating how the request will interact with the browser's cache
    * to set request's cache.
    */
@@ -107,7 +148,8 @@ export type BodyDataType =
  */
 export interface HttpResponse {
   /**
-   * Contains value indicating whether the response was successful (status in the range 200-299) or not.
+   * Contains value indicating whether the response was successful (status in
+   * the range 200-299) or not.
    */
   readonly ok: boolean;
   /**
@@ -119,11 +161,11 @@ export interface HttpResponse {
    */
   readonly statusText: string;
   /**
-   * Response URL after all redirections.
+   * Response URL after all redirects, if any, or the original URL.
    */
   readonly url: string;
   /**
-   * Bag of all response HTTP headers, keys are lower-cased.
+   * The bag of all response headers.
    */
   readonly headers: Headers;
 

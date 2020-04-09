@@ -52,8 +52,8 @@ function selectTransport(
 function makeOptions(
   request: HttpRequest,
 ): http.RequestOptions & https.RequestOptions {
-  const { method, url, headers, options = {} } = request;
-  let { agent } = options;
+  const { method, url, headers, options } = request;
+  let { agent } = options ?? {};
   if (typeof agent === "function") {
     agent = agent(url);
   }

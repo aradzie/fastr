@@ -1,5 +1,5 @@
 import test from "ava";
-import { fakeOkResponse } from "../fakes";
+import { fakeOkResponse } from "../fake/fakes";
 import type { Adapter, HttpRequest, HttpResponse } from "../types";
 import { compose } from "./compose";
 
