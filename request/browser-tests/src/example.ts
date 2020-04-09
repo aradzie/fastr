@@ -22,7 +22,7 @@ async function run(): Promise<void> {
     .query("a", 1)
     .query("b", 2)
     .header("x-foo", "bar")
-    .sendBody("request body");
+    .send("request body");
   const { status, statusText, headers } = response;
   console.log({ status, statusText, headers });
   console.log(await response.text());

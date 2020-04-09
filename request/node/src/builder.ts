@@ -1,6 +1,9 @@
 import { Accept, Headers, MimeType, multiEntries } from "@webfx-http/headers";
 import { mergeSearchParams } from "@webfx-http/url";
 import { EventEmitter } from "events";
+import { Readable } from "stream";
+import { Streamable } from "./body/streamable";
+import { guessContentType } from "./body/type";
 import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "./events";
 import type {
   Adapter,
@@ -9,7 +12,6 @@ import type {
   BuildableRequest,
   DownloadProgressEvent,
   HttpRequest,
-  HttpRequestBody,
   HttpRequestOptions,
   HttpResponse,
   Middleware,
@@ -148,26 +150,94 @@ export class RequestBuilder {
     return this;
   }
 
-  send(
-    body: any = null,
-    contentType: string | null = guessContentType(body),
-  ): Promise<HttpResponse> {
-    return this._call(this._makeRequest(body, contentType));
-  }
+  /**
+   * Sends an HTTP request without body.
+   */
+  send(): Promise<HttpResponse>;
+  /**
+   * Sends an HTTP request with the given body.
+   *
+   * @param body The body to send.
+   * @param contentType The content type to use.
+   *                    The default value is `text/plain`.
+   */
+  send(body: string, contentType?: string): Promise<HttpResponse>;
+  /**
+   * Sends an HTTP request with the given body.
+   *
+   * @param body The body to send.
+   * @param contentType The content type to use.
+   *                    The default value is `application/octet-stream`.
+   */
+  send(body: Buffer, contentType?: string): Promise<HttpResponse>;
+  /**
+   * Sends an HTTP request with the given body.
+   *
+   * @param body The body to send.
+   * @param contentType The content type to use.
+   *                    The default value is `application/octet-stream`.
+   */
+  send(body: ArrayBuffer, contentType?: string): Promise<HttpResponse>;
+  /**
+   * Sends an HTTP request with the given body.
+   *
+   * @param body The body to send.
+   * @param contentType The content type to use.
+   *                    The default value is `application/octet-stream`.
+   */
+  send(body: ArrayBufferView, contentType?: string): Promise<HttpResponse>;
+  /**
+   * Sends an HTTP request with the given body.
+   *
+   * @param body The body to send.
+   * @param contentType The content type to use.
+   *                    The default value is `application/octet-stream`.
+   */
+  send(body: Readable, contentType?: string): Promise<HttpResponse>;
+  /**
+   * Sends an HTTP request with the given body.
+   *
+   * @param body The body to send.
+   * @param contentType The content type to use.
+   *                    The default value is `application/octet-stream`.
+   */
+  send(body: Streamable, contentType?: string): Promise<HttpResponse>;
+  /**
+   * Sends an HTTP request with the given body.
+   *
+   * @param body The body to send.
+   * @param contentType The content type to use.
+   *                    The default value is `application/x-www-form-urlencoded`.
+   */
+  send(body: URLSearchParams, contentType?: string): Promise<HttpResponse>;
+  /**
+   * Sends an HTTP request with the given JSON body.
+   *
+   * @param body The body to send.
+   * @param contentType The content type to use.
+   *                    The default value is `application/json`.
+   */
+  send(body: unknown, contentType?: string): Promise<HttpResponse>;
 
-  sendJson(
-    body: any,
-    contentType: string | null = "application/json",
+  send(
+    body: BodyDataType | unknown | null = null,
+    contentType: string | null = null,
   ): Promise<HttpResponse> {
-    return this.send(JSON.stringify(body), contentType);
+    if (body == null) {
+      return this._send(this._makeRequest(null, null));
+    } else {
+      return this._send(
+        this._makeRequest(...guessContentType(body, contentType)),
+      );
+    }
   }
 
   private _makeRequest(
-    body: BodyDataType | HttpRequestBody | null,
+    body: BodyDataType | null,
     contentType: string | null = null,
   ): HttpRequest {
     const url = mergeSearchParams(this.url, this._query);
-    if (contentType != null) {
+    if (body != null && contentType != null) {
       this._headers.contentType(contentType);
     }
     if (this._accept.length > 0) {
@@ -183,7 +253,7 @@ export class RequestBuilder {
     };
   }
 
-  private _call(request: HttpRequest): Promise<HttpResponse> {
+  private _send(request: HttpRequest): Promise<HttpResponse> {
     return this.adapter(request);
   }
 
@@ -214,21 +284,4 @@ export class RequestBuilder {
       new RequestBuilder(adapter, "DELETE", url);
     return request;
   }
-}
-
-function guessContentType(body: any): string | null {
-  if (typeof body === "string") {
-    return "text/plain";
-  }
-  if (body instanceof URLSearchParams) {
-    return "application/x-www-form-urlencoded";
-  }
-  if (
-    Buffer.isBuffer(body) ||
-    body instanceof ArrayBuffer ||
-    ArrayBuffer.isView(body)
-  ) {
-    return "application/octet-stream";
-  }
-  return null;
 }

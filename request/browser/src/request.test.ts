@@ -60,7 +60,7 @@ test("build request without middleware", async (t) => {
 
   // Act.
 
-  const actualRes = await request.get("/").sendBody("body");
+  const actualRes = await request.get("/").send("body");
 
   // Assert.
 
@@ -114,7 +114,7 @@ test("build request with middleware", async (t) => {
 
   // Act.
 
-  const actualRes = await request.use(mw1).use(mw2).get("/").sendBody("body");
+  const actualRes = await request.use(mw1).use(mw2).get("/").send("body");
 
   // Assert.
 

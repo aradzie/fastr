@@ -1,10 +1,10 @@
 import type { Body } from "@webfx-http/body";
-import type { Headers, MimeType } from "@webfx-http/headers";
+import type { Headers } from "@webfx-http/headers";
 import type { Agent as HttpAgent } from "http";
 import type { Agent as HttpsAgent } from "https";
 import type { Readable } from "stream";
 import type { SecureContextOptions } from "tls";
-import type { Json, Streamable } from "./body";
+import type { Streamable } from "./body/streamable";
 import type { RequestBuilder } from "./builder";
 
 /**
@@ -106,7 +106,7 @@ export interface HttpRequest {
   /**
    * The request body.
    */
-  readonly body?: BodyDataType | HttpRequestBody | null;
+  readonly body?: BodyDataType | null;
   /**
    * Any additional request options.
    */
@@ -119,30 +119,12 @@ export interface HttpRequestOptions extends SecureContextOptions {
   readonly rejectUnauthorized?: boolean;
 }
 
-export interface HttpRequestBody {
-  /**
-   * Sets value of the `Content-Type` header.
-   */
-  readonly type?: MimeType | string | null;
-  /**
-   * Whether to apply gzip encoding to the body
-   * and set value of the `Content-Encoding` header.
-   */
-  readonly compressible?: boolean;
-  /**
-   * The actual body data to send.
-   */
-  readonly data: BodyDataType;
-}
-
 export type BodyDataType =
   | string
-  | URLSearchParams
   | Buffer
   | ArrayBuffer
   | ArrayBufferView
   | Readable
-  | Json
   | Streamable;
 
 /**

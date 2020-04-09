@@ -166,7 +166,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const response = await request
         .post("/test/reflect")
         .header("X-Foo", "Bar")
-        .sendBody("text data");
+        .send("text data");
       expect(await response.json()).to.deep.eq({
         url: "/test/reflect",
         method: "POST",
@@ -184,7 +184,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const response = await request
         .post("/test/reflect")
         .header("X-Foo", "Bar")
-        .sendBody(new Blob(["blob data"]));
+        .send(new Blob(["blob data"]));
       expect(await response.json()).to.deep.eq({
         url: "/test/reflect",
         method: "POST",
@@ -254,7 +254,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const response = await request
         .post("/test/reflect")
         .header("X-Foo", "Bar")
-        .sendJson({ a: 1, b: 2, c: 3 });
+        .send({ a: 1, b: 2, c: 3 });
       expect(await response.json()).to.deep.eq({
         url: "/test/reflect",
         method: "POST",
@@ -269,7 +269,7 @@ function makeAdapterTests(underTest: Adapter): void {
     });
 
     it("follow redirects", async () => {
-      const response = await request.post("/test/redirect").sendBody("posted");
+      const response = await request.post("/test/redirect").send("posted");
       expect(await response.json()).to.deep.eq({
         url: "/test/reflect",
         method: "POST",

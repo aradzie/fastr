@@ -4,12 +4,11 @@ export type {
   Middleware,
   HttpRequest,
   HttpResponse,
-  HttpRequestBody,
   BodyDataType,
 } from "./types";
 export { request } from "./request";
 export { RequestBuilder } from "./builder";
-export { Json, Streamable, FileStreamable } from "./body";
+export { Streamable, FileStreamable } from "./body/streamable";
 export {
   authenticate,
   compose,

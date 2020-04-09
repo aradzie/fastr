@@ -1,6 +1,7 @@
 import { Accept, Headers, MimeType, multiEntries } from "@webfx-http/headers";
 import { mergeSearchParams } from "@webfx-http/url";
 import { EventEmitter } from "events";
+import { guessContentType, toFormData } from "./body";
 import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "./events";
 import type {
   Adapter,
@@ -144,10 +145,7 @@ export class RequestBuilder {
   /**
    * Sends an HTTP request without body.
    */
-  send(): Promise<HttpResponse> {
-    return this._call(this._makeRequest(null));
-  }
-
+  send(): Promise<HttpResponse>;
   /**
    * Sends an HTTP request with the given body.
    *
@@ -155,25 +153,39 @@ export class RequestBuilder {
    * @param contentType The content type to use.
    *                    The default value is `text/plain`.
    */
-  sendBody(body: string, contentType?: string): Promise<HttpResponse>;
-
+  send(body: string, contentType?: string): Promise<HttpResponse>;
   /**
    * Sends an HTTP request with the given body.
    *
    * @param body The body to send.
    * @param contentType The content type to use.
-   *                    The default value is `application/octet-stream`.
+   *                    The default value is `application/octet-stream`
+   *                    or is taken from the blob argument.
    */
-  sendBody(
+  send(
     body: Blob | ArrayBuffer | ArrayBufferView,
     contentType?: string,
   ): Promise<HttpResponse>;
+  /**
+   * Sends an HTTP request with the given JSON body.
+   *
+   * @param body The body to send.
+   * @param contentType The content type to use.
+   *                    The default value is `application/json`.
+   */
+  send(body: unknown, contentType?: string): Promise<HttpResponse>;
 
-  sendBody(
-    body: string | Blob | ArrayBuffer | ArrayBufferView,
-    contentType = guessContentType(body),
+  send(
+    body: string | Blob | ArrayBuffer | ArrayBufferView | unknown | null = null,
+    contentType: string | null = null,
   ): Promise<HttpResponse> {
-    return this._call(this._makeRequest(body, contentType));
+    if (body == null) {
+      return this._send(this._makeRequest(null, null));
+    } else {
+      return this._send(
+        this._makeRequest(...guessContentType(body, contentType)),
+      );
+    }
   }
 
   /**
@@ -205,20 +217,7 @@ export class RequestBuilder {
       | Record<string, unknown>
       | NameValueEntries,
   ): Promise<HttpResponse> {
-    const [formData, contentType] = toFormData(body);
-    return this._call(this._makeRequest(formData, contentType));
-  }
-
-  /**
-   * Sends an HTTP request with the given form body.
-   *
-   * The `Content-Type` header will be set to `application/json`.
-   */
-  sendJson(
-    body: unknown,
-    contentType = "application/json",
-  ): Promise<HttpResponse> {
-    return this._call(this._makeRequest(JSON.stringify(body), contentType));
+    return this._send(this._makeRequest(...toFormData(body)));
   }
 
   private _makeRequest(
@@ -226,7 +225,7 @@ export class RequestBuilder {
     contentType: string | null = null,
   ): HttpRequest {
     const url = mergeSearchParams(this.url, this._query);
-    if (contentType != null) {
+    if (body != null && contentType != null) {
       this._headers.contentType(contentType);
     }
     if (this._accept.length > 0) {
@@ -243,7 +242,7 @@ export class RequestBuilder {
     };
   }
 
-  private _call(request: HttpRequest): Promise<HttpResponse> {
+  private _send(request: HttpRequest): Promise<HttpResponse> {
     return this.adapter(request);
   }
 
@@ -274,41 +273,4 @@ export class RequestBuilder {
       new RequestBuilder(adapter, "DELETE", url);
     return request;
   }
-}
-
-function toFormData(
-  body:
-    | FormData
-    | URLSearchParams
-    | Map<string, unknown>
-    | Record<string, unknown>
-    | NameValueEntries,
-): [FormData | URLSearchParams, string] {
-  if (body instanceof FormData) {
-    return [body, "multipart/form-data"];
-  }
-  if (!(body instanceof URLSearchParams)) {
-    body = new URLSearchParams([...multiEntries(body as Map<string, unknown>)]);
-  }
-  return [body, "application/x-www-form-urlencoded"];
-}
-
-function guessContentType(body: any): string {
-  if (typeof body === "string") {
-    return "text/plain";
-  }
-  if (body instanceof FormData) {
-    return "multipart/form-data";
-  }
-  if (body instanceof URLSearchParams) {
-    return "application/x-www-form-urlencoded";
-  }
-  let type;
-  if (body instanceof Blob && (type = body.type)) {
-    return type;
-  }
-  // Blob
-  // ArrayBuffer
-  // ArrayBufferView
-  return "application/octet-stream";
 }

@@ -37,7 +37,7 @@ test("handle request aborted", async (t) => {
       await request({
         url: server.url("/test"),
         method: "POST",
-        body: { data: "payload\n".repeat(1000) },
+        body: "payload\n".repeat(1000),
       });
     },
     {
@@ -67,7 +67,7 @@ test("handle response aborted", async (t) => {
       await request({
         url: server.url("/test"),
         method: "POST",
-        body: { data: "payload\n".repeat(1000) },
+        body: "payload\n".repeat(1000),
       });
     },
     {
@@ -181,42 +181,6 @@ test("handle send body error", async (t) => {
     },
     {
       is: error,
-    },
-  );
-});
-
-test("handle send invalid body type", async (t) => {
-  const { server } = t.context;
-
-  // Assert.
-
-  await t.throwsAsync(
-    async () => {
-      await request({
-        url: server.url("/test"),
-        method: "GET",
-        body: ({} as unknown) as string,
-      });
-    },
-    {
-      name: "TypeError",
-      message: "Invalid body type",
-    },
-  );
-  await t.throwsAsync(
-    async () => {
-      await request({
-        url: server.url("/test"),
-        method: "GET",
-        body: {
-          type: "text/plain",
-          data: ({} as unknown) as string,
-        },
-      });
-    },
-    {
-      name: "TypeError",
-      message: "Invalid body type",
     },
   );
 });

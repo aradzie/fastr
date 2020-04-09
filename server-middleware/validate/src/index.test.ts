@@ -40,8 +40,8 @@ test("validate json body", async (t) => {
   });
   const req = request.use(start(app.callback()));
 
-  t.is((await req.post("/").sendJson({ extra: "fail" })).status, 400);
-  t.is((await req.post("/").sendJson({ value: "ok" })).status, 200);
+  t.is((await req.post("/").send({ extra: "fail" })).status, 400);
+  t.is((await req.post("/").send({ value: "ok" })).status, 200);
 });
 
 test("validate form body", async (t) => {

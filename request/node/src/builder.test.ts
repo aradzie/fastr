@@ -1,5 +1,6 @@
 import { Headers } from "@webfx-http/headers";
 import test from "ava";
+import { Readable } from "stream";
 import { RequestBuilder } from "./builder";
 import { Adapter, HttpRequest, HttpResponse } from "./types";
 
@@ -251,7 +252,7 @@ test("send ArrayBuffer body with custom content type", async (t) => {
   t.is(req1.headers?.contentType()?.name, "foo/bar");
 });
 
-test("send URLSearchParams body", async (t) => {
+test("send Readable body", async (t) => {
   // Arrange.
 
   const receivedRequests: HttpRequest[] = [];
@@ -262,11 +263,11 @@ test("send URLSearchParams body", async (t) => {
     receivedRequests.push(request);
     return res1;
   };
-  const body = new URLSearchParams();
+  const body = Readable.from(["some text"]);
 
   // Act.
 
-  const builder = new RequestBuilder(testAdapter, "post", "/url");
+  const builder = new RequestBuilder(testAdapter, "put", "/url");
 
   // Assert.
 
@@ -274,7 +275,33 @@ test("send URLSearchParams body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
-  t.is(req1.headers?.contentType()?.name, "application/x-www-form-urlencoded");
+  t.is(req1.headers?.contentType()?.name, "application/octet-stream");
+});
+
+test("send Readable body with custom content type", async (t) => {
+  // Arrange.
+
+  const receivedRequests: HttpRequest[] = [];
+  const res1 = {} as HttpResponse;
+  const testAdapter: Adapter = async (
+    request: HttpRequest,
+  ): Promise<HttpResponse> => {
+    receivedRequests.push(request);
+    return res1;
+  };
+  const body = Readable.from(["some text"]);
+
+  // Act.
+
+  const builder = new RequestBuilder(testAdapter, "put", "/url");
+
+  // Assert.
+
+  t.is(await builder.send(body, "foo/bar"), res1);
+  t.is(receivedRequests.length, 1);
+  const [req1] = receivedRequests;
+  t.is(req1.body, body);
+  t.is(req1.headers?.contentType()?.name, "foo/bar");
 });
 
 test("send json body", async (t) => {
@@ -295,7 +322,7 @@ test("send json body", async (t) => {
 
   // Assert.
 
-  t.is(await builder.sendJson({ type: "json" }), res1);
+  t.is(await builder.send({ type: "json" }), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, '{"type":"json"}');
@@ -320,7 +347,7 @@ test("send json body with custom content type", async (t) => {
 
   // Assert.
 
-  t.is(await builder.sendJson({ type: "json" }, "application/foo+json"), res1);
+  t.is(await builder.send({ type: "json" }, "application/foo+json"), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, '{"type":"json"}');

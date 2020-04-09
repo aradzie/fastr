@@ -115,7 +115,7 @@ test("send string body", async (t) => {
 
   // Assert.
 
-  t.is(await builder.sendBody("some text"), res1);
+  t.is(await builder.send("some text"), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, "some text");
@@ -140,7 +140,7 @@ test("send string body with custom content type", async (t) => {
 
   // Assert.
 
-  t.is(await builder.sendBody("some text", "text/html"), res1);
+  t.is(await builder.send("some text", "text/html"), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, "some text");
@@ -166,7 +166,7 @@ test("send blob body", async (t) => {
 
   // Assert.
 
-  t.is(await builder.sendBody(blob), res1);
+  t.is(await builder.send(blob), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, blob);
@@ -192,7 +192,7 @@ test("send blob body with content type in blob", async (t) => {
 
   // Assert.
 
-  t.is(await builder.sendBody(blob), res1);
+  t.is(await builder.send(blob), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, blob);
@@ -218,7 +218,7 @@ test("send blob body with custom content type", async (t) => {
 
   // Assert.
 
-  t.is(await builder.sendBody(blob, "foo/bar"), res1);
+  t.is(await builder.send(blob, "foo/bar"), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, blob);
@@ -244,7 +244,7 @@ test("send array buffer body", async (t) => {
 
   // Assert.
 
-  t.is(await builder.sendBody(body), res1);
+  t.is(await builder.send(body), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
@@ -270,7 +270,7 @@ test("send array buffer body with custom content type", async (t) => {
 
   // Assert.
 
-  t.is(await builder.sendBody(body, "foo/bar"), res1);
+  t.is(await builder.send(body, "foo/bar"), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
@@ -347,7 +347,7 @@ test("send json body", async (t) => {
 
   // Assert.
 
-  t.is(await builder.sendJson({ type: "json" }), res1);
+  t.is(await builder.send({ type: "json" }), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, '{"type":"json"}');
@@ -372,7 +372,7 @@ test("send json body with custom content type", async (t) => {
 
   // Assert.
 
-  t.is(await builder.sendJson({ type: "json" }, "application/foo+json"), res1);
+  t.is(await builder.send({ type: "json" }, "application/foo+json"), res1);
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, '{"type":"json"}');

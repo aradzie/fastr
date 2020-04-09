@@ -63,7 +63,7 @@ export abstract class AbstractAdapter {
       .use(handleErrors())
       .use(expectType("application/json"))
       .post(this.tokenUri)
-      .sendJson({
+      .send({
         grant_type: "authorization_code",
         client_id: this.clientId,
         client_secret: this.clientSecret,

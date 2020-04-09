@@ -1,11 +1,9 @@
 import { Body } from "@webfx-http/body";
 import { Headers } from "@webfx-http/headers";
-import { Json, request } from "@webfx-request/node";
+import { request, Streamable } from "@webfx-request/node";
 import { IncomingMessage, ServerResponse } from "http";
 import { Readable } from "stream";
 import { test } from "./util";
-
-const largePayload = "large payload\n".repeat(1000);
 
 test("post string", async (t) => {
   const { server } = t.context;
@@ -28,63 +26,8 @@ test("post string", async (t) => {
   t.deepEqual(await body.json(), {
     headers: {
       "content-length": "11",
-      "content-type": "text/plain",
     },
     body: "string body",
-  });
-});
-
-test("post json", async (t) => {
-  const { server } = t.context;
-
-  // Arrange.
-
-  server.addRoute("POST", "/test", listener);
-
-  // Act.
-
-  const { ok, body } = await request({
-    url: server.url("/test"),
-    method: "POST",
-    body: new Json({ type: "json" }),
-  });
-
-  // Assert.
-
-  t.true(ok);
-  t.deepEqual(await body.json(), {
-    headers: {
-      "content-length": "15",
-      "content-type": "application/json",
-    },
-    body: '{"type":"json"}',
-  });
-});
-
-test("post form", async (t) => {
-  const { server } = t.context;
-
-  // Arrange.
-
-  server.addRoute("POST", "/test", listener);
-
-  // Act.
-
-  const { ok, body } = await request({
-    url: server.url("/test"),
-    method: "POST",
-    body: new URLSearchParams("a=1&b=2"),
-  });
-
-  // Assert.
-
-  t.true(ok);
-  t.deepEqual(await body.json(), {
-    headers: {
-      "content-length": "7",
-      "content-type": "application/x-www-form-urlencoded",
-    },
-    body: "a=1&b=2",
   });
 });
 
@@ -109,7 +52,6 @@ test("post buffer", async (t) => {
   t.deepEqual(await body.json(), {
     headers: {
       "content-length": "11",
-      "content-type": "application/octet-stream",
     },
     body: "buffer body",
   });
@@ -136,7 +78,6 @@ test("post array buffer", async (t) => {
   t.deepEqual(await body.json(), {
     headers: {
       "content-length": "17",
-      "content-type": "application/octet-stream",
     },
     body: "array buffer body",
   });
@@ -163,13 +104,12 @@ test("post array buffer view", async (t) => {
   t.deepEqual(await body.json(), {
     headers: {
       "content-length": "22",
-      "content-type": "application/octet-stream",
     },
     body: "array buffer view body",
   });
 });
 
-test("post stream", async (t) => {
+test("post readable", async (t) => {
   const { server } = t.context;
 
   // Arrange.
@@ -194,13 +134,12 @@ test("post stream", async (t) => {
   t.deepEqual(await body.json(), {
     headers: {
       "transfer-encoding": "chunked",
-      "content-type": "application/octet-stream",
     },
     body: "stream body",
   });
 });
 
-test("post compressible string", async (t) => {
+test("post streamable", async (t) => {
   const { server } = t.context;
 
   // Arrange.
@@ -212,10 +151,18 @@ test("post compressible string", async (t) => {
   const { ok, body } = await request({
     url: server.url("/test"),
     method: "POST",
-    body: {
-      data: largePayload,
-      compressible: true,
-    },
+    body: new (class extends Streamable {
+      length(): number | null {
+        return null;
+      }
+      open(): Readable {
+        return Readable.from([
+          Buffer.from("stream"),
+          Buffer.from(" "),
+          Buffer.from("body"),
+        ]);
+      }
+    })(),
   });
 
   // Assert.
@@ -224,72 +171,8 @@ test("post compressible string", async (t) => {
   t.deepEqual(await body.json(), {
     headers: {
       "transfer-encoding": "chunked",
-      "content-encoding": "gzip",
-      "content-type": "text/plain",
     },
-    body: largePayload,
-  });
-});
-
-test("post compressible buffer", async (t) => {
-  const { server } = t.context;
-
-  // Arrange.
-
-  server.addRoute("POST", "/test", listener);
-
-  // Act.
-
-  const { ok, body } = await request({
-    url: server.url("/test"),
-    method: "POST",
-    body: {
-      data: Buffer.from(largePayload),
-      compressible: true,
-    },
-  });
-
-  // Assert.
-
-  t.true(ok);
-  t.deepEqual(await body.json(), {
-    headers: {
-      "transfer-encoding": "chunked",
-      "content-encoding": "gzip",
-      "content-type": "application/octet-stream",
-    },
-    body: largePayload,
-  });
-});
-
-test("post compressible stream", async (t) => {
-  const { server } = t.context;
-
-  // Arrange.
-
-  server.addRoute("POST", "/test", listener);
-
-  // Act.
-
-  const { ok, body } = await request({
-    url: server.url("/test"),
-    method: "POST",
-    body: {
-      data: Readable.from([Buffer.from(largePayload)]),
-      compressible: true,
-    },
-  });
-
-  // Assert.
-
-  t.true(ok);
-  t.deepEqual(await body.json(), {
-    headers: {
-      "transfer-encoding": "chunked",
-      "content-encoding": "gzip",
-      "content-type": "application/octet-stream",
-    },
-    body: largePayload,
+    body: "stream body",
   });
 });
 

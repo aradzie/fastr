@@ -47,7 +47,7 @@ test("fake adapter", async (t) => {
   {
     // Act.
 
-    const response = await request.post("/url1").sendBody("something");
+    const response = await request.post("/url1").send("something");
 
     // Assert.
 
@@ -60,7 +60,7 @@ test("fake adapter", async (t) => {
   {
     // Act.
 
-    const response = await request.post("/url2").sendBody("something");
+    const response = await request.post("/url2").send("something");
 
     // Assert.
 

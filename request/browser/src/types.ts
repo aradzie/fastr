@@ -137,11 +137,11 @@ export interface HttpRequestOptions {
 
 export type BodyDataType =
   | string
-  | FormData
-  | URLSearchParams
   | Blob
   | ArrayBuffer
-  | ArrayBufferView;
+  | ArrayBufferView
+  | FormData
+  | URLSearchParams;
 
 /**
  * Represents response of a web request, if completed and parsed successfully.
