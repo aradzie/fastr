@@ -54,23 +54,7 @@ export class FacebookAdapter extends AbstractAdapter {
     };
   }
 
-  handleErrors(): Middleware {
-    return (adapter: Adapter): Adapter => {
-      return async (request: HttpRequest): Promise<HttpResponse> => {
-        const response = await adapter(request);
-        if (
-          isClientError(response.status) &&
-          response.headers.contentType()?.name === "application/json"
-        ) {
-          const body = await response.body.json<FacebookErrorResponse>();
-          throw FacebookAdapter.translateError(body);
-        }
-        return response;
-      };
-    };
-  }
-
-  authenticateRequest({ token }: AccessToken): Middleware {
+  authenticate({ token }: AccessToken): Middleware {
     const proof = createHmac("sha256", this.clientSecret)
       .update(token)
       .digest("hex");
@@ -83,6 +67,22 @@ export class FacebookAdapter extends AbstractAdapter {
           ...request,
           url: String(url),
         });
+      };
+    };
+  }
+
+  handleErrors(): Middleware {
+    return (adapter: Adapter): Adapter => {
+      return async (request: HttpRequest): Promise<HttpResponse> => {
+        const response = await adapter(request);
+        if (
+          isClientError(response.status) &&
+          response.headers.contentType()?.name === "application/json"
+        ) {
+          const body = await response.body.json<FacebookErrorResponse>();
+          throw FacebookAdapter.translateError(body);
+        }
+        return response;
       };
     };
   }

@@ -1,7 +1,7 @@
-import { Headers } from "@webfx-http/headers";
 import { isClientError } from "@webfx-http/status";
 import {
   Adapter,
+  authenticate,
   expectType,
   handleErrors,
   HttpRequest,
@@ -76,7 +76,7 @@ export abstract class AbstractAdapter {
 
   async getProfile(accessToken: AccessToken): Promise<ResourceOwner> {
     const response = await request
-      .use(this.authenticateRequest(accessToken))
+      .use(this.authenticate(accessToken))
       .use(this.handleErrors())
       .use(handleErrors())
       .use(expectType("application/json"))
@@ -87,6 +87,10 @@ export abstract class AbstractAdapter {
   }
 
   protected abstract parseProfileResponse(response: unknown): ResourceOwner;
+
+  authenticate({ type, token }: AccessToken): Middleware {
+    return authenticate(`${type} ${token}`);
+  }
 
   handleErrors(): Middleware {
     return (adapter: Adapter): Adapter => {
@@ -100,21 +104,6 @@ export abstract class AbstractAdapter {
           throw OAuthError.from(body);
         }
         return response;
-      };
-    };
-  }
-
-  authenticateRequest({ type, token }: AccessToken): Middleware {
-    const header = `${type} ${token}`;
-    return (adapter: Adapter): Adapter => {
-      return async (request: HttpRequest): Promise<HttpResponse> => {
-        return adapter({
-          ...request,
-          headers: Headers.from(request.headers ?? {})
-            .toBuilder()
-            .append("Authorization", header)
-            .build(),
-        });
       };
     };
   }

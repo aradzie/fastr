@@ -1,3 +1,4 @@
+export { authenticate } from "./authenticate";
 export { compose } from "./compose";
 export { expectType } from "./expect-type";
 export { followRedirects } from "./follow-redirects";

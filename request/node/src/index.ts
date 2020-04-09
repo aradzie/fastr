@@ -11,9 +11,10 @@ export { request } from "./request";
 export { RequestBuilder } from "./builder";
 export { Json, Streamable, FileStreamable } from "./body";
 export {
+  authenticate,
   compose,
-  followRedirects,
   expectType,
+  followRedirects,
   handleErrors,
   retryFailed,
 } from "./middleware";
