@@ -19,7 +19,7 @@
     "tslib": "^1.11.1"
   },
   "scripts": {
-    "compile": "rm -fr build; tsc",
+    "compile": "rm -fr build && tsc",
     "test": "ava"
   },
   "ava": {

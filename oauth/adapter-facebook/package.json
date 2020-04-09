@@ -20,7 +20,7 @@
     "@webfx-request/node-fake": "^0.0.4-alpha.1"
   },
   "scripts": {
-    "compile": "rm -fr lib; rm -fr lib-esm; tsc; tsc -b tsconfig-esm.json",
+    "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json",
     "test": "ava"
   },
   "ava": {
