@@ -1,21 +1,20 @@
 import { Body } from "@webfx-http/body";
-import { Headers } from "@webfx-http/headers";
 import { request, Streamable } from "@webfx-request/node";
+import { start } from "@webfx-request/testlib";
+import test from "ava";
 import { IncomingMessage, ServerResponse } from "http";
 import { Readable } from "stream";
-import { test } from "./util";
 
 test("post text", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("POST", "/test", listener);
+  const server = start(describeRequest);
+  const req = request.use(server);
 
   // Act.
 
-  const { ok, body } = await request({
-    url: server.url("/test"),
+  const { ok, body } = await req({
+    url: "/test",
     method: "POST",
     body: "string body",
   });
@@ -24,6 +23,8 @@ test("post text", async (t) => {
 
   t.true(ok);
   t.deepEqual(await body.json(), {
+    url: "/test",
+    method: "POST",
     headers: {
       "content-length": "11",
     },
@@ -32,16 +33,15 @@ test("post text", async (t) => {
 });
 
 test("post buffer", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("POST", "/test", listener);
+  const server = start(describeRequest);
+  const req = request.use(server);
 
   // Act.
 
-  const { ok, body } = await request({
-    url: server.url("/test"),
+  const { ok, body } = await req({
+    url: "/test",
     method: "POST",
     body: Buffer.from("buffer body"),
   });
@@ -50,6 +50,8 @@ test("post buffer", async (t) => {
 
   t.true(ok);
   t.deepEqual(await body.json(), {
+    url: "/test",
+    method: "POST",
     headers: {
       "content-length": "11",
     },
@@ -58,16 +60,15 @@ test("post buffer", async (t) => {
 });
 
 test("post readable", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("POST", "/test", listener);
+  const server = start(describeRequest);
+  const req = request.use(server);
 
   // Act.
 
-  const { ok, body } = await request({
-    url: server.url("/test"),
+  const { ok, body } = await req({
+    url: "/test",
     method: "POST",
     body: Readable.from([
       Buffer.from("stream"),
@@ -80,6 +81,8 @@ test("post readable", async (t) => {
 
   t.true(ok);
   t.deepEqual(await body.json(), {
+    url: "/test",
+    method: "POST",
     headers: {
       "transfer-encoding": "chunked",
     },
@@ -88,21 +91,21 @@ test("post readable", async (t) => {
 });
 
 test("post streamable", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("POST", "/test", listener);
+  const server = start(describeRequest);
+  const req = request.use(server);
 
   // Act.
 
-  const { ok, body } = await request({
-    url: server.url("/test"),
+  const { ok, body } = await req({
+    url: "/test",
     method: "POST",
     body: new (class extends Streamable {
       length(): number | null {
         return null;
       }
+
       open(): Readable {
         return Readable.from([
           Buffer.from("stream"),
@@ -117,6 +120,8 @@ test("post streamable", async (t) => {
 
   t.true(ok);
   t.deepEqual(await body.json(), {
+    url: "/test",
+    method: "POST",
     headers: {
       "transfer-encoding": "chunked",
     },
@@ -124,22 +129,27 @@ test("post streamable", async (t) => {
   });
 });
 
-async function listener(
-  req: IncomingMessage,
-  res: ServerResponse,
-): Promise<void> {
-  const headers = Headers.from(req.headers)
-    .toBuilder()
-    .delete("host")
-    .delete("connection")
-    .build();
-  const body = Body.from(req);
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "application/json");
-  res.end(
-    JSON.stringify({
-      headers: headers.toJSON(),
-      body: await body.text(),
-    }),
-  );
+function describeRequest(req: IncomingMessage, res: ServerResponse): void {
+  const { method, url } = req;
+  const headers = { ...req.headers };
+  delete headers.host;
+  delete headers.connection;
+  Body.from(req)
+    .text()
+    .then((body) => {
+      res.setHeader("Content-Type", "application/json");
+      res.end(
+        JSON.stringify({
+          url,
+          method,
+          headers,
+          body,
+        }),
+      );
+    })
+    .catch((err) => {
+      res.statusCode = 500;
+      res.setHeader("Content-Type", "text/plain");
+      res.end(String(err));
+    });
 }

@@ -1,26 +1,25 @@
 import { request } from "@webfx-request/node";
+import { start } from "@webfx-request/testlib";
+import test from "ava";
 import { Readable } from "stream";
-import { test } from "./util";
 
 test("abort response", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("GET", "/test", (req, res) => {
-    res.statusCode = 200;
-    const infinite = new Readable({
+  const server = start((req, res) => {
+    // Pipe infinite stream into response.
+    new Readable({
       read(): void {
         this.push("payload\n");
       },
-    });
-    infinite.pipe(res);
+    }).pipe(res);
   });
+  const req = request.use(server);
 
   // Act.
 
-  const response = await request({
-    url: server.url("/test"),
+  const response = await req({
+    url: "/test",
     method: "GET",
   });
   const { ok, status, statusText, headers, body } = response;
@@ -33,5 +32,5 @@ test("abort response", async (t) => {
   t.is(headers.get("Transfer-Encoding"), "chunked");
   t.is(headers.get("Content-Length"), null);
   response.abort();
-  t.true((await body.buffer()).length < 1024 * 1024);
+  t.true((await body.buffer()).length < 1024 * 1024); // TODO Throw RequestAbortedError?
 });

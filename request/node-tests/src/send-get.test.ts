@@ -1,22 +1,21 @@
 import { MimeType } from "@webfx-http/headers";
 import { request } from "@webfx-request/node";
-import { test } from "./util";
+import { start } from "@webfx-request/testlib";
+import test from "ava";
 
 test("get text", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("GET", "/test", (req, res) => {
-    res.statusCode = 200;
+  const server = start((req, res) => {
     res.setHeader("Content-Type", "text/plain");
     res.end("text response");
   });
+  const req = request.use(server);
 
   // Act.
 
-  const { ok, status, statusText, headers, body } = await request({
-    url: server.url("/test"),
+  const { ok, status, statusText, headers, body } = await req({
+    url: "/test",
     method: "GET",
   });
 
@@ -30,20 +29,18 @@ test("get text", async (t) => {
 });
 
 test("get buffer", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("GET", "/test", (req, res) => {
-    res.statusCode = 200;
+  const server = start((req, res) => {
     res.setHeader("Content-Type", "application/octet-stream");
     res.end("buffer response");
   });
+  const req = request.use(server);
 
   // Act.
 
-  const { ok, status, statusText, headers, body } = await request({
-    url: server.url("/test"),
+  const { ok, status, statusText, headers, body } = await req({
+    url: "/test",
     method: "GET",
   });
 
@@ -53,24 +50,22 @@ test("get buffer", async (t) => {
   t.is(status, 200);
   t.is(statusText, "OK");
   t.deepEqual(headers.contentType(), MimeType.APPLICATION_OCTET_STREAM);
-  t.is((await body.buffer()).toString("utf8"), "buffer response");
+  t.is(await body.text(), "buffer response");
 });
 
 test("get json", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("GET", "/test", (req, res) => {
-    res.statusCode = 200;
+  const server = start((req, res) => {
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({ type: "json" }));
   });
+  const req = request.use(server);
 
   // Act.
 
-  const { ok, status, statusText, headers, body } = await request({
-    url: server.url("/test"),
+  const { ok, status, statusText, headers, body } = await req({
+    url: "/test",
     method: "GET",
   });
 

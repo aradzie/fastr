@@ -1,6 +1,7 @@
 import { request } from "@webfx-request/node";
+import { start } from "@webfx-request/testlib";
+import test from "ava";
 import { Readable } from "stream";
-import { test } from "./util";
 
 test("handle connection refused", async (t) => {
   await t.throwsAsync(
@@ -19,23 +20,22 @@ test("handle connection refused", async (t) => {
 });
 
 test("handle request aborted", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("POST", "/test", (req, res) => {
+  const server = start((req, res) => {
     res.write("payload\n");
     res.write("payload\n");
     res.write("payload\n");
     req.destroy();
   });
+  const req = request.use(server);
 
   // Assert.
 
   await t.throwsAsync(
     async () => {
-      await request({
-        url: server.url("/test"),
+      await req({
+        url: "/test",
         method: "POST",
         body: "payload\n".repeat(1000),
       });
@@ -49,23 +49,22 @@ test("handle request aborted", async (t) => {
 });
 
 test("handle response aborted", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("POST", "/test", (req, res) => {
+  const server = start((req, res) => {
     res.write("payload\n");
     res.write("payload\n");
     res.write("payload\n");
     res.destroy();
   });
+  const req = request.use(server);
 
   // Assert.
 
   await t.throwsAsync(
     async () => {
-      await request({
-        url: server.url("/test"),
+      await req({
+        url: "/test",
         method: "POST",
         body: "payload\n".repeat(1000),
       });
@@ -79,24 +78,23 @@ test("handle response aborted", async (t) => {
 });
 
 test("handle invalid content encoding", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("GET", "/test", (req, res) => {
+  const server = start((req, res) => {
     res.setHeader("Content-Encoding", "invalid");
     res.write("payload\n");
     res.write("payload\n");
     res.write("payload\n");
     res.end();
   });
+  const req = request.use(server);
 
   // Assert.
 
   await t.throwsAsync(
     async () => {
-      await request({
-        url: server.url("/test"),
+      await req({
+        url: "/test",
         method: "GET",
       });
     },
@@ -108,20 +106,21 @@ test("handle invalid content encoding", async (t) => {
 });
 
 test("handle malformed content encoding", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("GET", "/test", (req, res) => {
+  const server = start((req, res) => {
     res.setHeader("Content-Encoding", "gzip");
     res.write("malformed gzip payload\n");
     res.write("malformed gzip payload\n");
     res.write("malformed gzip payload\n");
     res.end();
   });
+  const req = request.use(server);
 
-  const response = await request({
-    url: server.url("/test"),
+  // Act.
+
+  const response = await req({
+    url: "/test",
     method: "GET",
   });
 
@@ -139,22 +138,20 @@ test("handle malformed content encoding", async (t) => {
 });
 
 test("handle send body error", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("GET", "/test", (req, res) => {
+  const server = start((req, res) => {
     res.end();
   });
-
+  const req = request.use(server);
   const error = new Error("omg");
 
   // Assert.
 
   await t.throwsAsync(
     async () => {
-      await request({
-        url: server.url("/test"),
+      await req({
+        url: "/test",
         method: "GET",
         body: new Readable({
           read(): void {
@@ -169,8 +166,8 @@ test("handle send body error", async (t) => {
   );
   await t.throwsAsync(
     async () => {
-      await request({
-        url: server.url("/test"),
+      await req({
+        url: "/test",
         method: "GET",
         body: new Readable({
           read(): void {

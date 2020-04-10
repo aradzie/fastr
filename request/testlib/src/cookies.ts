@@ -7,7 +7,17 @@ import {
 } from "@webfx-request/node";
 import { CookieJar } from "./cookiejar";
 
-export function cookies(jar: CookieJar): Middleware {
+/**
+ * Returns a new middleware which remembers cookies sent in responses and
+ * attaches these cookies to requests.
+ *
+ * This makes the client behave like a web browser and allows testing stateful
+ * HTTP sessions.
+ *
+ * @param jar A cookie jar which keeps cookies received in responses.
+ *            It can also be used to examine the cookie contents.
+ */
+export function cookies(jar = new CookieJar()): Middleware {
   return (adapter: Adapter): Adapter => {
     return async (request: HttpRequest): Promise<HttpResponse> => {
       // Append cookies to request.

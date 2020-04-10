@@ -1,13 +1,12 @@
 import { Accept, Headers, MimeType } from "@webfx-http/headers";
 import { request } from "@webfx-request/node";
-import { test } from "./util";
+import { start } from "@webfx-request/testlib";
+import test from "ava";
 
 test("negotiate media type", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("GET", "/test", (req, res) => {
+  const server = start((req, res) => {
     const accept = Headers.from(req.headers).accept() ?? Accept.ANY;
 
     if (accept.accepts("text/plain")) {
@@ -27,12 +26,13 @@ test("negotiate media type", async (t) => {
     res.statusCode = 400;
     res.end();
   });
+  const req = request.use(server);
 
   {
     // Act.
 
-    const { ok, status, statusText, headers, body } = await request({
-      url: server.url("/test"),
+    const { ok, status, statusText, headers, body } = await req({
+      url: "/test",
       method: "GET",
       headers: Headers.builder().accept("text/plain").build(),
     });
@@ -43,14 +43,14 @@ test("negotiate media type", async (t) => {
     t.is(status, 200);
     t.is(statusText, "OK");
     t.deepEqual(headers.contentType(), MimeType.TEXT_PLAIN);
-    t.is((await body.buffer()).toString("utf8"), "text");
+    t.is(await body.text(), "text");
   }
 
   {
     // Act.
 
-    const { ok, status, statusText, headers, body } = await request({
-      url: server.url("/test"),
+    const { ok, status, statusText, headers, body } = await req({
+      url: "/test",
       method: "GET",
       headers: Headers.builder().accept("application/json").build(),
     });

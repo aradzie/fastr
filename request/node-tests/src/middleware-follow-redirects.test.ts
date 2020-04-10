@@ -1,42 +1,44 @@
 import { MimeType } from "@webfx-http/headers";
 import {
   followRedirects,
-  HttpRequest,
   request,
   RequestRedirectError,
 } from "@webfx-request/node";
-import { test } from "./util";
+import { start } from "@webfx-request/testlib";
+import test from "ava";
 
 const payload = "server response\n".repeat(1000);
 
 test("on redirect follow", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server
-    .addRoute("GET", "/a", (req, res) => {
-      res.statusCode = 302;
-      res.setHeader("Location", "/b");
-      res.end(payload);
-    })
-    .addRoute("GET", "/b", (req, res) => {
-      res.statusCode = 302;
-      res.setHeader("Location", "/c");
-      res.end(payload);
-    })
-    .addRoute("GET", "/c", (req, res) => {
-      res.statusCode = 200;
-      res.setHeader("Content-Type", "text/plain");
-      res.end("done");
-    });
+  const server = start((req, res) => {
+    switch (req.url) {
+      case "/a":
+        res.statusCode = 302;
+        res.setHeader("Location", "/b");
+        res.setHeader("Content-Type", "text/plain");
+        res.end(payload);
+        break;
+      case "/b":
+        res.statusCode = 302;
+        res.setHeader("Location", "/c");
+        res.setHeader("Content-Type", "text/plain");
+        res.end(payload);
+        break;
+      case "/c":
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "text/plain");
+        res.end("done");
+        break;
+    }
+  });
 
   // Act.
 
-  const { ok, status, statusText, url, headers, body } = await request.use(
-    followRedirects({ redirect: "follow" }),
-  )({
-    url: server.url("/a"),
+  const req = request.use(followRedirects({ redirect: "follow" })).use(server);
+  const { ok, status, statusText, url, headers, body } = await req({
+    url: "/a",
     method: "GET",
   });
 
@@ -45,34 +47,34 @@ test("on redirect follow", async (t) => {
   t.true(ok);
   t.is(status, 200);
   t.is(statusText, "OK");
-  t.is(String(url), server.url("/c"));
+  t.true(url.endsWith("/c"));
   t.deepEqual(headers.contentType(), MimeType.TEXT_PLAIN);
-  t.is((await body.buffer()).toString("utf8"), "done");
+  t.is(await body.text(), "done");
 });
 
 test("on redirect follow to not found", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server
-    .addRoute("GET", "/a", (req, res) => {
-      res.statusCode = 302;
-      res.setHeader("Location", "/b");
-      res.end(payload);
-    })
-    .addRoute("GET", "/b", (req, res) => {
-      res.statusCode = 404;
-      res.setHeader("Content-Type", "text/plain");
-      res.end("this is the end");
-    });
+  const server = start((req, res) => {
+    switch (req.url) {
+      case "/a":
+        res.statusCode = 302;
+        res.setHeader("Location", "/b");
+        res.end(payload);
+        break;
+      case "/b":
+        res.statusCode = 404;
+        res.setHeader("Content-Type", "text/plain");
+        res.end("this is the end");
+        break;
+    }
+  });
 
   // Act.
 
-  const { ok, status, statusText, url, headers, body } = await request.use(
-    followRedirects({ redirect: "follow" }),
-  )({
-    url: server.url("/a"),
+  const req = request.use(followRedirects({ redirect: "follow" })).use(server);
+  const { ok, status, statusText, url, headers, body } = await req({
+    url: "/a",
     method: "GET",
   });
 
@@ -81,17 +83,15 @@ test("on redirect follow to not found", async (t) => {
   t.false(ok);
   t.is(status, 404);
   t.is(statusText, "Not Found");
-  t.is(String(url), server.url("/b"));
+  t.true(url.endsWith("/b"));
   t.deepEqual(headers.contentType(), MimeType.TEXT_PLAIN);
-  t.is((await body.buffer()).toString("utf8"), "this is the end");
+  t.is(await body.text(), "this is the end");
 });
 
 test("on redirect return", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("GET", "/a", (req, res) => {
+  const server = start((req, res) => {
     res.statusCode = 302;
     res.setHeader("Location", "/b");
     res.setHeader("Content-Type", "text/plain");
@@ -100,10 +100,9 @@ test("on redirect return", async (t) => {
 
   // Act.
 
-  const { ok, status, statusText, url, headers, body } = await request.use(
-    followRedirects({ redirect: "manual" }),
-  )({
-    url: server.url("/a"),
+  const req = request.use(followRedirects({ redirect: "manual" })).use(server);
+  const { ok, status, statusText, url, headers, body } = await req({
+    url: "/a",
     method: "GET",
   });
 
@@ -112,17 +111,15 @@ test("on redirect return", async (t) => {
   t.false(ok);
   t.is(status, 302);
   t.is(statusText, "Found");
-  t.is(String(url), server.url("/a"));
+  t.true(url.endsWith("/a"));
   t.deepEqual(headers.contentType(), MimeType.TEXT_PLAIN);
-  t.is((await body.buffer()).toString("utf8"), "done");
+  t.is(await body.text(), "done");
 });
 
 test("on redirect throw", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("GET", "/a", (req, res) => {
+  const server = start((req, res) => {
     res.statusCode = 302;
     res.setHeader("Location", "/b");
     res.end(payload);
@@ -130,14 +127,13 @@ test("on redirect throw", async (t) => {
 
   // Assert.
 
-  const init: HttpRequest = {
-    url: server.url("/a"),
-    method: "GET",
-  };
-  const req = request.use(followRedirects({ redirect: "error" }));
+  const req = request.use(followRedirects({ redirect: "error" })).use(server);
   await t.throwsAsync(
     async () => {
-      await req(init);
+      await req({
+        url: "/a",
+        method: "GET",
+      });
     },
     {
       instanceOf: RequestRedirectError,
@@ -147,25 +143,22 @@ test("on redirect throw", async (t) => {
 });
 
 test("handle no redirect location", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("GET", "/a", (req, res) => {
+  const server = start((req, res) => {
     res.statusCode = 302;
     res.end();
   });
 
   // Assert.
 
-  const init: HttpRequest = {
-    url: server.url("/a"),
-    method: "GET",
-  };
-  const req = request.use(followRedirects({ redirect: "follow" }));
+  const req = request.use(followRedirects({ redirect: "follow" })).use(server);
   await t.throwsAsync(
     async () => {
-      await req(init);
+      await req({
+        url: "/a",
+        method: "GET",
+      });
     },
     {
       instanceOf: RequestRedirectError,
@@ -175,32 +168,32 @@ test("handle no redirect location", async (t) => {
 });
 
 test("handle redirect loop", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server
-    .addRoute("GET", "/a", (req, res) => {
-      res.statusCode = 302;
-      res.setHeader("Location", "/b");
-      res.end();
-    })
-    .addRoute("GET", "/b", (req, res) => {
-      res.statusCode = 302;
-      res.setHeader("Location", "/a");
-      res.end();
-    });
+  const server = start((req, res) => {
+    switch (req.url) {
+      case "/a":
+        res.statusCode = 302;
+        res.setHeader("Location", "/b");
+        res.end();
+        break;
+      case "/b":
+        res.statusCode = 302;
+        res.setHeader("Location", "/a");
+        res.end();
+        break;
+    }
+  });
 
   // Assert.
 
-  const init: HttpRequest = {
-    url: server.url("/a"),
-    method: "GET",
-  };
-  const req = request.use(followRedirects({ redirect: "follow" }));
+  const req = request.use(followRedirects({ redirect: "follow" })).use(server);
   await t.throwsAsync(
     async () => {
-      await req(init);
+      await req({
+        url: "/a",
+        method: "GET",
+      });
     },
     {
       instanceOf: RequestRedirectError,
@@ -210,42 +203,42 @@ test("handle redirect loop", async (t) => {
 });
 
 test("handle too many redirects", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server
-    .addRoute("GET", "/a", (req, res) => {
-      res.statusCode = 302;
-      res.setHeader("Location", "/b");
-      res.end();
-    })
-    .addRoute("GET", "/b", (req, res) => {
-      res.statusCode = 302;
-      res.setHeader("Location", "/c");
-      res.end();
-    })
-    .addRoute("GET", "/c", (req, res) => {
-      res.statusCode = 302;
-      res.setHeader("Location", "/d");
-      res.end();
-    })
-    .addRoute("GET", "/d", (req, res) => {
-      res.statusCode = 302;
-      res.setHeader("Location", "/e");
-      res.end();
-    });
+  const server = start((req, res) => {
+    switch (req.url) {
+      case "/a":
+        res.statusCode = 302;
+        res.setHeader("Location", "/b");
+        res.end();
+        break;
+      case "/b":
+        res.statusCode = 302;
+        res.setHeader("Location", "/c");
+        res.end();
+        break;
+      case "/c":
+        res.statusCode = 302;
+        res.setHeader("Location", "/d");
+        res.end();
+        break;
+      case "/d":
+        res.statusCode = 302;
+        res.setHeader("Location", "/e");
+        res.end();
+        break;
+    }
+  });
 
   // Assert.
 
-  const init: HttpRequest = {
-    url: server.url("/a"),
-    method: "GET",
-  };
-  const req = request.use(followRedirects({ redirect: "follow" }));
+  const req = request.use(followRedirects({ redirect: "follow" })).use(server);
   await t.throwsAsync(
     async () => {
-      await req(init);
+      await req({
+        url: "/a",
+        method: "GET",
+      });
     },
     {
       instanceOf: RequestRedirectError,

@@ -1,23 +1,21 @@
-import { expectType, HttpRequest, request } from "@webfx-request/node";
-import { test } from "./util";
+import { expectType, request } from "@webfx-request/node";
+import { start } from "@webfx-request/testlib";
+import test from "ava";
 
 test("return response if content type matches", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("GET", "/test", (req, res) => {
+  const server = start((req, res) => {
     res.statusCode = 200;
     res.setHeader("Content-Type", "text/plain");
     res.end("text");
   });
+  const req = request.use(server).use(expectType("text/plain"));
 
   // Act.
 
-  const { ok, status, statusText } = await request.use(
-    expectType("text/plain"),
-  )({
-    url: server.url("/test"),
+  const { ok, status, statusText } = await req({
+    url: "/test",
     method: "GET",
   });
 
@@ -29,25 +27,23 @@ test("return response if content type matches", async (t) => {
 });
 
 test("throw error if content type does not match", async (t) => {
-  const { server } = t.context;
-
   // Arrange.
 
-  server.addRoute("GET", "/test", (req, res) => {
+  const server = start((req, res) => {
     res.statusCode = 200;
     res.setHeader("Content-Type", "application/json");
     res.end("{");
   });
+  const req = request.use(server).use(expectType("text/plain"));
 
   // Assert.
 
-  const init: HttpRequest = {
-    url: server.url("/test"),
-    method: "GET",
-  };
   await t.throwsAsync(
     async () => {
-      await request.use(expectType("text/plain"))(init);
+      await req({
+        url: "/test",
+        method: "GET",
+      });
     },
     {
       name: "UnsupportedMediaTypeError",
