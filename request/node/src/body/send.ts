@@ -1,7 +1,7 @@
-import { ClientRequest } from "http";
+import { OutgoingMessage } from "http";
 import { pipeline, Readable } from "stream";
 import { createGzip } from "zlib";
-import { BodyDataType } from "../types";
+import type { BodyDataType } from "../types";
 import { Streamable } from "./streamable";
 
 const GZIP_SIZE_THRESHOLD = 1024;
@@ -11,22 +11,18 @@ export function isStreamBody(body: BodyDataType | null): boolean {
 }
 
 export function sendBody(
-  req: ClientRequest,
-  body: BodyDataType | null,
+  req: OutgoingMessage,
+  body: BodyDataType,
   callback: (err: Error | null) => void,
 ): void {
-  if (body == null) {
-    callback(null);
-  } else {
-    const payload = toPayload(body);
-    switch (payload.kind) {
-      case "buffer":
-        sendBuffer(req, payload, callback);
-        break;
-      case "stream":
-        sendStream(req, payload, callback);
-        break;
-    }
+  const payload = toPayload(body);
+  switch (payload.kind) {
+    case "buffer":
+      sendBuffer(req, payload, callback);
+      break;
+    case "stream":
+      sendStream(req, payload, callback);
+      break;
   }
 }
 
@@ -82,13 +78,13 @@ function toPayload(
 }
 
 function sendBuffer(
-  req: ClientRequest,
+  req: OutgoingMessage,
   { data, compressible }: BufferPayload,
   callback: (err: Error | null) => void,
 ): void {
   const { byteLength } = data;
   const stream = Readable.from([data]);
-  if (compressible && byteLength > GZIP_SIZE_THRESHOLD) {
+  if (compressible && byteLength >= GZIP_SIZE_THRESHOLD) {
     req.setHeader("Content-Encoding", "gzip");
     pipeline(stream, createGzip(), req, callback);
   } else {
@@ -98,7 +94,7 @@ function sendBuffer(
 }
 
 function sendStream(
-  req: ClientRequest,
+  req: OutgoingMessage,
   { stream, compressible }: StreamPayload,
   callback: (err: Error | null) => void,
 ): void {
