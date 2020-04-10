@@ -12,12 +12,7 @@ import {
 import { OAuthError } from "./errors";
 import type { ResourceOwner } from "./resource-owner";
 import { AccessToken } from "./token";
-import type {
-  AdapterConfig,
-  ClientConfig,
-  ErrorResponse,
-  TokenResponse,
-} from "./types";
+import type { AdapterConfig, ClientConfig, ErrorResponse } from "./types";
 
 export abstract class AbstractAdapter {
   protected readonly clientId: string;
@@ -70,20 +65,18 @@ export abstract class AbstractAdapter {
         redirect_uri: this.redirectUri,
         code,
       });
-    const body = await response.body.json<TokenResponse>();
-    return new AccessToken(body);
+    return new AccessToken(await response.body.json());
   }
 
   async getProfile(accessToken: AccessToken): Promise<ResourceOwner> {
     const response = await request
-      .use(this.authenticate(accessToken))
       .use(this.handleErrors())
       .use(handleErrors())
       .use(expectType("application/json"))
+      .use(this.authenticate(accessToken))
       .get(this.profileUri)
       .send();
-    const body = await response.body.json<{}>();
-    return this.parseProfileResponse(body);
+    return this.parseProfileResponse(await response.body.json());
   }
 
   protected abstract parseProfileResponse(response: unknown): ResourceOwner;
