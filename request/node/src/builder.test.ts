@@ -2,7 +2,7 @@ import { Headers } from "@webfx-http/headers";
 import test from "ava";
 import { Readable } from "stream";
 import { RequestBuilder } from "./builder";
-import { Adapter, HttpRequest, HttpResponse } from "./types";
+import type { Adapter, HttpRequest, HttpResponse } from "./types";
 
 test("build url query string", async (t) => {
   // Arrange.
@@ -98,7 +98,7 @@ test("send empty body", async (t) => {
   t.is(req1.body, null);
 });
 
-test("send string body", async (t) => {
+test("send text body", async (t) => {
   // Arrange.
 
   const receivedRequests: HttpRequest[] = [];
@@ -123,7 +123,7 @@ test("send string body", async (t) => {
   t.is(req1.headers?.contentType()?.name, "text/plain");
 });
 
-test("send string body with custom content type", async (t) => {
+test("send text body with custom content type", async (t) => {
   // Arrange.
 
   const receivedRequests: HttpRequest[] = [];
@@ -148,7 +148,7 @@ test("send string body with custom content type", async (t) => {
   t.is(req1.headers?.contentType()?.name, "text/html");
 });
 
-test("send Buffer body", async (t) => {
+test("send buffer body", async (t) => {
   // Arrange.
 
   const receivedRequests: HttpRequest[] = [];
@@ -174,7 +174,7 @@ test("send Buffer body", async (t) => {
   t.is(req1.headers?.contentType()?.name, "application/octet-stream");
 });
 
-test("send Buffer body with custom content type", async (t) => {
+test("send buffer body with custom content type", async (t) => {
   // Arrange.
 
   const receivedRequests: HttpRequest[] = [];
@@ -186,58 +186,6 @@ test("send Buffer body with custom content type", async (t) => {
     return res1;
   };
   const body: Buffer = await Buffer.from("some text");
-
-  // Act.
-
-  const builder = new RequestBuilder(testAdapter, "put", "/url");
-
-  // Assert.
-
-  t.is(await builder.send(body, "foo/bar"), res1);
-  t.is(receivedRequests.length, 1);
-  const [req1] = receivedRequests;
-  t.is(req1.body, body);
-  t.is(req1.headers?.contentType()?.name, "foo/bar");
-});
-
-test("send ArrayBuffer body", async (t) => {
-  // Arrange.
-
-  const receivedRequests: HttpRequest[] = [];
-  const res1 = {} as HttpResponse;
-  const testAdapter: Adapter = async (
-    request: HttpRequest,
-  ): Promise<HttpResponse> => {
-    receivedRequests.push(request);
-    return res1;
-  };
-  const body: ArrayBuffer = await Buffer.from("some text").buffer;
-
-  // Act.
-
-  const builder = new RequestBuilder(testAdapter, "put", "/url");
-
-  // Assert.
-
-  t.is(await builder.send(body), res1);
-  t.is(receivedRequests.length, 1);
-  const [req1] = receivedRequests;
-  t.is(req1.body, body);
-  t.is(req1.headers?.contentType()?.name, "application/octet-stream");
-});
-
-test("send ArrayBuffer body with custom content type", async (t) => {
-  // Arrange.
-
-  const receivedRequests: HttpRequest[] = [];
-  const res1 = {} as HttpResponse;
-  const testAdapter: Adapter = async (
-    request: HttpRequest,
-  ): Promise<HttpResponse> => {
-    receivedRequests.push(request);
-    return res1;
-  };
-  const body: ArrayBuffer = await Buffer.from("some text").buffer;
 
   // Act.
 

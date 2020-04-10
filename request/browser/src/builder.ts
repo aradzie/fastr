@@ -179,13 +179,13 @@ export class RequestBuilder {
     body: string | Blob | ArrayBuffer | ArrayBufferView | unknown | null = null,
     contentType: string | null = null,
   ): Promise<HttpResponse> {
+    let request;
     if (body == null) {
-      return this._send(this._makeRequest(null, null));
+      request = this._makeRequest(null, null);
     } else {
-      return this._send(
-        this._makeRequest(...guessContentType(body, contentType)),
-      );
+      request = this._makeRequest(...guessContentType(body, contentType));
     }
+    return this._send(request);
   }
 
   /**

@@ -119,13 +119,7 @@ export interface HttpRequestOptions extends SecureContextOptions {
   readonly rejectUnauthorized?: boolean;
 }
 
-export type BodyDataType =
-  | string
-  | Buffer
-  | ArrayBuffer
-  | ArrayBufferView
-  | Readable
-  | Streamable;
+export type BodyDataType = string | Buffer | Readable | Streamable;
 
 /**
  * Represents response of a web request, if completed and parsed successfully.

@@ -12,13 +12,6 @@ export function guessContentType(
   if (Buffer.isBuffer(body)) {
     return [body, contentType ?? "application/octet-stream"];
   }
-  if (
-    Buffer.isBuffer(body) ||
-    body instanceof ArrayBuffer ||
-    ArrayBuffer.isView(body)
-  ) {
-    return [body, contentType ?? "application/octet-stream"];
-  }
   if (body instanceof Readable) {
     return [body, contentType ?? "application/octet-stream"];
   }
@@ -27,6 +20,9 @@ export function guessContentType(
   }
   if (body instanceof URLSearchParams) {
     return [String(body), contentType ?? "application/x-www-form-urlencoded"];
+  }
+  if (body instanceof ArrayBuffer || ArrayBuffer.isView(body)) {
+    throw new TypeError("Must use Buffer");
   }
   return [JSON.stringify(body), contentType ?? "application/json"];
 }

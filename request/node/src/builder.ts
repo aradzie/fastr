@@ -177,22 +177,6 @@ export class RequestBuilder {
    * @param contentType The content type to use.
    *                    The default value is `application/octet-stream`.
    */
-  send(body: ArrayBuffer, contentType?: string): Promise<HttpResponse>;
-  /**
-   * Sends an HTTP request with the given body.
-   *
-   * @param body The body to send.
-   * @param contentType The content type to use.
-   *                    The default value is `application/octet-stream`.
-   */
-  send(body: ArrayBufferView, contentType?: string): Promise<HttpResponse>;
-  /**
-   * Sends an HTTP request with the given body.
-   *
-   * @param body The body to send.
-   * @param contentType The content type to use.
-   *                    The default value is `application/octet-stream`.
-   */
   send(body: Readable, contentType?: string): Promise<HttpResponse>;
   /**
    * Sends an HTTP request with the given body.
@@ -220,16 +204,16 @@ export class RequestBuilder {
   send(body: unknown, contentType?: string): Promise<HttpResponse>;
 
   send(
-    body: BodyDataType | unknown | null = null,
+    body: BodyDataType | URLSearchParams | unknown | null = null,
     contentType: string | null = null,
   ): Promise<HttpResponse> {
+    let request;
     if (body == null) {
-      return this._send(this._makeRequest(null, null));
+      request = this._makeRequest(null, null);
     } else {
-      return this._send(
-        this._makeRequest(...guessContentType(body, contentType)),
-      );
+      request = this._makeRequest(...guessContentType(body, contentType));
     }
+    return this._send(request);
   }
 
   private _makeRequest(

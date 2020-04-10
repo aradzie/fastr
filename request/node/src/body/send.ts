@@ -62,22 +62,6 @@ function toPayload(
     };
   }
 
-  if (body instanceof ArrayBuffer) {
-    return {
-      kind: "buffer",
-      data: Buffer.from(body),
-      compressible,
-    };
-  }
-
-  if (ArrayBuffer.isView(body)) {
-    return {
-      kind: "buffer",
-      data: Buffer.from(body.buffer, body.byteOffset, body.byteLength),
-      compressible,
-    };
-  }
-
   if (body instanceof Readable) {
     return {
       kind: "stream",

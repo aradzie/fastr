@@ -5,7 +5,7 @@ import { IncomingMessage, ServerResponse } from "http";
 import { Readable } from "stream";
 import { test } from "./util";
 
-test("post string", async (t) => {
+test("post text", async (t) => {
   const { server } = t.context;
 
   // Arrange.
@@ -54,58 +54,6 @@ test("post buffer", async (t) => {
       "content-length": "11",
     },
     body: "buffer body",
-  });
-});
-
-test("post array buffer", async (t) => {
-  const { server } = t.context;
-
-  // Arrange.
-
-  server.addRoute("POST", "/test", listener);
-
-  // Act.
-
-  const { ok, body } = await request({
-    url: server.url("/test"),
-    method: "POST",
-    body: toArrayBuffer("array buffer body"),
-  });
-
-  // Assert.
-
-  t.true(ok);
-  t.deepEqual(await body.json(), {
-    headers: {
-      "content-length": "17",
-    },
-    body: "array buffer body",
-  });
-});
-
-test("post array buffer view", async (t) => {
-  const { server } = t.context;
-
-  // Arrange.
-
-  server.addRoute("POST", "/test", listener);
-
-  // Act.
-
-  const { ok, body } = await request({
-    url: server.url("/test"),
-    method: "POST",
-    body: new Uint8Array(toArrayBuffer("array buffer view body")),
-  });
-
-  // Assert.
-
-  t.true(ok);
-  t.deepEqual(await body.json(), {
-    headers: {
-      "content-length": "22",
-    },
-    body: "array buffer view body",
   });
 });
 
@@ -194,11 +142,4 @@ async function listener(
       body: await body.text(),
     }),
   );
-}
-
-function toArrayBuffer(text: string): ArrayBuffer {
-  const buffer = Buffer.from(text);
-  const arrayBuffer = new ArrayBuffer(buffer.length);
-  buffer.copy(new Uint8Array(arrayBuffer));
-  return arrayBuffer;
 }

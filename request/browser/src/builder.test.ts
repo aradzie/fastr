@@ -1,7 +1,7 @@
 import { Headers } from "@webfx-http/headers";
 import test from "ava";
 import { RequestBuilder } from "./builder";
-import { Adapter, HttpRequest, HttpResponse } from "./types";
+import type { Adapter, HttpRequest, HttpResponse } from "./types";
 
 test("build url query string", async (t) => {
   // Arrange.
@@ -97,7 +97,7 @@ test("send empty body", async (t) => {
   t.is(req1.body, null);
 });
 
-test("send string body", async (t) => {
+test("send text body", async (t) => {
   // Arrange.
 
   const receivedRequests: HttpRequest[] = [];
@@ -122,7 +122,7 @@ test("send string body", async (t) => {
   t.is(req1.headers?.contentType()?.name, "text/plain");
 });
 
-test("send string body with custom content type", async (t) => {
+test("send text body with custom content type", async (t) => {
   // Arrange.
 
   const receivedRequests: HttpRequest[] = [];
