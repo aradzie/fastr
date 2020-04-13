@@ -1,5 +1,6 @@
 export { authenticate } from "./authenticate";
 export { compose } from "./compose";
+export { defaultOptions } from "./default-options";
 export { expectType } from "./expect-type";
 export { followRedirects } from "./follow-redirects";
 export { handleErrors } from "./handle-errors";

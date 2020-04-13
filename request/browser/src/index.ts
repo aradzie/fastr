@@ -12,5 +12,15 @@ export { adapter, request } from "./request";
 export { xhrAdapter } from "./adapter/xhr";
 export { fetchAdapter } from "./adapter/fetch";
 export { RequestBuilder } from "./builder";
-export { compose, expectType, handleErrors } from "./middleware";
-export type { HandleErrorOptions } from "./middleware";
+export {
+  compose,
+  expectType,
+  handleErrors,
+  retryFailed,
+  xsrf,
+} from "./middleware";
+export type {
+  HandleErrorOptions,
+  RetryFailedOptions,
+  XsrfOptions,
+} from "./middleware";

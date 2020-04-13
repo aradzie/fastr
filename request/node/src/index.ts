@@ -12,6 +12,7 @@ export { Streamable, FileStreamable } from "./body/streamable";
 export {
   authenticate,
   compose,
+  defaultOptions,
   expectType,
   followRedirects,
   handleErrors,
