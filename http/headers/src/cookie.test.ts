@@ -27,7 +27,8 @@ test("toString", (t) => {
   );
 });
 
-test.skip("escape cookie value", (t) => {
+test("escape cookie value", (t) => {
   const value = ' ",;\u{1F36D},;" ';
-  // TODO t.is(Cookie.parse(String(new Cookie("name", value))).value, value);
+  const cookie = new Cookie([["name", value]]);
+  t.is(Cookie.parse(String(cookie)).get("name"), value);
 });

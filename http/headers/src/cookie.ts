@@ -22,7 +22,7 @@ export interface ValueCodec {
 const kMap = Symbol("kMap");
 
 /**
- * Represents the value of a HTTP cookie, transferred in a request.
+ * Represents the value of the `Cookie` header, transferred in a request.
  *
  * See https://tools.ietf.org/html/rfc6265
  */
@@ -65,6 +65,7 @@ export class Cookie implements Iterable<[string, string]> {
 
   constructor(
     data:
+      | Cookie
       | Map<string, unknown>
       | Record<string, unknown>
       | NameValueEntries
@@ -72,8 +73,14 @@ export class Cookie implements Iterable<[string, string]> {
   ) {
     const map = new Map<string, string>();
     if (data != null) {
-      for (const [name, value] of entries(data as Map<string, unknown>)) {
-        map.set(name, value);
+      if (data instanceof Cookie) {
+        for (const [name, value] of data) {
+          map.set(name, value);
+        }
+      } else {
+        for (const [name, value] of entries(data as Map<string, unknown>)) {
+          map.set(name, value);
+        }
       }
     }
     Object.defineProperty(this, kMap, {
@@ -122,7 +129,7 @@ export class Cookie implements Iterable<[string, string]> {
     return this;
   }
 
-  toJSON(): any {
+  toJSON(): string {
     return this.toString();
   }
 

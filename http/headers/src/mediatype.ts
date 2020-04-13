@@ -1,5 +1,6 @@
 import { Parameters } from "./parameters";
 import { splitPair } from "./strings";
+import type { NameValueEntries } from "./types";
 
 export class MediaType {
   static from(value: MediaType | string): MediaType {
@@ -104,19 +105,24 @@ export class MediaType {
    */
   readonly subtype: string;
   /**
-   * Optional parameters, if any.
+   * Optional parameters.
    */
-  readonly parameters: Parameters | null;
+  readonly parameters: Parameters;
 
   constructor(
     type: string,
     subtype: string,
-    parameters: Parameters | null = null,
+    parameters:
+      | Parameters
+      | Map<string, unknown>
+      | Record<string, unknown>
+      | NameValueEntries
+      | null = null,
   ) {
     this.name = type + "/" + subtype;
     this.type = type;
     this.subtype = subtype;
-    this.parameters = parameters;
+    this.parameters = new Parameters(parameters);
   }
 
   matches(that: MediaType | string): boolean {
@@ -131,21 +137,12 @@ export class MediaType {
     );
   }
 
-  withCharset(charset: string): MediaType {
-    return new MediaType(
-      this.type,
-      this.subtype,
-      new Parameters([...(this.parameters ?? []), ["charset", charset]]),
-    );
-  }
-
-  toJSON(): any {
+  toJSON(): string {
     return this.toString();
   }
 
   toString(): string {
-    return this.parameters != null
-      ? this.name + "; " + this.parameters
-      : this.name;
+    const p = String(this.parameters);
+    return p !== "" ? this.name + "; " + p : this.name;
   }
 }

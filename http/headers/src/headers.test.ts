@@ -22,7 +22,7 @@ test("mutate", (t) => {
 });
 
 test("from headers", (t) => {
-  const headers = Headers.from(new Headers().set("foo", "1").set("bar", "2"));
+  const headers = new Headers(new Headers().set("foo", "1").set("bar", "2"));
   t.deepEqual(
     [...headers],
     [
@@ -33,7 +33,7 @@ test("from headers", (t) => {
 });
 
 test("from map", (t) => {
-  const headers = Headers.from(
+  const headers = new Headers(
     new Map([
       ["foo", 1],
       ["bar", 2],
@@ -49,7 +49,7 @@ test("from map", (t) => {
 });
 
 test("from record", (t) => {
-  const headers = Headers.from({
+  const headers = new Headers({
     foo: 1,
     bar: 2,
   });
@@ -63,7 +63,7 @@ test("from record", (t) => {
 });
 
 test("from entries", (t) => {
-  const headers = Headers.from([
+  const headers = new Headers([
     ["foo", 1],
     ["bar", 2],
   ]);

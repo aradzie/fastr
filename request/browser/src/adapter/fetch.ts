@@ -48,7 +48,7 @@ export async function fetchAdapter(
     readonly status = res.status;
     readonly statusText = res.statusText;
     readonly url = res.url;
-    readonly headers = HttpHeaders.from([...res.headers]);
+    readonly headers = new HttpHeaders([...res.headers]);
 
     async blob(): Promise<Blob> {
       return res.blob();

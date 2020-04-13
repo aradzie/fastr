@@ -151,7 +151,7 @@ export class FakeHttpResponse implements HttpResponse {
     url = "http://fake/",
     status = 200,
     statusText = statusTextOf(status),
-    headers = Headers.from({}),
+    headers = new Headers(),
     body = null,
     onBodyResolve = noop,
   }: ResponseInit) {
@@ -161,7 +161,7 @@ export class FakeHttpResponse implements HttpResponse {
     this.ok = isSuccess(status);
     this.status = status;
     this.statusText = statusText;
-    this.headers = Headers.from(headers);
+    this.headers = new Headers(headers);
     this.body = body ?? Promise.resolve(new Blob());
     this.onBodyResolve = onBodyResolve;
   }

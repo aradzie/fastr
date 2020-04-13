@@ -2,6 +2,11 @@ import { MediaType } from "./mediatype";
 import { splitList } from "./strings";
 import type { StringOr } from "./types";
 
+const kList = Symbol("kList");
+
+/**
+ * Parsed `Accept` header.
+ */
 export class Accept {
   static from(value: Accept | string): Accept {
     if (typeof value === "string") {
@@ -18,16 +23,28 @@ export class Accept {
     return new Accept(splitList(input, ","));
   }
 
-  static readonly ANY = new Accept([MediaType.ANY]);
+  /**
+   * Returns an `Accept` instance which accepts any media type `"* / *"`.
+   */
+  static any(): Accept {
+    return new Accept([MediaType.ANY]);
+  }
 
-  readonly types: readonly MediaType[];
+  private readonly [kList]: MediaType[];
 
-  constructor(types: readonly StringOr<MediaType>[]) {
+  constructor(types: readonly StringOr<MediaType>[] = []) {
+    Object.defineProperty(this, kList, {
+      value: [],
+    });
+    this.add(...types);
+  }
+
+  add(...types: readonly StringOr<MediaType>[]): this {
+    this[kList].push(...types.map((v) => MediaType.from(v)));
     // Sort the given types in the descending order
     // compared by the `q` parameter.
-    this.types = types
-      .map((v) => MediaType.from(v))
-      .sort((a, b) => (b?.parameters?.q ?? 1) - (a?.parameters?.q ?? 1));
+    this[kList].sort((a, b) => (b.parameters.q ?? 1) - (a.parameters.q ?? 1));
+    return this;
   }
 
   /**
@@ -37,12 +54,12 @@ export class Accept {
    */
   accepts(candidate: StringOr<MediaType>): boolean | number {
     candidate = MediaType.from(candidate);
-    if (this.types.length === 0) {
+    if (this[kList].length === 0) {
       return true;
     }
-    for (const type of this.types) {
+    for (const type of this[kList]) {
       if (type.matches(candidate)) {
-        return type?.parameters?.q ?? true;
+        return type.parameters.q ?? true;
       }
     }
     return false;
@@ -68,11 +85,11 @@ export class Accept {
     return best;
   }
 
-  toJSON(): any {
+  toJSON(): string {
     return this.toString();
   }
 
   toString(): string {
-    return this.types.map((type) => String(type)).join(", ");
+    return this[kList].map((type) => String(type)).join(", ");
   }
 }

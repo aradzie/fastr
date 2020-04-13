@@ -74,7 +74,7 @@ function makeResponse(
     statusMessage: statusText = "OK",
   } = incomingMessage;
   const ok = isSuccess(status);
-  const headers = Headers.from(incomingMessage.headers);
+  const headers = new Headers(incomingMessage.headers);
   const body = Body.from(incomingMessage);
   return new (class implements HttpResponse {
     readonly ok = ok;

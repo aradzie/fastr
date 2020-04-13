@@ -20,15 +20,15 @@ test("parse", (t) => {
   t.is(t1.name, "text/plain");
   t.is(t1.type, "text");
   t.is(t1.subtype, "plain");
-  t.is(t1.parameters, null);
+  t.not(t1.parameters, null);
 
   const t2 = MediaType.parse("text/plain; A = 1; B = 2; charset=utf-8");
   t.is(t2.name, "text/plain");
   t.is(t2.type, "text");
   t.is(t2.subtype, "plain");
-  t.is(t2.parameters?.get("charset"), "utf-8");
-  t.is(t2.parameters?.get("a"), "1");
-  t.is(t2.parameters?.get("b"), "2");
+  t.is(t2.parameters.get("charset"), "utf-8");
+  t.is(t2.parameters.get("a"), "1");
+  t.is(t2.parameters.get("b"), "2");
 
   t.is(MediaType.parse("illegal garbage"), MediaType.APPLICATION_OCTET_STREAM);
 });

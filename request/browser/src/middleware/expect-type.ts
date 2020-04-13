@@ -22,7 +22,7 @@ export function expectType(
       // Update request headers, make request with the new headers.
       const response = await adapter({
         ...request,
-        headers: Headers.from(request.headers).set("Accept", accept),
+        headers: new Headers(request.headers).set("Accept", accept),
       });
 
       // Check response.

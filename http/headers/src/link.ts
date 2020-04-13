@@ -69,7 +69,7 @@ export class Link {
     this.title = title;
   }
 
-  toJSON(): any {
+  toJSON(): string {
     return this.toString();
   }
 

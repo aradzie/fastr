@@ -17,6 +17,8 @@ export interface SetCookieInit {
 }
 
 /**
+ * Parsed `Set-Cookie` header.
+ *
  * Represents a command to create a new HTTP cookie on the client,
  * transferred in a response.
  *
@@ -152,7 +154,7 @@ export class SetCookie {
     this.httpOnly = httpOnly;
   }
 
-  toJSON(): any {
+  toJSON(): string {
     return this.toString();
   }
 

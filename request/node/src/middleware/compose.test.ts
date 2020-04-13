@@ -73,7 +73,7 @@ function a(adapter: Adapter): Adapter {
     const { headers } = response;
     return {
       ...response,
-      headers: Headers.from(headers).append("X-Middleware", "a"),
+      headers: new Headers(headers).append("X-Middleware", "a"),
     };
   };
 }
@@ -84,7 +84,7 @@ function b(adapter: Adapter): Adapter {
     const { headers } = response;
     return {
       ...response,
-      headers: Headers.from(headers).append("X-Middleware", "b"),
+      headers: new Headers(headers).append("X-Middleware", "b"),
     };
   };
 }
@@ -95,7 +95,7 @@ function c(adapter: Adapter): Adapter {
     const { headers } = response;
     return {
       ...response,
-      headers: Headers.from(headers).append("X-Middleware", "c"),
+      headers: new Headers(headers).append("X-Middleware", "c"),
     };
   };
 }

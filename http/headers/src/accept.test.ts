@@ -4,7 +4,7 @@ import { MediaType } from "./mediatype";
 import { Parameters } from "./parameters";
 
 test("accepts with empty list", (t) => {
-  const accept = new Accept([]);
+  const accept = new Accept();
 
   t.true(accept.accepts("text/html"));
   t.true(accept.accepts("any/type"));

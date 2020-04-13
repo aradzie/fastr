@@ -54,35 +54,6 @@ export class Headers implements Iterable<[string, string | string[]]> {
   ]);
 
   /**
-   * Creates a new `Headers` instance from the given JSON object
-   * with key/value pairs.
-   */
-  static from(
-    headers:
-      | Headers
-      | Map<string, unknown>
-      | Record<string, unknown>
-      | NameValueEntries
-      | null = null,
-  ): Headers {
-    const result = new Headers();
-    if (headers != null) {
-      if (headers instanceof Headers) {
-        for (const [name, value] of headers) {
-          result.append(name, value);
-        }
-      } else {
-        for (const [name, value] of multiEntries(
-          headers as Map<string, unknown>,
-        )) {
-          result.append(name, value);
-        }
-      }
-    }
-    return result;
-  }
-
-  /**
    * Creates a new `Headers` instance by parsing the given raw headers string.
    * @param value Raw headers string.
    */
@@ -99,10 +70,30 @@ export class Headers implements Iterable<[string, string | string[]]> {
 
   private readonly [kMap]: Map<string, HeaderEntry>;
 
-  constructor() {
+  constructor(
+    data:
+      | Headers
+      | Map<string, unknown>
+      | Record<string, unknown>
+      | NameValueEntries
+      | null = null,
+  ) {
     Object.defineProperty(this, kMap, {
       value: new Map(),
     });
+    if (data != null) {
+      if (data instanceof Headers) {
+        for (const [name, value] of data) {
+          this.append(name, value);
+        }
+      } else {
+        for (const [name, value] of multiEntries(
+          data as Map<string, unknown>,
+        )) {
+          this.append(name, value);
+        }
+      }
+    }
   }
 
   *[Symbol.iterator](): Iterator<[string, string | string[]]> {

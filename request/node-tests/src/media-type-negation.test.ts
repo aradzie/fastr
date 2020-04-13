@@ -8,7 +8,7 @@ test("negotiate media type", async (t) => {
 
   const server = start((req, res) => {
     const accept =
-      Headers.from(req.headers).map("Accept", Accept.parse) ?? Accept.ANY;
+      new Headers(req.headers).map("Accept", Accept.parse) ?? Accept.any();
 
     if (accept.accepts("text/plain")) {
       res.statusCode = 200;

@@ -1,3 +1,6 @@
+/**
+ * Parsed `E-Tag` header.
+ */
 export class ETag {
   static from(value: ETag | string): ETag {
     if (typeof value === "string") {
@@ -32,7 +35,7 @@ export class ETag {
     this.weak = weak;
   }
 
-  toJSON(): any {
+  toJSON(): string {
     return this.toString();
   }
 

@@ -25,26 +25,30 @@ export class Parameters {
   }
 
   private [kMap] = new Map<string, string>();
-  readonly charset: string | null;
-  readonly q: number | null;
 
   constructor(
-    arg: Map<string, unknown> | Record<string, unknown> | NameValueEntries = {},
+    data:
+      | Parameters
+      | Map<string, unknown>
+      | Record<string, unknown>
+      | NameValueEntries
+      | null = null,
   ) {
-    this[kMap] = new Map(entries(arg as Map<string, unknown>));
-    let v: string | null;
-    let charset;
-    if ((v = this.get("charset")) != null && (charset = v) !== "") {
-      this.charset = charset;
-    } else {
-      this.charset = null;
+    const map = new Map<string, string>();
+    if (data != null) {
+      if (data instanceof Parameters) {
+        for (const [name, value] of data) {
+          map.set(name, value);
+        }
+      } else {
+        for (const [name, value] of entries(data as Map<string, unknown>)) {
+          map.set(name, value);
+        }
+      }
     }
-    let q;
-    if ((v = this.get("q")) != null && Number.isFinite((q = Number(v)))) {
-      this.q = q;
-    } else {
-      this.q = null;
-    }
+    Object.defineProperty(this, kMap, {
+      value: map,
+    });
   }
 
   [Symbol.iterator](): IterableIterator<[string, string]> {
@@ -71,7 +75,52 @@ export class Parameters {
     return this[kMap].get(key) ?? null;
   }
 
-  toJSON(): any {
+  set(name: string, value: unknown): this {
+    this[kMap].set(name, String(value));
+    return this;
+  }
+
+  delete(name: string): this {
+    this[kMap].delete(name);
+    return this;
+  }
+
+  clear(): this {
+    this[kMap].clear();
+    return this;
+  }
+
+  get q(): number | null {
+    // TODO Add parse number util.
+    const v = this.get("q");
+    if (v != null) {
+      return Number(v);
+    } else {
+      return null;
+    }
+  }
+
+  set q(value: number | null) {
+    if (value == null) {
+      this.delete("q");
+    } else {
+      this.set("q", value);
+    }
+  }
+
+  get charset(): string | null {
+    return this.get("charset");
+  }
+
+  set charset(value: string | null) {
+    if (value == null) {
+      this.delete("charset");
+    } else {
+      this.set("charset", value);
+    }
+  }
+
+  toJSON(): string {
     return this.toString();
   }
 

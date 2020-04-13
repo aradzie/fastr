@@ -51,7 +51,7 @@ test("build headers", async (t) => {
     .accept("text/plain")
     .accept("text/*")
     .header("a", 1)
-    .header(Headers.from({ b: 2 }))
+    .header(new Headers({ b: 2 }))
     .header(new Map([["c", 3]]))
     .header({ d: 4 })
     .header([["e", 5]]);

@@ -13,6 +13,9 @@ export interface CacheControlInit {
   readonly sMaxAge?: number | null;
 }
 
+/**
+ * Parsed `Cache-Control` header.
+ */
 export class CacheControl {
   static from(value: CacheControl | string): CacheControl {
     if (typeof value === "string") {

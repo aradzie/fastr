@@ -31,7 +31,7 @@ export function cookies(jar = new CookieJar()): Middleware {
       // Append cookies to request.
       const response = await adapter({
         ...request,
-        headers: Headers.from(request.headers).set("Cookie", cookie),
+        headers: new Headers(request.headers).set("Cookie", cookie),
       });
 
       // Save cookies from response.

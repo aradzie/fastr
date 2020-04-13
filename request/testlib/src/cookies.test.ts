@@ -80,7 +80,7 @@ function listener(req: IncomingMessage, res: ServerResponse): void {
   res.end(
     JSON.stringify({
       requestCookies: Object.fromEntries(
-        Headers.from(req.headers).map("Cookie", Cookie.parse) ?? [],
+        new Headers(req.headers).map("Cookie", Cookie.parse) ?? [],
       ),
     }),
   );
