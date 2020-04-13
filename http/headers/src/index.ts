@@ -4,7 +4,7 @@ export { Cookie } from "./cookie";
 export { ETag } from "./etag";
 export { Headers } from "./headers";
 export { Link } from "./link";
-export { MimeType } from "./mimetype";
+export { MediaType } from "./mediatype";
 export { Parameters } from "./parameters";
 export { SetCookie } from "./set-cookie";
 export { entries, multiEntries } from "./util";

@@ -1,4 +1,4 @@
-import { MimeType } from "@webfx-http/headers";
+import { MediaType } from "@webfx-http/headers";
 import { isClientError } from "@webfx-http/status";
 import {
   AbstractAdapter,
@@ -78,7 +78,7 @@ export class FacebookAdapter extends AbstractAdapter {
         const response = await adapter(request);
         if (
           isClientError(response.status) &&
-          response.headers.map("Content-Type", MimeType.parse)?.name ===
+          response.headers.map("Content-Type", MediaType.parse)?.name ===
             "application/json"
         ) {
           const body = await response.body.json<FacebookErrorResponse>();

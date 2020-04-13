@@ -1,54 +1,54 @@
 import { Parameters } from "./parameters";
 import { splitPair } from "./strings";
 
-export class MimeType {
-  static from(value: MimeType | string): MimeType {
+export class MediaType {
+  static from(value: MediaType | string): MediaType {
     if (typeof value === "string") {
-      return MimeType.parse(value);
+      return MediaType.parse(value);
     } else {
       return value;
     }
   }
 
-  static parse(value: string): MimeType {
+  static parse(value: string): MediaType {
     // See https://mimesniff.spec.whatwg.org/#parsing-a-mime-type
     // See https://tools.ietf.org/html/rfc7231#section-3.1.1.1
     switch (value) {
       case "*/*":
-        return MimeType.ANY;
+        return MediaType.ANY;
       case "application/octet-stream":
-        return MimeType.APPLICATION_OCTET_STREAM;
+        return MediaType.APPLICATION_OCTET_STREAM;
       case "application/json":
-        return MimeType.APPLICATION_JSON;
+        return MediaType.APPLICATION_JSON;
       case "text/plain":
-        return MimeType.TEXT_PLAIN;
+        return MediaType.TEXT_PLAIN;
       case "text/html":
-        return MimeType.TEXT_HTML;
+        return MediaType.TEXT_HTML;
       case "text/xml":
-        return MimeType.TEXT_XML;
+        return MediaType.TEXT_XML;
       case "application/x-www-form-urlencoded":
-        return MimeType.APPLICATION_FORM_URLENCODED_TYPE;
+        return MediaType.APPLICATION_FORM_URLENCODED_TYPE;
       case "multipart/form-data":
-        return MimeType.MULTIPART_FORM_DATA;
+        return MediaType.MULTIPART_FORM_DATA;
     }
     const [head, tail] = splitPair(value, ";");
     if (head) {
       const [type, subtype] = splitPair(head, "/");
       if (type && subtype) {
-        return new MimeType(
+        return new MediaType(
           type.toLowerCase(),
           subtype.toLowerCase(),
           tail ? Parameters.from(tail) : null,
         );
       }
     }
-    return MimeType.APPLICATION_OCTET_STREAM; // We never fail.
+    return MediaType.APPLICATION_OCTET_STREAM; // We never fail.
   }
 
   /**
    * The `application/octet-stream` mime type.
    */
-  static readonly APPLICATION_OCTET_STREAM = new MimeType(
+  static readonly APPLICATION_OCTET_STREAM = new MediaType(
     "application",
     "octet-stream",
   );
@@ -56,32 +56,32 @@ export class MimeType {
   /**
    * The wildcard type mime type.
    */
-  static readonly ANY = new MimeType("*", "*");
+  static readonly ANY = new MediaType("*", "*");
 
   /**
    * The `application/json` mime type.
    */
-  static readonly APPLICATION_JSON = new MimeType("application", "json");
+  static readonly APPLICATION_JSON = new MediaType("application", "json");
 
   /**
    * The `text/plain` mime type.
    */
-  static readonly TEXT_PLAIN = new MimeType("text", "plain");
+  static readonly TEXT_PLAIN = new MediaType("text", "plain");
 
   /**
    * The `text/html` mime type.
    */
-  static readonly TEXT_HTML = new MimeType("text", "html");
+  static readonly TEXT_HTML = new MediaType("text", "html");
 
   /**
    * The `text/xml` mime type.
    */
-  static readonly TEXT_XML = new MimeType("text", "xml");
+  static readonly TEXT_XML = new MediaType("text", "xml");
 
   /**
    * The `application/x-www-form-urlencoded` mime type.
    */
-  static readonly APPLICATION_FORM_URLENCODED_TYPE = new MimeType(
+  static readonly APPLICATION_FORM_URLENCODED_TYPE = new MediaType(
     "application",
     "x-www-form-urlencoded",
   );
@@ -89,7 +89,7 @@ export class MimeType {
   /**
    * The `multipart/form-data` mime type.
    */
-  static readonly MULTIPART_FORM_DATA = new MimeType("multipart", "form-data");
+  static readonly MULTIPART_FORM_DATA = new MediaType("multipart", "form-data");
 
   /**
    * Full name without parameters.
@@ -119,8 +119,8 @@ export class MimeType {
     this.parameters = parameters;
   }
 
-  matches(that: MimeType | string): boolean {
-    that = MimeType.from(that);
+  matches(that: MediaType | string): boolean {
+    that = MediaType.from(that);
     return (
       (this.type === "*" || //
         that.type === "*" ||
@@ -131,8 +131,8 @@ export class MimeType {
     );
   }
 
-  withCharset(charset: string): MimeType {
-    return new MimeType(
+  withCharset(charset: string): MediaType {
+    return new MediaType(
       this.type,
       this.subtype,
       new Parameters([...(this.parameters ?? []), ["charset", charset]]),

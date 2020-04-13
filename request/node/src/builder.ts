@@ -1,4 +1,4 @@
-import { Accept, Headers, MimeType, multiEntries } from "@webfx-http/headers";
+import { Accept, Headers, MediaType, multiEntries } from "@webfx-http/headers";
 import { mergeSearchParams } from "@webfx-http/url";
 import { EventEmitter } from "events";
 import { Readable } from "stream";
@@ -26,7 +26,7 @@ export class RequestBuilder {
   private readonly _eventEmitter = new EventEmitter();
   private readonly _query = new URLSearchParams();
   private readonly _headers = new Headers();
-  private readonly _accept: (MimeType | string)[] = [];
+  private readonly _accept: (MediaType | string)[] = [];
   private readonly _options: HttpRequestOptions = {};
 
   constructor(adapter: Adapter, method: string, url: URL | string) {
@@ -130,7 +130,7 @@ export class RequestBuilder {
    * Appends the given value to the `Accept` HTTP header.
    * @param type New mime type to append.
    */
-  accept(type: MimeType | string): this {
+  accept(type: MediaType | string): this {
     this._accept.push(type);
     return this;
   }

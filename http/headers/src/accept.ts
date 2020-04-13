@@ -1,4 +1,4 @@
-import { MimeType } from "./mimetype";
+import { MediaType } from "./mediatype";
 import { splitList } from "./strings";
 import type { StringOr } from "./types";
 
@@ -18,15 +18,15 @@ export class Accept {
     return new Accept(splitList(input, ","));
   }
 
-  static readonly ANY = new Accept([MimeType.ANY]);
+  static readonly ANY = new Accept([MediaType.ANY]);
 
-  readonly types: readonly MimeType[];
+  readonly types: readonly MediaType[];
 
-  constructor(types: readonly StringOr<MimeType>[]) {
+  constructor(types: readonly StringOr<MediaType>[]) {
     // Sort the given types in the descending order
     // compared by the `q` parameter.
     this.types = types
-      .map((v) => MimeType.from(v))
+      .map((v) => MediaType.from(v))
       .sort((a, b) => (b?.parameters?.q ?? 1) - (a?.parameters?.q ?? 1));
   }
 
@@ -35,8 +35,8 @@ export class Accept {
    * @param candidate A candidate media type.
    * @return Whether the candidate media type is accepted.
    */
-  accepts(candidate: StringOr<MimeType>): boolean | number {
-    candidate = MimeType.from(candidate);
+  accepts(candidate: StringOr<MediaType>): boolean | number {
+    candidate = MediaType.from(candidate);
     if (this.types.length === 0) {
       return true;
     }
@@ -54,11 +54,11 @@ export class Accept {
    * @param candidates A list of candidate media types to chose from.
    * @return The best matching candidate, or `null` if none matches.
    */
-  select(...candidates: readonly StringOr<MimeType>[]): MimeType | null {
-    let best: MimeType | null = null;
+  select(...candidates: readonly StringOr<MediaType>[]): MediaType | null {
+    let best: MediaType | null = null;
     let bq = 0;
     for (let candidate of candidates) {
-      candidate = MimeType.from(candidate);
+      candidate = MediaType.from(candidate);
       const q = this.accepts(candidate);
       if (q === true || q > bq) {
         best = candidate;

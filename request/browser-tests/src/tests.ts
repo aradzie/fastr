@@ -1,4 +1,4 @@
-import { MimeType } from "@webfx-http/headers";
+import { MediaType } from "@webfx-http/headers";
 import {
   Adapter,
   adapter,
@@ -34,7 +34,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(400);
       expect(statusText).to.eq("Bad Request");
-      expect(headers.map("Content-Type", MimeType.parse)?.name).to.eq(
+      expect(headers.map("Content-Type", MediaType.parse)?.name).to.eq(
         "application/json",
       );
       expect(await response.json()).to.deep.eq({ type: "json" });
@@ -45,7 +45,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(500);
       expect(statusText).to.eq("Internal Server Error");
-      expect(headers.map("Content-Type", MimeType.parse)?.name).to.eq(
+      expect(headers.map("Content-Type", MediaType.parse)?.name).to.eq(
         "application/json",
       );
       expect(await response.json()).to.deep.eq({ type: "json" });
@@ -56,7 +56,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(204);
       expect(statusText).to.eq("No Content");
-      expect(headers.map("Content-Type", MimeType.parse)).to.eq(null);
+      expect(headers.map("Content-Type", MediaType.parse)).to.eq(null);
       expect(await response.text()).to.eq("");
     });
 
@@ -65,7 +65,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
-      expect(headers.map("Content-Type", MimeType.parse)?.name).to.eq(
+      expect(headers.map("Content-Type", MediaType.parse)?.name).to.eq(
         "text/plain",
       );
       const body = await response.blob();
@@ -80,7 +80,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
-      expect(headers.map("Content-Type", MimeType.parse)?.name).to.eq(
+      expect(headers.map("Content-Type", MediaType.parse)?.name).to.eq(
         "text/plain",
       );
       const body = await response.arrayBuffer();
@@ -94,7 +94,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
-      expect(headers.map("Content-Type", MimeType.parse)?.name).to.eq(
+      expect(headers.map("Content-Type", MediaType.parse)?.name).to.eq(
         "text/plain",
       );
       expect(await response.text()).to.eq("some text");
@@ -107,7 +107,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
-      expect(headers.map("Content-Type", MimeType.parse)?.name).to.eq(
+      expect(headers.map("Content-Type", MediaType.parse)?.name).to.eq(
         "multipart/form-data",
       );
       if (underTest === xhrAdapter) {
@@ -138,7 +138,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
-      expect(headers.map("Content-Type", MimeType.parse)?.name).to.eq(
+      expect(headers.map("Content-Type", MediaType.parse)?.name).to.eq(
         "application/x-www-form-urlencoded",
       );
       expect(formDataEntries(await response.formData())).to.deep.eq([
@@ -153,7 +153,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
-      expect(headers.map("Content-Type", MimeType.parse)?.name).to.eq(
+      expect(headers.map("Content-Type", MediaType.parse)?.name).to.eq(
         "application/json",
       );
       expect(await response.json()).to.deep.eq({ type: "json" });

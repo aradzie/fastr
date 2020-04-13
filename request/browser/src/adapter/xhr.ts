@@ -1,4 +1,4 @@
-import { Headers as HttpHeaders, MimeType } from "@webfx-http/headers";
+import { Headers as HttpHeaders, MediaType } from "@webfx-http/headers";
 import { isSuccess } from "@webfx-http/status";
 import { EventEmitter } from "events";
 import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "../events";
@@ -86,7 +86,7 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
 }
 
 xhrAdapter.parseMultipartFormData = (
-  contentType: MimeType,
+  contentType: MediaType,
   blob: Blob,
 ): Promise<FormData> => {
   throw new Error(
@@ -125,8 +125,8 @@ function makeResponse(xhr: XMLHttpRequest, body: Promise<Blob>): HttpResponse {
     async formData(): Promise<FormData> {
       const body = await readBody();
       const contentType =
-        headers.map("Content-Type", MimeType.parse) ??
-        MimeType.APPLICATION_OCTET_STREAM;
+        headers.map("Content-Type", MediaType.parse) ??
+        MediaType.APPLICATION_OCTET_STREAM;
       switch (contentType.name) {
         case "application/x-www-form-urlencoded":
           return parseUrlEncodedFormData(await body.text());

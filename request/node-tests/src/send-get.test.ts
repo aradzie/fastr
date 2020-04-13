@@ -1,4 +1,4 @@
-import { MimeType } from "@webfx-http/headers";
+import { MediaType } from "@webfx-http/headers";
 import { request } from "@webfx-request/node";
 import { start } from "@webfx-request/testlib";
 import test from "ava";
@@ -24,7 +24,10 @@ test("get text", async (t) => {
   t.true(ok);
   t.is(status, 200);
   t.is(statusText, "OK");
-  t.deepEqual(headers.map("Content-Type", MimeType.parse), MimeType.TEXT_PLAIN);
+  t.deepEqual(
+    headers.map("Content-Type", MediaType.parse),
+    MediaType.TEXT_PLAIN,
+  );
   t.is(await body.text(), "text response");
 });
 
@@ -50,8 +53,8 @@ test("get buffer", async (t) => {
   t.is(status, 200);
   t.is(statusText, "OK");
   t.deepEqual(
-    headers.map("Content-Type", MimeType.parse),
-    MimeType.APPLICATION_OCTET_STREAM,
+    headers.map("Content-Type", MediaType.parse),
+    MediaType.APPLICATION_OCTET_STREAM,
   );
   t.is(await body.text(), "buffer response");
 });
@@ -78,8 +81,8 @@ test("get json", async (t) => {
   t.is(status, 200);
   t.is(statusText, "OK");
   t.deepEqual(
-    headers.map("Content-Type", MimeType.parse),
-    MimeType.APPLICATION_JSON,
+    headers.map("Content-Type", MediaType.parse),
+    MediaType.APPLICATION_JSON,
   );
   t.deepEqual(await body.json(), { type: "json" });
 });

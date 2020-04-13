@@ -1,6 +1,6 @@
 import test from "ava";
 import { Accept } from "./accept";
-import { MimeType } from "./mimetype";
+import { MediaType } from "./mediatype";
 import { Parameters } from "./parameters";
 
 test("accepts with empty list", (t) => {
@@ -13,9 +13,9 @@ test("accepts with empty list", (t) => {
 
 test("accepts without range", (t) => {
   const accept = new Accept([
-    new MimeType("x-foo", "c", new Parameters([["q", "0.8"]])),
-    new MimeType("x-foo", "b", new Parameters([["q", "0.9"]])),
-    new MimeType("x-foo", "a"),
+    new MediaType("x-foo", "c", new Parameters([["q", "0.8"]])),
+    new MediaType("x-foo", "b", new Parameters([["q", "0.9"]])),
+    new MediaType("x-foo", "a"),
   ]);
 
   t.true(accept.accepts("x-foo/a"));
@@ -26,10 +26,10 @@ test("accepts without range", (t) => {
 
 test("accepts with range", (t) => {
   const accept = new Accept([
-    new MimeType("*", "*", new Parameters([["q", "0.8"]])),
-    new MimeType("x-foo", "c", new Parameters([["q", "0.8"]])),
-    new MimeType("x-foo", "b", new Parameters([["q", "0.9"]])),
-    new MimeType("x-foo", "a"),
+    new MediaType("*", "*", new Parameters([["q", "0.8"]])),
+    new MediaType("x-foo", "c", new Parameters([["q", "0.8"]])),
+    new MediaType("x-foo", "b", new Parameters([["q", "0.9"]])),
+    new MediaType("x-foo", "a"),
   ]);
 
   t.true(accept.accepts("x-foo/a"));
@@ -48,11 +48,11 @@ test("parse", (t) => {
         "*/*;q=0.8",
     ),
     new Accept([
-      new MimeType("text", "html"),
-      new MimeType("application", "xhtml+xml"),
-      new MimeType("image", "webp"),
-      new MimeType("application", "xml", new Parameters([["q", "0.9"]])),
-      new MimeType("*", "*", new Parameters([["q", "0.8"]])),
+      new MediaType("text", "html"),
+      new MediaType("application", "xhtml+xml"),
+      new MediaType("image", "webp"),
+      new MediaType("application", "xml", new Parameters([["q", "0.9"]])),
+      new MediaType("*", "*", new Parameters([["q", "0.8"]])),
     ]),
   );
 });
@@ -61,11 +61,11 @@ test("stringify", (t) => {
   t.is(
     String(
       new Accept([
-        new MimeType("text", "html"),
-        new MimeType("application", "xhtml+xml"),
-        new MimeType("application", "xml", new Parameters([["q", "0.9"]])),
-        new MimeType("image", "webp"),
-        new MimeType("*", "*", new Parameters([["q", "0.8"]])),
+        new MediaType("text", "html"),
+        new MediaType("application", "xhtml+xml"),
+        new MediaType("application", "xml", new Parameters([["q", "0.9"]])),
+        new MediaType("image", "webp"),
+        new MediaType("*", "*", new Parameters([["q", "0.8"]])),
       ]),
     ),
     "text/html, " +

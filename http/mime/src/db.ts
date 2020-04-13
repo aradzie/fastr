@@ -1,4 +1,4 @@
-import { MimeType } from "@webfx-http/headers";
+import { MediaType } from "@webfx-http/headers";
 
 const jsonTypes = new Set<string>();
 const textTypes = new Set<string>();
@@ -11,62 +11,59 @@ export class MimeDb {
   /**
    * Test if the specified mime type is of JSON category.
    */
-  static isJson(mimeType: MimeType | string): boolean {
-    return match(jsonTypes, MimeType.from(mimeType));
+  static isJson(type: MediaType | string): boolean {
+    return match(jsonTypes, MediaType.from(type));
   }
 
   /**
    * Test if the specified mime type is of text category.
    */
-  static isText(mimeType: MimeType | string): boolean {
-    return match(textTypes, MimeType.from(mimeType));
+  static isText(type: MediaType | string): boolean {
+    return match(textTypes, MediaType.from(type));
   }
 
   /**
    * Test if the specified mime type is of binary category.
    */
-  static isBinary(mimeType: MimeType | string): boolean {
-    return match(binaryTypes, MimeType.from(mimeType));
+  static isBinary(type: MediaType | string): boolean {
+    return match(binaryTypes, MediaType.from(type));
   }
 
   /**
    * Add known JSON mime type. Wildcards subtypes are supported, e.g. "text/*".
    */
-  static addJsonType(mimeType: string): void {
-    jsonTypes.add(mimeType);
+  static addJsonType(type: string): void {
+    jsonTypes.add(type);
   }
 
   /**
    * Add known text mime type. Wildcards subtypes are supported, e.g. "text/*".
    */
-  static addTextType(mimeType: string): void {
-    textTypes.add(mimeType);
+  static addTextType(type: string): void {
+    textTypes.add(type);
   }
 
   /**
    * Add known binary mime type. Wildcards subtypes are supported, e.g. "image/*".
    */
-  static addBinaryType(mimeType: string): void {
-    binaryTypes.add(mimeType);
+  static addBinaryType(type: string): void {
+    binaryTypes.add(type);
   }
 }
 
-function match(all: Set<string>, mimeType: MimeType): boolean {
-  return (
-    all.has(mimeType.type + "/" + mimeType.subtype) ||
-    all.has(mimeType.type + "/*")
-  );
+function match(all: Set<string>, type: MediaType): boolean {
+  return all.has(type.type + "/" + type.subtype) || all.has(type.type + "/*");
 }
 
-for (const mimeType of [
+for (const type of [
   "application/json",
   "application/error+json",
   "application/problem+json",
 ]) {
-  MimeDb.addJsonType(mimeType);
+  MimeDb.addJsonType(type);
 }
 
-for (const mimeType of [
+for (const type of [
   "text/*",
   "image/svg+xml",
   "application/xml",
@@ -76,14 +73,14 @@ for (const mimeType of [
   "application/xhtml+xml",
   "application/javascript",
 ]) {
-  MimeDb.addTextType(mimeType);
+  MimeDb.addTextType(type);
 }
 
-for (const mimeType of [
+for (const type of [
   "application/octet-stream",
   "image/*",
   "audio/*",
   "video/*",
 ]) {
-  MimeDb.addBinaryType(mimeType);
+  MimeDb.addBinaryType(type);
 }

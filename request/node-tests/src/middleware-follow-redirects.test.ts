@@ -1,4 +1,4 @@
-import { MimeType } from "@webfx-http/headers";
+import { MediaType } from "@webfx-http/headers";
 import {
   followRedirects,
   request,
@@ -48,7 +48,10 @@ test("on redirect follow", async (t) => {
   t.is(status, 200);
   t.is(statusText, "OK");
   t.true(url.endsWith("/c"));
-  t.deepEqual(headers.map("Content-Type", MimeType.parse), MimeType.TEXT_PLAIN);
+  t.deepEqual(
+    headers.map("Content-Type", MediaType.parse),
+    MediaType.TEXT_PLAIN,
+  );
   t.is(await body.text(), "done");
 });
 
@@ -84,7 +87,10 @@ test("on redirect follow to not found", async (t) => {
   t.is(status, 404);
   t.is(statusText, "Not Found");
   t.true(url.endsWith("/b"));
-  t.deepEqual(headers.map("Content-Type", MimeType.parse), MimeType.TEXT_PLAIN);
+  t.deepEqual(
+    headers.map("Content-Type", MediaType.parse),
+    MediaType.TEXT_PLAIN,
+  );
   t.is(await body.text(), "this is the end");
 });
 
@@ -112,7 +118,10 @@ test("on redirect return", async (t) => {
   t.is(status, 302);
   t.is(statusText, "Found");
   t.true(url.endsWith("/a"));
-  t.deepEqual(headers.map("Content-Type", MimeType.parse), MimeType.TEXT_PLAIN);
+  t.deepEqual(
+    headers.map("Content-Type", MediaType.parse),
+    MediaType.TEXT_PLAIN,
+  );
   t.is(await body.text(), "done");
 });
 

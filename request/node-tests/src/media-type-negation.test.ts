@@ -1,4 +1,4 @@
-import { Accept, Headers, MimeType } from "@webfx-http/headers";
+import { Accept, Headers, MediaType } from "@webfx-http/headers";
 import { request } from "@webfx-request/node";
 import { start } from "@webfx-request/testlib";
 import test from "ava";
@@ -44,8 +44,8 @@ test("negotiate media type", async (t) => {
     t.is(status, 200);
     t.is(statusText, "OK");
     t.deepEqual(
-      headers.map("Content-Type", MimeType.parse),
-      MimeType.TEXT_PLAIN,
+      headers.map("Content-Type", MediaType.parse),
+      MediaType.TEXT_PLAIN,
     );
     t.is(await body.text(), "text");
   }
@@ -65,8 +65,8 @@ test("negotiate media type", async (t) => {
     t.is(status, 200);
     t.is(statusText, "OK");
     t.deepEqual(
-      headers.map("Content-Type", MimeType.parse),
-      MimeType.APPLICATION_JSON,
+      headers.map("Content-Type", MediaType.parse),
+      MediaType.APPLICATION_JSON,
     );
     t.deepEqual(await body.json(), { type: "json" });
   }

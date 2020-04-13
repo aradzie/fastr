@@ -1,5 +1,5 @@
 import { UnsupportedMediaTypeError } from "@webfx-http/error";
-import { Accept, Headers, MimeType } from "@webfx-http/headers";
+import { Accept, Headers, MediaType } from "@webfx-http/headers";
 import { isSuccess } from "@webfx-http/status";
 import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
 
@@ -14,7 +14,7 @@ import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
  *         the expected type.
  */
 export function expectType(
-  ...expectedType: readonly (MimeType | string)[]
+  ...expectedType: readonly (MediaType | string)[]
 ): Middleware {
   const accept = new Accept(expectedType);
   return (adapter: Adapter): Adapter => {
@@ -30,8 +30,8 @@ export function expectType(
         return response;
       }
       const responseType =
-        response.headers.map("Content-Type", MimeType.parse) ??
-        MimeType.APPLICATION_OCTET_STREAM;
+        response.headers.map("Content-Type", MediaType.parse) ??
+        MediaType.APPLICATION_OCTET_STREAM;
       if (accept.accepts(responseType)) {
         return response;
       }

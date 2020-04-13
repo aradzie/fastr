@@ -1,5 +1,5 @@
 import { BadRequestError } from "@webfx-http/error";
-import { MimeType } from "@webfx-http/headers";
+import { MediaType } from "@webfx-http/headers";
 import type { IncomingHttpHeaders } from "http";
 import type { IParseOptions } from "qs";
 import { parse } from "qs";
@@ -39,7 +39,7 @@ export class Body {
   private readonly _charset: string | null;
   private readonly _length: number | null;
   private readonly _encoding: Encoding;
-  private readonly _type: MimeType;
+  private readonly _type: MediaType;
   private readonly _stream: Readable;
   private _bodyUsed = false;
 
@@ -53,7 +53,7 @@ export class Body {
     this._charset = charset;
     this._length = length == null ? null : Number(length);
     this._encoding = getEncoding(encoding);
-    this._type = MimeType.parse(type);
+    this._type = MediaType.parse(type);
     this._stream = incomingMessage;
   }
 
@@ -61,7 +61,7 @@ export class Body {
    * Returns value of the `Content-Encoding` header or
    * just `application/octet-stream` if absent.
    */
-  get type(): MimeType {
+  get type(): MediaType {
     return this._type;
   }
 
