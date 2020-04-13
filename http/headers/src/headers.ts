@@ -12,21 +12,6 @@ import { multiEntries } from "./util";
 
 // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
 
-const nonCoalescingHeaders = new Set<string>([
-  "date",
-  "expires",
-  "last-modified",
-  "if-modified-since",
-  "if-unmodified-since",
-  "retry-after",
-  "cookie",
-  "set-cookie",
-  "link",
-  "www-authenticate",
-  "proxy-authenticate",
-  "strict-transport-security",
-]);
-
 const kMap = Symbol("kMap");
 
 class HeaderEntry {
@@ -46,7 +31,7 @@ class HeaderEntry {
   constructor(name: string, nameLc: string, value: string | readonly string[]) {
     this.name = name;
     this.nameLc = nameLc;
-    this.value = nonCoalescingHeaders.has(this.nameLc)
+    this.value = Headers.nonCoalescingHeaders.has(this.nameLc)
       ? toArray(value)
       : toArray(value).join(", ");
   }
@@ -67,6 +52,16 @@ class HeaderEntry {
       ...toArray(value),
     ]);
   }
+
+  tuple(): [string, string | string[]] {
+    const { name, value } = this;
+    return [
+      name,
+      Array.isArray(value) // Clone as mutable array.
+        ? ([...value] as string[])
+        : (value as string),
+    ];
+  }
 }
 
 export class HeadersBuilder {
@@ -82,7 +77,7 @@ export class HeadersBuilder {
   ): HeadersBuilder {
     const builder = new HeadersBuilder();
     if (headers instanceof Headers) {
-      for (const { name, value } of headers.entries()) {
+      for (const [name, value] of headers) {
         builder.append(name, value);
       }
     } else {
@@ -98,7 +93,9 @@ export class HeadersBuilder {
   readonly [kMap]: Map<string, HeaderEntry>;
 
   constructor() {
-    this[kMap] = new Map();
+    Object.defineProperty(this, kMap, {
+      value: new Map(),
+    });
   }
 
   /**
@@ -268,16 +265,26 @@ export class HeadersBuilder {
 /**
  * A collection of HTTP headers.
  */
-export class Headers {
+export class Headers implements Iterable<[string, string | string[]]> {
   /**
-   * Returns a new empty Headers builder.
+   * The set of multi-value header names whose values are kept on separate lines
+   * in an HTTP message.
+   */
+  static readonly nonCoalescingHeaders = new Set<string>([
+    "cookie",
+    "set-cookie",
+    "link",
+  ]);
+
+  /**
+   * Returns a new empty `Headers` builder.
    */
   static builder(): HeadersBuilder {
     return new HeadersBuilder();
   }
 
   /**
-   * Creates a new Headers instance from the given JSON object
+   * Creates a new `Headers` instance from the given JSON object
    * with key/value pairs.
    */
   static from(
@@ -295,7 +302,7 @@ export class Headers {
   }
 
   /**
-   * Creates a new Headers instance by parsing the given raw headers string.
+   * Creates a new `Headers` instance by parsing the given raw headers string.
    * @param value Raw headers string.
    */
   static parse(value: string): Headers {
@@ -312,7 +319,15 @@ export class Headers {
   readonly [kMap]: Map<string, HeaderEntry>;
 
   constructor(builder: HeadersBuilder) {
-    this[kMap] = new Map(builder[kMap]);
+    Object.defineProperty(this, kMap, {
+      value: new Map(builder[kMap]),
+    });
+  }
+
+  *[Symbol.iterator](): Iterator<[string, string | string[]]> {
+    for (const entry of this[kMap].values()) {
+      yield entry.tuple();
+    }
   }
 
   /**
@@ -387,15 +402,6 @@ export class Headers {
     }
   }
 
-  *entries(): IterableIterator<{
-    name: string;
-    value: string | readonly string[];
-  }> {
-    for (const { name, value } of this[kMap].values()) {
-      yield { name, value };
-    }
-  }
-
   contentLength(): number | null {
     return this.value("Content-Length", Number);
   }
@@ -452,17 +458,15 @@ export class Headers {
     return this.allValues("Link", Link.parse);
   }
 
-  toJSON(): any {
-    return Object.fromEntries(
-      [...this[kMap].values()].map(({ name, value }) => [name, value]),
-    );
+  toJSON(): Record<string, string | string[]> {
+    return Object.fromEntries(this);
   }
 
   toString(): string {
     const lines: string[] = [];
     for (const entry of this[kMap].values()) {
       const { name, nameLc, value } = entry;
-      if (nonCoalescingHeaders.has(nameLc)) {
+      if (Headers.nonCoalescingHeaders.has(nameLc)) {
         for (const item of toArray(value)) {
           lines.push(`${name}: ${item}`);
         }

@@ -33,8 +33,8 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
   const xhr = new XMLHttpRequest();
   xhr.open(method, url, true);
   xhr.responseType = "blob";
-  for (const { name, value } of HttpHeaders.from(headers ?? {}).entries()) {
-    xhr.setRequestHeader(name, String(value));
+  for (const [name, value] of HttpHeaders.from(headers ?? {})) {
+    xhr.setRequestHeader(name, Array.isArray(value) ? value.join(", ") : value);
   }
   if (timeout != null) {
     xhr.timeout = timeout;

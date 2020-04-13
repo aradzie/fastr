@@ -16,62 +16,97 @@ test("build headers", (t) => {
     .append("bar", "a")
     .append("Bar", "b")
     .append("BAR", "c")
-    .contentLength(123)
-    .contentType("text/plain")
     .build();
 
-  t.false(headers.has("unknown"));
-  t.is(headers.get("unknown"), null);
-  t.deepEqual(headers.getAll("unknown"), []);
   t.is(headers.get("foo"), "c");
   t.deepEqual(headers.getAll("foo"), ["c"]);
   t.is(headers.get("bar"), "a, b, c");
   t.deepEqual(headers.getAll("bar"), ["a, b, c"]);
+  t.false(headers.has("baz"));
+  t.is(headers.get("baz"), null);
+  t.deepEqual(headers.getAll("baz"), []);
+
+  const copy = headers.toBuilder().set("baz", "d").build();
+
+  t.is(copy.get("foo"), "c");
+  t.deepEqual(copy.getAll("foo"), ["c"]);
+  t.is(copy.get("bar"), "a, b, c");
+  t.deepEqual(copy.getAll("bar"), ["a, b, c"]);
+  t.is(copy.get("baz"), "d");
+  t.deepEqual(copy.getAll("baz"), ["d"]);
+});
+
+test("from headers", (t) => {
+  const headers = Headers.from(
+    Headers.builder().set("foo", "1").set("bar", "2").build(),
+  );
   t.deepEqual(
-    [...headers.entries()],
+    [...headers],
     [
-      { name: "foo", value: "c" },
-      { name: "bar", value: "a, b, c" },
-      { name: "Content-Length", value: "123" },
-      { name: "Content-Type", value: "text/plain" },
+      ["foo", "1"],
+      ["bar", "2"],
     ],
   );
 });
 
-test("copy headers", (t) => {
-  const headers = Headers.builder().set("foo", "a").set("bar", "b").build();
+test("from map", (t) => {
+  const headers = Headers.from(
+    new Map([
+      ["foo", 1],
+      ["bar", 2],
+    ]),
+  );
+  t.deepEqual(
+    [...headers],
+    [
+      ["foo", "1"],
+      ["bar", "2"],
+    ],
+  );
+});
 
-  const copy = headers.toBuilder().set("baz", "c").build();
+test("from record", (t) => {
+  const headers = Headers.from({
+    foo: "1",
+    bar: 2,
+  });
+  t.deepEqual(
+    [...headers],
+    [
+      ["foo", "1"],
+      ["bar", "2"],
+    ],
+  );
+});
 
-  t.deepEqual(copy.toJSON(), {
+test("from entries", (t) => {
+  const headers = Headers.from([
+    ["foo", 1],
+    ["bar", 2],
+  ]);
+  t.deepEqual(
+    [...headers],
+    [
+      ["foo", "1"],
+      ["bar", "2"],
+    ],
+  );
+});
+
+test("spread", (t) => {
+  const headers = Headers.builder().set("foo", "a").append("bar", "b").build();
+  t.deepEqual({ ...headers }, {});
+  t.deepEqual(
+    [...headers],
+    [
+      ["foo", "a"],
+      ["bar", "b"],
+    ],
+  );
+  t.deepEqual(Object.fromEntries(headers), {
     foo: "a",
     bar: "b",
-    baz: "c",
   });
-});
-
-test("fromJSON", (t) => {
-  const headers = Headers.from({
-    "date": "Thu, 01 Jan 1970 00:00:01 GMT",
-    "cache-control": "private, max-age=0",
-    "content-type": "text/html; charset=UTF-8",
-    "content-encoding": "gzip",
-    "set-cookie": ["a=1", "b=2"],
-  });
-  t.deepEqual(
-    [...headers.entries()],
-    [
-      { name: "date", value: ["Thu, 01 Jan 1970 00:00:01 GMT"] },
-      { name: "cache-control", value: "private, max-age=0" },
-      { name: "content-type", value: "text/html; charset=UTF-8" },
-      { name: "content-encoding", value: "gzip" },
-      { name: "set-cookie", value: ["a=1", "b=2"] },
-    ],
-  );
-  t.deepEqual(headers.allSetCookies(), [
-    new SetCookie("a", "1"),
-    new SetCookie("b", "2"),
-  ]);
 });
 
 test("toJSON", (t) => {
@@ -158,7 +193,7 @@ test("parse", (t) => {
         "Set-Cookie: d=4\n",
     ).toJSON(),
     {
-      "Date": ["Thu, 01 Jan 1970 00:00:01 GMT"],
+      "Date": "Thu, 01 Jan 1970 00:00:01 GMT",
       "Accept": "image/png, image/*",
       "Cache-Control": "no-cache, no-store",
       "Cookie": ["a=1", "b=2"],

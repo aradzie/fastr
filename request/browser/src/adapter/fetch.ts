@@ -33,7 +33,7 @@ export async function fetchAdapter(
 
   const req = new Request(url, {
     method,
-    headers: new Headers(headers?.toJSON()),
+    headers: toHeaders(headers),
     body,
     cache,
     credentials,
@@ -74,4 +74,19 @@ export async function fetchAdapter(
       controller.abort();
     }
   })();
+}
+
+function toHeaders(headers: HttpHeaders | null = null): Headers {
+  const result = new Headers();
+  if (headers != null)
+    for (const [name, value] of headers) {
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          result.append(name, item);
+        }
+      } else {
+        result.append(name, value);
+      }
+    }
+  return result;
 }

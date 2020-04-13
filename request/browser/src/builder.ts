@@ -105,8 +105,8 @@ export class RequestBuilder {
     if (length === 1) {
       if (arg0 instanceof Headers) {
         // header(headers: Headers): this;
-        for (const { name, value } of arg0.entries()) {
-          this._headers.append(name, String(value));
+        for (const [name, value] of arg0) {
+          this._headers.append(name, value);
         }
         return this;
       }
