@@ -1,20 +1,7 @@
-import { Cookie, SetCookie } from "@webfx-http/headers";
+import { SetCookie } from "@webfx-http/headers";
 
-export class CookieJar implements Iterable<Cookie> {
+export class CookieJar implements Iterable<[string, string]> {
   readonly #data = new Map<string, Entry>();
-  readonly domain: string;
-  readonly path: string;
-
-  constructor({
-    domain = ".",
-    path = "/",
-  }: {
-    readonly domain?: string;
-    readonly path?: string;
-  } = {}) {
-    this.domain = domain;
-    this.path = path;
-  }
 
   clear(): void {
     this.#data.clear();
@@ -27,16 +14,12 @@ export class CookieJar implements Iterable<Cookie> {
   }
 
   add(cookie: SetCookie): void {
-    const { name, value, maxAge, expires } = cookie;
+    const { name, maxAge, expires } = cookie;
     if (maxAge != null && maxAge <= 0) {
       this.#data.delete(name);
       return;
     }
     if (expires != null && expires.getTime() < Date.now()) {
-      this.#data.delete(name);
-      return;
-    }
-    if (value === "") {
       this.#data.delete(name);
       return;
     }
@@ -53,10 +36,10 @@ export class CookieJar implements Iterable<Cookie> {
     }
   }
 
-  *[Symbol.iterator](): Iterator<Cookie> {
+  *[Symbol.iterator](): Iterator<[string, string]> {
     for (const entry of this.#data.values()) {
       if (!entry.expired()) {
-        yield new Cookie(entry.name, entry.value);
+        yield [entry.name, entry.value];
       }
     }
   }
@@ -68,7 +51,10 @@ class Entry {
   readonly expires: Date | null;
 
   constructor({ name, value, maxAge, expires }: SetCookie) {
-    if (expires == null && maxAge != null) {
+    // https://tools.ietf.org/html/rfc6265#section-4.1.2.2
+    // If a cookie has both the Max-Age and the Expires attribute, the Max-Age
+    // attribute has precedence and controls the expiration date of the cookie.
+    if (maxAge != null) {
       expires = new Date(Date.now() + maxAge * 1000);
     }
     this.name = name;

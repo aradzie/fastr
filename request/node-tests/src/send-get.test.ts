@@ -24,7 +24,7 @@ test("get text", async (t) => {
   t.true(ok);
   t.is(status, 200);
   t.is(statusText, "OK");
-  t.deepEqual(headers.contentType(), MimeType.TEXT_PLAIN);
+  t.deepEqual(headers.map("Content-Type", MimeType.parse), MimeType.TEXT_PLAIN);
   t.is(await body.text(), "text response");
 });
 
@@ -49,7 +49,10 @@ test("get buffer", async (t) => {
   t.true(ok);
   t.is(status, 200);
   t.is(statusText, "OK");
-  t.deepEqual(headers.contentType(), MimeType.APPLICATION_OCTET_STREAM);
+  t.deepEqual(
+    headers.map("Content-Type", MimeType.parse),
+    MimeType.APPLICATION_OCTET_STREAM,
+  );
   t.is(await body.text(), "buffer response");
 });
 
@@ -74,6 +77,9 @@ test("get json", async (t) => {
   t.true(ok);
   t.is(status, 200);
   t.is(statusText, "OK");
-  t.deepEqual(headers.contentType(), MimeType.APPLICATION_JSON);
+  t.deepEqual(
+    headers.map("Content-Type", MimeType.parse),
+    MimeType.APPLICATION_JSON,
+  );
   t.deepEqual(await body.json(), { type: "json" });
 });

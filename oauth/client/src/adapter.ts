@@ -1,3 +1,4 @@
+import { MimeType } from "@webfx-http/headers";
 import { isClientError } from "@webfx-http/status";
 import {
   Adapter,
@@ -91,7 +92,8 @@ export abstract class AbstractAdapter {
         const response = await adapter(request);
         if (
           isClientError(response.status) &&
-          response.headers.contentType()?.name === "application/json"
+          response.headers.map("Content-Type", MimeType.parse)?.name ===
+            "application/json"
         ) {
           const body = await response.body.json<ErrorResponse>();
           throw OAuthError.from(body);

@@ -33,7 +33,7 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
   const xhr = new XMLHttpRequest();
   xhr.open(method, url, true);
   xhr.responseType = "blob";
-  for (const [name, value] of HttpHeaders.from(headers ?? {})) {
+  for (const [name, value] of HttpHeaders.from(headers)) {
     xhr.setRequestHeader(name, Array.isArray(value) ? value.join(", ") : value);
   }
   if (timeout != null) {
@@ -125,7 +125,8 @@ function makeResponse(xhr: XMLHttpRequest, body: Promise<Blob>): HttpResponse {
     async formData(): Promise<FormData> {
       const body = await readBody();
       const contentType =
-        headers.contentType() ?? MimeType.APPLICATION_OCTET_STREAM;
+        headers.map("Content-Type", MimeType.parse) ??
+        MimeType.APPLICATION_OCTET_STREAM;
       switch (contentType.name) {
         case "application/x-www-form-urlencoded":
           return parseUrlEncodedFormData(await body.text());

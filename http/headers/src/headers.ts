@@ -1,16 +1,6 @@
-import { Accept } from "./accept";
-import { CacheControl } from "./cache-control";
-import { Cookie } from "./cookie";
-import { ETag } from "./etag";
-import { Link } from "./link";
-import { MimeType } from "./mimetype";
-import { SetCookie } from "./set-cookie";
 import { splitLines, splitPair } from "./strings";
-import { parseDate, stringifyDate } from "./tokens";
 import type { NameValueEntries } from "./types";
 import { multiEntries } from "./util";
-
-// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
 
 const kMap = Symbol("kMap");
 
@@ -26,239 +16,27 @@ class HeaderEntry {
   /**
    * The list of header values.
    */
-  readonly value: string | readonly string[];
+  value: string | string[] = [];
 
-  constructor(name: string, nameLc: string, value: string | readonly string[]) {
+  constructor(name: string, nameLc: string) {
     this.name = name;
     this.nameLc = nameLc;
-    this.value = Headers.nonCoalescingHeaders.has(this.nameLc)
-      ? toArray(value)
-      : toArray(value).join(", ");
   }
 
-  /**
-   * Returns a new copy with the value replaced.
-   */
-  set(value: string | readonly string[]): HeaderEntry {
-    return new HeaderEntry(this.name, this.nameLc, value);
-  }
-
-  /**
-   * Returns a new copy with the value updated.
-   */
-  append(value: string | readonly string[]): HeaderEntry {
-    return new HeaderEntry(this.name, this.nameLc, [
-      ...toArray(this.value),
-      ...toArray(value),
-    ]);
-  }
-
-  tuple(): [string, string | string[]] {
-    const { name, value } = this;
-    return [
-      name,
-      Array.isArray(value) // Clone as mutable array.
-        ? ([...value] as string[])
-        : (value as string),
-    ];
-  }
-}
-
-export class HeadersBuilder {
-  /**
-   * Creates a new builder with values copied from the given headers.
-   */
-  static from(
-    headers:
-      | Headers
-      | Map<string, unknown>
-      | Record<string, unknown>
-      | NameValueEntries,
-  ): HeadersBuilder {
-    const builder = new HeadersBuilder();
-    if (headers instanceof Headers) {
-      for (const [name, value] of headers) {
-        builder.append(name, value);
-      }
+  set(v: string | string[]): void {
+    if (Headers.nonCoalescingHeaders.has(this.nameLc)) {
+      this.value = concat([], v);
     } else {
-      for (const [name, value] of multiEntries(
-        headers as Map<string, unknown>,
-      )) {
-        builder.append(name, value);
-      }
+      this.value = concat([], v).join(", ");
     }
-    return builder;
   }
 
-  readonly [kMap]: Map<string, HeaderEntry>;
-
-  constructor() {
-    Object.defineProperty(this, kMap, {
-      value: new Map(),
-    });
-  }
-
-  /**
-   * Creates a new header or replaces the previously created header with the
-   * given name.
-   */
-  set(name: string, value: string | readonly string[]): this {
-    if (name === "" || value.length === 0) {
-      throw new Error();
+  append(v: string | string[]): void {
+    if (Headers.nonCoalescingHeaders.has(this.nameLc)) {
+      this.value = concat(this.value, v);
+    } else {
+      this.value = concat(this.value, v).join(", ");
     }
-    const nameLc = name.toLowerCase();
-    const entry =
-      this[kMap].get(nameLc)?.set(value) ??
-      new HeaderEntry(name, nameLc, value);
-    this[kMap].set(nameLc, entry);
-    return this;
-  }
-
-  /**
-   * Creates a new header or updates the previously created header with the
-   * given name.
-   */
-  append(name: string, value: string | readonly string[]): this {
-    if (name === "" || value.length === 0) {
-      throw new Error();
-    }
-    const nameLc = name.toLowerCase();
-    const entry =
-      this[kMap].get(nameLc)?.append(value) ??
-      new HeaderEntry(name, nameLc, value);
-    this[kMap].set(nameLc, entry);
-    return this;
-  }
-
-  /**
-   * Deletes a header with the given name.
-   */
-  delete(name: string): this {
-    if (name === "") {
-      throw new Error();
-    }
-    this[kMap].delete(name);
-    return this;
-  }
-
-  /**
-   * Deletes all headers.
-   */
-  clear(): this {
-    this[kMap].clear();
-    return this;
-  }
-
-  /**
-   * Sets the `Content-Length` header to the given value.
-   */
-  contentLength(value: number): this {
-    this.set("Content-Length", String(value));
-    return this;
-  }
-
-  /**
-   * Sets the `Content-Type` header to the given value.
-   */
-  contentType(value: MimeType | string): this {
-    this.set("Content-Type", String(value));
-    return this;
-  }
-
-  /**
-   * Sets the `Content-Encoding` header to the given value.
-   */
-  contentEncoding(value: string): this {
-    this.set("Content-Encoding", String(value));
-    return this;
-  }
-
-  /**
-   * Sets the `Accept` header to the given value.
-   */
-  accept(value: Accept | string): this {
-    this.set("Accept", String(value));
-    return this;
-  }
-
-  /**
-   * Sets the `Cache-Control` header to the given value.
-   */
-  cacheControl(value: CacheControl | string): this {
-    this.set("Cache-Control", String(value));
-    return this;
-  }
-
-  /**
-   * Sets the `ETag` header to the given value.
-   */
-  etag(value: ETag | string): this {
-    this.set("ETag", String(value));
-    return this;
-  }
-
-  /**
-   * Sets the `If-Match` header to the given value.
-   */
-  ifMatch(value: ETag | string): this {
-    this.set("If-Match", String(value));
-    return this;
-  }
-
-  /**
-   * Sets the `If-None-Match` header to the given value.
-   */
-  ifNoneMatch(value: ETag | string): this {
-    this.set("If-None-Match", String(value));
-    return this;
-  }
-
-  /**
-   * Sets the `Last-Modified` header to the given value.
-   */
-  lastModified(value: Date | string): this {
-    this.set("Last-Modified", stringifyDate(value));
-    return this;
-  }
-
-  /**
-   * Sets the `If-Modified-Since` header to the given value.
-   */
-  ifModifiedSince(value: Date | string): this {
-    this.set("If-Modified-Since", stringifyDate(value));
-    return this;
-  }
-
-  /**
-   * Sets the `If-Unmodified-Since` header to the given value.
-   */
-  ifUnmodifiedSince(value: Date | string): this {
-    this.set("If-Unmodified-Since", stringifyDate(value));
-    return this;
-  }
-
-  appendVary(value: string): this {
-    this.append("Vary", value);
-    return this;
-  }
-
-  appendCookie(value: Cookie | string): this {
-    this.append("Cookie", String(value));
-    return this;
-  }
-
-  appendSetCookie(value: SetCookie | string): this {
-    this.append("Set-Cookie", String(value));
-    return this;
-  }
-
-  appendLink(value: Link | string): this {
-    this.append("Link", String(value));
-    return this;
-  }
-
-  build(): Headers {
-    return new Headers(this);
   }
 }
 
@@ -271,17 +49,9 @@ export class Headers implements Iterable<[string, string | string[]]> {
    * in an HTTP message.
    */
   static readonly nonCoalescingHeaders = new Set<string>([
-    "cookie",
     "set-cookie",
     "link",
   ]);
-
-  /**
-   * Returns a new empty `Headers` builder.
-   */
-  static builder(): HeadersBuilder {
-    return new HeadersBuilder();
-  }
 
   /**
    * Creates a new `Headers` instance from the given JSON object
@@ -292,13 +62,24 @@ export class Headers implements Iterable<[string, string | string[]]> {
       | Headers
       | Map<string, unknown>
       | Record<string, unknown>
-      | NameValueEntries,
+      | NameValueEntries
+      | null = null,
   ): Headers {
-    if (headers instanceof Headers) {
-      return headers;
-    } else {
-      return HeadersBuilder.from(headers).build();
+    const result = new Headers();
+    if (headers != null) {
+      if (headers instanceof Headers) {
+        for (const [name, value] of headers) {
+          result.append(name, value);
+        }
+      } else {
+        for (const [name, value] of multiEntries(
+          headers as Map<string, unknown>,
+        )) {
+          result.append(name, value);
+        }
+      }
     }
+    return result;
   }
 
   /**
@@ -306,28 +87,82 @@ export class Headers implements Iterable<[string, string | string[]]> {
    * @param value Raw headers string.
    */
   static parse(value: string): Headers {
-    const builder = new HeadersBuilder();
+    const builder = new Headers();
     for (const header of splitLines(value)) {
       const [name, value] = splitPair(header, ":");
       if (name && value) {
         builder.append(name, value);
       }
     }
-    return builder.build();
+    return builder;
   }
 
-  readonly [kMap]: Map<string, HeaderEntry>;
+  private readonly [kMap]: Map<string, HeaderEntry>;
 
-  constructor(builder: HeadersBuilder) {
+  constructor() {
     Object.defineProperty(this, kMap, {
-      value: new Map(builder[kMap]),
+      value: new Map(),
     });
   }
 
   *[Symbol.iterator](): Iterator<[string, string | string[]]> {
-    for (const entry of this[kMap].values()) {
-      yield entry.tuple();
+    for (const { name, value } of this[kMap].values()) {
+      yield [name, value];
     }
+  }
+
+  /**
+   * Creates a new header or replaces the previously created header with the
+   * given name.
+   */
+  set(name: string, value: unknown | readonly unknown[]): this {
+    if (name === "") {
+      throw new Error();
+    }
+    const nameLc = name.toLowerCase();
+    let entry = this[kMap].get(nameLc);
+    if (entry == null) {
+      this[kMap].set(nameLc, (entry = new HeaderEntry(name, nameLc)));
+    }
+    entry.set(stringify(value));
+    return this;
+  }
+
+  /**
+   * Creates a new header or updates the previously created header with the
+   * given name.
+   */
+  append(name: string, value: unknown | readonly unknown[]): this {
+    if (name === "") {
+      throw new Error();
+    }
+    const nameLc = name.toLowerCase();
+    let entry = this[kMap].get(nameLc);
+    if (entry == null) {
+      this[kMap].set(nameLc, (entry = new HeaderEntry(name, nameLc)));
+    }
+    entry.append(stringify(value));
+    return this;
+  }
+
+  /**
+   * Deletes a header with the given name.
+   */
+  delete(name: string): this {
+    if (name === "") {
+      throw new Error();
+    }
+    const nameLc = name.toLowerCase();
+    this[kMap].delete(nameLc);
+    return this;
+  }
+
+  /**
+   * Deletes all headers.
+   */
+  clear(): this {
+    this[kMap].clear();
+    return this;
   }
 
   /**
@@ -335,20 +170,31 @@ export class Headers implements Iterable<[string, string | string[]]> {
    * Header name is case-insensitive.
    */
   has(name: string): boolean {
-    return this[kMap].has(name.toLowerCase());
+    if (name === "") {
+      throw new Error();
+    }
+    const nameLc = name.toLowerCase();
+    return this[kMap].has(nameLc);
   }
 
   /**
    * Gets value of the header with the given name,
    * or `null` if it does not exist.
-   * If header has multiple values these will be joined into a single string
-   * using the standard separator.
    * Header name is case-insensitive.
    */
   get(name: string): string | null {
-    const entry = this[kMap].get(name.toLowerCase());
+    if (name === "") {
+      throw new Error();
+    }
+    const nameLc = name.toLowerCase();
+    const entry = this[kMap].get(nameLc);
     if (entry != null) {
-      return fromArray(entry.value);
+      const { value } = entry;
+      if (Array.isArray(value)) {
+        return value[0];
+      } else {
+        return value;
+      }
     } else {
       return null;
     }
@@ -359,103 +205,37 @@ export class Headers implements Iterable<[string, string | string[]]> {
    * or empty array if it does not exist.
    * Header name is case-insensitive.
    */
-  getAll(name: string): readonly string[] {
-    const entry = this[kMap].get(name.toLowerCase());
+  getAll(name: string): string[] {
+    if (name === "") {
+      throw new Error();
+    }
+    const nameLc = name.toLowerCase();
+    const entry = this[kMap].get(nameLc);
     if (entry != null) {
-      return toArray(entry.value);
+      const { value } = entry;
+      if (Array.isArray(value)) {
+        return value;
+      } else {
+        return [value];
+      }
     } else {
       return [];
     }
   }
 
-  /**
-   * Gets parsed value with the given name,
-   * or `null` if it does not exist.
-   * The specified parser will be applied to header string
-   * to convert it to a desired type.
-   * Header name is case-insensitive.
-   */
-  value<T>(name: string, parser: (value: string) => T): T | null {
-    const value = this.get(name);
-    if (value != null) {
-      return parser(value);
+  map<T>(name: string, parser: (value: string) => T | null): T | null {
+    const v = this.get(name);
+    if (v != null) {
+      return parser(v);
     } else {
       return null;
     }
   }
 
-  /**
-   * Gets all parsed values of the header with the given name,
-   * or empty array if it does not exist.
-   * The specified parser will be applied to all header strings
-   * to convert them to a desired type.
-   * Header name is case-insensitive.
-   * @param name
-   * @param parser
-   */
-  allValues<T>(name: string, parser: (value: string) => T): readonly T[] {
-    const value = this.getAll(name);
-    if (value != null) {
-      return value.map(parser);
-    } else {
-      return [];
-    }
-  }
-
-  contentLength(): number | null {
-    return this.value("Content-Length", Number);
-  }
-
-  contentType(): MimeType | null {
-    return this.value("Content-Type", MimeType.parse);
-  }
-
-  contentEncoding(): string | null {
-    return this.value("Content-Encoding", String);
-  }
-
-  accept(): Accept | null {
-    return this.value("Accept", Accept.parse);
-  }
-
-  cacheControl(): CacheControl | null {
-    return this.value("Cache-Control", CacheControl.parse);
-  }
-
-  etag(): ETag | null {
-    return this.value("ETag", ETag.parse);
-  }
-
-  ifMatch(): ETag | null {
-    return this.value("If-Match", ETag.parse);
-  }
-
-  ifNoneMatch(): ETag | null {
-    return this.value("If-None-Match", ETag.parse);
-  }
-
-  lastModified(): Date | null {
-    return this.value("Last-Modified", parseDate);
-  }
-
-  ifModifiedSince(): Date | null {
-    return this.value("If-Modified-Since", parseDate);
-  }
-
-  ifUnmodifiedSince(): Date | null {
-    return this.value("If-Unmodified-Since", parseDate);
-  }
-
-  allCookies(): readonly Cookie[] {
-    return this.allValues("Cookie", Cookie.parse);
-  }
-
-  allSetCookies(): readonly SetCookie[] {
-    return this.allValues("Set-Cookie", SetCookie.parse);
-  }
-
-  allLinks(): readonly Link[] {
-    return this.allValues("Link", Link.parse);
+  mapAll<T>(name: string, parser: (value: string) => T | null): T[] {
+    return this.getAll(name)
+      .map((v) => parser(v))
+      .filter((v) => v != null) as T[];
   }
 
   toJSON(): Record<string, string | string[]> {
@@ -465,9 +245,9 @@ export class Headers implements Iterable<[string, string | string[]]> {
   toString(): string {
     const lines: string[] = [];
     for (const entry of this[kMap].values()) {
-      const { name, nameLc, value } = entry;
-      if (Headers.nonCoalescingHeaders.has(nameLc)) {
-        for (const item of toArray(value)) {
+      const { name, value } = entry;
+      if (Array.isArray(value)) {
+        for (const item of value) {
           lines.push(`${name}: ${item}`);
         }
       } else {
@@ -476,24 +256,27 @@ export class Headers implements Iterable<[string, string | string[]]> {
     }
     return lines.join("\n") + "\n";
   }
+}
 
-  toBuilder(): HeadersBuilder {
-    return HeadersBuilder.from(this);
+function stringify(value: unknown | unknown[]): string | string[] {
+  if (Array.isArray(value)) {
+    return value.map(String);
+  } else {
+    return String(value);
   }
 }
 
-function toArray(value: string | readonly string[]): readonly string[] {
-  if (Array.isArray(value)) {
-    return value;
-  } else {
-    return [value as string];
+function concat(a: string | string[], b: string | string[]): string[] {
+  const x = Array.isArray(a);
+  const y = Array.isArray(b);
+  if (x && y) {
+    return [...a, ...b];
   }
-}
-
-function fromArray(value: string | readonly string[]): string {
-  if (Array.isArray(value)) {
-    return value[0];
-  } else {
-    return value as string;
+  if (x) {
+    return [...a, b as string];
   }
+  if (y) {
+    return [a as string, ...b];
+  }
+  return [a as string, b as string];
 }

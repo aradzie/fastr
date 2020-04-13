@@ -1,4 +1,4 @@
-import { HeadersBuilder } from "@webfx-http/headers";
+import { Cookie, Headers, SetCookie } from "@webfx-http/headers";
 import {
   Adapter,
   HttpRequest,
@@ -8,8 +8,8 @@ import {
 import { CookieJar } from "./cookiejar";
 
 /**
- * Returns a new middleware which remembers cookies sent in responses and
- * attaches these cookies to requests.
+ * Returns a new middleware which remembers cookies sent in the responses and
+ * attaches these cookies to the following requests.
  *
  * This makes the client behave like a web browser and allows testing stateful
  * HTTP sessions.
@@ -20,21 +20,22 @@ import { CookieJar } from "./cookiejar";
 export function cookies(jar = new CookieJar()): Middleware {
   return (adapter: Adapter): Adapter => {
     return async (request: HttpRequest): Promise<HttpResponse> => {
-      // Append cookies to request.
-      const builder = HeadersBuilder.from(request.headers ?? {});
-      for (const cookie of jar) {
-        builder.appendCookie(cookie);
-      }
-      const headers = builder.build();
+      // Compute cookies to send.
+      const cookie = new Cookie([
+        // Remembered cookies.
+        ...jar,
+        // User specified cookies.
+        ...(request.headers?.map("Cookie", Cookie.parse) ?? []),
+      ]);
 
-      // Make request.
+      // Append cookies to request.
       const response = await adapter({
         ...request,
-        headers,
+        headers: Headers.from(request.headers).set("Cookie", cookie),
       });
 
       // Save cookies from response.
-      jar.addAll(response.headers.allSetCookies());
+      jar.addAll(response.headers.mapAll("Set-Cookie", SetCookie.parse));
       return response;
     };
   };

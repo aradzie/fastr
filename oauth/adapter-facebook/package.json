@@ -12,6 +12,7 @@
     "node": ">=12.16"
   },
   "dependencies": {
+    "@webfx-http/headers": "^0.0.5-alpha.1",
     "@webfx-http/status": "^0.0.5-alpha.1",
     "@webfx-oauth/client": "^0.0.5-alpha.1",
     "@webfx-request/node": "^0.0.5-alpha.1"

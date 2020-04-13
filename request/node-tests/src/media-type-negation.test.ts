@@ -7,7 +7,8 @@ test("negotiate media type", async (t) => {
   // Arrange.
 
   const server = start((req, res) => {
-    const accept = Headers.from(req.headers).accept() ?? Accept.ANY;
+    const accept =
+      Headers.from(req.headers).map("Accept", Accept.parse) ?? Accept.ANY;
 
     if (accept.accepts("text/plain")) {
       res.statusCode = 200;
@@ -34,7 +35,7 @@ test("negotiate media type", async (t) => {
     const { ok, status, statusText, headers, body } = await req({
       url: "/test",
       method: "GET",
-      headers: Headers.builder().accept("text/plain").build(),
+      headers: new Headers().set("Accept", "text/plain"),
     });
 
     // Assert.
@@ -42,7 +43,10 @@ test("negotiate media type", async (t) => {
     t.true(ok);
     t.is(status, 200);
     t.is(statusText, "OK");
-    t.deepEqual(headers.contentType(), MimeType.TEXT_PLAIN);
+    t.deepEqual(
+      headers.map("Content-Type", MimeType.parse),
+      MimeType.TEXT_PLAIN,
+    );
     t.is(await body.text(), "text");
   }
 
@@ -52,7 +56,7 @@ test("negotiate media type", async (t) => {
     const { ok, status, statusText, headers, body } = await req({
       url: "/test",
       method: "GET",
-      headers: Headers.builder().accept("application/json").build(),
+      headers: new Headers().set("Accept", "application/json"),
     });
 
     // Assert.
@@ -60,7 +64,10 @@ test("negotiate media type", async (t) => {
     t.true(ok);
     t.is(status, 200);
     t.is(statusText, "OK");
-    t.deepEqual(headers.contentType(), MimeType.APPLICATION_JSON);
+    t.deepEqual(
+      headers.map("Content-Type", MimeType.parse),
+      MimeType.APPLICATION_JSON,
+    );
     t.deepEqual(await body.json(), { type: "json" });
   }
 });

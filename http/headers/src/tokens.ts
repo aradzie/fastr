@@ -16,23 +16,12 @@ export function parseTokens(value: string): Token[] {
   for (const item of splitList(value, ";")) {
     const [name, value] = splitPair(item, "=");
     if (name && value) {
-      tokens.push({ name, value: parseToken(value) });
+      tokens.push({ name, value });
     } else if (name) {
       tokens.push({ name, value: null });
     }
   }
   return tokens;
-}
-
-export function parseToken(input: string): string {
-  if (input.includes("%")) {
-    try {
-      input = decodeURIComponent(input);
-    } catch {
-      // Ignore.
-    }
-  }
-  return input;
 }
 
 export function stringifyTokens(tokens: readonly Token[]): string {
@@ -57,18 +46,6 @@ export function stringifyDate(date: Date | string): string {
   } else {
     return date.toUTCString();
   }
-}
-
-export function parseCookieValue(value: string): string {
-  try {
-    return decodeURIComponent(value);
-  } catch {
-    return value;
-  }
-}
-
-export function stringifyCookieValue(value: string): string {
-  return encodeURIComponent(value);
 }
 
 export class Scanner {

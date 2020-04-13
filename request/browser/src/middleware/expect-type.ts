@@ -19,25 +19,19 @@ export function expectType(
   const accept = new Accept(expectedType);
   return (adapter: Adapter): Adapter => {
     return async (request: HttpRequest): Promise<HttpResponse> => {
-      // Update request headers.
-      const headers = Headers.from(request.headers ?? {})
-        .toBuilder()
-        .accept(accept)
-        .build();
-      request = {
+      // Update request headers, make request with the new headers.
+      const response = await adapter({
         ...request,
-        headers,
-      };
-
-      // Make request.
-      const response = await adapter(request);
+        headers: Headers.from(request.headers).set("Accept", accept),
+      });
 
       // Check response.
       if (!isSuccess(response.status)) {
         return response;
       }
       const responseType =
-        response.headers.contentType() ?? MimeType.APPLICATION_OCTET_STREAM;
+        response.headers.map("Content-Type", MimeType.parse) ??
+        MimeType.APPLICATION_OCTET_STREAM;
       if (accept.accepts(responseType)) {
         return response;
       }

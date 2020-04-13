@@ -1,3 +1,4 @@
+import { Headers } from "@webfx-http/headers";
 import test from "ava";
 import { fakeOkResponse } from "../fake/fakes";
 import type { Adapter, HttpRequest, HttpResponse } from "../types";
@@ -72,7 +73,7 @@ function a(adapter: Adapter): Adapter {
     const { headers } = response;
     return {
       ...response,
-      headers: headers.toBuilder().append("X-Middleware", "a").build(),
+      headers: Headers.from(headers).append("X-Middleware", "a"),
     };
   };
 }
@@ -83,7 +84,7 @@ function b(adapter: Adapter): Adapter {
     const { headers } = response;
     return {
       ...response,
-      headers: headers.toBuilder().append("X-Middleware", "b").build(),
+      headers: Headers.from(headers).append("X-Middleware", "b"),
     };
   };
 }
@@ -94,7 +95,7 @@ function c(adapter: Adapter): Adapter {
     const { headers } = response;
     return {
       ...response,
-      headers: headers.toBuilder().append("X-Middleware", "c").build(),
+      headers: Headers.from(headers).append("X-Middleware", "c"),
     };
   };
 }

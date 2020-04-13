@@ -1,8 +1,7 @@
+import { Cookie } from "./cookie";
 import {
-  parseCookieValue,
   parseDate,
   parseTokens,
-  stringifyCookieValue,
   stringifyDate,
   stringifyTokens,
   Token,
@@ -21,12 +20,16 @@ export interface SetCookieInit {
  * Represents a command to create a new HTTP cookie on the client,
  * transferred in a response.
  *
- * RFC 2109 specifies the legal characters for name, value, path and domain.
+ * See https://tools.ietf.org/html/rfc6265
  */
 export class SetCookie {
   static from(value: SetCookie | string): SetCookie {
     if (typeof value === "string") {
-      return SetCookie.parse(value);
+      const parsed = SetCookie.parse(value);
+      if (parsed == null) {
+        throw new TypeError("Invalid Set-Cookie header.");
+      }
+      return parsed;
     } else {
       return value;
     }
@@ -34,13 +37,14 @@ export class SetCookie {
 
   /**
    * Creates a new instance of `Cookie` by parsing the given header string.
+   * See https://tools.ietf.org/html/rfc6265#section-4.1.1
+   * See https://tools.ietf.org/html/rfc6265#section-5.2
    */
-  static parse(input: string): SetCookie {
+  static parse(input: string): SetCookie | null {
     const [head, ...rest] = parseTokens(input);
     if (!head) {
-      return new SetCookie("invalid", ""); // We never fail.
+      return null;
     }
-    const { name, value } = head;
     let path = null;
     let domain = null;
     let maxAge = null;
@@ -77,14 +81,18 @@ export class SetCookie {
           break;
       }
     }
-    return new SetCookie(name, parseCookieValue(value ?? ""), {
-      path,
-      domain,
-      maxAge,
-      expires,
-      secure,
-      httpOnly,
-    });
+    return new SetCookie(
+      head.name,
+      Cookie.codec.decode(unquote(head.value ?? "")),
+      {
+        path,
+        domain,
+        maxAge,
+        expires,
+        secure,
+        httpOnly,
+      },
+    );
   }
 
   /**
@@ -159,7 +167,7 @@ export class SetCookie {
       secure,
       httpOnly,
     } = this;
-    const tokens: Token[] = [{ name, value: stringifyCookieValue(value) }];
+    const tokens: Token[] = [{ name, value: Cookie.codec.encode(value) }];
     if (path != null) {
       tokens.push({ name: "path", value: path });
     }
@@ -179,5 +187,14 @@ export class SetCookie {
       tokens.push({ name: "httpOnly", value: null });
     }
     return stringifyTokens(tokens);
+  }
+}
+
+function unquote(value: string): string {
+  const { length } = value;
+  if (length >= 2 && value[0] === '"' && value[length - 1] === '"') {
+    return value.substring(0, length - 1);
+  } else {
+    return value;
   }
 }

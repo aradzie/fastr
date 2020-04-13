@@ -19,10 +19,7 @@ export function authenticate(header: string): Middleware {
       }
       return adapter({
         ...request,
-        headers: Headers.from(request.headers ?? {})
-          .toBuilder()
-          .set("Authorization", header)
-          .build(),
+        headers: Headers.from(request.headers).set("Authorization", header),
       });
     };
   };

@@ -140,5 +140,5 @@ test("toString", (t) => {
 
 test("escape cookie value", (t) => {
   const value = ' ",;\u{1F36D},;" ';
-  t.is(SetCookie.parse(String(new SetCookie("name", value))).value, value);
+  t.is(SetCookie.parse(String(new SetCookie("name", value)))?.value, value);
 });

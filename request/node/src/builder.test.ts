@@ -1,4 +1,4 @@
-import { Headers } from "@webfx-http/headers";
+import { Headers, MimeType } from "@webfx-http/headers";
 import test from "ava";
 import { Readable } from "stream";
 import { RequestBuilder } from "./builder";
@@ -120,7 +120,7 @@ test("send text body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, "some text");
-  t.is(req1.headers?.contentType()?.name, "text/plain");
+  t.is(req1.headers?.map("Content-Type", MimeType.parse)?.name, "text/plain");
 });
 
 test("send text body with custom content type", async (t) => {
@@ -145,7 +145,7 @@ test("send text body with custom content type", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, "some text");
-  t.is(req1.headers?.contentType()?.name, "text/html");
+  t.is(req1.headers?.map("Content-Type", MimeType.parse)?.name, "text/html");
 });
 
 test("send buffer body", async (t) => {
@@ -171,7 +171,10 @@ test("send buffer body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
-  t.is(req1.headers?.contentType()?.name, "application/octet-stream");
+  t.is(
+    req1.headers?.map("Content-Type", MimeType.parse)?.name,
+    "application/octet-stream",
+  );
 });
 
 test("send buffer body with custom content type", async (t) => {
@@ -197,7 +200,7 @@ test("send buffer body with custom content type", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
-  t.is(req1.headers?.contentType()?.name, "foo/bar");
+  t.is(req1.headers?.map("Content-Type", MimeType.parse)?.name, "foo/bar");
 });
 
 test("send Readable body", async (t) => {
@@ -223,7 +226,10 @@ test("send Readable body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
-  t.is(req1.headers?.contentType()?.name, "application/octet-stream");
+  t.is(
+    req1.headers?.map("Content-Type", MimeType.parse)?.name,
+    "application/octet-stream",
+  );
 });
 
 test("send Readable body with custom content type", async (t) => {
@@ -249,7 +255,7 @@ test("send Readable body with custom content type", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
-  t.is(req1.headers?.contentType()?.name, "foo/bar");
+  t.is(req1.headers?.map("Content-Type", MimeType.parse)?.name, "foo/bar");
 });
 
 test("send json body", async (t) => {
@@ -274,7 +280,10 @@ test("send json body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, '{"type":"json"}');
-  t.is(req1.headers?.contentType()?.name, "application/json");
+  t.is(
+    req1.headers?.map("Content-Type", MimeType.parse)?.name,
+    "application/json",
+  );
 });
 
 test("send json body with custom content type", async (t) => {
@@ -299,5 +308,8 @@ test("send json body with custom content type", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, '{"type":"json"}');
-  t.is(req1.headers?.contentType()?.name, "application/foo+json");
+  t.is(
+    req1.headers?.map("Content-Type", MimeType.parse)?.name,
+    "application/foo+json",
+  );
 });

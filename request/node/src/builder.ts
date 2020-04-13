@@ -25,7 +25,7 @@ export class RequestBuilder {
   readonly url: string;
   private readonly _eventEmitter = new EventEmitter();
   private readonly _query = new URLSearchParams();
-  private readonly _headers = Headers.builder();
+  private readonly _headers = new Headers();
   private readonly _accept: (MimeType | string)[] = [];
   private readonly _options: HttpRequestOptions = {};
 
@@ -222,16 +222,15 @@ export class RequestBuilder {
   ): HttpRequest {
     const url = mergeSearchParams(this.url, this._query);
     if (body != null && contentType != null) {
-      this._headers.contentType(contentType);
+      this._headers.set("Content-Type", contentType);
     }
     if (this._accept.length > 0) {
-      this._headers.accept(new Accept(this._accept));
+      this._headers.set("Accept", new Accept(this._accept));
     }
-    const headers = this._headers.build();
     return {
       method: this.method,
       url,
-      headers,
+      headers: this._headers,
       body,
       options: this._options,
     };
