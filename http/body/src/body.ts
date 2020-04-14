@@ -104,7 +104,7 @@ export class Body {
   async text(): Promise<string> {
     return (await this.buffer()).toString(
       normalizeCharset(
-        this._type?.parameters?.charset ?? this._charset ?? "utf-8",
+        this._type?.parameters?.get("charset") ?? this._charset ?? "utf-8",
       ),
     );
   }

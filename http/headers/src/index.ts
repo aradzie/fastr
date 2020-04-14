@@ -1,10 +1,21 @@
 export { Accept } from "./accept";
+export { AcceptEncoding } from "./accept-encoding";
 export { CacheControl } from "./cache-control";
 export { Cookie } from "./cookie";
+export { CookieCodec, CodecDelegate } from "./cookie-codec";
 export { ETag } from "./etag";
 export { Headers } from "./headers";
-export { Link } from "./link";
-export { MediaType } from "./mediatype";
-export { Parameters } from "./parameters";
+export { MediaType } from "./media-type";
 export { SetCookie } from "./set-cookie";
-export { entries, multiEntries } from "./util";
+export {
+  createError,
+  InvalidHeaderNameError,
+  InvalidHeaderValueError,
+  InvalidCookieHeaderError,
+  InvalidSetCookieHeaderError,
+  InvalidMediaTypeError,
+  InvalidAcceptError,
+  InvalidAcceptEncodingError,
+  InvalidCacheControlHeaderError,
+} from "./errors";
+export { entriesOf, multiEntriesOf } from "./util";

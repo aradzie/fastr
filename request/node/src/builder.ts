@@ -1,4 +1,9 @@
-import { Accept, Headers, MediaType, multiEntries } from "@webfx-http/headers";
+import {
+  Accept,
+  Headers,
+  MediaType,
+  multiEntriesOf,
+} from "@webfx-http/headers";
 import { mergeSearchParams } from "@webfx-http/url";
 import { EventEmitter } from "events";
 import { Readable } from "stream";
@@ -26,7 +31,7 @@ export class RequestBuilder {
   private readonly _eventEmitter = new EventEmitter();
   private readonly _query = new URLSearchParams();
   private readonly _headers = new Headers();
-  private readonly _accept: (MediaType | string)[] = [];
+  private readonly _accept = new Accept();
   private readonly _options: HttpRequestOptions = {};
 
   constructor(adapter: Adapter, method: string, url: URL | string) {
@@ -81,7 +86,9 @@ export class RequestBuilder {
       // query(params: Map<string, unknown>): this;
       // query(values: Record<string, unknown>): this;
       // query(entries: NameValueEntries): this;
-      for (const [name, value] of multiEntries(arg0 as Map<string, unknown>)) {
+      for (const [name, value] of multiEntriesOf(
+        arg0 as Map<string, unknown>,
+      )) {
         this._query.append(name, String(value));
       }
       return this;
@@ -117,7 +124,9 @@ export class RequestBuilder {
       // header(headers: Map<string, unknown>): this;
       // header(headers: Record<string, unknown>): this;
       // header(headers: NameValueEntries): this;
-      for (const [name, value] of multiEntries(arg0 as Map<string, unknown>)) {
+      for (const [name, value] of multiEntriesOf(
+        arg0 as Map<string, unknown>,
+      )) {
         this._headers.append(name, String(value));
       }
       return this;
@@ -128,10 +137,11 @@ export class RequestBuilder {
 
   /**
    * Appends the given value to the `Accept` HTTP header.
-   * @param type New mime type to append.
+   * @param type A new mime type to accept.
+   * @param q The quality parameter.
    */
-  accept(type: MediaType | string): this {
-    this._accept.push(type);
+  accept(type: MediaType | string, q: number | null = null): this {
+    this._accept.add(String(type), q);
     return this;
   }
 
@@ -224,8 +234,8 @@ export class RequestBuilder {
     if (body != null && contentType != null) {
       this._headers.set("Content-Type", contentType);
     }
-    if (this._accept.length > 0) {
-      this._headers.set("Accept", new Accept(this._accept));
+    if (!this._accept.empty) {
+      this._headers.set("Accept", this._accept);
     }
     return {
       method: this.method,

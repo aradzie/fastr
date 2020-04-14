@@ -3,9 +3,11 @@ import { Cookie } from "./cookie";
 
 test("parse", (t) => {
   t.deepEqual(
-    Cookie.parse(" ; X = ; Name0 = Value0 ;Name1=Value1"),
+    Cookie.parse("=; X=; Name0=Value0; Name1=Value1"),
     new Cookie(
       new Map([
+        ["", ""],
+        ["X", ""],
         ["Name0", "Value0"],
         ["Name1", "Value1"],
       ]),

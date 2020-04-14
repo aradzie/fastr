@@ -1,11 +1,10 @@
-import { InvalidAcceptError } from "./errors";
-import { MediaType } from "./media-type";
+import { InvalidAcceptEncodingError } from "./errors";
 import { findQualityParam, Scanner } from "./syntax";
 import type { Header } from "./types";
 
 const kList = Symbol("kList");
 
-export class Entry {
+class Entry {
   constructor(readonly value: string, readonly q: number | null = null) {}
 
   toString(): string {
@@ -18,14 +17,14 @@ export class Entry {
 }
 
 /**
- * Parsed `Accept` header.
+ * Parsed `Accept-Encoding` header.
  *
- * See https://tools.ietf.org/html/rfc7231#section-5.3.2
+ * See https://tools.ietf.org/html/rfc7231#section-5.3.4
  */
-export class Accept implements Header, Iterable<Entry> {
-  static from(value: Accept | string): Accept {
+export class AcceptEncoding implements Header, Iterable<Entry> {
+  static from(value: AcceptEncoding | string): AcceptEncoding {
     if (typeof value === "string") {
-      return Accept.parse(value);
+      return AcceptEncoding.parse(value);
     } else {
       return value;
     }
@@ -34,50 +33,38 @@ export class Accept implements Header, Iterable<Entry> {
   /**
    * Creates a new instance of `Accept` by parsing the given header string.
    */
-  static parse(input: string): Accept {
-    // Accept = #( media-range [ accept-params ] )
-    //
-    // media-range    = ( "*/*"
-    //                  / ( type "/" "*" )
-    //                  / ( type "/" subtype )
-    //                  ) *( OWS ";" OWS parameter )
-    // accept-params  = weight *( accept-ext )
-    // weight         = OWS ";" OWS "q=" qvalue
-    // qvalue         = ( "0" [ "." 0*3DIGIT ] )
-    //                / ( "1" [ "." 0*3("0") ] )
-    // accept-ext     = OWS ";" OWS token [ "=" ( token / quoted-string ) ]
-    const accept = new Accept();
+  static parse(input: string): AcceptEncoding {
+    // Accept-Encoding  = #( codings [ weight ] )
+    // codings          = content-coding / "identity" / "*"
+    // content-coding   = token
+    // weight           = OWS ";" OWS "q=" qvalue
+    // qvalue           = ( "0" [ "." 0*3DIGIT ] )
+    //                  / ( "1" [ "." 0*3("0") ] )
+    const accept = new AcceptEncoding();
     const scanner = new Scanner(input);
     while (scanner.hasNext()) {
-      const type = scanner.readToken();
-      if (type == null) {
-        throw new InvalidAcceptError();
-      }
-      if (!scanner.readSeparator(0x2f /* / */)) {
-        throw new InvalidAcceptError();
-      }
-      const subtype = scanner.readToken();
-      if (subtype == null) {
-        throw new InvalidAcceptError();
+      const token = scanner.readToken();
+      if (token == null) {
+        throw new InvalidAcceptEncodingError();
       }
       const params = scanner.readParams();
       if (params != null) {
-        accept.add(`${type}/${subtype}`, findQualityParam(params));
+        accept.add(token, findQualityParam(params));
       } else {
-        accept.add(`${type}/${subtype}`);
+        accept.add(token);
       }
-      if (scanner.hasNext() && !scanner.readSeparator(0x2c /* , */)) {
-        throw new InvalidAcceptError();
+      if (!scanner.readSeparator(0x2c /* , */)) {
+        break;
       }
     }
     return accept;
   }
 
   /**
-   * Returns an `Accept` instance which accepts any media type `"* / *"`.
+   * Returns an `AcceptEncoding` instance which accepts `"identity"`.
    */
-  static any(): Accept {
-    return new Accept().add("*/*");
+  static identity(): AcceptEncoding {
+    return new AcceptEncoding().add("identity");
   }
 
   private readonly [kList]: Entry[];
@@ -97,7 +84,7 @@ export class Accept implements Header, Iterable<Entry> {
   }
 
   /**
-   * Adds a new accepted type with the given quality parameter.
+   * Adds a new accepted encoding with the given quality parameter.
    */
   add(value: string, q: number | null = null): this {
     const entry = new Entry(value, q);
@@ -122,16 +109,16 @@ export class Accept implements Header, Iterable<Entry> {
   }
 
   /**
-   * Tests whether the specified media type is accepted.
-   * @param candidate A candidate media type.
-   * @return Whether the candidate media type is accepted.
+   * Tests whether the specified encoding is accepted.
+   * @param candidate A candidate encoding.
+   * @return Whether the candidate encoding is accepted.
    */
   accepts(candidate: string): boolean | number {
-    if (this[kList].length === 0) {
+    if (candidate === "identity") {
       return true;
     }
     for (const item of this[kList]) {
-      if (MediaType.from(item.value).matches(candidate)) {
+      if (item.value === candidate) {
         return item.q ?? true;
       }
     }
@@ -139,9 +126,9 @@ export class Accept implements Header, Iterable<Entry> {
   }
 
   /**
-   * From the given list of candidate media types returns the one which
+   * From the given list of candidate encodings returns the one which
    * matches best, or `null` if no candidate matched.
-   * @param candidates A list of candidate media types to chose from.
+   * @param candidates A list of candidate encodings to chose from.
    * @return The best matching candidate, or `null` if none matches.
    */
   select(...candidates: readonly string[]): string | null {
@@ -162,6 +149,6 @@ export class Accept implements Header, Iterable<Entry> {
   }
 
   get [Symbol.toStringTag](): string {
-    return "Accept";
+    return "AcceptEncoding";
   }
 }

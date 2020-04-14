@@ -3,6 +3,88 @@ import { Cookie } from "./cookie";
 import { Headers } from "./headers";
 import { SetCookie } from "./set-cookie";
 
+test("reject invalid header names", (t) => {
+  const headers = new Headers();
+
+  t.throws(
+    () => {
+      headers.set("\0", "something");
+    },
+    {
+      instanceOf: TypeError,
+      code: "ERR_INVALID_HEADER_NAME",
+    },
+  );
+  t.throws(
+    () => {
+      headers.append("\0", "something");
+    },
+    {
+      instanceOf: TypeError,
+      code: "ERR_INVALID_HEADER_NAME",
+    },
+  );
+  t.throws(
+    () => {
+      headers.delete("\0");
+    },
+    {
+      instanceOf: TypeError,
+      code: "ERR_INVALID_HEADER_NAME",
+    },
+  );
+  t.throws(
+    () => {
+      headers.has("\0");
+    },
+    {
+      instanceOf: TypeError,
+      code: "ERR_INVALID_HEADER_NAME",
+    },
+  );
+  t.throws(
+    () => {
+      headers.get("\0");
+    },
+    {
+      instanceOf: TypeError,
+      code: "ERR_INVALID_HEADER_NAME",
+    },
+  );
+  t.throws(
+    () => {
+      headers.getAll("\0");
+    },
+    {
+      instanceOf: TypeError,
+      code: "ERR_INVALID_HEADER_NAME",
+    },
+  );
+});
+
+test("reject invalid header values", (t) => {
+  const headers = new Headers();
+
+  t.throws(
+    () => {
+      headers.set("header", "\0");
+    },
+    {
+      instanceOf: TypeError,
+      code: "ERR_INVALID_HEADER_VALUE",
+    },
+  );
+  t.throws(
+    () => {
+      headers.append("header", "\0");
+    },
+    {
+      instanceOf: TypeError,
+      code: "ERR_INVALID_HEADER_VALUE",
+    },
+  );
+});
+
 test("mutate", (t) => {
   const headers = new Headers()
     .set("foo", "a")

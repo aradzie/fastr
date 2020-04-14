@@ -1,40 +1,40 @@
 import type { NameValueEntries } from "./types";
 
-export function entries(
+export function entriesOf(
   value: Map<string, unknown>,
 ): IterableIterator<[string, string]>;
 
-export function entries(
+export function entriesOf(
   value: Record<string, unknown>,
 ): IterableIterator<[string, string]>;
 
-export function entries(
+export function entriesOf(
   value: NameValueEntries,
 ): IterableIterator<[string, string]>;
 
-export function* entries(arg: unknown): IterableIterator<[string, string]> {
+export function* entriesOf(arg: unknown): IterableIterator<[string, string]> {
   // Map<string, unknown> overload.
   if (arg instanceof Map) {
-    yield* entries0(arg);
+    yield* entriesOf0(arg);
     return;
   }
 
   // NameValueEntries overload.
   if (Array.isArray(arg)) {
-    yield* entries0(arg);
+    yield* entriesOf0(arg);
     return;
   }
 
   // Record<string, unknown> overload.
   if (typeof arg === "object" && arg != null) {
-    yield* entries0(Object.entries(arg));
+    yield* entriesOf0(Object.entries(arg));
     return;
   }
 
   throw new TypeError();
 }
 
-function* entries0(
+function* entriesOf0(
   entries: Iterable<readonly [string, unknown]>,
 ): IterableIterator<[string, string]> {
   for (const [name, value] of entries) {
@@ -66,7 +66,7 @@ function* entries0(
  * ]
  * ```
  */
-export function multiEntries(
+export function multiEntriesOf(
   value: Map<string, unknown>,
 ): IterableIterator<[string, string]>;
 
@@ -92,7 +92,7 @@ export function multiEntries(
  * ]
  * ```
  */
-export function multiEntries(
+export function multiEntriesOf(
   value: Record<string, unknown>,
 ): IterableIterator<[string, string]>;
 
@@ -120,35 +120,35 @@ export function multiEntries(
  * ]
  * ```
  */
-export function multiEntries(
+export function multiEntriesOf(
   value: NameValueEntries,
 ): IterableIterator<[string, string]>;
 
-export function* multiEntries(
+export function* multiEntriesOf(
   arg: unknown,
 ): IterableIterator<[string, string]> {
   // Map<string, unknown> overload.
   if (arg instanceof Map) {
-    yield* multiEntries0(arg);
+    yield* multiEntriesOf0(arg);
     return;
   }
 
   // NameValueEntries overload.
   if (Array.isArray(arg)) {
-    yield* multiEntries0(arg);
+    yield* multiEntriesOf0(arg);
     return;
   }
 
   // Record<string, unknown> overload.
   if (typeof arg === "object" && arg != null) {
-    yield* multiEntries0(Object.entries(arg));
+    yield* multiEntriesOf0(Object.entries(arg));
     return;
   }
 
   throw new TypeError();
 }
 
-function* multiEntries0(
+function* multiEntriesOf0(
   entries: Iterable<readonly [string, unknown]>,
 ): IterableIterator<[string, string]> {
   for (const [name, value] of entries) {

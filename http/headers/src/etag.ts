@@ -1,7 +1,9 @@
+import type { Header } from "./types";
+
 /**
  * Parsed `E-Tag` header.
  */
-export class ETag {
+export class ETag implements Header {
   static from(value: ETag | string): ETag {
     if (typeof value === "string") {
       return new ETag(value);
@@ -28,18 +30,18 @@ export class ETag {
       weak = true;
       value = value.substring(2);
     }
-    if (value.length > 2 && value.startsWith('"') && value.endsWith('"')) {
+    if (value.length >= 2 && value.startsWith('"') && value.endsWith('"')) {
       value = value.substring(1, value.length - 1);
     }
     this.value = value;
     this.weak = weak;
   }
 
-  toJSON(): string {
-    return this.toString();
-  }
-
   toString(): string {
     return `${this.weak ? "W/" : ""}"${this.value}"`;
+  }
+
+  get [Symbol.toStringTag](): string {
+    return "ETag";
   }
 }

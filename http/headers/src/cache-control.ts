@@ -1,5 +1,6 @@
-import { splitPair } from "./strings";
-import { Token } from "./tokens";
+import { InvalidCacheControlHeaderError } from "./errors";
+import { Scanner } from "./syntax";
+import type { Header } from "./types";
 
 export interface CacheControlInit {
   readonly isPublic?: boolean;
@@ -16,7 +17,7 @@ export interface CacheControlInit {
 /**
  * Parsed `Cache-Control` header.
  */
-export class CacheControl {
+export class CacheControl implements Header {
   static from(value: CacheControl | string): CacheControl {
     if (typeof value === "string") {
       return CacheControl.parse(value);
@@ -28,6 +29,13 @@ export class CacheControl {
   /**
    * Creates a new instance of `CacheControl` by parsing
    * the given header string.
+   *
+   * See https://tools.ietf.org/html/rfc7234#section-5.2
+   *
+   * ```
+   * Cache-Control   = 1#cache-directive
+   * cache-directive = token [ "=" ( token / quoted-string ) ]
+   * ```
    */
   static parse(input: string): CacheControl {
     let isPublic = false;
@@ -39,8 +47,12 @@ export class CacheControl {
     let proxyRevalidate = false;
     let maxAge: number | null = null;
     let sMaxAge: number | null = null;
-    for (const token of input.split(",")) {
-      const [name, value] = splitPair(token, "=");
+    const scanner = new Scanner(input);
+    while (scanner.hasNext()) {
+      const name = scanner.readToken();
+      if (name == null) {
+        throw new InvalidCacheControlHeaderError();
+      }
       switch (name.toLowerCase()) {
         case "public":
           isPublic = true;
@@ -64,18 +76,35 @@ export class CacheControl {
           proxyRevalidate = true;
           break;
         case "max-age":
-          if (value) {
-            maxAge = Number(value);
+          if (scanner.readSeparator(0x3d /* = */)) {
+            const value = scanner.readTokenOrQuotedString();
+            if (value) {
+              maxAge = Number(value);
+            } else {
+              throw new InvalidCacheControlHeaderError();
+            }
+          } else {
+            throw new InvalidCacheControlHeaderError();
           }
           break;
         case "s-maxage":
-          if (value) {
-            sMaxAge = Number(value);
+          if (scanner.readSeparator(0x3d /* = */)) {
+            const value = scanner.readTokenOrQuotedString();
+            if (value) {
+              sMaxAge = Number(value);
+            } else {
+              throw new InvalidCacheControlHeaderError();
+            }
+          } else {
+            throw new InvalidCacheControlHeaderError();
           }
           break;
         default:
           // TODO add extension such as "immutable"
           break;
+      }
+      if (!scanner.readSeparator(0x2c /* , */)) {
+        break;
       }
     }
     return new CacheControl({
@@ -124,36 +153,38 @@ export class CacheControl {
   }
 
   toString(): string {
-    const tokens: Token[] = [];
+    const tokens: string[] = [];
     if (this.isPublic) {
-      tokens.push({ name: "public", value: null });
+      tokens.push("public");
     }
     if (this.isPrivate) {
-      tokens.push({ name: "private", value: null });
+      tokens.push("private");
     }
     if (this.noCache) {
-      tokens.push({ name: "no-cache", value: null });
+      tokens.push("no-cache");
     }
     if (this.noStore) {
-      tokens.push({ name: "no-store", value: null });
+      tokens.push("no-store");
     }
     if (this.noTransform) {
-      tokens.push({ name: "no-transform", value: null });
+      tokens.push("no-transform");
     }
     if (this.mustRevalidate) {
-      tokens.push({ name: "must-revalidate", value: null });
+      tokens.push("must-revalidate");
     }
     if (this.proxyRevalidate) {
-      tokens.push({ name: "proxy-revalidate", value: null });
+      tokens.push("proxy-revalidate");
     }
     if (this.maxAge != null) {
-      tokens.push({ name: "max-age", value: String(this.maxAge) });
+      tokens.push(`max-age=${this.maxAge}`);
     }
     if (this.sMaxAge != null) {
-      tokens.push({ name: "s-maxage", value: String(this.sMaxAge) });
+      tokens.push(`s-maxage=${this.sMaxAge}`);
     }
-    return tokens
-      .map(({ name, value }) => (value != null ? `${name}=${value}` : name))
-      .join(", ");
+    return tokens.join(", ");
+  }
+
+  get [Symbol.toStringTag](): string {
+    return "CacheControl";
   }
 }

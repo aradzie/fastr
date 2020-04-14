@@ -1,6 +1,8 @@
+import { InvalidHeaderNameError, InvalidHeaderValueError } from "./errors";
 import { splitLines, splitPair } from "./strings";
+import { isToken, isValidHeaderValue } from "./syntax";
 import type { NameValueEntries } from "./types";
-import { multiEntries } from "./util";
+import { multiEntriesOf } from "./util";
 
 const kMap = Symbol("kMap");
 
@@ -23,15 +25,11 @@ class HeaderEntry {
     this.nameLc = nameLc;
   }
 
-  set(v: string | string[]): void {
-    if (Headers.nonCoalescingHeaders.has(this.nameLc)) {
-      this.value = concat([], v);
-    } else {
-      this.value = concat([], v).join(", ");
-    }
+  set(v: string): void {
+    this.value = v;
   }
 
-  append(v: string | string[]): void {
+  append(v: string): void {
     if (Headers.nonCoalescingHeaders.has(this.nameLc)) {
       this.value = concat(this.value, v);
     } else {
@@ -48,10 +46,7 @@ export class Headers implements Iterable<[string, string | string[]]> {
    * The set of multi-value header names whose values are kept on separate lines
    * in an HTTP message.
    */
-  static readonly nonCoalescingHeaders = new Set<string>([
-    "set-cookie",
-    "link",
-  ]);
+  static readonly nonCoalescingHeaders = new Set<string>(["set-cookie"]);
 
   /**
    * Creates a new `Headers` instance by parsing the given raw headers string.
@@ -87,7 +82,7 @@ export class Headers implements Iterable<[string, string | string[]]> {
           this.append(name, value);
         }
       } else {
-        for (const [name, value] of multiEntries(
+        for (const [name, value] of multiEntriesOf(
           data as Map<string, unknown>,
         )) {
           this.append(name, value);
@@ -106,16 +101,20 @@ export class Headers implements Iterable<[string, string | string[]]> {
    * Creates a new header or replaces the previously created header with the
    * given name.
    */
-  set(name: string, value: unknown | readonly unknown[]): this {
-    if (name === "") {
-      throw new Error();
+  set(name: string, value: unknown): this {
+    if (!isToken(name)) {
+      throw new InvalidHeaderNameError();
+    }
+    let stringified;
+    if (value == null || !isValidHeaderValue((stringified = String(value)))) {
+      throw new InvalidHeaderValueError();
     }
     const nameLc = name.toLowerCase();
     let entry = this[kMap].get(nameLc);
     if (entry == null) {
       this[kMap].set(nameLc, (entry = new HeaderEntry(name, nameLc)));
     }
-    entry.set(stringify(value));
+    entry.set(stringified);
     return this;
   }
 
@@ -123,16 +122,20 @@ export class Headers implements Iterable<[string, string | string[]]> {
    * Creates a new header or updates the previously created header with the
    * given name.
    */
-  append(name: string, value: unknown | readonly unknown[]): this {
-    if (name === "") {
-      throw new Error();
+  append(name: string, value: unknown): this {
+    if (!isToken(name)) {
+      throw new InvalidHeaderNameError();
+    }
+    let stringified;
+    if (value == null || !isValidHeaderValue((stringified = String(value)))) {
+      throw new InvalidHeaderValueError();
     }
     const nameLc = name.toLowerCase();
     let entry = this[kMap].get(nameLc);
     if (entry == null) {
       this[kMap].set(nameLc, (entry = new HeaderEntry(name, nameLc)));
     }
-    entry.append(stringify(value));
+    entry.append(stringified);
     return this;
   }
 
@@ -140,8 +143,8 @@ export class Headers implements Iterable<[string, string | string[]]> {
    * Deletes a header with the given name.
    */
   delete(name: string): this {
-    if (name === "") {
-      throw new Error();
+    if (!isToken(name)) {
+      throw new InvalidHeaderNameError();
     }
     const nameLc = name.toLowerCase();
     this[kMap].delete(nameLc);
@@ -161,8 +164,8 @@ export class Headers implements Iterable<[string, string | string[]]> {
    * Header name is case-insensitive.
    */
   has(name: string): boolean {
-    if (name === "") {
-      throw new Error();
+    if (!isToken(name)) {
+      throw new InvalidHeaderNameError();
     }
     const nameLc = name.toLowerCase();
     return this[kMap].has(nameLc);
@@ -174,8 +177,8 @@ export class Headers implements Iterable<[string, string | string[]]> {
    * Header name is case-insensitive.
    */
   get(name: string): string | null {
-    if (name === "") {
-      throw new Error();
+    if (!isToken(name)) {
+      throw new InvalidHeaderNameError();
     }
     const nameLc = name.toLowerCase();
     const entry = this[kMap].get(nameLc);
@@ -197,8 +200,8 @@ export class Headers implements Iterable<[string, string | string[]]> {
    * Header name is case-insensitive.
    */
   getAll(name: string): string[] {
-    if (name === "") {
-      throw new Error();
+    if (!isToken(name)) {
+      throw new InvalidHeaderNameError();
     }
     const nameLc = name.toLowerCase();
     const entry = this[kMap].get(nameLc);
@@ -246,14 +249,6 @@ export class Headers implements Iterable<[string, string | string[]]> {
       }
     }
     return lines.join("\n") + "\n";
-  }
-}
-
-function stringify(value: unknown | unknown[]): string | string[] {
-  if (Array.isArray(value)) {
-    return value.map(String);
-  } else {
-    return String(value);
   }
 }
 

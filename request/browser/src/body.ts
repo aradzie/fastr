@@ -1,4 +1,4 @@
-import { multiEntries } from "@webfx-http/headers";
+import { multiEntriesOf } from "@webfx-http/headers";
 import type { BodyDataType, NameValueEntries } from "./types";
 
 export function guessContentType(
@@ -35,7 +35,9 @@ export function toFormData(
     return [body, "multipart/form-data"];
   }
   if (!(body instanceof URLSearchParams)) {
-    body = new URLSearchParams([...multiEntries(body as Map<string, unknown>)]);
+    body = new URLSearchParams([
+      ...multiEntriesOf(body as Map<string, unknown>),
+    ]);
   }
   return [body, "application/x-www-form-urlencoded"];
 }

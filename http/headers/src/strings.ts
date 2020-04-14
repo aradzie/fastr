@@ -25,45 +25,6 @@ export function splitPair(
 }
 
 /**
- * Splits the given input string into a list of substrings
- * on the all occurrences of the given separator.
- * Empty substrings are ignored.
- * @param input The input string.
- * @param separator The separator.
- */
-export function splitList(
-  input: string,
-  separator: string | number,
-): readonly string[] {
-  if (typeof separator === "string") {
-    separator = separator.charCodeAt(0);
-  }
-  const items: string[] = [];
-  const { length } = input;
-  let last = 0;
-  let pos = 0;
-  while (pos < length) {
-    if (input.charCodeAt(pos) === separator) {
-      if (pos > last) {
-        const item = trimSubstring(input, last, pos);
-        if (item.length > 0) {
-          items.push(item);
-        }
-      }
-      last = pos + 1;
-    }
-    pos += 1;
-  }
-  if (pos > last) {
-    const item = trimSubstring(input, last, pos);
-    if (item.length > 0) {
-      items.push(item);
-    }
-  }
-  return items;
-}
-
-/**
  * Splits the given input string into a list of lines
  * on the all new line separators such as "\n" and "\r".
  * Empty lines are ignored.
@@ -101,7 +62,6 @@ function trimSubstring(
   begin: number,
   end: number = input.length,
 ): string {
-  // TODO https://fetch.spec.whatwg.org/#http-whitespace
   while (begin < end) {
     const ch = input.charCodeAt(begin);
     if (ch === 32) {

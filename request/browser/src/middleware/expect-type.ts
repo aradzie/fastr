@@ -16,7 +16,10 @@ import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
 export function expectType(
   ...expectedType: readonly (MediaType | string)[]
 ): Middleware {
-  const accept = new Accept(expectedType);
+  const accept = new Accept();
+  for (const item of expectedType) {
+    accept.add(String(item));
+  }
   return (adapter: Adapter): Adapter => {
     return async (request: HttpRequest): Promise<HttpResponse> => {
       // Update request headers, make request with the new headers.
@@ -32,7 +35,7 @@ export function expectType(
       const responseType =
         response.headers.map("Content-Type", MediaType.parse) ??
         MediaType.APPLICATION_OCTET_STREAM;
-      if (accept.accepts(responseType)) {
+      if (accept.accepts(responseType.name)) {
         return response;
       }
       response.abort();

@@ -1,11 +1,7 @@
-import { Cookie } from "./cookie";
-import {
-  parseDate,
-  parseTokens,
-  stringifyDate,
-  stringifyTokens,
-  Token,
-} from "./tokens";
+import { CookieCodec } from "./cookie-codec";
+import { InvalidSetCookieHeaderError } from "./errors";
+import { isToken, isValidCookieValue, parseDate, Scanner } from "./syntax";
+import type { Header } from "./types";
 
 export interface SetCookieInit {
   readonly path?: string | null;
@@ -24,14 +20,10 @@ export interface SetCookieInit {
  *
  * See https://tools.ietf.org/html/rfc6265
  */
-export class SetCookie {
+export class SetCookie implements Header {
   static from(value: SetCookie | string): SetCookie {
     if (typeof value === "string") {
-      const parsed = SetCookie.parse(value);
-      if (parsed == null) {
-        throw new TypeError("Invalid Set-Cookie header.");
-      }
-      return parsed;
+      return SetCookie.parse(value);
     } else {
       return value;
     }
@@ -42,37 +34,89 @@ export class SetCookie {
    * See https://tools.ietf.org/html/rfc6265#section-4.1.1
    * See https://tools.ietf.org/html/rfc6265#section-5.2
    */
-  static parse(input: string): SetCookie | null {
-    const [head, ...rest] = parseTokens(input);
-    if (!head) {
-      return null;
+  static parse(input: string): SetCookie {
+    const scanner = new Scanner(input);
+    // set-cookie-header = "Set-Cookie:" SP set-cookie-string
+    // set-cookie-string = cookie-pair *( ";" SP cookie-av )
+    // cookie-pair       = cookie-name "=" cookie-value
+    // cookie-name       = token
+    // cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
+    // cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
+    //                       ; US-ASCII characters excluding CTLs,
+    //                       ; whitespace DQUOTE, comma, semicolon,
+    //                       ; and backslash
+    // cookie-av         = expires-av / max-age-av / domain-av /
+    //                     path-av / secure-av / httponly-av /
+    //                     extension-av
+    // path-av           = "Path=" path-value
+    // path-value        = <any CHAR except CTLs or ";">
+    // domain-av         = "Domain=" domain-value
+    // domain-value      = <subdomain>
+    //                       ; defined in [RFC1034], Section 3.5, as
+    //                       ; enhanced by [RFC1123], Section 2.1
+    // max-age-av        = "Max-Age=" non-zero-digit *DIGIT
+    // non-zero-digit    = %x31-39
+    //                       ; digits 1 through 9
+    // expires-av        = "Expires=" sane-cookie-date
+    // sane-cookie-date  = <rfc1123-date>
+    //                      ; defined in [RFC2616], Section 3.3.1
+    // secure-av         = "Secure"
+    // httponly-av       = "HttpOnly"
+    const name = scanner.readUntil(0x3d /* = */, /* trim= */ true);
+    if (name !== "" && !isToken(name)) {
+      throw new InvalidSetCookieHeaderError();
     }
+    if (!scanner.readSeparator(0x3d /* = */)) {
+      throw new InvalidSetCookieHeaderError();
+    }
+
+    const value = scanner.readUntil(0x3b /* ; */, /* trim= */ true);
+    if (!isValidCookieValue(value)) {
+      throw new InvalidSetCookieHeaderError();
+    }
+
     let path = null;
     let domain = null;
     let maxAge = null;
     let expires = null;
     let secure = false;
     let httpOnly = false;
-    for (const token of rest) {
-      switch (token.name.toLowerCase()) {
+    while (scanner.readSeparator(0x3b /* ; */)) {
+      const param = scanner.readToken();
+      if (param == null) {
+        break;
+      }
+      switch (param.toLowerCase()) {
         case "path":
-          if (token.value) {
-            path = token.value;
+          if (scanner.readSeparator(0x3d /* = */)) {
+            const value = scanner.readUntil(0x3b /* ; */, /* trim= */ true);
+            if (value) {
+              path = value;
+            }
           }
           break;
         case "domain":
-          if (token.value) {
-            domain = token.value;
+          if (scanner.readSeparator(0x3d /* = */)) {
+            const value = scanner.readUntil(0x3b /* ; */, /* trim= */ true);
+            if (value) {
+              domain = value;
+            }
           }
           break;
         case "maxage":
-          if (token.value) {
-            maxAge = Number(token.value);
+          if (scanner.readSeparator(0x3d /* = */)) {
+            const value = scanner.readUntil(0x3b /* ; */, /* trim= */ true);
+            if (value) {
+              maxAge = Number(value);
+            }
           }
           break;
         case "expires":
-          if (token.value) {
-            expires = parseDate(token.value);
+          if (scanner.readSeparator(0x3d /* = */)) {
+            const value = scanner.readUntil(0x3b /* ; */, /* trim= */ true);
+            if (value) {
+              expires = parseDate(value);
+            }
           }
           break;
         case "secure":
@@ -83,18 +127,14 @@ export class SetCookie {
           break;
       }
     }
-    return new SetCookie(
-      head.name,
-      Cookie.codec.decode(unquote(head.value ?? "")),
-      {
-        path,
-        domain,
-        maxAge,
-        expires,
-        secure,
-        httpOnly,
-      },
-    );
+    return new SetCookie(name, CookieCodec.decode(value), {
+      path,
+      domain,
+      maxAge,
+      expires,
+      secure,
+      httpOnly,
+    });
   }
 
   /**
@@ -154,10 +194,6 @@ export class SetCookie {
     this.httpOnly = httpOnly;
   }
 
-  toJSON(): string {
-    return this.toString();
-  }
-
   toString(): string {
     const {
       name,
@@ -169,34 +205,30 @@ export class SetCookie {
       secure,
       httpOnly,
     } = this;
-    const tokens: Token[] = [{ name, value: Cookie.codec.encode(value) }];
+    const parts: string[] = [];
+    parts.push(`${name}=${CookieCodec.encode(value)}`);
     if (path != null) {
-      tokens.push({ name: "path", value: path });
+      parts.push(`path=${path}`);
     }
     if (domain != null) {
-      tokens.push({ name: "domain", value: domain });
+      parts.push(`domain=${domain}`);
     }
     if (maxAge != null) {
-      tokens.push({ name: "maxAge", value: String(maxAge) });
+      parts.push(`maxAge=${maxAge}`);
     }
     if (expires != null) {
-      tokens.push({ name: "expires", value: stringifyDate(expires) });
+      parts.push(`expires=${expires.toUTCString()}`);
     }
     if (secure) {
-      tokens.push({ name: "secure", value: null });
+      parts.push("secure");
     }
     if (httpOnly) {
-      tokens.push({ name: "httpOnly", value: null });
+      parts.push("httpOnly");
     }
-    return stringifyTokens(tokens);
+    return parts.join("; ");
   }
-}
 
-function unquote(value: string): string {
-  const { length } = value;
-  if (length >= 2 && value[0] === '"' && value[length - 1] === '"') {
-    return value.substring(0, length - 1);
-  } else {
-    return value;
+  get [Symbol.toStringTag](): string {
+    return "SetCookie";
   }
 }

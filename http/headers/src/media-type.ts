@@ -1,8 +1,9 @@
-import { Parameters } from "./parameters";
-import { splitPair } from "./strings";
-import type { NameValueEntries } from "./types";
+import { InvalidMediaTypeError } from "./errors";
+import { escapeToken, Scanner } from "./syntax";
+import type { Header, NameValueEntries } from "./types";
+import { entriesOf } from "./util";
 
-export class MediaType {
+export class MediaType implements Header {
   static from(value: MediaType | string): MediaType {
     if (typeof value === "string") {
       return MediaType.parse(value);
@@ -11,10 +12,11 @@ export class MediaType {
     }
   }
 
-  static parse(value: string): MediaType {
-    // See https://mimesniff.spec.whatwg.org/#parsing-a-mime-type
-    // See https://tools.ietf.org/html/rfc7231#section-3.1.1.1
-    switch (value) {
+  /**
+   * See https://tools.ietf.org/html/rfc7231#section-3.1.1.1
+   */
+  static parse(input: string): MediaType {
+    switch (input) {
       case "*/*":
         return MediaType.ANY;
       case "application/octet-stream":
@@ -32,18 +34,23 @@ export class MediaType {
       case "multipart/form-data":
         return MediaType.MULTIPART_FORM_DATA;
     }
-    const [head, tail] = splitPair(value, ";");
-    if (head) {
-      const [type, subtype] = splitPair(head, "/");
-      if (type && subtype) {
-        return new MediaType(
-          type.toLowerCase(),
-          subtype.toLowerCase(),
-          tail ? Parameters.from(tail) : null,
-        );
-      }
+    const scanner = new Scanner(input);
+    const type = scanner.readToken();
+    if (type == null) {
+      throw new InvalidMediaTypeError();
     }
-    return MediaType.APPLICATION_OCTET_STREAM; // We never fail.
+    if (!scanner.readSeparator(0x2f /* / */)) {
+      throw new InvalidMediaTypeError();
+    }
+    const subtype = scanner.readToken();
+    if (subtype == null) {
+      throw new InvalidMediaTypeError();
+    }
+    return new MediaType(
+      type.toLowerCase(),
+      subtype.toLowerCase(),
+      scanner.readParams(),
+    );
   }
 
   /**
@@ -107,13 +114,12 @@ export class MediaType {
   /**
    * Optional parameters.
    */
-  readonly parameters: Parameters;
+  readonly parameters: ReadonlyMap<string, string>;
 
   constructor(
     type: string,
     subtype: string,
     parameters:
-      | Parameters
       | Map<string, unknown>
       | Record<string, unknown>
       | NameValueEntries
@@ -122,7 +128,15 @@ export class MediaType {
     this.name = type + "/" + subtype;
     this.type = type;
     this.subtype = subtype;
-    this.parameters = new Parameters(parameters);
+    const map = new Map();
+    if (parameters != null) {
+      for (const [name, value] of entriesOf(
+        parameters as Map<string, unknown>,
+      )) {
+        map.set(name.toLowerCase(), value);
+      }
+    }
+    this.parameters = map;
   }
 
   matches(that: MediaType | string): boolean {
@@ -137,12 +151,16 @@ export class MediaType {
     );
   }
 
-  toJSON(): string {
-    return this.toString();
+  toString(): string {
+    const parts: string[] = [];
+    parts.push(`${this.type}/${this.subtype}`);
+    for (const [name, value] of this.parameters) {
+      parts.push(`${name}=${escapeToken(value)}`);
+    }
+    return parts.join("; ");
   }
 
-  toString(): string {
-    const p = String(this.parameters);
-    return p !== "" ? this.name + "; " + p : this.name;
+  get [Symbol.toStringTag](): string {
+    return "MediaType";
   }
 }

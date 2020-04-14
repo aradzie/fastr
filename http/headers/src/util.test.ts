@@ -1,11 +1,11 @@
 import test from "ava";
-import { multiEntries } from "./util";
+import { multiEntriesOf } from "./util";
 
 test("flatten map entries", (t) => {
-  t.deepEqual([...multiEntries(new Map<string, unknown>())], []);
+  t.deepEqual([...multiEntriesOf(new Map<string, unknown>())], []);
   t.deepEqual(
     [
-      ...multiEntries(
+      ...multiEntriesOf(
         new Map<string, unknown>([
           ["a", 1],
           ["b", [2, 3]],
@@ -21,9 +21,9 @@ test("flatten map entries", (t) => {
 });
 
 test("flatten record entries", (t) => {
-  t.deepEqual([...multiEntries({})], []);
+  t.deepEqual([...multiEntriesOf({})], []);
   t.deepEqual(
-    [...multiEntries({ a: 1, b: [2, 3] })],
+    [...multiEntriesOf({ a: 1, b: [2, 3] })],
     [
       ["a", "1"],
       ["b", "2"],
@@ -33,10 +33,10 @@ test("flatten record entries", (t) => {
 });
 
 test("flatten array entries", (t) => {
-  t.deepEqual([...multiEntries([])], []);
+  t.deepEqual([...multiEntriesOf([])], []);
   t.deepEqual(
     [
-      ...multiEntries([
+      ...multiEntriesOf([
         ["a", 1],
         ["b", [2, 3]],
       ]),

@@ -1,23 +1,8 @@
-import { parseTokens, stringifyTokens, Token } from "./tokens";
-import { NameValueEntries } from "./types";
-import { entries } from "./util";
-
-/**
- * To maximize compatibility with user agents, servers that wish to store
- * arbitrary data in a cookie-value SHOULD encode that data, for example,
- * using Base64.
- */
-export interface ValueCodec {
-  /**
-   * Takes arbitrary cookie value and encodes it to a form
-   * suitable for usage in an HTTP header.
-   */
-  readonly encode: (value: string) => string;
-  /**
-   * Takes an HTTP header value and decodes it to the original cookie value.
-   */
-  readonly decode: (value: string) => string;
-}
+import { CookieCodec } from "./cookie-codec";
+import { InvalidCookieHeaderError } from "./errors";
+import { isToken, isValidCookieValue, Scanner } from "./syntax";
+import type { Header, NameValueEntries } from "./types";
+import { entriesOf } from "./util";
 
 const kMap = Symbol("kMap");
 
@@ -26,7 +11,7 @@ const kMap = Symbol("kMap");
  *
  * See https://tools.ietf.org/html/rfc6265
  */
-export class Cookie implements Iterable<[string, string]> {
+export class Cookie implements Header, Iterable<[string, string]> {
   static from(value: Cookie | string): Cookie {
     if (typeof value === "string") {
       return Cookie.parse(value);
@@ -41,31 +26,42 @@ export class Cookie implements Iterable<[string, string]> {
    * See https://tools.ietf.org/html/rfc6265#section-5.4
    */
   static parse(input: string): Cookie {
+    // cookie-header = "Cookie:" OWS cookie-string OWS
+    // cookie-string = cookie-pair *( ";" SP cookie-pair )
+    // cookie-pair   = cookie-name "=" cookie-value
+    // cookie-name   = token
+    // cookie-value  = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
+    // cookie-octet  = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
+    //                   ; US-ASCII characters excluding CTLs,
+    //                   ; whitespace DQUOTE, comma, semicolon,
+    //                   ; and backslash
     const data: [string, string][] = [];
-    for (const { name, value } of parseTokens(input)) {
-      if (value != null) {
-        data.push([name, Cookie.codec.decode(value)]);
+    const scanner = new Scanner(input);
+    while (scanner.hasNext()) {
+      const name = scanner.readUntil(0x3d /* = */, /* trim= */ true);
+      if (name !== "" && !isToken(name)) {
+        throw new InvalidCookieHeaderError();
+      }
+      if (!scanner.readSeparator(0x3d /* = */)) {
+        throw new InvalidCookieHeaderError();
+      }
+
+      const value = scanner.readUntil(0x3b /* ; */, /* trim= */ true);
+      if (!isValidCookieValue(value)) {
+        throw new InvalidCookieHeaderError();
+      }
+      data.push([name, CookieCodec.decode(value)]);
+      if (!scanner.readSeparator(0x3b /* ; */)) {
+        break;
       }
     }
     return new Cookie(data);
   }
 
-  static codec: ValueCodec = {
-    decode: (value: string): string => {
-      try {
-        return decodeURIComponent(value);
-      } catch {
-        return value;
-      }
-    },
-    encode: encodeURIComponent,
-  };
-
   private readonly [kMap]: Map<string, string>;
 
   constructor(
     data:
-      | Cookie
       | Map<string, unknown>
       | Record<string, unknown>
       | NameValueEntries
@@ -73,14 +69,8 @@ export class Cookie implements Iterable<[string, string]> {
   ) {
     const map = new Map<string, string>();
     if (data != null) {
-      if (data instanceof Cookie) {
-        for (const [name, value] of data) {
-          map.set(name, value);
-        }
-      } else {
-        for (const [name, value] of entries(data as Map<string, unknown>)) {
-          map.set(name, value);
-        }
+      for (const [name, value] of entriesOf(data as Map<string, unknown>)) {
+        map.set(name, value);
       }
     }
     Object.defineProperty(this, kMap, {
@@ -129,15 +119,15 @@ export class Cookie implements Iterable<[string, string]> {
     return this;
   }
 
-  toJSON(): string {
-    return this.toString();
+  toString(): string {
+    const parts: string[] = [];
+    for (const [name, value] of this[kMap]) {
+      parts.push(`${name}=${CookieCodec.encode(value)}`);
+    }
+    return parts.join("; ");
   }
 
-  toString(): string {
-    const tokens: Token[] = [];
-    for (const [name, value] of this[kMap]) {
-      tokens.push({ name, value: Cookie.codec.encode(value) });
-    }
-    return stringifyTokens(tokens);
+  get [Symbol.toStringTag](): string {
+    return "Cookie";
   }
 }

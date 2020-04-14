@@ -48,7 +48,7 @@ test("parse", (t) => {
   );
   t.deepEqual(
     SetCookie.parse(
-      "Name0 = Value0 ; " +
+      "Name0=Value0; " +
         "Path = path0 ; " +
         "Domain = domain0 ; " +
         "MaxAge = 123 ; " +
