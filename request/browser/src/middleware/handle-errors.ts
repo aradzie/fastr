@@ -24,17 +24,18 @@ export interface HandleErrorOptions {
  */
 export function handleErrors(options: HandleErrorOptions = {}): Middleware {
   const { ignoreBody = true } = options;
-  return (adapter: Adapter): Adapter => {
-    return async (request: HttpRequest): Promise<HttpResponse> => {
-      const response = await adapter(request);
-      const { status, statusText } = response;
-      if (isClientError(status) || isServerError(status)) {
-        if (ignoreBody) {
-          response.abort(); // TODO Do we need this?
-        }
-        throwError(status, statusText);
+  return async (
+    request: HttpRequest,
+    adapter: Adapter,
+  ): Promise<HttpResponse> => {
+    const response = await adapter(request);
+    const { status, statusText } = response;
+    if (isClientError(status) || isServerError(status)) {
+      if (ignoreBody) {
+        response.abort(); // TODO Do we need this?
       }
-      return response;
-    };
+      throwError(status, statusText);
+    }
+    return response;
   };
 }

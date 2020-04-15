@@ -15,11 +15,12 @@ export function xsrf(options: XsrfOptions = {}): Middleware {
     headerName = "X-XSRF-TOKEN",
     cookieReader = documentCookieReader,
   } = options;
-  return (adapter: Adapter): Adapter => {
-    return async (request: HttpRequest): Promise<HttpResponse> => {
-      // TODO Implement me.
-      return adapter(request);
-    };
+  return async (
+    request: HttpRequest,
+    adapter: Adapter,
+  ): Promise<HttpResponse> => {
+    // TODO Implement me.
+    return adapter(request);
   };
 }
 

@@ -265,7 +265,7 @@ export class RequestBuilder {
       request: HttpRequest,
     ): Promise<HttpResponse> => adapter(request);
     request.use = (middleware: Middleware): BuildableRequest =>
-      RequestBuilder.extend(middleware(adapter));
+      RequestBuilder.extend((request) => middleware(request, adapter));
     request.method = (method: string, url: URL | string): RequestBuilder =>
       new RequestBuilder(adapter, method, url);
     request.get = (url: URL | string): RequestBuilder =>

@@ -10,12 +10,10 @@ export interface Adapter {
 }
 
 /**
- * Middleware is a function which takes one adapter and returns another.
- *
- * The returned adapter must call the original adapter.
+ * Middleware is a function which intercepts the execution of an adapter.
  */
 export interface Middleware {
-  (adapter: Adapter): Adapter;
+  (request: HttpRequest, adapter: Adapter): Promise<HttpResponse>;
 }
 
 export interface BuildableRequest extends Adapter {

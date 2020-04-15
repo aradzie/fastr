@@ -1,6 +1,9 @@
-import type { Adapter, Middleware } from "../types";
+import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
 
-const id: Middleware = (adapter: Adapter): Adapter => adapter;
+const id: Middleware = (
+  request: HttpRequest,
+  adapter: Adapter,
+): Promise<HttpResponse> => adapter(request);
 
 export function compose(middleware: readonly Middleware[]): Middleware {
   const result = middleware.reduce(composeTwo, id);
@@ -11,5 +14,6 @@ export function compose(middleware: readonly Middleware[]): Middleware {
 }
 
 function composeTwo(a: Middleware, b: Middleware): Middleware {
-  return (adapter: Adapter): Adapter => a(b(adapter));
+  return (request: HttpRequest, adapter: Adapter): Promise<HttpResponse> =>
+    a(request, (request) => b(request, adapter));
 }

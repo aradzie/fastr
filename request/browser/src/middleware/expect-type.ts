@@ -20,26 +20,27 @@ export function expectType(
   for (const item of expectedType) {
     accept.add(String(item));
   }
-  return (adapter: Adapter): Adapter => {
-    return async (request: HttpRequest): Promise<HttpResponse> => {
-      // Update request headers, make request with the new headers.
-      const response = await adapter({
-        ...request,
-        headers: new Headers(request.headers).set("Accept", accept),
-      });
+  return async (
+    request: HttpRequest,
+    adapter: Adapter,
+  ): Promise<HttpResponse> => {
+    // Update request headers, make request with the new headers.
+    const response = await adapter({
+      ...request,
+      headers: new Headers(request.headers).set("Accept", accept),
+    });
 
-      // Check response.
-      if (!isSuccess(response.status)) {
-        return response;
-      }
-      const responseType =
-        response.headers.map("Content-Type", MediaType.parse) ??
-        MediaType.APPLICATION_OCTET_STREAM;
-      if (accept.accepts(responseType.name)) {
-        return response;
-      }
-      response.abort();
-      throw new UnsupportedMediaTypeError();
-    };
+    // Check response.
+    if (!isSuccess(response.status)) {
+      return response;
+    }
+    const responseType =
+      response.headers.map("Content-Type", MediaType.parse) ??
+      MediaType.APPLICATION_OCTET_STREAM;
+    if (accept.accepts(responseType.name)) {
+      return response;
+    }
+    response.abort();
+    throw new UnsupportedMediaTypeError();
   };
 }

@@ -25,20 +25,21 @@ export interface RetryFailedOptions {
  */
 export function retryFailed(options: RetryFailedOptions = {}): Middleware {
   const { maxRetries = 3, shouldRetry = retryFailed.shouldRetry } = options;
-  return (adapter: Adapter): Adapter => {
-    return async (request: HttpRequest): Promise<HttpResponse> => {
-      let retryIndex = 0;
-      while (true) {
-        const response = await adapter(request);
-        if (!shouldRetry(response)) {
-          return response;
-        }
-        if (retryIndex === maxRetries) {
-          return response;
-        }
-        retryIndex += 1;
+  return async (
+    request: HttpRequest,
+    adapter: Adapter,
+  ): Promise<HttpResponse> => {
+    let retryIndex = 0;
+    while (true) {
+      const response = await adapter(request);
+      if (!shouldRetry(response)) {
+        return response;
       }
-    };
+      if (retryIndex === maxRetries) {
+        return response;
+      }
+      retryIndex += 1;
+    }
   };
 }
 
