@@ -20,7 +20,8 @@ export interface HandleErrorOptions {
  * check if a page is not found, so this is the right thing to do.
  *
  * This middleware automates error handling and rejects the returned promises
- * with an HTTP error instance if the response status if not successful.
+ * with an HTTP error instance if the response status if either client or server
+ * error.
  */
 export function handleErrors(options: HandleErrorOptions = {}): Middleware {
   const { ignoreBody = true } = options;
