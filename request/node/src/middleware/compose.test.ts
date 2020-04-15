@@ -1,6 +1,6 @@
 import { Headers } from "@webfx-http/headers";
 import test from "ava";
-import { fakeOkResponse } from "../fake/fakes";
+import { fakeResponse } from "../fake/fakes";
 import type { Adapter, HttpRequest, HttpResponse } from "../types";
 import { compose } from "./compose";
 
@@ -16,7 +16,7 @@ test("compose zero middlewares", async (t) => {
       url: "http://test/",
       method: "GET",
     },
-    fakeOkResponse(),
+    fakeResponse(),
   );
 
   // Assert.
@@ -40,7 +40,7 @@ test("compose one middleware", async (t) => {
       url: "http://test/",
       method: "GET",
     },
-    fakeOkResponse(),
+    fakeResponse(),
   );
 
   // Assert.
@@ -64,7 +64,7 @@ test("compose many middlewares", async (t) => {
       url: "http://test/",
       method: "GET",
     },
-    fakeOkResponse(),
+    fakeResponse(),
   );
 
   // Assert.

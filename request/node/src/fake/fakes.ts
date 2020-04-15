@@ -27,7 +27,7 @@ export type ResponseInit = {
 /**
  * Creates an adapter which responds with request description. The generated
  * response body is a JSON object whose properties are copies of request
- * properties.
+ * properties such as url, method, headers, etc.
  */
 export function reflect(): Adapter {
   let calls = 0;
@@ -58,15 +58,6 @@ export function fakeResponse(init?: ResponseInit): Adapter {
   };
 }
 
-export function fakeOkResponse(init?: ResponseInit): Adapter {
-  return async (request: HttpRequest): Promise<HttpResponse> =>
-    new FakeResponse({
-      ...init,
-      url: request.url,
-      status: 200,
-    });
-}
-
 export function fakeRedirectResponse(
   status: number,
   location: string,
@@ -76,7 +67,7 @@ export function fakeRedirectResponse(
       url: request.url,
       status,
       headers: {
-        location: location,
+        location,
       },
       bodyData: `see ${location}`,
     });

@@ -1,5 +1,5 @@
 import test from "ava";
-import { fakeOkResponse } from "../fake/fakes";
+import { fakeResponse } from "../fake/fakes";
 import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
 import { compose } from "./compose";
 import { expectType } from "./expect-type";
@@ -18,7 +18,7 @@ test("return response if content type matches", async (t) => {
   const adapter = (req: HttpRequest): Promise<HttpResponse> =>
     compose([underTest, checkRequest])(
       req,
-      fakeOkResponse({
+      fakeResponse({
         headers: { "content-type": "text/plain" },
         bodyData: "text",
       }),
@@ -44,7 +44,7 @@ test("throw error if content type does not match", async (t) => {
     request: HttpRequest,
   ): Promise<HttpResponse> => {
     t.is(request.headers?.get("accept"), "text/plain");
-    return fakeOkResponse({
+    return fakeResponse({
       headers: { "content-type": "application/json" },
       bodyData: "{}",
     })(request);

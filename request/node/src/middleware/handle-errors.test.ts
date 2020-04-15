@@ -1,5 +1,5 @@
 import test from "ava";
-import { fakeNotFoundResponse, fakeOkResponse } from "../fake/fakes";
+import { fakeNotFoundResponse, fakeResponse } from "../fake/fakes";
 import { HttpRequest, HttpResponse } from "../types";
 import { handleErrors } from "./handle-errors";
 
@@ -8,7 +8,7 @@ test("passes through if response status is successful", async (t) => {
 
   const underTest = handleErrors();
   const adapter = (req: HttpRequest): Promise<HttpResponse> =>
-    underTest(req, fakeOkResponse());
+    underTest(req, fakeResponse());
 
   // Act.
 

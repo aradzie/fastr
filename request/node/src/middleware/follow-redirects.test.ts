@@ -2,8 +2,8 @@ import { RequestRedirectError } from "@webfx-request/error";
 import test from "ava";
 import {
   fakeNotFoundResponse,
-  fakeOkResponse,
   fakeRedirectResponse,
+  fakeResponse,
 } from "../fake/fakes";
 import type { Adapter, HttpRequest, HttpResponse } from "../types";
 import { followRedirects } from "./follow-redirects";
@@ -13,7 +13,7 @@ test("pass through if response status is not redirect", async (t) => {
 
   const underTest = followRedirects();
   const adapter = (req: HttpRequest): Promise<HttpResponse> =>
-    underTest(req, fakeOkResponse({ bodyData: "found" }));
+    underTest(req, fakeResponse({ bodyData: "found" }));
 
   // Act.
 
@@ -178,7 +178,7 @@ export function fakeRedirectingAdapter(): Adapter {
       case "http://test/c":
         return fakeRedirectResponse(303, "/found")(request);
       case "http://test/found":
-        return fakeOkResponse({ bodyData: "found" })(request);
+        return fakeResponse({ bodyData: "found" })(request);
       default:
         return fakeNotFoundResponse()(request);
     }
