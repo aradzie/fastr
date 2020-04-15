@@ -8,18 +8,21 @@ test("return response if content type matches", async (t) => {
   // Arrange.
 
   const underTest = expectType("text/plain");
-  const checkRequest: Middleware = (adapter: Adapter): Adapter => {
-    return (request: HttpRequest): Promise<HttpResponse> => {
-      t.is(request.headers?.get("accept"), "text/plain");
-      return adapter(request);
-    };
+  const checkRequest: Middleware = (
+    request: HttpRequest,
+    adapter: Adapter,
+  ): Promise<HttpResponse> => {
+    t.is(request.headers?.get("accept"), "text/plain");
+    return adapter(request);
   };
-  const adapter = compose([underTest, checkRequest])(
-    fakeOkResponse({
-      headers: { "content-type": "text/plain" },
-      bodyData: "text",
-    }),
-  );
+  const adapter = (req: HttpRequest): Promise<HttpResponse> =>
+    compose([underTest, checkRequest])(
+      req,
+      fakeOkResponse({
+        headers: { "content-type": "text/plain" },
+        bodyData: "text",
+      }),
+    );
 
   // Act.
 
@@ -37,18 +40,17 @@ test("throw error if content type does not match", async (t) => {
   // Arrange.
 
   const underTest = expectType("text/plain");
-  const checkRequest: Middleware = (adapter: Adapter): Adapter => {
-    return (request: HttpRequest): Promise<HttpResponse> => {
-      t.is(request.headers?.get("accept"), "text/plain");
-      return adapter(request);
-    };
-  };
-  const adapter = compose([underTest, checkRequest])(
-    fakeOkResponse({
+  const checkRequest: Adapter = (
+    request: HttpRequest,
+  ): Promise<HttpResponse> => {
+    t.is(request.headers?.get("accept"), "text/plain");
+    return fakeOkResponse({
       headers: { "content-type": "application/json" },
       bodyData: "{}",
-    }),
-  );
+    })(request);
+  };
+  const adapter = (req: HttpRequest): Promise<HttpResponse> =>
+    underTest(req, checkRequest);
 
   // Assert.
 
@@ -71,9 +73,10 @@ test("pass through error", async (t) => {
 
   const error = new Error("omg");
   const underTest = expectType("text/plain");
-  const adapter = underTest(async () => {
-    throw error;
-  });
+  const adapter = (req: HttpRequest): Promise<HttpResponse> =>
+    underTest(req, async () => {
+      throw error;
+    });
 
   // Assert.
 

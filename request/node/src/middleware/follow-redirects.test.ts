@@ -12,7 +12,8 @@ test("pass through if response status is not redirect", async (t) => {
   // Arrange.
 
   const underTest = followRedirects();
-  const adapter = underTest(fakeOkResponse({ bodyData: "found" }));
+  const adapter = (req: HttpRequest): Promise<HttpResponse> =>
+    underTest(req, fakeOkResponse({ bodyData: "found" }));
 
   // Act.
 
@@ -33,7 +34,8 @@ test("return first response the redirect option is manual", async (t) => {
   // Arrange.
 
   const underTest = followRedirects({ redirect: "manual" });
-  const adapter = underTest(fakeRedirectResponse(303, "http://test/another"));
+  const adapter = (req: HttpRequest): Promise<HttpResponse> =>
+    underTest(req, fakeRedirectResponse(303, "http://test/another"));
 
   // Act.
 
@@ -54,7 +56,8 @@ test("follows redirect", async (t) => {
   // Arrange.
 
   const underTest = followRedirects();
-  const adapter = underTest(fakeRedirectingAdapter());
+  const adapter = (req: HttpRequest): Promise<HttpResponse> =>
+    underTest(req, fakeRedirectingAdapter());
 
   // Act.
 
@@ -75,7 +78,8 @@ test("throw error if the redirect option is error", async (t) => {
   // Arrange.
 
   const underTest = followRedirects({ redirect: "error" });
-  const adapter = underTest(fakeRedirectResponse(303, "http://test/another"));
+  const adapter = (req: HttpRequest): Promise<HttpResponse> =>
+    underTest(req, fakeRedirectResponse(303, "http://test/another"));
 
   // Assert.
 
@@ -97,7 +101,8 @@ test("throw error if too many redirects", async (t) => {
   // Arrange.
 
   const underTest = followRedirects({ follow: 2 });
-  const adapter = underTest(fakeRedirectingAdapter());
+  const adapter = (req: HttpRequest): Promise<HttpResponse> =>
+    underTest(req, fakeRedirectingAdapter());
 
   // Assert.
 
@@ -119,7 +124,8 @@ test("throw error if redirect loop detected", async (t) => {
   // Arrange.
 
   const underTest = followRedirects();
-  const adapter = underTest(fakeLoopingRedirectingAdapter());
+  const adapter = (req: HttpRequest): Promise<HttpResponse> =>
+    underTest(req, fakeLoopingRedirectingAdapter());
 
   // Assert.
 
@@ -142,9 +148,10 @@ test("pass through error", async (t) => {
 
   const error = new Error("omg");
   const underTest = followRedirects();
-  const adapter = underTest(async () => {
-    throw error;
-  });
+  const adapter = (req: HttpRequest): Promise<HttpResponse> =>
+    underTest(req, async () => {
+      throw error;
+    });
 
   // Assert.
 

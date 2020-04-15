@@ -18,25 +18,26 @@ import { CookieJar } from "./cookiejar";
  *            It can also be used to examine the cookie contents.
  */
 export function cookies(jar = new CookieJar()): Middleware {
-  return (adapter: Adapter): Adapter => {
-    return async (request: HttpRequest): Promise<HttpResponse> => {
-      // Compute cookies to send.
-      const cookie = new Cookie([
-        // Remembered cookies.
-        ...jar,
-        // User specified cookies.
-        ...(request.headers?.map("Cookie", Cookie.parse) ?? []),
-      ]);
+  return async (
+    request: HttpRequest,
+    adapter: Adapter,
+  ): Promise<HttpResponse> => {
+    // Compute cookies to send.
+    const cookie = new Cookie([
+      // Remembered cookies.
+      ...jar,
+      // User specified cookies.
+      ...(request.headers?.map("Cookie", Cookie.parse) ?? []),
+    ]);
 
-      // Append cookies to request.
-      const response = await adapter({
-        ...request,
-        headers: new Headers(request.headers).set("Cookie", cookie),
-      });
+    // Append cookies to request.
+    const response = await adapter({
+      ...request,
+      headers: new Headers(request.headers).set("Cookie", cookie),
+    });
 
-      // Save cookies from response.
-      jar.addAll(response.headers.mapAll("Set-Cookie", SetCookie.parse));
-      return response;
-    };
+    // Save cookies from response.
+    jar.addAll(response.headers.mapAll("Set-Cookie", SetCookie.parse));
+    return response;
   };
 }

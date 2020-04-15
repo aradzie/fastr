@@ -2,22 +2,24 @@ import test from "ava";
 import { adapter, request } from "./request";
 import type { Adapter, HttpRequest, HttpResponse, Middleware } from "./types";
 
-const mw1: Middleware = (adapter: Adapter): Adapter => {
-  return (request: HttpRequest): Promise<HttpResponse> => {
-    return adapter({
-      ...request,
-      body: `${request.body};mw1`,
-    });
-  };
+const mw1: Middleware = (
+  request: HttpRequest,
+  adapter: Adapter,
+): Promise<HttpResponse> => {
+  return adapter({
+    ...request,
+    body: `${request.body};mw1`,
+  });
 };
 
-const mw2: Middleware = (adapter: Adapter): Adapter => {
-  return (request: HttpRequest): Promise<HttpResponse> => {
-    return adapter({
-      ...request,
-      body: `${request.body};mw2`,
-    });
-  };
+const mw2: Middleware = (
+  request: HttpRequest,
+  adapter: Adapter,
+): Promise<HttpResponse> => {
+  return adapter({
+    ...request,
+    body: `${request.body};mw2`,
+  });
 };
 
 test("request without middleware", async (t) => {

@@ -59,33 +59,35 @@ export class FacebookAdapter extends AbstractAdapter {
     const proof = createHmac("sha256", this.clientSecret)
       .update(token)
       .digest("hex");
-    return (adapter: Adapter): Adapter => {
-      return async (request: HttpRequest): Promise<HttpResponse> => {
-        const url = new URL(request.url);
-        url.searchParams.set("access_token", token);
-        url.searchParams.set("appsecret_proof", proof);
-        return adapter({
-          ...request,
-          url: String(url),
-        });
-      };
+    return async (
+      request: HttpRequest,
+      adapter: Adapter,
+    ): Promise<HttpResponse> => {
+      const url = new URL(request.url);
+      url.searchParams.set("access_token", token);
+      url.searchParams.set("appsecret_proof", proof);
+      return adapter({
+        ...request,
+        url: String(url),
+      });
     };
   }
 
   handleErrors(): Middleware {
-    return (adapter: Adapter): Adapter => {
-      return async (request: HttpRequest): Promise<HttpResponse> => {
-        const response = await adapter(request);
-        if (
-          isClientError(response.status) &&
-          response.headers.map("Content-Type", MediaType.parse)?.name ===
-            "application/json"
-        ) {
-          const body = await response.body.json<FacebookErrorResponse>();
-          throw FacebookAdapter.translateError(body);
-        }
-        return response;
-      };
+    return async (
+      request: HttpRequest,
+      adapter: Adapter,
+    ): Promise<HttpResponse> => {
+      const response = await adapter(request);
+      if (
+        isClientError(response.status) &&
+        response.headers.map("Content-Type", MediaType.parse)?.name ===
+          "application/json"
+      ) {
+        const body = await response.body.json<FacebookErrorResponse>();
+        throw FacebookAdapter.translateError(body);
+      }
+      return response;
     };
   }
 

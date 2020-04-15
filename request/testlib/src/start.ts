@@ -42,13 +42,14 @@ export function start(
 ): Middleware {
   const server = toServer(target);
   const serverUrl = baseUrl(server);
-  return (adapter: Adapter): Adapter => {
-    return async (request: HttpRequest): Promise<HttpResponse> => {
-      return adapter({
-        ...request,
-        url: String(new URL(request.url, serverUrl)),
-      });
-    };
+  return async (
+    request: HttpRequest,
+    adapter: Adapter,
+  ): Promise<HttpResponse> => {
+    return adapter({
+      ...request,
+      url: String(new URL(request.url, serverUrl)),
+    });
   };
 }
 

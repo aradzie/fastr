@@ -11,7 +11,8 @@ test("pass through if response is successful", async (t) => {
   // Arrange.
 
   const underTest = retryFailed();
-  const adapter = underTest(fakeOkResponse());
+  const adapter = (req: HttpRequest): Promise<HttpResponse> =>
+    underTest(req, fakeOkResponse());
 
   // Act.
 
@@ -31,7 +32,8 @@ test("retry request if response is failing", async (t) => {
   // Arrange.
 
   const underTest = retryFailed();
-  const adapter = underTest(fakeEventualOkResponse());
+  const adapter = (req: HttpRequest): Promise<HttpResponse> =>
+    underTest(req, fakeEventualOkResponse());
 
   // Act.
 
@@ -52,7 +54,8 @@ test("return failing response if too many retries", async (t) => {
   // Arrange.
 
   const underTest = retryFailed({ maxRetries: 1 });
-  const adapter = underTest(fakeEventualOkResponse());
+  const adapter = (req: HttpRequest): Promise<HttpResponse> =>
+    underTest(req, fakeEventualOkResponse());
 
   // Act.
 
@@ -74,9 +77,10 @@ test("pass through error", async (t) => {
 
   const error = new Error("omg");
   const underTest = retryFailed();
-  const adapter = underTest(async () => {
-    throw error;
-  });
+  const adapter = (req: HttpRequest): Promise<HttpResponse> =>
+    underTest(req, async () => {
+      throw error;
+    });
 
   // Assert.
 

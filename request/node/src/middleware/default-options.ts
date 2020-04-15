@@ -14,15 +14,16 @@ import type {
  * @param options The default options to use if not provided explicitly.
  */
 export function defaultOptions(options: HttpRequestOptions): Middleware {
-  return (adapter: Adapter): Adapter => {
-    return async (request: HttpRequest): Promise<HttpResponse> => {
-      return adapter({
-        ...request,
-        options: {
-          ...options,
-          ...request.options,
-        },
-      });
-    };
+  return async (
+    request: HttpRequest,
+    adapter: Adapter,
+  ): Promise<HttpResponse> => {
+    return adapter({
+      ...request,
+      options: {
+        ...options,
+        ...request.options,
+      },
+    });
   };
 }

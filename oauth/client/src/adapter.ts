@@ -87,19 +87,20 @@ export abstract class AbstractAdapter {
   }
 
   handleErrors(): Middleware {
-    return (adapter: Adapter): Adapter => {
-      return async (request: HttpRequest): Promise<HttpResponse> => {
-        const response = await adapter(request);
-        if (
-          isClientError(response.status) &&
-          response.headers.map("Content-Type", MediaType.parse)?.name ===
-            "application/json"
-        ) {
-          const body = await response.body.json<ErrorResponse>();
-          throw OAuthError.from(body);
-        }
-        return response;
-      };
+    return async (
+      request: HttpRequest,
+      adapter: Adapter,
+    ): Promise<HttpResponse> => {
+      const response = await adapter(request);
+      if (
+        isClientError(response.status) &&
+        response.headers.map("Content-Type", MediaType.parse)?.name ===
+          "application/json"
+      ) {
+        const body = await response.body.json<ErrorResponse>();
+        throw OAuthError.from(body);
+      }
+      return response;
     };
   }
 }

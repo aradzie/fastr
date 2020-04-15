@@ -26,25 +26,26 @@ export interface RetryFailedOptions {
  */
 export function retryFailed(options: RetryFailedOptions = {}): Middleware {
   const { maxRetries = 3, shouldRetry = retryFailed.shouldRetry } = options;
-  return (adapter: Adapter): Adapter => {
-    return async (request: HttpRequest): Promise<HttpResponse> => {
-      // TODO Cache stream body.
-      if (isStreamBody(request.body ?? null)) {
-        throw new TypeError("Cannot retry with stream bodies");
-      }
+  return async (
+    request: HttpRequest,
+    adapter: Adapter,
+  ): Promise<HttpResponse> => {
+    // TODO Cache stream body.
+    if (isStreamBody(request.body ?? null)) {
+      throw new TypeError("Cannot retry with stream bodies");
+    }
 
-      let retryIndex = 0;
-      while (true) {
-        const response = await adapter(request);
-        if (!shouldRetry(response)) {
-          return response;
-        }
-        if (retryIndex === maxRetries) {
-          return response;
-        }
-        retryIndex += 1;
+    let retryIndex = 0;
+    while (true) {
+      const response = await adapter(request);
+      if (!shouldRetry(response)) {
+        return response;
       }
-    };
+      if (retryIndex === maxRetries) {
+        return response;
+      }
+      retryIndex += 1;
+    }
   };
 }
 

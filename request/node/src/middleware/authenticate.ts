@@ -12,16 +12,14 @@ import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
  * @param header The `Authorization` header value.
  */
 export function authenticate(header: string): Middleware {
-  return (adapter: Adapter): Adapter => {
-    return (request: HttpRequest): Promise<HttpResponse> => {
-      if (!request.url.startsWith("https://")) {
-        throw new TypeError("Must use HTTPS to sent authorization headers.");
-      }
-      return adapter({
-        ...request,
-        headers: new Headers(request.headers).set("Authorization", header),
-      });
-    };
+  return (request: HttpRequest, adapter: Adapter): Promise<HttpResponse> => {
+    if (!request.url.startsWith("https://")) {
+      throw new TypeError("Must use HTTPS to sent authorization headers.");
+    }
+    return adapter({
+      ...request,
+      headers: new Headers(request.headers).set("Authorization", header),
+    });
   };
 }
 

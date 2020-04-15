@@ -1,25 +1,20 @@
 import test from "ava";
 import { fakeOkResponse } from "../fake/fakes";
-import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
-import { compose } from "./compose";
+import type { Adapter, HttpRequest, HttpResponse } from "../types";
 import { defaultOptions } from "./default-options";
 
 test("set default values", async (t) => {
   // Arrange.
 
   const underTest = defaultOptions({ timeout: 123 });
-  const checkRequest: Middleware = (adapter: Adapter): Adapter => {
-    return (request: HttpRequest): Promise<HttpResponse> => {
-      t.deepEqual(request.options, { timeout: 123 });
-      return adapter(request);
-    };
+  const checkRequest: Adapter = (
+    request: HttpRequest,
+  ): Promise<HttpResponse> => {
+    t.deepEqual(request.options, { timeout: 123 });
+    return fakeOkResponse({})(request);
   };
-  const adapter = compose([underTest, checkRequest])(
-    fakeOkResponse({
-      headers: { "content-type": "text/plain" },
-      bodyData: "text",
-    }),
-  );
+  const adapter = (req: HttpRequest): Promise<HttpResponse> =>
+    underTest(req, checkRequest);
 
   // Act.
 
@@ -37,18 +32,14 @@ test("use explicit values", async (t) => {
   // Arrange.
 
   const underTest = defaultOptions({ timeout: 123 });
-  const checkRequest: Middleware = (adapter: Adapter): Adapter => {
-    return (request: HttpRequest): Promise<HttpResponse> => {
-      t.deepEqual(request.options, { timeout: 321 });
-      return adapter(request);
-    };
+  const checkRequest: Adapter = (
+    request: HttpRequest,
+  ): Promise<HttpResponse> => {
+    t.deepEqual(request.options, { timeout: 321 });
+    return fakeOkResponse({})(request);
   };
-  const adapter = compose([underTest, checkRequest])(
-    fakeOkResponse({
-      headers: { "content-type": "text/plain" },
-      bodyData: "text",
-    }),
-  );
+  const adapter = (req: HttpRequest): Promise<HttpResponse> =>
+    underTest(req, checkRequest);
 
   // Act.
 

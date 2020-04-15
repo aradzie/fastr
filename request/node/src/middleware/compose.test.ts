@@ -11,10 +11,13 @@ test("compose zero middlewares", async (t) => {
 
   // Act.
 
-  const response = await middleware(fakeOkResponse())({
-    url: "http://test/",
-    method: "GET",
-  });
+  const response = await middleware(
+    {
+      url: "http://test/",
+      method: "GET",
+    },
+    fakeOkResponse(),
+  );
 
   // Assert.
 
@@ -32,10 +35,13 @@ test("compose one middleware", async (t) => {
 
   // Act.
 
-  const response = await middleware(fakeOkResponse())({
-    url: "http://test/",
-    method: "GET",
-  });
+  const response = await middleware(
+    {
+      url: "http://test/",
+      method: "GET",
+    },
+    fakeOkResponse(),
+  );
 
   // Assert.
 
@@ -53,10 +59,13 @@ test("compose many middlewares", async (t) => {
 
   // Act.
 
-  const response = await middleware(fakeOkResponse())({
-    url: "http://test/",
-    method: "GET",
-  });
+  const response = await middleware(
+    {
+      url: "http://test/",
+      method: "GET",
+    },
+    fakeOkResponse(),
+  );
 
   // Assert.
 
@@ -67,35 +76,38 @@ test("compose many middlewares", async (t) => {
   t.is(response.headers.get("X-Middleware"), "c, b, a");
 });
 
-function a(adapter: Adapter): Adapter {
-  return async (request: HttpRequest): Promise<HttpResponse> => {
-    const response = await adapter(request);
-    const { headers } = response;
-    return {
-      ...response,
-      headers: new Headers(headers).append("X-Middleware", "a"),
-    };
+async function a(
+  request: HttpRequest,
+  adapter: Adapter,
+): Promise<HttpResponse> {
+  const response = await adapter(request);
+  const { headers } = response;
+  return {
+    ...response,
+    headers: new Headers(headers).append("X-Middleware", "a"),
   };
 }
 
-function b(adapter: Adapter): Adapter {
-  return async (request: HttpRequest): Promise<HttpResponse> => {
-    const response = await adapter(request);
-    const { headers } = response;
-    return {
-      ...response,
-      headers: new Headers(headers).append("X-Middleware", "b"),
-    };
+async function b(
+  request: HttpRequest,
+  adapter: Adapter,
+): Promise<HttpResponse> {
+  const response = await adapter(request);
+  const { headers } = response;
+  return {
+    ...response,
+    headers: new Headers(headers).append("X-Middleware", "b"),
   };
 }
 
-function c(adapter: Adapter): Adapter {
-  return async (request: HttpRequest): Promise<HttpResponse> => {
-    const response = await adapter(request);
-    const { headers } = response;
-    return {
-      ...response,
-      headers: new Headers(headers).append("X-Middleware", "c"),
-    };
+async function c(
+  request: HttpRequest,
+  adapter: Adapter,
+): Promise<HttpResponse> {
+  const response = await adapter(request);
+  const { headers } = response;
+  return {
+    ...response,
+    headers: new Headers(headers).append("X-Middleware", "c"),
   };
 }
