@@ -1,20 +1,14 @@
 import test from "ava";
-import { fakeOkResponse } from "../fake/fakes";
-import type { Adapter, HttpRequest, HttpResponse } from "../types";
+import { reflect } from "../fake/fakes";
+import type { HttpRequest, HttpResponse } from "../types";
 import { defaultOptions } from "./default-options";
 
 test("set default values", async (t) => {
   // Arrange.
 
   const underTest = defaultOptions({ timeout: 123 });
-  const checkRequest: Adapter = (
-    request: HttpRequest,
-  ): Promise<HttpResponse> => {
-    t.deepEqual(request.options, { timeout: 123 });
-    return fakeOkResponse({})(request);
-  };
   const adapter = (req: HttpRequest): Promise<HttpResponse> =>
-    underTest(req, checkRequest);
+    underTest(req, reflect());
 
   // Act.
 
@@ -26,20 +20,22 @@ test("set default values", async (t) => {
   // Assert.
 
   t.true(response.ok);
+  t.deepEqual(await response.body.json(), {
+    method: "GET",
+    url: "http://test/",
+    headers: {},
+    body: null,
+    options: { timeout: 123 },
+    calls: 1,
+  });
 });
 
 test("use explicit values", async (t) => {
   // Arrange.
 
   const underTest = defaultOptions({ timeout: 123 });
-  const checkRequest: Adapter = (
-    request: HttpRequest,
-  ): Promise<HttpResponse> => {
-    t.deepEqual(request.options, { timeout: 321 });
-    return fakeOkResponse({})(request);
-  };
   const adapter = (req: HttpRequest): Promise<HttpResponse> =>
-    underTest(req, checkRequest);
+    underTest(req, reflect());
 
   // Act.
 
@@ -54,4 +50,12 @@ test("use explicit values", async (t) => {
   // Assert.
 
   t.true(response.ok);
+  t.deepEqual(await response.body.json(), {
+    method: "GET",
+    url: "http://test/",
+    headers: {},
+    body: null,
+    options: { timeout: 321 },
+    calls: 1,
+  });
 });

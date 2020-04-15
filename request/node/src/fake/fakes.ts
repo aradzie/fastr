@@ -24,6 +24,31 @@ export type ResponseInit = {
   readonly bodyData?: BodyData;
 };
 
+/**
+ * Creates an adapter which responds with request description. The generated
+ * response body is a JSON object whose properties are copies of request
+ * properties.
+ */
+export function reflect(): Adapter {
+  let calls = 0;
+  return async (request: HttpRequest): Promise<HttpResponse> => {
+    calls += 1;
+    const { url, method, headers, body, options } = request;
+    return new FakeResponse({
+      url: request.url,
+      headers: { "Content-Type": "application/json" },
+      bodyData: JSON.stringify({
+        url,
+        method,
+        headers: headers?.toJSON() ?? {},
+        body: body != null ? String(body) : null,
+        options: options ?? null,
+        calls,
+      }),
+    });
+  };
+}
+
 export function fakeResponse(init?: ResponseInit): Adapter {
   return async (request: HttpRequest): Promise<HttpResponse> => {
     return new FakeResponse({

@@ -1,20 +1,14 @@
 import test from "ava";
-import { fakeOkResponse } from "../fake/fakes";
-import type { Adapter, HttpRequest, HttpResponse } from "../types";
+import { reflect } from "../fake/fakes";
+import type { HttpRequest, HttpResponse } from "../types";
 import { authenticate } from "./authenticate";
 
 test("custom header value", async (t) => {
   // Arrange.
 
   const underTest = authenticate("xyz");
-  const checkRequest: Adapter = (
-    request: HttpRequest,
-  ): Promise<HttpResponse> => {
-    t.is(request.headers?.get("Authorization"), "xyz");
-    return fakeOkResponse({})(request);
-  };
   const adapter = (req: HttpRequest): Promise<HttpResponse> =>
-    underTest(req, checkRequest);
+    underTest(req, reflect());
 
   // Act.
 
@@ -26,23 +20,22 @@ test("custom header value", async (t) => {
   // Assert.
 
   t.true(response.ok);
+  t.deepEqual(await response.body.json(), {
+    method: "GET",
+    url: "https://test/",
+    headers: { Authorization: "xyz" },
+    body: null,
+    options: null,
+    calls: 1,
+  });
 });
 
 test("basic authorization header", async (t) => {
   // Arrange.
 
   const underTest = authenticate.basic("username1", "password1");
-  const checkRequest: Adapter = (
-    request: HttpRequest,
-  ): Promise<HttpResponse> => {
-    t.is(
-      request.headers?.get("Authorization"),
-      "Basic dXNlcm5hbWUxOnBhc3N3b3JkMQ==",
-    );
-    return fakeOkResponse({})(request);
-  };
   const adapter = (req: HttpRequest): Promise<HttpResponse> =>
-    underTest(req, checkRequest);
+    underTest(req, reflect());
 
   // Act.
 
@@ -54,20 +47,22 @@ test("basic authorization header", async (t) => {
   // Assert.
 
   t.true(response.ok);
+  t.deepEqual(await response.body.json(), {
+    method: "GET",
+    url: "https://test/",
+    headers: { Authorization: "Basic dXNlcm5hbWUxOnBhc3N3b3JkMQ==" },
+    body: null,
+    options: null,
+    calls: 1,
+  });
 });
 
 test("bearer authorization header", async (t) => {
   // Arrange.
 
   const underTest = authenticate.bearer("token1");
-  const checkRequest: Adapter = (
-    request: HttpRequest,
-  ): Promise<HttpResponse> => {
-    t.is(request.headers?.get("Authorization"), "Bearer token1");
-    return fakeOkResponse({})(request);
-  };
   const adapter = (req: HttpRequest): Promise<HttpResponse> =>
-    underTest(req, checkRequest);
+    underTest(req, reflect());
 
   // Act.
 
@@ -79,6 +74,14 @@ test("bearer authorization header", async (t) => {
   // Assert.
 
   t.true(response.ok);
+  t.deepEqual(await response.body.json(), {
+    method: "GET",
+    url: "https://test/",
+    headers: { Authorization: "Bearer token1" },
+    body: null,
+    options: null,
+    calls: 1,
+  });
 });
 
 test("check that HTTPS is used", async (t) => {
@@ -86,7 +89,7 @@ test("check that HTTPS is used", async (t) => {
 
   const underTest = authenticate("xyz");
   const adapter = (req: HttpRequest): Promise<HttpResponse> =>
-    underTest(req, fakeOkResponse({}));
+    underTest(req, reflect());
 
   // Assert.
 
