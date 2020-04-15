@@ -60,7 +60,7 @@ test("throw error if content type does not match", async (t) => {
       });
     },
     {
-      name: "UnsupportedMediaTypeError",
+      name: "HttpError [415]",
       message: "Unsupported Media Type",
     },
   );

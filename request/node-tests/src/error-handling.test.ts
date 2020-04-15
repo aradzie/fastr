@@ -99,7 +99,7 @@ test("handle invalid content encoding", async (t) => {
       });
     },
     {
-      name: "BadRequestError",
+      name: "HttpError [400]",
       message: "Invalid content encoding",
     },
   );
@@ -131,7 +131,7 @@ test("handle malformed content encoding", async (t) => {
       await response.body.text();
     },
     {
-      name: "BadRequestError",
+      name: "HttpError [400]",
       message: "Invalid gzip data",
     },
   );

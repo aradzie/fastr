@@ -38,7 +38,7 @@ test("throw error if response status is not successful", async (t) => {
       });
     },
     {
-      name: "NotFoundError",
+      name: "HttpError [404]",
       message: "Not Found",
     },
   );
