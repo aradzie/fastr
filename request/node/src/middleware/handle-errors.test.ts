@@ -1,6 +1,6 @@
 import test from "ava";
-import { fakeNotFoundResponse, fakeResponse } from "../fake/fakes";
-import { HttpRequest, HttpResponse } from "../types";
+import { FakeResponse } from "../fake/response";
+import type { HttpRequest, HttpResponse } from "../types";
 import { handleErrors } from "./handle-errors";
 
 test("passes through if response status is successful", async (t) => {
@@ -8,7 +8,7 @@ test("passes through if response status is successful", async (t) => {
 
   const underTest = handleErrors();
   const adapter = (req: HttpRequest): Promise<HttpResponse> =>
-    underTest(req, fakeResponse());
+    underTest(req, FakeResponse.ok());
 
   // Act.
 
@@ -29,7 +29,7 @@ test("throw error if response status is not successful", async (t) => {
 
   const underTest = handleErrors();
   const adapter = (req: HttpRequest): Promise<HttpResponse> =>
-    underTest(req, fakeNotFoundResponse());
+    underTest(req, FakeResponse.notFound());
 
   // Assert.
 

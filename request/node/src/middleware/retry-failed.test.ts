@@ -1,5 +1,5 @@
 import test from "ava";
-import { fakeNotFoundResponse, fakeResponse } from "../fake/fakes";
+import { FakeResponse } from "../fake/response";
 import type { Adapter, HttpRequest, HttpResponse } from "../types";
 import { retryFailed } from "./retry-failed";
 
@@ -8,7 +8,7 @@ test("pass through if response is successful", async (t) => {
 
   const underTest = retryFailed();
   const adapter = (req: HttpRequest): Promise<HttpResponse> =>
-    underTest(req, fakeResponse());
+    underTest(req, FakeResponse.ok());
 
   // Act.
 
@@ -98,15 +98,15 @@ export function fakeEventualOkResponse(): Adapter {
   return async (request: HttpRequest): Promise<HttpResponse> => {
     switch (index++) {
       case 0:
-        return fakeResponse({ status: 500, bodyData: "a" })(request);
+        return FakeResponse.ok({ status: 500, bodyData: "a" })(request);
       case 1:
-        return fakeResponse({ status: 500, bodyData: "b" })(request);
+        return FakeResponse.ok({ status: 500, bodyData: "b" })(request);
       case 2:
-        return fakeResponse({ status: 502, bodyData: "c" })(request);
+        return FakeResponse.ok({ status: 502, bodyData: "c" })(request);
       case 3:
-        return fakeResponse({ bodyData: "done" })(request);
+        return FakeResponse.ok({ bodyData: "done" })(request);
       default:
-        return fakeNotFoundResponse()(request);
+        return FakeResponse.notFound()(request);
     }
   };
 }

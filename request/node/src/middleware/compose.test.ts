@@ -1,10 +1,10 @@
 import { Headers } from "@webfx-http/headers";
 import test from "ava";
-import { fakeResponse } from "../fake/fakes";
+import { FakeResponse } from "../fake/response";
 import type { Adapter, HttpRequest, HttpResponse } from "../types";
 import { compose } from "./compose";
 
-test("compose zero middlewares", async (t) => {
+test("compose zero middleware", async (t) => {
   // Arrange.
 
   const middleware = compose([]);
@@ -16,7 +16,7 @@ test("compose zero middlewares", async (t) => {
       url: "http://test/",
       method: "GET",
     },
-    fakeResponse(),
+    FakeResponse.ok(),
   );
 
   // Assert.
@@ -40,7 +40,7 @@ test("compose one middleware", async (t) => {
       url: "http://test/",
       method: "GET",
     },
-    fakeResponse(),
+    FakeResponse.ok(),
   );
 
   // Assert.
@@ -52,7 +52,7 @@ test("compose one middleware", async (t) => {
   t.is(response.headers.get("X-Middleware"), "a");
 });
 
-test("compose many middlewares", async (t) => {
+test("compose many middleware", async (t) => {
   // Arrange.
 
   const middleware = compose([a, b, c]);
@@ -64,7 +64,7 @@ test("compose many middlewares", async (t) => {
       url: "http://test/",
       method: "GET",
     },
-    fakeResponse(),
+    FakeResponse.ok(),
   );
 
   // Assert.

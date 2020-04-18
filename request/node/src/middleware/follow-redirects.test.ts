@@ -1,10 +1,6 @@
 import { RequestRedirectError } from "@webfx-request/error";
 import test from "ava";
-import {
-  fakeNotFoundResponse,
-  fakeRedirectResponse,
-  fakeResponse,
-} from "../fake/fakes";
+import { FakeResponse } from "../fake/response";
 import type { Adapter, HttpRequest, HttpResponse } from "../types";
 import { followRedirects } from "./follow-redirects";
 
@@ -13,7 +9,7 @@ test("pass through if response status is not redirect", async (t) => {
 
   const underTest = followRedirects();
   const adapter = (req: HttpRequest): Promise<HttpResponse> =>
-    underTest(req, fakeResponse({ bodyData: "found" }));
+    underTest(req, FakeResponse.ok({ bodyData: "found" }));
 
   // Act.
 
@@ -35,7 +31,7 @@ test("return first response the redirect option is manual", async (t) => {
 
   const underTest = followRedirects({ redirect: "manual" });
   const adapter = (req: HttpRequest): Promise<HttpResponse> =>
-    underTest(req, fakeRedirectResponse(303, "http://test/another"));
+    underTest(req, FakeResponse.redirect(303, "http://test/another"));
 
   // Act.
 
@@ -79,7 +75,7 @@ test("throw error if the redirect option is error", async (t) => {
 
   const underTest = followRedirects({ redirect: "error" });
   const adapter = (req: HttpRequest): Promise<HttpResponse> =>
-    underTest(req, fakeRedirectResponse(303, "http://test/another"));
+    underTest(req, FakeResponse.redirect(303, "http://test/another"));
 
   // Assert.
 
@@ -172,15 +168,15 @@ export function fakeRedirectingAdapter(): Adapter {
   return async (request: HttpRequest): Promise<HttpResponse> => {
     switch (String(request.url)) {
       case "http://test/a":
-        return fakeRedirectResponse(303, "http://test/b")(request);
+        return FakeResponse.redirect(303, "http://test/b")(request);
       case "http://test/b":
-        return fakeRedirectResponse(303, "http://test/c")(request);
+        return FakeResponse.redirect(303, "http://test/c")(request);
       case "http://test/c":
-        return fakeRedirectResponse(303, "/found")(request);
+        return FakeResponse.redirect(303, "/found")(request);
       case "http://test/found":
-        return fakeResponse({ bodyData: "found" })(request);
+        return FakeResponse.ok({ bodyData: "found" })(request);
       default:
-        return fakeNotFoundResponse()(request);
+        return FakeResponse.notFound()(request);
     }
   };
 }
@@ -189,11 +185,11 @@ export function fakeLoopingRedirectingAdapter(): Adapter {
   return async (request: HttpRequest): Promise<HttpResponse> => {
     switch (String(request.url)) {
       case "http://test/a":
-        return fakeRedirectResponse(308, "http://test/b")(request);
+        return FakeResponse.redirect(308, "http://test/b")(request);
       case "http://test/b":
-        return fakeRedirectResponse(308, "http://test/a")(request);
+        return FakeResponse.redirect(308, "http://test/a")(request);
       default:
-        return fakeNotFoundResponse()(request);
+        return FakeResponse.notFound()(request);
     }
   };
 }

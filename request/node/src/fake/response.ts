@@ -49,41 +49,38 @@ export function reflect(): Adapter {
   };
 }
 
-export function fakeResponse(init?: ResponseInit): Adapter {
-  return async (request: HttpRequest): Promise<HttpResponse> => {
-    return new FakeResponse({
-      ...init,
-      url: request.url,
-    });
-  };
-}
-
-export function fakeRedirectResponse(
-  status: number,
-  location: string,
-): Adapter {
-  return async (request: HttpRequest): Promise<HttpResponse> =>
-    new FakeResponse({
-      url: request.url,
-      status,
-      headers: {
-        location,
-      },
-      bodyData: `see ${location}`,
-    });
-}
-
-export function fakeNotFoundResponse(init?: ResponseInit): Adapter {
-  return async (request: HttpRequest): Promise<HttpResponse> =>
-    new FakeResponse({
-      ...init,
-      url: request.url,
-      status: 404,
-      bodyData: "not found",
-    });
-}
-
 export class FakeResponse implements HttpResponse {
+  static ok(init?: ResponseInit): Adapter {
+    return async ({ url }: HttpRequest): Promise<HttpResponse> => {
+      return new FakeResponse({
+        url,
+        ...init,
+      });
+    };
+  }
+
+  static redirect(status: number, location: string): Adapter {
+    return async ({ url }: HttpRequest): Promise<HttpResponse> =>
+      new FakeResponse({
+        url,
+        status,
+        headers: {
+          location,
+        },
+        bodyData: `see ${location}`,
+      });
+  }
+
+  static notFound(init?: ResponseInit): Adapter {
+    return async ({ url }: HttpRequest): Promise<HttpResponse> =>
+      new FakeResponse({
+        url,
+        status: 404,
+        bodyData: "not found",
+        ...init,
+      });
+  }
+
   readonly ok: boolean;
   readonly status: number;
   readonly statusText: string;

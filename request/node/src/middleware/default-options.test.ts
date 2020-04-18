@@ -1,5 +1,5 @@
 import test from "ava";
-import { reflect } from "../fake/fakes";
+import { reflect } from "../fake/response";
 import type { HttpRequest, HttpResponse } from "../types";
 import { defaultOptions } from "./default-options";
 
