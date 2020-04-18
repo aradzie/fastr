@@ -177,7 +177,10 @@ export class RequestBuilder {
     contentType?: string,
   ): Promise<HttpResponse>;
   /**
-   * Sends an HTTP request with the given JSON body.
+   * Sends an HTTP request with the given JSON body. The body argument must be
+   * either a plain object or an object with the `toJSON` method. If any other
+   * argument is given, e.g. an array or a function, this method will throw
+   * the `TypeError` at runtime.
    *
    * @param body The body to send.
    * @param contentType The content type to use.

@@ -205,16 +205,19 @@ export class RequestBuilder {
    */
   send(body: URLSearchParams, contentType?: string): Promise<HttpResponse>;
   /**
-   * Sends an HTTP request with the given JSON body.
+   * Sends an HTTP request with the given JSON body. The body argument must be
+   * either a plain object or an object with the `toJSON` method. If any other
+   * argument is given, e.g. an array or a function, this method will throw
+   * the `TypeError` at runtime.
    *
    * @param body The body to send.
    * @param contentType The content type to use.
    *                    The default value is `application/json`.
    */
-  send(body: unknown, contentType?: string): Promise<HttpResponse>;
+  send(body: object, contentType?: string): Promise<HttpResponse>;
 
   send(
-    body: BodyDataType | URLSearchParams | unknown | null = null,
+    body: BodyDataType | URLSearchParams | object | null = null,
     contentType: string | null = null,
   ): Promise<HttpResponse> {
     let request;

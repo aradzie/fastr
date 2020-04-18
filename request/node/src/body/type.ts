@@ -1,9 +1,10 @@
+import { isJSON } from "@webfx-request/json";
 import { Readable } from "stream";
 import { BodyDataType } from "../types";
 import { Streamable } from "./streamable";
 
 export function guessContentType(
-  body: BodyDataType | URLSearchParams | unknown,
+  body: BodyDataType | URLSearchParams | object,
   contentType: string | null,
 ): [BodyDataType, string] {
   if (typeof body === "string") {
@@ -21,8 +22,8 @@ export function guessContentType(
   if (body instanceof URLSearchParams) {
     return [String(body), contentType ?? "application/x-www-form-urlencoded"];
   }
-  if (body instanceof ArrayBuffer || ArrayBuffer.isView(body)) {
-    throw new TypeError("Must use Buffer");
+  if (isJSON(body)) {
+    return [JSON.stringify(body), contentType ?? "application/json"];
   }
-  return [JSON.stringify(body), contentType ?? "application/json"];
+  throw new TypeError("Invalid body object.");
 }

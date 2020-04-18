@@ -1,4 +1,5 @@
 import { multiEntriesOf } from "@webfx-http/headers";
+import { isJSON } from "@webfx-request/json";
 import type { BodyDataType, NameValueEntries } from "./types";
 
 export function guessContentType(
@@ -20,7 +21,10 @@ export function guessContentType(
   if (body instanceof ArrayBuffer || ArrayBuffer.isView(body)) {
     return [body, contentType ?? "application/octet-stream"];
   }
-  return [JSON.stringify(body), contentType ?? "application/json"];
+  if (isJSON(body)) {
+    return [JSON.stringify(body), contentType ?? "application/json"];
+  }
+  throw new TypeError("Invalid body object.");
 }
 
 export function toFormData(

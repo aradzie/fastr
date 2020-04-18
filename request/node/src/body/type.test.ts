@@ -21,7 +21,55 @@ test("guess form type", (t) => {
 });
 
 test("guess json type", (t) => {
-  t.is(guessContentType(new Map(), null)[1], "application/json"); // OMG
-  t.is(guessContentType({}, null)[1], "application/json");
-  t.is(guessContentType([], null)[1], "application/json");
+  // Try plain object.
+  t.deepEqual(guessContentType({ a: 1 }, null), [
+    '{"a":1}',
+    "application/json",
+  ]);
+
+  // Try non-plain object with the toJSON method.
+  t.deepEqual(
+    guessContentType(
+      new (class Dummy {
+        ignored = 0;
+        toJSON(): unknown {
+          return { a: 1 };
+        }
+      })(),
+      null,
+    ),
+    ['{"a":1}', "application/json"],
+  );
+});
+
+test("reject invalid type", (t) => {
+  // Try array.
+  t.throws(
+    () => {
+      guessContentType([], null);
+    },
+    {
+      instanceOf: TypeError,
+    },
+  );
+
+  // Try function.
+  t.throws(
+    () => {
+      guessContentType(() => null, null);
+    },
+    {
+      instanceOf: TypeError,
+    },
+  );
+
+  // Try non-plain object.
+  t.throws(
+    () => {
+      guessContentType(new (class Dummy {})(), null);
+    },
+    {
+      instanceOf: TypeError,
+    },
+  );
 });
