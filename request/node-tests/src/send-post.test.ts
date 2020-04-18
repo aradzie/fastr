@@ -26,7 +26,10 @@ test("post text", async (t) => {
     url: "/test",
     method: "POST",
     headers: {
+      "accept": "*/*",
+      "accept-encoding": "gzip, deflate, br",
       "content-length": "11",
+      "connection": "close",
     },
     body: "string body",
   });
@@ -53,7 +56,10 @@ test("post buffer", async (t) => {
     url: "/test",
     method: "POST",
     headers: {
+      "accept": "*/*",
+      "accept-encoding": "gzip, deflate, br",
       "content-length": "11",
+      "connection": "close",
     },
     body: "buffer body",
   });
@@ -84,7 +90,10 @@ test("post readable", async (t) => {
     url: "/test",
     method: "POST",
     headers: {
+      "accept": "*/*",
+      "accept-encoding": "gzip, deflate, br",
       "transfer-encoding": "chunked",
+      "connection": "close",
     },
     body: "stream body",
   });
@@ -123,17 +132,19 @@ test("post streamable", async (t) => {
     url: "/test",
     method: "POST",
     headers: {
+      "accept": "*/*",
+      "accept-encoding": "gzip, deflate, br",
       "transfer-encoding": "chunked",
+      "connection": "close",
     },
     body: "stream body",
   });
 });
 
 function describeRequest(req: IncomingMessage, res: ServerResponse): void {
-  const { method, url } = req;
+  const { url, method } = req;
   const headers = { ...req.headers };
   delete headers.host;
-  delete headers.connection;
   Body.from(req)
     .text()
     .then((body) => {

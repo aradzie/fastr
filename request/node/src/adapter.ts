@@ -21,6 +21,12 @@ export function requestAdapter(request: HttpRequest): Promise<HttpResponse> {
     req.on("error", (err) => {
       reject(err);
     });
+    if (req.getHeader("Accept") == null) {
+      req.setHeader("Accept", "*/*");
+    }
+    if (req.getHeader("Accept-Encoding") == null) {
+      req.setHeader("Accept-Encoding", "gzip, deflate, br");
+    }
     if (body != null) {
       sendBody(req, body, (err) => {
         if (err != null) {
