@@ -1,9 +1,5 @@
 import { MediaType } from "@webfx-http/headers";
-import {
-  followRedirects,
-  request,
-  RequestRedirectError,
-} from "@webfx-request/node";
+import { followRedirects, request, RequestError } from "@webfx-request/node";
 import { start } from "@webfx-request/testlib";
 import test from "ava";
 
@@ -145,7 +141,8 @@ test("on redirect throw", async (t) => {
       });
     },
     {
-      instanceOf: RequestRedirectError,
+      instanceOf: RequestError,
+      code: "REDIRECT",
       message: "Redirect response detected",
     },
   );
@@ -170,7 +167,8 @@ test("handle no redirect location", async (t) => {
       });
     },
     {
-      instanceOf: RequestRedirectError,
+      instanceOf: RequestError,
+      code: "REDIRECT",
       message: "Redirect has no location",
     },
   );
@@ -205,7 +203,8 @@ test("handle redirect loop", async (t) => {
       });
     },
     {
-      instanceOf: RequestRedirectError,
+      instanceOf: RequestError,
+      code: "REDIRECT",
       message: "Redirect loop detected",
     },
   );
@@ -250,7 +249,8 @@ test("handle too many redirects", async (t) => {
       });
     },
     {
-      instanceOf: RequestRedirectError,
+      instanceOf: RequestError,
+      code: "REDIRECT",
       message: "Too many redirects",
     },
   );

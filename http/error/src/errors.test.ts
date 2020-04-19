@@ -1,4 +1,5 @@
 import test from "ava";
+import { types } from "util";
 import { BadRequestError, createError, HttpError } from "./errors";
 
 test("create error returns an http error constructor", (t) => {
@@ -8,6 +9,7 @@ test("create error returns an http error constructor", (t) => {
 
   const instance = new ctor();
 
+  t.true(types.isNativeError(instance));
   t.true(instance instanceof HttpError);
   t.is(instance.name, "HttpError [400]");
   t.is(instance.message, "Bad Request");

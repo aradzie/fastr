@@ -23,10 +23,4 @@ export type {
   HandleErrorOptions,
   RetryFailedOptions,
 } from "./middleware";
-export {
-  RequestAbortedError,
-  RequestError,
-  RequestNetworkError,
-  RequestRedirectError,
-  RequestTimeoutError,
-} from "@webfx-request/error";
+export { RequestError } from "@webfx-request/error";

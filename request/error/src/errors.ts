@@ -1,59 +1,13 @@
 export class RequestError extends Error {
-  name = "RequestError";
+  readonly code: string;
 
-  constructor(message: string) {
+  constructor(message: string, code: string) {
     super(message);
-    const fn = Error.captureStackTrace;
-    if (typeof fn === "function") {
-      fn(this, this.constructor);
-    }
+    this.name = "RequestError";
+    this.code = code;
   }
-}
 
-export class RequestRedirectError extends RequestError {
-  readonly name = "RequestRedirectError";
-
-  constructor(message: string) {
-    super(message);
-    const fn = Error.captureStackTrace;
-    if (typeof fn === "function") {
-      fn(this, this.constructor);
-    }
-  }
-}
-
-export class RequestAbortedError extends RequestError {
-  readonly name = "RequestAbortedError";
-
-  constructor(message: string) {
-    super(message);
-    const fn = Error.captureStackTrace;
-    if (typeof fn === "function") {
-      fn(this, this.constructor);
-    }
-  }
-}
-
-export class RequestTimeoutError extends RequestError {
-  readonly name = "RequestTimeoutError";
-
-  constructor(message: string) {
-    super(message);
-    const fn = Error.captureStackTrace;
-    if (typeof fn === "function") {
-      fn(this, this.constructor);
-    }
-  }
-}
-
-export class RequestNetworkError extends RequestError {
-  readonly name = "RequestNetworkError";
-
-  constructor(message: string) {
-    super(message);
-    const fn = Error.captureStackTrace;
-    if (typeof fn === "function") {
-      fn(this, this.constructor);
-    }
+  get [Symbol.toStringTag](): string {
+    return "RequestError";
   }
 }
