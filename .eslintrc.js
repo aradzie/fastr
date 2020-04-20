@@ -11,8 +11,6 @@ module.exports = {
   },
   extends: [
     "eslint:recommended",
-    // "plugin:import/recommended",
-    // "plugin:import/typescript",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:node/recommended",
@@ -33,17 +31,6 @@ module.exports = {
     "node/prefer-global/process": ["error", "always"],
     "node/prefer-global/url": ["error", "always"],
     "node/prefer-global/url-search-params": ["error", "always"],
-  },
-  settings: {
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts"],
-    },
-    "import/resolver": {
-      typescript: {
-        alwaysTryTypes: true,
-        directory: "./packages/*/tsconfig.json",
-      },
-    },
   },
   overrides: [
     {
