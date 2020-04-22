@@ -1,4 +1,4 @@
-import { Cookie, Headers } from "@webfx-http/headers";
+import { Cookie, HttpHeaders } from "@webfx-http/headers";
 import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
 
 export interface XsrfOptions {
@@ -40,7 +40,7 @@ export function xsrf(options: XsrfOptions = {}): Middleware {
     ) {
       return adapter(request);
     }
-    const headers = new Headers(request.headers);
+    const headers = new HttpHeaders(request.headers);
     if (headers.has(headerName)) {
       return adapter(request);
     }

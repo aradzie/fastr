@@ -4,7 +4,7 @@ export { CacheControl } from "./cache-control";
 export { Cookie } from "./cookie";
 export { CookieCodec, CodecDelegate } from "./cookie-codec";
 export { ETag } from "./etag";
-export { Headers } from "./headers";
+export { HttpHeaders } from "./headers";
 export { MediaType } from "./media-type";
 export { SetCookie } from "./set-cookie";
 export {

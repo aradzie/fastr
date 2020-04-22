@@ -1,5 +1,5 @@
 import { Body } from "@webfx-http/body";
-import { Headers } from "@webfx-http/headers";
+import { HttpHeaders } from "@webfx-http/headers";
 import { isSuccess, statusCodes } from "@webfx-http/status";
 import type { IncomingHttpHeaders } from "http";
 import { Readable } from "stream";
@@ -17,7 +17,7 @@ export type ResponseInit = {
   readonly status?: number;
   readonly statusText?: string;
   readonly headers?:
-    | Headers
+    | HttpHeaders
     | Map<string, unknown>
     | Record<string, unknown>
     | NameValueEntries;
@@ -85,7 +85,7 @@ export class FakeResponse implements HttpResponse {
   readonly status: number;
   readonly statusText: string;
   readonly url: string;
-  readonly headers: Headers;
+  readonly headers: HttpHeaders;
   readonly body: Body;
   aborted = false;
 
@@ -100,7 +100,7 @@ export class FakeResponse implements HttpResponse {
     this.status = status;
     this.statusText = statusText;
     this.url = url;
-    this.headers = new Headers(headers);
+    this.headers = new HttpHeaders(headers);
     this.body = Body.from(new FakeIncomingMessage(bodyData));
   }
 

@@ -1,4 +1,4 @@
-import { Headers, MediaType } from "@webfx-http/headers";
+import { HttpHeaders, MediaType } from "@webfx-http/headers";
 import test from "ava";
 import { RequestBuilder } from "./builder";
 import type { Adapter, HttpRequest, HttpResponse } from "./types";
@@ -51,7 +51,7 @@ test("build headers", async (t) => {
     .accept("text/plain")
     .accept("text/*")
     .header("a", 1)
-    .header(new Headers({ b: 2 }))
+    .header(new HttpHeaders({ b: 2 }))
     .header(new Map([["c", 3]]))
     .header({ d: 4 })
     .header([["e", 5]]);

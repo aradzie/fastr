@@ -1,5 +1,5 @@
 import { UnsupportedMediaTypeError } from "@webfx-http/error";
-import { Accept, Headers, MediaType } from "@webfx-http/headers";
+import { Accept, HttpHeaders, MediaType } from "@webfx-http/headers";
 import { isSuccess } from "@webfx-http/status";
 import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
 
@@ -27,7 +27,7 @@ export function expectType(
     // Update request headers, make request with the new headers.
     const response = await adapter({
       ...request,
-      headers: new Headers(request.headers).set("Accept", accept),
+      headers: new HttpHeaders(request.headers).set("Accept", accept),
     });
 
     // Check response.

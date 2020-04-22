@@ -1,6 +1,6 @@
 import {
   Accept,
-  Headers,
+  HttpHeaders,
   MediaType,
   multiEntriesOf,
 } from "@webfx-http/headers";
@@ -26,7 +26,7 @@ export class RequestBuilder {
   readonly method: string;
   readonly url: string;
   private readonly _query = new URLSearchParams();
-  private readonly _headers = new Headers();
+  private readonly _headers = new HttpHeaders();
   private readonly _accept = new Accept();
   private readonly _eventEmitter = new EventEmitter();
   private _signal: AbortSignal | null = null;
@@ -77,7 +77,7 @@ export class RequestBuilder {
   }
 
   header(name: string, value: unknown): this;
-  header(headers: Headers): this;
+  header(headers: HttpHeaders): this;
   header(headers: Map<string, unknown>): this;
   header(headers: Record<string, unknown>): this;
   header(headers: NameValueEntries): this;
@@ -92,8 +92,8 @@ export class RequestBuilder {
     }
 
     if (length === 1) {
-      if (arg0 instanceof Headers) {
-        // header(headers: Headers): this;
+      if (arg0 instanceof HttpHeaders) {
+        // header(headers: HttpHeaders): this;
         for (const [name, value] of arg0) {
           this._headers.append(name, value);
         }

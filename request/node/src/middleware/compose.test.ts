@@ -1,4 +1,4 @@
-import { Headers } from "@webfx-http/headers";
+import { HttpHeaders } from "@webfx-http/headers";
 import test from "ava";
 import { FakeResponse } from "../fake/response";
 import type { Adapter, HttpRequest, HttpResponse } from "../types";
@@ -84,7 +84,7 @@ async function a(
   const { headers } = response;
   return {
     ...response,
-    headers: new Headers(headers).append("X-Middleware", "a"),
+    headers: new HttpHeaders(headers).append("X-Middleware", "a"),
   };
 }
 
@@ -96,7 +96,7 @@ async function b(
   const { headers } = response;
   return {
     ...response,
-    headers: new Headers(headers).append("X-Middleware", "b"),
+    headers: new HttpHeaders(headers).append("X-Middleware", "b"),
   };
 }
 
@@ -108,6 +108,6 @@ async function c(
   const { headers } = response;
   return {
     ...response,
-    headers: new Headers(headers).append("X-Middleware", "c"),
+    headers: new HttpHeaders(headers).append("X-Middleware", "c"),
   };
 }

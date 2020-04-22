@@ -1,4 +1,4 @@
-import { Cookie, Headers, SetCookie } from "@webfx-http/headers";
+import { Cookie, HttpHeaders, SetCookie } from "@webfx-http/headers";
 import { request } from "@webfx-request/node";
 import test from "ava";
 import { IncomingMessage, ServerResponse } from "http";
@@ -80,7 +80,7 @@ function listener(req: IncomingMessage, res: ServerResponse): void {
   res.end(
     JSON.stringify({
       requestCookies: Object.fromEntries(
-        new Headers(req.headers).map("Cookie", Cookie.parse) ?? [],
+        new HttpHeaders(req.headers).map("Cookie", Cookie.parse) ?? [],
       ),
     }),
   );

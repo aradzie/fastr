@@ -1,4 +1,4 @@
-import { Accept, Headers, MediaType } from "@webfx-http/headers";
+import { Accept, HttpHeaders, MediaType } from "@webfx-http/headers";
 import { request } from "@webfx-request/node";
 import { start } from "@webfx-request/testlib";
 import test from "ava";
@@ -8,7 +8,7 @@ test("negotiate media type", async (t) => {
 
   const server = start((req, res) => {
     const accept =
-      new Headers(req.headers).map("Accept", Accept.parse) ?? Accept.any();
+      new HttpHeaders(req.headers).map("Accept", Accept.parse) ?? Accept.any();
 
     if (accept.accepts("text/plain")) {
       res.statusCode = 200;
@@ -35,7 +35,7 @@ test("negotiate media type", async (t) => {
     const { ok, status, statusText, headers, body } = await req({
       url: "/test",
       method: "GET",
-      headers: new Headers().set("Accept", "text/plain"),
+      headers: new HttpHeaders().set("Accept", "text/plain"),
     });
 
     // Assert.
@@ -56,7 +56,7 @@ test("negotiate media type", async (t) => {
     const { ok, status, statusText, headers, body } = await req({
       url: "/test",
       method: "GET",
-      headers: new Headers().set("Accept", "application/json"),
+      headers: new HttpHeaders().set("Accept", "application/json"),
     });
 
     // Assert.

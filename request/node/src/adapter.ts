@@ -1,5 +1,5 @@
 import { Body } from "@webfx-http/body";
-import { Headers } from "@webfx-http/headers";
+import { HttpHeaders } from "@webfx-http/headers";
 import { isSuccess } from "@webfx-http/status";
 import http, { ClientRequest, IncomingMessage } from "http";
 import https from "https";
@@ -80,7 +80,7 @@ function makeResponse(
     statusMessage: statusText = "OK",
   } = incomingMessage;
   const ok = isSuccess(status);
-  const headers = new Headers(incomingMessage.headers);
+  const headers = new HttpHeaders(incomingMessage.headers);
   const body = Body.from(incomingMessage);
   return new (class implements HttpResponse {
     readonly ok = ok;

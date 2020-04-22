@@ -1,4 +1,4 @@
-import { Cookie, Headers, SetCookie } from "@webfx-http/headers";
+import { Cookie, HttpHeaders, SetCookie } from "@webfx-http/headers";
 import {
   Adapter,
   HttpRequest,
@@ -33,7 +33,7 @@ export function cookies(jar = new CookieJar()): Middleware {
     // Append cookies to request.
     const response = await adapter({
       ...request,
-      headers: new Headers(request.headers).set("Cookie", cookie),
+      headers: new HttpHeaders(request.headers).set("Cookie", cookie),
     });
 
     // Save cookies from response.

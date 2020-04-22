@@ -6,7 +6,7 @@ import { multiEntriesOf } from "./util";
 
 const kMap = Symbol("kMap");
 
-class HeaderEntry {
+class Entry {
   /**
    * The original Mixed-Case header name.
    */
@@ -30,7 +30,7 @@ class HeaderEntry {
   }
 
   append(v: string): void {
-    if (Headers.nonCoalescingHeaders.has(this.nameLc)) {
+    if (HttpHeaders.nonCoalescingHeaders.has(this.nameLc)) {
       this.value = concat(this.value, v);
     } else {
       this.value = concat(this.value, v).join(", ");
@@ -41,7 +41,7 @@ class HeaderEntry {
 /**
  * A collection of HTTP headers.
  */
-export class Headers implements Iterable<[string, string | string[]]> {
+export class HttpHeaders implements Iterable<[string, string | string[]]> {
   /**
    * The set of multi-value header names whose values are kept on separate lines
    * in an HTTP message.
@@ -52,22 +52,22 @@ export class Headers implements Iterable<[string, string | string[]]> {
    * Creates a new `Headers` instance by parsing the given raw headers string.
    * @param value Raw headers string.
    */
-  static parse(value: string): Headers {
-    const builder = new Headers();
+  static parse(value: string): HttpHeaders {
+    const headers = new HttpHeaders();
     for (const header of splitLines(value)) {
       const [name, value] = splitPair(header, ":");
       if (name && value) {
-        builder.append(name, value);
+        headers.append(name, value);
       }
     }
-    return builder;
+    return headers;
   }
 
-  private readonly [kMap]: Map<string, HeaderEntry>;
+  private readonly [kMap]: Map<string, Entry>;
 
   constructor(
     data:
-      | Headers
+      | HttpHeaders
       | Map<string, unknown>
       | Record<string, unknown>
       | NameValueEntries
@@ -77,7 +77,7 @@ export class Headers implements Iterable<[string, string | string[]]> {
       value: new Map(),
     });
     if (data != null) {
-      if (data instanceof Headers) {
+      if (data instanceof HttpHeaders) {
         for (const [name, value] of data) {
           this.append(name, value);
         }
@@ -112,7 +112,7 @@ export class Headers implements Iterable<[string, string | string[]]> {
     const nameLc = name.toLowerCase();
     let entry = this[kMap].get(nameLc);
     if (entry == null) {
-      this[kMap].set(nameLc, (entry = new HeaderEntry(name, nameLc)));
+      this[kMap].set(nameLc, (entry = new Entry(name, nameLc)));
     }
     entry.set(stringified);
     return this;
@@ -133,7 +133,7 @@ export class Headers implements Iterable<[string, string | string[]]> {
     const nameLc = name.toLowerCase();
     let entry = this[kMap].get(nameLc);
     if (entry == null) {
-      this[kMap].set(nameLc, (entry = new HeaderEntry(name, nameLc)));
+      this[kMap].set(nameLc, (entry = new Entry(name, nameLc)));
     }
     entry.append(stringified);
     return this;

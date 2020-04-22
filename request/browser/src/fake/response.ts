@@ -1,4 +1,4 @@
-import { Headers } from "@webfx-http/headers";
+import { HttpHeaders } from "@webfx-http/headers";
 import { isSuccess, statusCodes } from "@webfx-http/status";
 import type {
   Adapter,
@@ -12,7 +12,7 @@ export interface ResponseInit {
   readonly status?: number;
   readonly statusText?: string;
   readonly headers?:
-    | Headers
+    | HttpHeaders
     | Map<string, string>
     | Record<string, string>
     | NameValueEntries;
@@ -24,7 +24,7 @@ export interface BodyMethodInit {
   readonly status?: number;
   readonly statusText?: string;
   readonly headers?:
-    | Headers
+    | HttpHeaders
     | Map<string, string>
     | Record<string, string>
     | NameValueEntries;
@@ -141,7 +141,7 @@ export class FakeHttpResponse implements HttpResponse {
   readonly ok: boolean;
   readonly status: number;
   readonly statusText: string;
-  readonly headers: Headers;
+  readonly headers: HttpHeaders;
   readonly body: Promise<Blob>;
   readonly onBodyResolve: () => void;
   private _aborted = false;
@@ -151,7 +151,7 @@ export class FakeHttpResponse implements HttpResponse {
     url = "http://fake/",
     status = 200,
     statusText = statusTextOf(status),
-    headers = new Headers(),
+    headers = new HttpHeaders(),
     body = null,
     onBodyResolve = noop,
   }: ResponseInit) {
@@ -161,7 +161,7 @@ export class FakeHttpResponse implements HttpResponse {
     this.ok = isSuccess(status);
     this.status = status;
     this.statusText = statusText;
-    this.headers = new Headers(headers);
+    this.headers = new HttpHeaders(headers);
     this.body = body ?? Promise.resolve(new Blob());
     this.onBodyResolve = onBodyResolve;
   }

@@ -1,4 +1,4 @@
-import type { Headers } from "@webfx-http/headers";
+import type { HttpHeaders } from "@webfx-http/headers";
 import type { EventEmitter } from "events";
 import type { RequestBuilder } from "./builder";
 
@@ -95,7 +95,7 @@ export interface HttpRequest {
   /**
    * The request headers.
    */
-  readonly headers?: Headers | null;
+  readonly headers?: HttpHeaders | null;
   /**
    * The request body.
    */
@@ -169,7 +169,7 @@ export interface HttpResponse {
   /**
    * The bag of all response headers.
    */
-  readonly headers: Headers;
+  readonly headers: HttpHeaders;
 
   /**
    * Reads response body.

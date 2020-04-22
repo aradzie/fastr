@@ -1,4 +1,4 @@
-import { Headers } from "@webfx-http/headers";
+import { HttpHeaders } from "@webfx-http/headers";
 import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
 
 /**
@@ -18,7 +18,7 @@ export function authenticate(header: string): Middleware {
     }
     return adapter({
       ...request,
-      headers: new Headers(request.headers).set("Authorization", header),
+      headers: new HttpHeaders(request.headers).set("Authorization", header),
     });
   };
 }

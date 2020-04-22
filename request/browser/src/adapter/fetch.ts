@@ -1,4 +1,4 @@
-import { Headers as HttpHeaders } from "@webfx-http/headers";
+import { HttpHeaders } from "@webfx-http/headers";
 import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "../events";
 import type { HttpRequest, HttpResponse } from "../types";
 

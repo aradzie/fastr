@@ -1,5 +1,5 @@
 import type { Body } from "@webfx-http/body";
-import type { Headers } from "@webfx-http/headers";
+import type { HttpHeaders } from "@webfx-http/headers";
 import type { Agent as HttpAgent } from "http";
 import type { Agent as HttpsAgent } from "https";
 import type { Readable } from "stream";
@@ -100,7 +100,7 @@ export interface HttpRequest {
   /**
    * The request headers.
    */
-  readonly headers?: Headers | null;
+  readonly headers?: HttpHeaders | null;
   /**
    * The request body.
    */
@@ -143,7 +143,7 @@ export interface HttpResponse {
   /**
    * The bag of all response headers.
    */
-  readonly headers: Headers;
+  readonly headers: HttpHeaders;
   /**
    * Response body.
    */

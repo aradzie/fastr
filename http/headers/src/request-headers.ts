@@ -2,15 +2,15 @@ import { Accept } from "./accept";
 import { AcceptEncoding } from "./accept-encoding";
 import { Cookie } from "./cookie";
 import { ETag } from "./etag";
-import { Headers } from "./headers";
+import { HttpHeaders } from "./headers";
 import { MediaType } from "./media-type";
 import { stringifyDate } from "./syntax";
 import type { NameValueEntries } from "./types";
 
-export class RequestHeaders extends Headers {
+export class RequestHeaders extends HttpHeaders {
   constructor(
     data:
-      | Headers
+      | HttpHeaders
       | Map<string, unknown>
       | Record<string, unknown>
       | NameValueEntries

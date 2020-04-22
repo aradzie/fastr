@@ -1,4 +1,4 @@
-import { Headers } from "@webfx-http/headers";
+import { HttpHeaders } from "@webfx-http/headers";
 import { request } from "@webfx-request/node";
 import { start } from "@webfx-request/testlib";
 import test from "ava";
@@ -60,7 +60,7 @@ test("use custom header values", async (t) => {
   const { ok, status, statusText, body } = await req({
     url: "/test",
     method: "GET",
-    headers: new Headers({
+    headers: new HttpHeaders({
       "accept": "text/plain",
       "accept-encoding": "identity",
     }),

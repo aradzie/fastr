@@ -1,15 +1,15 @@
 import { CacheControl } from "./cache-control";
 import { ETag } from "./etag";
-import { Headers } from "./headers";
+import { HttpHeaders } from "./headers";
 import { MediaType } from "./media-type";
 import { SetCookie } from "./set-cookie";
 import { stringifyDate } from "./syntax";
 import type { NameValueEntries } from "./types";
 
-export class ResponseHeaders extends Headers {
+export class ResponseHeaders extends HttpHeaders {
   constructor(
     data:
-      | Headers
+      | HttpHeaders
       | Map<string, unknown>
       | Record<string, unknown>
       | NameValueEntries

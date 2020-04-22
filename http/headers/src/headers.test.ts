@@ -1,10 +1,10 @@
 import test from "ava";
 import { Cookie } from "./cookie";
-import { Headers } from "./headers";
+import { HttpHeaders } from "./headers";
 import { SetCookie } from "./set-cookie";
 
 test("reject invalid header names", (t) => {
-  const headers = new Headers();
+  const headers = new HttpHeaders();
 
   t.throws(
     () => {
@@ -63,7 +63,7 @@ test("reject invalid header names", (t) => {
 });
 
 test("reject invalid header values", (t) => {
-  const headers = new Headers();
+  const headers = new HttpHeaders();
 
   t.throws(
     () => {
@@ -86,7 +86,7 @@ test("reject invalid header values", (t) => {
 });
 
 test("mutate", (t) => {
-  const headers = new Headers()
+  const headers = new HttpHeaders()
     .set("foo", "a")
     .set("Foo", "b")
     .set("FOO", "c")
@@ -104,7 +104,9 @@ test("mutate", (t) => {
 });
 
 test("from headers", (t) => {
-  const headers = new Headers(new Headers().set("foo", "1").set("bar", "2"));
+  const headers = new HttpHeaders(
+    new HttpHeaders().set("foo", "1").set("bar", "2"),
+  );
   t.deepEqual(
     [...headers],
     [
@@ -115,7 +117,7 @@ test("from headers", (t) => {
 });
 
 test("from map", (t) => {
-  const headers = new Headers(
+  const headers = new HttpHeaders(
     new Map([
       ["foo", 1],
       ["bar", 2],
@@ -131,7 +133,7 @@ test("from map", (t) => {
 });
 
 test("from record", (t) => {
-  const headers = new Headers({
+  const headers = new HttpHeaders({
     foo: 1,
     bar: 2,
   });
@@ -145,7 +147,7 @@ test("from record", (t) => {
 });
 
 test("from entries", (t) => {
-  const headers = new Headers([
+  const headers = new HttpHeaders([
     ["foo", 1],
     ["bar", 2],
   ]);
@@ -159,7 +161,7 @@ test("from entries", (t) => {
 });
 
 test("spread", (t) => {
-  const headers = new Headers().set("foo", "a").append("bar", "b");
+  const headers = new HttpHeaders().set("foo", "a").append("bar", "b");
   t.deepEqual({ ...headers }, {});
   t.deepEqual(
     [...headers],
@@ -175,7 +177,7 @@ test("spread", (t) => {
 });
 
 test("toJSON", (t) => {
-  const headers = new Headers()
+  const headers = new HttpHeaders()
     .append("foo", 1)
     .append("foo", 2)
     .set("bar", 3)
@@ -192,7 +194,7 @@ test("toJSON", (t) => {
 });
 
 test("toString", (t) => {
-  const headers = new Headers()
+  const headers = new HttpHeaders()
     .append("foo", 1)
     .append("foo", 2)
     .set("bar", 3)
@@ -211,24 +213,24 @@ test("toString", (t) => {
 });
 
 test("parse", (t) => {
-  t.deepEqual(Headers.parse("").toJSON(), {});
-  t.deepEqual(Headers.parse("\n").toJSON(), {});
-  t.deepEqual(Headers.parse("foo: a").toJSON(), {
+  t.deepEqual(HttpHeaders.parse("").toJSON(), {});
+  t.deepEqual(HttpHeaders.parse("\n").toJSON(), {});
+  t.deepEqual(HttpHeaders.parse("foo: a").toJSON(), {
     foo: "a",
   });
-  t.deepEqual(Headers.parse("foo: a\n").toJSON(), {
+  t.deepEqual(HttpHeaders.parse("foo: a\n").toJSON(), {
     foo: "a",
   });
-  t.deepEqual(Headers.parse("foo: a\nbar: b:c=d").toJSON(), {
+  t.deepEqual(HttpHeaders.parse("foo: a\nbar: b:c=d").toJSON(), {
     foo: "a",
     bar: "b:c=d",
   });
-  t.deepEqual(Headers.parse("\nfoo:  a  \nbar:b:c=d  \n\n").toJSON(), {
+  t.deepEqual(HttpHeaders.parse("\nfoo:  a  \nbar:b:c=d  \n\n").toJSON(), {
     foo: "a",
     bar: "b:c=d",
   });
   t.deepEqual(
-    Headers.parse(
+    HttpHeaders.parse(
       "Date: Thu, 01 Jan 1970 00:00:01 GMT\n" +
         "Accept: image/png\n" +
         "Accept: image/*\n" +
