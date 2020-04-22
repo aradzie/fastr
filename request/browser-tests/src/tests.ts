@@ -231,12 +231,15 @@ function makeAdapterTests(underTest: Adapter): void {
         .sendForm(formData);
       const { body, ...val } = await response.json();
       const parsedFormData = parseFormData(body);
+      expect(val.headers["content-type"]).to.match(
+        /^multipart\/form-data; boundary=.*$/,
+      );
+      delete val.headers["content-type"];
       expect(val).to.deep.eq({
         url: "/test/reflect",
         method: "POST",
         headers: {
           "accept": "*/*",
-          "content-type": "multipart/form-data",
           "content-length": String(body.length),
           "x-foo": "Bar",
         },

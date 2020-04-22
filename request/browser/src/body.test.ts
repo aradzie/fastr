@@ -10,7 +10,7 @@ test("guess text type", (t) => {
 });
 
 test("guess multipart form type", (t) => {
-  t.is(guessContentType(new FormData(), null)[1], "multipart/form-data");
+  t.is(guessContentType(new FormData(), null)[1], null);
 });
 
 test("guess url-encoded form type", (t) => {
@@ -97,7 +97,7 @@ test("reject invalid type", (t) => {
 });
 
 test("to form data", (t) => {
-  t.is(toFormData(new FormData())[1], "multipart/form-data");
+  t.is(toFormData(new FormData())[1], null);
   t.is(
     toFormData(new URLSearchParams())[1],
     "application/x-www-form-urlencoded",

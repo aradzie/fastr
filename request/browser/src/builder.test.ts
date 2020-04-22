@@ -306,10 +306,7 @@ test("send multipart form body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
-  t.is(
-    req1.headers?.map("Content-Type", MediaType.parse)?.name,
-    "multipart/form-data",
-  );
+  t.is(req1.headers?.get("Content-Type"), null);
 });
 
 test("send url-encoded form body", async (t) => {

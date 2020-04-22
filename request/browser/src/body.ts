@@ -5,12 +5,15 @@ import type { BodyDataType, NameValueEntries } from "./types";
 export function guessContentType(
   body: unknown,
   contentType: string | null,
-): [BodyDataType, string] {
+): [BodyDataType, string | null] {
+  if (body == null) {
+    throw new TypeError();
+  }
   if (typeof body === "string") {
     return [body, contentType ?? "text/plain"];
   }
   if (body instanceof FormData) {
-    return [body, contentType ?? "multipart/form-data"];
+    return [body, null]; // Let the browser determine the right type.
   }
   if (body instanceof URLSearchParams) {
     return [body, contentType ?? "application/x-www-form-urlencoded"];
@@ -34,9 +37,12 @@ export function toFormData(
     | Map<string, unknown>
     | Record<string, unknown>
     | NameValueEntries,
-): [FormData | URLSearchParams, string] {
+): [FormData | URLSearchParams, string | null] {
+  if (body == null) {
+    throw new TypeError();
+  }
   if (body instanceof FormData) {
-    return [body, "multipart/form-data"];
+    return [body, null];
   }
   if (!(body instanceof URLSearchParams)) {
     body = new URLSearchParams([
