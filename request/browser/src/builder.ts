@@ -25,35 +25,17 @@ export class RequestBuilder {
   readonly adapter: Adapter;
   readonly method: string;
   readonly url: string;
-  private readonly _eventEmitter = new EventEmitter();
   private readonly _query = new URLSearchParams();
   private readonly _headers = new Headers();
   private readonly _accept = new Accept();
+  private readonly _eventEmitter = new EventEmitter();
+  private _signal: AbortSignal | null = null;
   private readonly _options: HttpRequestOptions = {};
 
   constructor(adapter: Adapter, method: string, url: URL | string) {
     this.adapter = adapter;
     this.method = method.toUpperCase();
     this.url = String(url);
-  }
-
-  /**
-   * Adds a listener to be notified of upload progress.
-   */
-  on(
-    event: typeof EV_UPLOAD_PROGRESS,
-    listener: (event: UploadProgressEvent) => void,
-  ): this;
-  /**
-   * Adds a listener to be notified of download progress.
-   */
-  on(
-    event: typeof EV_DOWNLOAD_PROGRESS,
-    listener: (event: DownloadProgressEvent) => void,
-  ): this;
-  on(event: string | symbol, listener: (...args: any[]) => void): this {
-    this._eventEmitter.on(event, listener);
-    return this;
   }
 
   query(name: string, value: unknown): this;
@@ -142,13 +124,38 @@ export class RequestBuilder {
     return this;
   }
 
-  options(options: HttpRequestOptions): this {
-    Object.assign(this._options, options);
+  /**
+   * Adds a listener to be notified of upload progress.
+   */
+  on(
+    event: typeof EV_UPLOAD_PROGRESS,
+    listener: (event: UploadProgressEvent) => void,
+  ): this;
+  /**
+   * Adds a listener to be notified of download progress.
+   */
+  on(
+    event: typeof EV_DOWNLOAD_PROGRESS,
+    listener: (event: DownloadProgressEvent) => void,
+  ): this;
+  on(event: string | symbol, listener: (...args: any[]) => void): this {
+    this._eventEmitter.on(event, listener);
     return this;
   }
 
-  timeout(timeout: number): this {
-    this.options({ timeout });
+  /**
+   * Sets the given abort signal.
+   */
+  signal(signal: AbortSignal): this {
+    this._signal = signal;
+    return this;
+  }
+
+  /**
+   * Appends the given options, overwrites any previously set options.
+   */
+  options(options: HttpRequestOptions): this {
+    Object.assign(this._options, options);
     return this;
   }
 
@@ -250,6 +257,7 @@ export class RequestBuilder {
       headers: this._headers,
       body,
       eventEmitter: this._eventEmitter,
+      signal: this._signal,
       options: this._options,
     };
   }

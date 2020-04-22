@@ -17,11 +17,16 @@ import "./polyfills"; // Automatically install the necessary polyfills.
  * See https://xhr.spec.whatwg.org/
  * See https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
  */
-export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
-  const { url, method, headers, body, eventEmitter, options } = request;
+export async function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
+  const { url, method, headers, body, eventEmitter, signal, options } = request;
   const { timeout, cache, credentials, redirect } = options ?? {};
 
-  switch (method.toUpperCase()) {
+  if (signal != null && signal.aborted) {
+    throw new DOMException("Request aborted", "AbortError");
+  }
+
+  const methodUc = (method ?? "GET").toUpperCase();
+  switch (methodUc) {
     case "HEAD":
     case "GET":
       if (body != null) {
@@ -31,10 +36,15 @@ export function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
   }
 
   const xhr = new XMLHttpRequest();
-  xhr.open(method, url, true);
+  xhr.open(methodUc, url, true);
   xhr.responseType = "blob";
   for (const [name, value] of headers ?? []) {
     xhr.setRequestHeader(name, Array.isArray(value) ? value.join(", ") : value);
+  }
+  if (signal != null) {
+    signal.addEventListener("abort", () => {
+      xhr.abort();
+    });
   }
   if (timeout != null) {
     xhr.timeout = timeout;
@@ -100,7 +110,6 @@ function makeResponse(xhr: XMLHttpRequest, body: Promise<Blob>): HttpResponse {
   const { status, statusText, responseURL: url } = xhr;
   const headers = HttpHeaders.parse(xhr.getAllResponseHeaders());
   const ok = isSuccess(status);
-  let aborted = false;
   let bodyUsed = false;
 
   return new (class XhrHttpResponse implements HttpResponse {
@@ -110,8 +119,8 @@ function makeResponse(xhr: XMLHttpRequest, body: Promise<Blob>): HttpResponse {
     url = url;
     headers = headers;
 
-    async blob(): Promise<Blob> {
-      return await readBody();
+    blob(): Promise<Blob> {
+      return readBody();
     }
 
     async arrayBuffer(): Promise<ArrayBuffer> {
@@ -142,15 +151,15 @@ function makeResponse(xhr: XMLHttpRequest, body: Promise<Blob>): HttpResponse {
     }
 
     abort(): void {
-      aborted = true;
       xhr.abort();
+    }
+
+    get bodyUsed(): boolean {
+      return bodyUsed;
     }
   })();
 
   function readBody(): Promise<Blob> {
-    if (aborted) {
-      throw new DOMException("Request aborted", "AbortError");
-    }
     if (bodyUsed) {
       throw new TypeError("Body has already been consumed.");
     }

@@ -144,8 +144,8 @@ export class FakeHttpResponse implements HttpResponse {
   readonly headers: Headers;
   readonly body: Promise<Blob>;
   readonly onBodyResolve: () => void;
-  bodyUsed = false;
-  aborted = false;
+  private _aborted = false;
+  private _bodyUsed = false;
 
   constructor({
     url = "http://fake/",
@@ -167,10 +167,10 @@ export class FakeHttpResponse implements HttpResponse {
   }
 
   private _readBlob(): Promise<Blob> {
-    if (this.aborted) {
+    if (this._aborted) {
       throw new DOMException("Request aborted", "AbortError");
     }
-    if (this.bodyUsed) {
+    if (this._bodyUsed) {
       throw new TypeError("Body has already been consumed.");
     }
     return this.body;
@@ -201,7 +201,11 @@ export class FakeHttpResponse implements HttpResponse {
   }
 
   abort(): void {
-    this.aborted = true;
+    this._aborted = true;
+  }
+
+  get bodyUsed(): boolean {
+    return this._bodyUsed;
   }
 }
 

@@ -28,35 +28,16 @@ export class RequestBuilder {
   readonly adapter: Adapter;
   readonly method: string;
   readonly url: string;
-  private readonly _eventEmitter = new EventEmitter();
   private readonly _query = new URLSearchParams();
   private readonly _headers = new Headers();
   private readonly _accept = new Accept();
+  private readonly _eventEmitter = new EventEmitter();
   private readonly _options: HttpRequestOptions = {};
 
   constructor(adapter: Adapter, method: string, url: URL | string) {
     this.adapter = adapter;
     this.method = method.toUpperCase();
     this.url = String(url);
-  }
-
-  /**
-   * Adds a listener to be notified of upload progress.
-   */
-  on(
-    event: typeof EV_UPLOAD_PROGRESS,
-    listener: (event: UploadProgressEvent) => void,
-  ): this;
-  /**
-   * Adds a listener to be notified of download progress.
-   */
-  on(
-    event: typeof EV_DOWNLOAD_PROGRESS,
-    listener: (event: DownloadProgressEvent) => void,
-  ): this;
-  on(event: string | symbol, listener: (...args: any[]) => void): this {
-    this._eventEmitter.on(event, listener);
-    return this;
   }
 
   query(name: string, value: unknown): this;
@@ -142,6 +123,25 @@ export class RequestBuilder {
    */
   accept(type: MediaType | string, q: number | null = null): this {
     this._accept.add(String(type), q);
+    return this;
+  }
+
+  /**
+   * Adds a listener to be notified of upload progress.
+   */
+  on(
+    event: typeof EV_UPLOAD_PROGRESS,
+    listener: (event: UploadProgressEvent) => void,
+  ): this;
+  /**
+   * Adds a listener to be notified of download progress.
+   */
+  on(
+    event: typeof EV_DOWNLOAD_PROGRESS,
+    listener: (event: DownloadProgressEvent) => void,
+  ): this;
+  on(event: string | symbol, listener: (...args: any[]) => void): this {
+    this._eventEmitter.on(event, listener);
     return this;
   }
 

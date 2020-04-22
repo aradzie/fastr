@@ -12,7 +12,7 @@ export function match(method: string, url: string | RegExp): RequestMatcher {
     if (method === "*") {
       return true;
     } else {
-      return method.toUpperCase() === request.method.toUpperCase();
+      return method.toUpperCase() === (request.method ?? "GET").toUpperCase();
     }
   };
 

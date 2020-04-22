@@ -89,9 +89,9 @@ export interface HttpRequest {
    */
   readonly url: string;
   /**
-   * The HTTP method to use for a request.
+   * The HTTP method to use for a request. The default value is "GET".
    */
-  readonly method: string;
+  readonly method?: string | null;
   /**
    * The request headers.
    */
@@ -105,6 +105,10 @@ export interface HttpRequest {
    */
   readonly eventEmitter?: EventEmitter | null;
   /**
+   * An abort signal to cancel this request on demand.
+   */
+  readonly signal?: AbortSignal | null;
+  /**
    * Any additional request options.
    */
   readonly options?: HttpRequestOptions | null;
@@ -115,22 +119,22 @@ export interface HttpRequestOptions {
    * When set to a non-zero value will cause fetching to terminate after
    * the given time in milliseconds has passed.
    */
-  readonly timeout?: number;
+  readonly timeout?: number | null;
   /**
    * A string indicating how the request will interact with the browser's cache
    * to set request's cache.
    */
-  readonly cache?: RequestCache;
+  readonly cache?: RequestCache | null;
   /**
    * A string indicating whether credentials will be sent with the request
    * always, never, or only when sent to a same-origin URL. Sets request's
    * credentials.
    */
-  readonly credentials?: RequestCredentials;
+  readonly credentials?: RequestCredentials | null;
   /**
    * The mode for how redirects are handled.
    */
-  readonly redirect?: RequestRedirect;
+  readonly redirect?: RequestRedirect | null;
 }
 
 export type BodyDataType =
@@ -168,34 +172,45 @@ export interface HttpResponse {
   readonly headers: Headers;
 
   /**
-   * Response body.
+   * Reads response body.
+   * Throws `DOMException` with name `AbortError` if request was aborted.
    */
   blob(): Promise<Blob>;
 
   /**
-   * Response body as ArrayBuffer.
+   * Reads response body as array buffer.
+   * Throws `DOMException` with name `AbortError` if request was aborted.
    */
   arrayBuffer(): Promise<ArrayBuffer>;
 
   /**
-   * Response body as string.
+   * Reads response body as text.
+   * Throws `DOMException` with name `AbortError` if request was aborted.
    */
   text(): Promise<string>;
 
   /**
-   * Response body as form data.
+   * Reads response body as form data.
+   * Throws `DOMException` with name `AbortError` if request was aborted.
    */
   formData(): Promise<FormData>;
 
   /**
-   * Response body parsed from JSON string.
+   * Reads response body as text then parses it as JSON.
+   * Throws `DOMException` with name `AbortError` if request was aborted.
    */
   json<T = unknown>(): Promise<T>;
 
   /**
-   * Discards response body.
+   * Aborts this request at the read response body phase.
    */
   abort(): void;
+
+  /**
+   * Returns a value indicating whether the response body has already been
+   * consumed. Trying to read body twice will throw an error.
+   */
+  readonly bodyUsed: boolean;
 }
 
 export interface UploadProgressEvent {

@@ -1,12 +1,16 @@
 import { throwError } from "@webfx-http/error";
-import { isClientError, isServerError } from "@webfx-http/status";
+import { isClientError, isServerError, isSuccess } from "@webfx-http/status";
 import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
 
 export interface HandleErrorOptions {
   /**
-   * Whether to ignore response body in case of a failed response.
+   * Whether to accept only successful HTTP statuses.
+   * But default the handle errors middleware rejects only error HTTP statuses
+   * such as 4XX and 5XX. This option allows to reject more HTTP statuses
+   * such as 1XX, 3XX, 4XX and 5XX.
+   * The default value is `true`.
    */
-  readonly ignoreBody?: boolean;
+  readonly okOnly?: boolean;
 }
 
 /**
@@ -24,7 +28,7 @@ export interface HandleErrorOptions {
  * error.
  */
 export function handleErrors(options: HandleErrorOptions = {}): Middleware {
-  const { ignoreBody = true } = options;
+  const { okOnly = true } = options;
   return async (
     request: HttpRequest,
     adapter: Adapter,
@@ -32,10 +36,12 @@ export function handleErrors(options: HandleErrorOptions = {}): Middleware {
     const response = await adapter(request);
     const { status, statusText } = response;
     if (isClientError(status) || isServerError(status)) {
-      if (ignoreBody) {
-        response.abort(); // TODO Do we need this?
-      }
+      response.abort();
       throwError(status, statusText);
+    }
+    if (okOnly && !isSuccess(status)) {
+      response.abort();
+      throw new TypeError(`Excepted successful HTTP status but got ${status}.`);
     }
     return response;
   };

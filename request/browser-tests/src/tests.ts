@@ -22,11 +22,18 @@ function makeAdapterTests(underTest: Adapter): void {
       adapter(underTest);
     });
 
-    it("data url", async () => {
+    it("get data url", async () => {
       const response = await request
         .get("data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==")
         .send();
       expect(await response.text()).to.eq("Hello, World!");
+    });
+
+    it("get blob url", async () => {
+      const blob = new Blob(["blob data"], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const response = await request.get(url).send();
+      expect(await response.text()).to.eq("blob data");
     });
 
     it("get with client error status", async () => {
@@ -302,7 +309,9 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText } = response;
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
+      expect(response.bodyUsed).to.eq(false);
       expect(await response.text()).to.eq("some text");
+      expect(response.bodyUsed).to.eq(true);
       try {
         await response.blob();
       } catch (ex) {
@@ -312,11 +321,13 @@ function makeAdapterTests(underTest: Adapter): void {
       expect.fail("Should throw error");
     });
 
-    it("ignore body", async () => {
-      // TODO In Chrome dev tools:
-      //   Uncaught (in promise) RequestAbortedError: Request aborted
-      const response = await request.get("/test/infinite-response").send();
-      response.abort();
+    it("abort synchronously", async () => {
+      const controller = new AbortController();
+      const response = await request
+        .get("/test/infinite-response")
+        .signal(controller.signal)
+        .send();
+      controller.abort();
       try {
         await response.text();
       } catch (ex) {
@@ -327,10 +338,14 @@ function makeAdapterTests(underTest: Adapter): void {
       expect.fail("Should throw error");
     });
 
-    it("ignore body asynchronously", async () => {
-      const response = await request.get("/test/infinite-response").send();
+    it("abort asynchronously", async () => {
+      const controller = new AbortController();
+      const response = await request
+        .get("/test/infinite-response")
+        .signal(controller.signal)
+        .send();
       setTimeout(() => {
-        response.abort();
+        controller.abort();
       }, 10);
       try {
         await response.text();
@@ -340,6 +355,34 @@ function makeAdapterTests(underTest: Adapter): void {
         return;
       }
       expect.fail("Should throw error");
+    });
+
+    it("abort before request", async () => {
+      const controller = new AbortController();
+      controller.abort();
+      try {
+        await request
+          .get("/test/infinite-response")
+          .signal(controller.signal)
+          .send();
+      } catch (ex) {
+        expect(ex).to.instanceof(DOMException);
+        expect(ex.code).to.eq(DOMException.ABORT_ERR);
+        return;
+      }
+      expect.fail("Should throw error");
+    });
+
+    it("abort after response", async () => {
+      const controller = new AbortController();
+      const response = await request
+        .get("/test/text-type")
+        .signal(controller.signal)
+        .send();
+      expect(await response.text()).to.eq("some text");
+      controller.abort();
+      expect(response.status).to.eq(200);
+      expect(response.statusText).to.eq("OK");
     });
 
     it("request aborted on the server", async () => {
@@ -366,7 +409,7 @@ function makeAdapterTests(underTest: Adapter): void {
 
     it("destination unreachable", async () => {
       try {
-        const response = await request.get("http://localhost:1/").send();
+        const response = await request.get("http://localhost:12345/").send();
         await response.text();
       } catch (ex) {
         expect(ex).to.instanceof(TypeError);

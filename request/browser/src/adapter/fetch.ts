@@ -11,8 +11,18 @@ import type { HttpRequest, HttpResponse } from "../types";
 export async function fetchAdapter(
   request: HttpRequest,
 ): Promise<HttpResponse> {
-  const { url, method, headers, body, eventEmitter, options } = request;
+  const { url, method, headers, body, eventEmitter, signal, options } = request;
   const { timeout, cache, credentials, redirect } = options ?? {};
+
+  const controller = new AbortController();
+  if (signal != null) {
+    if (signal.aborted) {
+      controller.abort();
+    }
+    signal.addEventListener("abort", () => {
+      controller.abort();
+    });
+  }
 
   if (process.env.NODE_ENV !== "production") {
     if (eventEmitter != null) {
@@ -20,7 +30,7 @@ export async function fetchAdapter(
         eventEmitter.listenerCount(EV_UPLOAD_PROGRESS) > 0 ||
         eventEmitter.listenerCount(EV_DOWNLOAD_PROGRESS) > 0
       ) {
-        console.error("Fetch adapter does not support events");
+        console.warn("Fetch adapter does not support progress events.");
       }
     }
     if (timeout != null) {
@@ -28,17 +38,14 @@ export async function fetchAdapter(
     }
   }
 
-  const controller = new AbortController();
-  const { signal } = controller;
-
   const req = new Request(url, {
-    method,
+    method: method ?? "GET",
     headers: toHeaders(headers),
-    body,
-    cache,
-    credentials,
-    redirect,
-    signal,
+    body: body,
+    signal: controller.signal,
+    cache: cache ?? undefined,
+    credentials: credentials ?? undefined,
+    redirect: redirect ?? undefined,
   });
 
   const res = await fetch(req);
@@ -50,28 +57,32 @@ export async function fetchAdapter(
     readonly url = res.url;
     readonly headers = new HttpHeaders([...res.headers]);
 
-    async blob(): Promise<Blob> {
+    blob(): Promise<Blob> {
       return res.blob();
     }
 
-    async arrayBuffer(): Promise<ArrayBuffer> {
+    arrayBuffer(): Promise<ArrayBuffer> {
       return res.arrayBuffer();
     }
 
-    async text(): Promise<string> {
+    text(): Promise<string> {
       return res.text();
     }
 
-    async formData(): Promise<FormData> {
+    formData(): Promise<FormData> {
       return res.formData();
     }
 
-    async json<T = unknown>(): Promise<T> {
+    json<T = unknown>(): Promise<T> {
       return res.json();
     }
 
     abort(): void {
       controller.abort();
+    }
+
+    get bodyUsed(): boolean {
+      return res.bodyUsed;
     }
   })();
 }
