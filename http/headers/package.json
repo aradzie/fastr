@@ -8,6 +8,10 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "module": "lib-esm/index.js",
+  "browser": {
+    "./lib/headers.js": "./lib/headers-browser.js",
+    "./lib-esm/headers.js": "./lib-esm/headers-browser.js"
+  },
   "engines": {
     "node": ">=12.16"
   },

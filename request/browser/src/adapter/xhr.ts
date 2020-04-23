@@ -39,7 +39,8 @@ export async function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
   xhr.open(methodUc, url, true);
   xhr.responseType = "blob";
   for (const [name, value] of headers ?? []) {
-    xhr.setRequestHeader(name, Array.isArray(value) ? value.join(", ") : value);
+    // In the browser env header values are always strings.
+    xhr.setRequestHeader(name, value as string);
   }
   if (signal != null) {
     signal.addEventListener("abort", () => {

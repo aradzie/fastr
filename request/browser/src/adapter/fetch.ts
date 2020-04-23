@@ -40,7 +40,7 @@ export async function fetchAdapter(
 
   const req = new Request(url, {
     method: method ?? "GET",
-    headers: toHeaders(headers),
+    headers: headers?.toJSON() as Record<string, string>,
     body: body,
     signal: controller.signal,
     cache: cache ?? undefined,
@@ -85,19 +85,4 @@ export async function fetchAdapter(
       return res.bodyUsed;
     }
   })();
-}
-
-function toHeaders(headers: HttpHeaders | null = null): Headers {
-  const result = new Headers();
-  if (headers != null)
-    for (const [name, value] of headers) {
-      if (Array.isArray(value)) {
-        for (const item of value) {
-          result.append(name, item);
-        }
-      } else {
-        result.append(name, value);
-      }
-    }
-  return result;
 }

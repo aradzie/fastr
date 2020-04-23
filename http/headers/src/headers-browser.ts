@@ -157,29 +157,6 @@ export class HttpHeaders implements Iterable<[string, string | string[]]> {
   }
 
   /**
-   * Gets all values of the header with the given name,
-   * or empty array if it does not exist.
-   * Header name is case-insensitive.
-   *
-   * Although this class is isomorphic and can be used in the browser, this
-   * specific method exists only in the node server. A bundler such as webpack
-   * will replace this code with a browser-specific version which does not have
-   * this method.
-   */
-  getAll(name: string): string[] {
-    if (!isToken(name)) {
-      throw new InvalidHeaderNameError();
-    }
-    const nameLc = name.toLowerCase();
-    const entry = this[kMap].get(nameLc);
-    if (entry != null) {
-      return entry.getAll();
-    } else {
-      return [];
-    }
-  }
-
-  /**
    * Passes header string value through the specified parser and returns either
    * a parsed value of `null` if the header is missing.
    * Header name is case-insensitive.
@@ -193,21 +170,6 @@ export class HttpHeaders implements Iterable<[string, string | string[]]> {
     }
   }
 
-  /**
-   * Passes header string values through the specified parser and returns either
-   * an array of parsed values or an empty array if the header is missing.
-   *
-   * Although this class is isomorphic and can be used in the browser, this
-   * specific method exists only in the node server. A bundler such as webpack
-   * will replace this code with a browser-specific version which does not have
-   * this method.
-   */
-  mapAll<T>(name: string, parser: (value: string) => T | null): T[] {
-    return this.getAll(name)
-      .map((v) => parser(v))
-      .filter((v) => v != null) as T[];
-  }
-
   toJSON(): Record<string, string | string[]> {
     return Object.fromEntries(this);
   }
@@ -216,13 +178,7 @@ export class HttpHeaders implements Iterable<[string, string | string[]]> {
     const lines: string[] = [];
     for (const entry of this[kMap].values()) {
       const { name, value } = entry;
-      if (Array.isArray(value)) {
-        for (const item of value) {
-          lines.push(`${name}: ${item}`);
-        }
-      } else {
-        lines.push(`${name}: ${value}`);
-      }
+      lines.push(`${name}: ${value}`);
     }
     return lines.join("\n") + "\n";
   }
@@ -236,53 +192,42 @@ class Entry {
   /**
    * The header value.
    */
-  value!: string | string[];
+  value!: string;
 
   constructor(readonly name: string, readonly nameLc: string, value: string) {
     this.set(value);
   }
 
   set(value: string): void {
-    switch (this.nameLc) {
-      case "set-cookie":
-        this.value = [value];
-        break;
-      case "cookie":
-        this.value = value;
-        break;
-      default:
-        this.value = value;
-        break;
-    }
+    this.value = value;
   }
 
   append(value: string): void {
-    switch (this.nameLc) {
-      case "set-cookie":
-        (this.value as string[]).push(value);
-        break;
-      case "cookie":
-        (this.value as string) += "; " + value;
-        break;
-      default:
-        (this.value as string) += ", " + value;
-        break;
-    }
+    this.value += ", " + value;
   }
 
   get(): string {
-    if (this.nameLc === "set-cookie") {
-      return (this.value as string[])[0];
-    } else {
-      return this.value as string;
-    }
+    return this.value;
   }
+}
 
-  getAll(): string[] {
-    if (this.nameLc === "set-cookie") {
-      return this.value as string[];
-    } else {
-      return [this.value as string];
-    }
-  }
+if (process.env.NODE_ENV !== "production") {
+  // These methods exist only in the server environment.
+  // They are needed to obtain values of the "set-cookie" header which is
+  // forbidden by the browser Fetch API.
+  // See https://fetch.spec.whatwg.org/#forbidden-header-name
+  // See https://fetch.spec.whatwg.org/#forbidden-response-header-name
+  // In the development mode to simplify debugging we throw errors
+  // when users are trying to call the forbidden methods.
+  // In the production mode the bundler should remove this code.
+  (HttpHeaders.prototype as any).getAll = (): never => {
+    throw new TypeError(
+      "The 'getAll' method does not exist in the browser environment.",
+    );
+  };
+  (HttpHeaders.prototype as any).mapAll = (): never => {
+    throw new TypeError(
+      "The 'mapAll' method does not exist in the browser environment.",
+    );
+  };
 }

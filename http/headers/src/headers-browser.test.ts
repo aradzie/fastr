@@ -1,5 +1,5 @@
 import test from "ava";
-import { HttpHeaders } from "./headers";
+import { HttpHeaders } from "./headers-browser";
 
 test("reject invalid header names", (t) => {
   const headers = new HttpHeaders();
@@ -49,15 +49,6 @@ test("reject invalid header names", (t) => {
       code: "ERR_INVALID_HEADER_NAME",
     },
   );
-  t.throws(
-    () => {
-      headers.getAll("\0");
-    },
-    {
-      instanceOf: TypeError,
-      code: "ERR_INVALID_HEADER_NAME",
-    },
-  );
 });
 
 test("reject invalid header values", (t) => {
@@ -88,15 +79,6 @@ test("get missing header", (t) => {
 
   t.false(headers.has("foo"));
   t.is(headers.get("foo"), null);
-  t.deepEqual(headers.getAll("foo"), []);
-
-  t.false(headers.has("cookie"));
-  t.is(headers.get("cookie"), null);
-  t.deepEqual(headers.getAll("cookie"), []);
-
-  t.false(headers.has("set-cookie"));
-  t.is(headers.get("set-cookie"), null);
-  t.deepEqual(headers.getAll("set-cookie"), []);
 });
 
 test("set simple header", (t) => {
@@ -107,7 +89,6 @@ test("set simple header", (t) => {
 
   t.true(headers.has("foo"));
   t.is(headers.get("foo"), "c");
-  t.deepEqual(headers.getAll("foo"), ["c"]);
   t.deepEqual(headers.toJSON(), {
     foo: "c",
   });
@@ -121,93 +102,20 @@ test("append simple header", (t) => {
 
   t.true(headers.has("bar"));
   t.is(headers.get("bar"), "a, b, c");
-  t.deepEqual(headers.getAll("bar"), ["a, b, c"]);
   t.deepEqual(headers.toJSON(), {
     bar: "a, b, c",
   });
 });
 
-test("set cookie header", (t) => {
-  const headers = new HttpHeaders()
-    .set("Cookie", "a=1")
-    .set("cookie", "b=2")
-    .set("COOKIE", "c=3");
-
-  t.true(headers.has("cookie"));
-  t.is(headers.get("cookie"), "c=3");
-  t.deepEqual(headers.getAll("cookie"), ["c=3"]);
-  t.deepEqual(headers.toJSON(), {
-    Cookie: "c=3",
-  });
-});
-
-test("append cookie header", (t) => {
-  const headers = new HttpHeaders()
-    .append("Cookie", "a=1")
-    .append("cookie", "b=2")
-    .append("COOKIE", "c=3");
-
-  t.true(headers.has("cookie"));
-  t.is(headers.get("cookie"), "a=1; b=2; c=3");
-  t.deepEqual(headers.getAll("cookie"), ["a=1; b=2; c=3"]);
-  t.deepEqual(headers.toJSON(), {
-    Cookie: "a=1; b=2; c=3",
-  });
-});
-
-test("set set-cookie header", (t) => {
-  const headers = new HttpHeaders()
-    .set("Set-Cookie", "a=1")
-    .set("set-cookie", "b=2")
-    .set("SET-COOKIE", "c=3");
-
-  t.true(headers.has("set-cookie"));
-  t.is(headers.get("set-cookie"), "c=3");
-  t.deepEqual(headers.getAll("set-cookie"), ["c=3"]);
-  t.deepEqual(headers.toJSON(), {
-    "Set-Cookie": ["c=3"],
-  });
-});
-
-test("append set-cookie header", (t) => {
-  const headers = new HttpHeaders()
-    .append("Set-Cookie", "a=1")
-    .append("set-cookie", "b=2")
-    .append("SET-COOKIE", "c=3");
-
-  t.true(headers.has("set-cookie"));
-  t.is(headers.get("set-cookie"), "a=1");
-  t.deepEqual(headers.getAll("set-cookie"), ["a=1", "b=2", "c=3"]);
-  t.deepEqual(headers.toJSON(), {
-    "Set-Cookie": ["a=1", "b=2", "c=3"],
-  });
-});
-
 test("delete header", (t) => {
-  const headers = new HttpHeaders()
-    .set("foo", "1")
-    .set("cookie", "a=1")
-    .set("set-cookie", "a=1");
+  const headers = new HttpHeaders().set("foo", "1");
 
   t.true(headers.has("foo"));
-  t.true(headers.has("cookie"));
-  t.true(headers.has("set-cookie"));
 
   headers.delete("foo");
-  headers.delete("cookie");
-  headers.delete("set-cookie");
 
   t.false(headers.has("foo"));
   t.is(headers.get("foo"), null);
-  t.deepEqual(headers.getAll("foo"), []);
-
-  t.false(headers.has("cookie"));
-  t.is(headers.get("cookie"), null);
-  t.deepEqual(headers.getAll("cookie"), []);
-
-  t.false(headers.has("set-cookie"));
-  t.is(headers.get("set-cookie"), null);
-  t.deepEqual(headers.getAll("set-cookie"), []);
 });
 
 test("new instance from headers", (t) => {
@@ -287,17 +195,11 @@ test("toJSON", (t) => {
   const headers = new HttpHeaders()
     .append("foo", 1)
     .append("foo", 2)
-    .append("bar", 3)
-    .append("Cookie", "a=1")
-    .append("Cookie", "b=2")
-    .append("Set-Cookie", "c=3")
-    .append("Set-Cookie", "d=4");
+    .append("bar", 3);
 
   t.deepEqual(headers.toJSON(), {
-    "foo": "1, 2",
-    "bar": "3",
-    "Cookie": "a=1; b=2",
-    "Set-Cookie": ["c=3", "d=4"],
+    foo: "1, 2",
+    bar: "3",
   });
 });
 
@@ -305,20 +207,9 @@ test("toString", (t) => {
   const headers = new HttpHeaders()
     .append("foo", 1)
     .append("foo", 2)
-    .append("bar", 3)
-    .append("Cookie", "a=1")
-    .append("Cookie", "b=2")
-    .append("Set-Cookie", "c=3")
-    .append("Set-Cookie", "d=4");
+    .append("bar", 3);
 
-  t.is(
-    headers.toString(),
-    "foo: 1, 2\n" +
-      "bar: 3\n" +
-      "Cookie: a=1; b=2\n" +
-      "Set-Cookie: c=3\n" +
-      "Set-Cookie: d=4\n",
-  );
+  t.is(headers.toString(), "foo: 1, 2\nbar: 3\n");
 });
 
 test("parse", (t) => {
@@ -344,17 +235,12 @@ test("parse", (t) => {
         "Accept: image/png\n" +
         "Accept: image/*\n" +
         "Cache-Control: no-cache\n" +
-        "Cache-Control: no-store\n" +
-        "Cookie: a=1; b=2\n" +
-        "Set-Cookie: c=3\n" +
-        "Set-Cookie: d=4\n",
+        "Cache-Control: no-store\n",
     ).toJSON(),
     {
       "Date": "Thu, 01 Jan 1970 00:00:01 GMT",
       "Accept": "image/png, image/*",
       "Cache-Control": "no-cache, no-store",
-      "Cookie": "a=1; b=2",
-      "Set-Cookie": ["c=3", "d=4"],
     },
   );
 });
