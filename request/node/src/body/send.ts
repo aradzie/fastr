@@ -6,8 +6,20 @@ import { Streamable } from "./streamable";
 
 const GZIP_SIZE_THRESHOLD = 1024;
 
-export function isStreamBody(body: BodyDataType | null): boolean {
+export function isStreamBody(body: BodyDataType | null): body is Readable {
   return body instanceof Readable;
+}
+
+export async function cacheStreamBody(stream: Readable): Promise<Buffer> {
+  const buffers: Buffer[] = [];
+  for await (const item of stream) {
+    if (typeof item === "string") {
+      buffers.push(Buffer.from(item));
+    } else {
+      buffers.push(item);
+    }
+  }
+  return Buffer.concat(buffers);
 }
 
 export function sendBody(

@@ -1,18 +1,25 @@
 import { HttpHeaders } from "@webfx-http/headers";
 import { RequestError } from "@webfx-request/error";
-import { isStreamBody } from "../body/send";
+import { cacheStreamBody, isStreamBody } from "../body/send";
 import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
 
 export interface FollowRedirectOptions {
   /**
    * The mode for how redirects are handled.
+   * The default is `"follow"`.
    */
   readonly redirect?: "manual" | "follow" | "error";
   /**
    * The number of redirects to follow before throwing error.
    * Zero to not follow redirects.
+   * The default is three.
    */
   readonly follow?: number;
+  /**
+   * Whether to cache the request body if it is a stream.
+   * The default is true.
+   */
+  readonly cacheRequestBody?: boolean;
 }
 
 /**
@@ -23,6 +30,7 @@ export interface FollowRedirectOptions {
 export function followRedirects({
   redirect = "follow",
   follow = 3,
+  cacheRequestBody = true,
 }: FollowRedirectOptions = {}): Middleware {
   if (redirect === "manual") {
     follow = 0;
@@ -33,9 +41,21 @@ export function followRedirects({
     request: HttpRequest,
     adapter: Adapter,
   ): Promise<HttpResponse> => {
-    // TODO Cache stream body.
-    if (isStreamBody(request.body ?? null)) {
-      throw new TypeError("Cannot follow with stream bodies");
+    // Cache request body if it is a stream.
+    let { body } = request;
+    if (body != null && isStreamBody(body)) {
+      if (cacheRequestBody) {
+        body = await cacheStreamBody(body);
+        request = {
+          ...request,
+          body,
+          headers: new HttpHeaders(request.headers)
+            .set("Content-Length", body.byteLength)
+            .delete("Transfer-Encoding"),
+        };
+      } else {
+        throw new TypeError("Cannot follow redirects with stream bodies");
+      }
     }
 
     // The current url to visit which is updated after each redirect response.

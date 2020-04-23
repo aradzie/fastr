@@ -27,8 +27,9 @@ export interface HandleErrorOptions {
  * with an HTTP error instance if the response status if either client or server
  * error.
  */
-export function handleErrors(options: HandleErrorOptions = {}): Middleware {
-  const { okOnly = true } = options;
+export function handleErrors({
+  okOnly = true,
+}: HandleErrorOptions = {}): Middleware {
   return async (
     request: HttpRequest,
     adapter: Adapter,

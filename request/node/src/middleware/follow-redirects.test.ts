@@ -1,6 +1,7 @@
 import { HttpHeaders } from "@webfx-http/headers";
 import { RequestError } from "@webfx-request/error";
 import test from "ava";
+import { Readable } from "stream";
 import { FakeResponse, reflect } from "../fake/response";
 import type { Adapter, HttpRequest, HttpResponse } from "../types";
 import { followRedirects } from "./follow-redirects";
@@ -66,7 +67,7 @@ test("follow redirect and keep request body", async (t) => {
       ["Content-Length", 5],
       ["X-Extra", "something"],
     ]),
-    body: "hello",
+    body: Readable.from(["hello"]),
   });
 
   // Assert.
@@ -105,7 +106,7 @@ test("follow redirect and discard request body", async (t) => {
       ["Content-Length", 5],
       ["X-Extra", "something"],
     ]),
-    body: "hello",
+    body: Readable.from(["hello"]),
   });
 
   // Assert.
