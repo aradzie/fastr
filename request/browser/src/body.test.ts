@@ -1,67 +1,96 @@
 import test from "ava";
 import { guessContentType, toFormData } from "./body";
 
-test("use custom type", (t) => {
-  t.is(guessContentType("text", "foo/bar")[1], "foo/bar");
-});
-
 test("guess text type", (t) => {
-  t.is(guessContentType("text", null)[1], "text/plain");
+  const body = "text";
+  t.deepEqual(guessContentType(body, null), [body, null]);
+  t.deepEqual(guessContentType(body, "foo/bar"), [body, "foo/bar"]);
 });
 
 test("guess multipart form type", (t) => {
-  t.is(guessContentType(new FormData(), null)[1], null);
+  const body = new FormData();
+  t.deepEqual(guessContentType(body, null), [body, null]);
+  t.throws(
+    () => {
+      guessContentType(body, "foo/bar");
+    },
+    {
+      instanceOf: TypeError,
+    },
+  );
 });
 
 test("guess url-encoded form type", (t) => {
-  t.is(
-    guessContentType(new URLSearchParams(), null)[1],
-    "application/x-www-form-urlencoded",
+  const body = new URLSearchParams();
+  t.deepEqual(guessContentType(body, null), [body, null]);
+  t.throws(
+    () => {
+      guessContentType(body, "foo/bar");
+    },
+    {
+      instanceOf: TypeError,
+    },
   );
 });
 
 test("guess type from blob", (t) => {
-  t.is(guessContentType(new Blob([]), null)[1], "application/octet-stream");
-  t.is(
-    guessContentType(new Blob([], { type: "text/plain" }), null)[1],
-    "text/plain",
-  );
+  const body = new Blob([]);
+  t.deepEqual(guessContentType(body, null), [body, null]);
+  t.deepEqual(guessContentType(body, "foo/bar"), [body, "foo/bar"]);
+});
+
+test("guess type from blob with type", (t) => {
+  const body = new Blob([], { type: "bar/baz" });
+  t.deepEqual(guessContentType(body, null), [body, "bar/baz"]);
+  t.deepEqual(guessContentType(body, "foo/bar"), [body, "foo/bar"]);
 });
 
 test("guess array buffer type", (t) => {
-  t.is(
-    guessContentType(new ArrayBuffer(0), null)[1],
-    "application/octet-stream",
-  );
+  const body = new ArrayBuffer(0);
+  t.false(ArrayBuffer.isView(body));
+  t.deepEqual(guessContentType(body, null), [body, null]);
+  t.deepEqual(guessContentType(body, "foo/bar"), [body, "foo/bar"]);
 });
 
 test("guess array buffer view type", (t) => {
-  t.is(
-    guessContentType(new Uint8Array(0), null)[1],
-    "application/octet-stream",
-  );
+  const body = new Uint8Array(0);
+  t.true(ArrayBuffer.isView(body));
+  t.deepEqual(guessContentType(body, null), [body, null]);
+  t.deepEqual(guessContentType(body, "foo/bar"), [body, "foo/bar"]);
 });
 
 test("guess json type", (t) => {
+  const plainObject = { a: 1 };
+  const nonPlainObject = new (class Dummy {
+    ignored = 0;
+    toJSON(): unknown {
+      return plainObject;
+    }
+  })();
+
   // Try plain object.
-  t.deepEqual(guessContentType({ a: 1 }, null), [
+  t.deepEqual(guessContentType(plainObject, null), [
     '{"a":1}',
     "application/json",
   ]);
 
+  // Try plain object with custom type.
+  t.deepEqual(guessContentType(plainObject, "application/foobar+json"), [
+    '{"a":1}',
+    "application/foobar+json",
+  ]);
+
   // Try non-plain object with the toJSON method.
-  t.deepEqual(
-    guessContentType(
-      new (class Dummy {
-        ignored = 0;
-        toJSON(): unknown {
-          return { a: 1 };
-        }
-      })(),
-      null,
-    ),
-    ['{"a":1}', "application/json"],
-  );
+  t.deepEqual(guessContentType(nonPlainObject, null), [
+    '{"a":1}',
+    "application/json",
+  ]);
+
+  // Try non-plain object with the toJSON method with custom type.
+  t.deepEqual(guessContentType(nonPlainObject, "application/foobar+json"), [
+    '{"a":1}',
+    "application/foobar+json",
+  ]);
 });
 
 test("reject invalid type", (t) => {
@@ -97,12 +126,11 @@ test("reject invalid type", (t) => {
 });
 
 test("to form data", (t) => {
-  t.is(toFormData(new FormData())[1], null);
-  t.is(
-    toFormData(new URLSearchParams())[1],
-    "application/x-www-form-urlencoded",
-  );
-  t.is(toFormData(new Map())[1], "application/x-www-form-urlencoded");
-  t.is(toFormData({})[1], "application/x-www-form-urlencoded");
-  t.is(toFormData([])[1], "application/x-www-form-urlencoded");
+  const formData = new FormData();
+  const urlSearchParams = new URLSearchParams();
+  t.is(toFormData(formData), formData);
+  t.is(toFormData(urlSearchParams), urlSearchParams);
+  t.true(toFormData(new Map()) instanceof URLSearchParams);
+  t.true(toFormData({}) instanceof URLSearchParams);
+  t.true(toFormData([]) instanceof URLSearchParams);
 });

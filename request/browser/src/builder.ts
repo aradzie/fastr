@@ -237,7 +237,7 @@ export class RequestBuilder {
       | Record<string, unknown>
       | NameValueEntries,
   ): Promise<HttpResponse> {
-    return this._send(this._makeRequest(...toFormData(body)));
+    return this._send(this._makeRequest(toFormData(body)));
   }
 
   private _makeRequest(
@@ -247,6 +247,8 @@ export class RequestBuilder {
     const url = mergeSearchParams(this.url, this._query);
     if (body != null && contentType != null) {
       this._headers.set("Content-Type", contentType);
+    } else {
+      this._headers.delete("Content-Type");
     }
     if (!this._accept.empty) {
       this._headers.set("Accept", this._accept);

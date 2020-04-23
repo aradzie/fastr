@@ -72,9 +72,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
-      expect(headers.map("Content-Type", MediaType.parse)?.name).to.eq(
-        "text/plain",
-      );
+      expect(headers.get("Content-Type")).to.eq("text/plain");
       const body = await response.blob();
       expect(body).to.instanceof(Blob);
       expect(body.type).to.eq("text/plain");
@@ -87,9 +85,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
-      expect(headers.map("Content-Type", MediaType.parse)?.name).to.eq(
-        "text/plain",
-      );
+      expect(headers.get("Content-Type")).to.eq("text/plain");
       const body = await response.arrayBuffer();
       expect(body).to.instanceof(ArrayBuffer);
       expect(body.byteLength).to.eq(9);
@@ -101,9 +97,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
-      expect(headers.map("Content-Type", MediaType.parse)?.name).to.eq(
-        "text/plain",
-      );
+      expect(headers.get("Content-Type")).to.eq("text/plain");
       expect(await response.text()).to.eq("some text");
     });
 
@@ -171,14 +165,14 @@ function makeAdapterTests(underTest: Adapter): void {
         .get("/test/reflect")
         .accept("image/png")
         .accept("image/*")
-        .header("X-Foo", "Bar")
+        .header("X-Foo", "bar")
         .send();
       expect(await response.json()).to.deep.eq({
         url: "/test/reflect",
         method: "GET",
         headers: {
           "accept": "image/png, image/*",
-          "x-foo": "Bar",
+          "x-foo": "bar",
         },
         body: "",
       });
@@ -187,16 +181,16 @@ function makeAdapterTests(underTest: Adapter): void {
     it("send a post request with a string body", async () => {
       const response = await request
         .post("/test/reflect")
-        .header("X-Foo", "Bar")
+        .header("X-Foo", "bar")
         .send("text data");
       expect(await response.json()).to.deep.eq({
         url: "/test/reflect",
         method: "POST",
         headers: {
           "accept": "*/*",
-          "content-type": "text/plain",
+          "content-type": "text/plain;charset=UTF-8",
           "content-length": "9",
-          "x-foo": "Bar",
+          "x-foo": "bar",
         },
         body: "text data",
       });
@@ -205,16 +199,15 @@ function makeAdapterTests(underTest: Adapter): void {
     it("send a post request with a blob body", async () => {
       const response = await request
         .post("/test/reflect")
-        .header("X-Foo", "Bar")
+        .header("X-Foo", "bar")
         .send(new Blob(["blob data"]));
       expect(await response.json()).to.deep.eq({
         url: "/test/reflect",
         method: "POST",
         headers: {
           "accept": "*/*",
-          "content-type": "application/octet-stream",
           "content-length": "9",
-          "x-foo": "Bar",
+          "x-foo": "bar",
         },
         body: "blob data",
       });
@@ -227,12 +220,11 @@ function makeAdapterTests(underTest: Adapter): void {
       formData.append("c", "3");
       const response = await request
         .post("/test/reflect")
-        .header("X-Foo", "Bar")
+        .header("X-Foo", "bar")
         .sendForm(formData);
       const { body, ...val } = await response.json();
-      const parsedFormData = parseFormData(body);
       expect(val.headers["content-type"]).to.match(
-        /^multipart\/form-data; boundary=.*$/,
+        /^multipart\/form-data; *boundary=.*$/,
       );
       delete val.headers["content-type"];
       expect(val).to.deep.eq({
@@ -241,10 +233,10 @@ function makeAdapterTests(underTest: Adapter): void {
         headers: {
           "accept": "*/*",
           "content-length": String(body.length),
-          "x-foo": "Bar",
+          "x-foo": "bar",
         },
       });
-      expect(formDataEntries(parsedFormData)).to.deep.eq([
+      expect(formDataEntries(parseFormData(body))).to.deep.eq([
         ["a", "1"],
         ["b", "2"],
         ["c", "3"],
@@ -254,7 +246,7 @@ function makeAdapterTests(underTest: Adapter): void {
     it("send a post request with an urlencoded form data body", async () => {
       const response = await request
         .post("/test/reflect")
-        .header("X-Foo", "Bar")
+        .header("X-Foo", "bar")
         .sendForm(
           new URLSearchParams([
             ["a", "1"],
@@ -262,23 +254,27 @@ function makeAdapterTests(underTest: Adapter): void {
             ["c", "3"],
           ]),
         );
-      expect(await response.json()).to.deep.eq({
+      const { body, ...val } = await response.json<any>();
+      expect(val.headers["content-type"]).to.match(
+        /^application\/x-www-form-urlencoded; *charset=UTF-8$/,
+      );
+      delete val.headers["content-type"];
+      expect(val).to.deep.eq({
         url: "/test/reflect",
         method: "POST",
         headers: {
           "accept": "*/*",
-          "content-type": "application/x-www-form-urlencoded",
           "content-length": "11",
-          "x-foo": "Bar",
+          "x-foo": "bar",
         },
-        body: "a=1&b=2&c=3",
       });
+      expect(body).to.eq("a=1&b=2&c=3");
     });
 
     it("send a post request with a JSON data body", async () => {
       const response = await request
         .post("/test/reflect")
-        .header("X-Foo", "Bar")
+        .header("X-Foo", "bar")
         .send({ a: 1, b: 2, c: 3 });
       expect(await response.json()).to.deep.eq({
         url: "/test/reflect",
@@ -287,7 +283,7 @@ function makeAdapterTests(underTest: Adapter): void {
           "accept": "*/*",
           "content-type": "application/json",
           "content-length": "19",
-          "x-foo": "Bar",
+          "x-foo": "bar",
         },
         body: '{"a":1,"b":2,"c":3}',
       });
@@ -300,7 +296,7 @@ function makeAdapterTests(underTest: Adapter): void {
         method: "POST",
         headers: {
           "accept": "*/*",
-          "content-type": "text/plain",
+          "content-type": "text/plain;charset=UTF-8",
           "content-length": "6",
         },
         body: "posted",

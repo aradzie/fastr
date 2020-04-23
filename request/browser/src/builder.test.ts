@@ -119,7 +119,7 @@ test("send text body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, "some text");
-  t.is(req1.headers?.map("Content-Type", MediaType.parse)?.name, "text/plain");
+  t.is(req1.headers?.get("Content-Type"), null);
 });
 
 test("send text body with custom content type", async (t) => {
@@ -170,10 +170,7 @@ test("send blob body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, blob);
-  t.is(
-    req1.headers?.map("Content-Type", MediaType.parse)?.name,
-    "application/octet-stream",
-  );
+  t.is(req1.headers?.get("Content-Type"), null);
 });
 
 test("send blob body with content type in blob", async (t) => {
@@ -251,10 +248,7 @@ test("send array buffer body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
-  t.is(
-    req1.headers?.map("Content-Type", MediaType.parse)?.name,
-    "application/octet-stream",
-  );
+  t.is(req1.headers?.get("Content-Type"), null);
 });
 
 test("send array buffer body with custom content type", async (t) => {
@@ -332,10 +326,7 @@ test("send url-encoded form body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
-  t.is(
-    req1.headers?.map("Content-Type", MediaType.parse)?.name,
-    "application/x-www-form-urlencoded",
-  );
+  t.is(req1.headers?.get("Content-Type"), null);
 });
 
 test("send json body", async (t) => {

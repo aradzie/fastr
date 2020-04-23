@@ -2,27 +2,55 @@ import { multiEntriesOf } from "@webfx-http/headers";
 import { isJSON } from "@webfx-request/json";
 import type { BodyDataType, NameValueEntries } from "./types";
 
+/**
+ * The native Fetch API understands a limited amount of body types. This method
+ * will try to convert the given body argument to a type understood by the API.
+ * Along the way it will try to detect the media type of the returned body.
+ * Throws `TypeError` if the body argument is invalid.
+ * @param body A body to be converted to a native type and sent in a request.
+ * @param contentType A user-provided content type.
+ * @return A tuple of body and its content type.
+ */
 export function guessContentType(
   body: unknown,
   contentType: string | null,
 ): [BodyDataType, string | null] {
+  // See https://fetch.spec.whatwg.org/#body-mixin
   if (body == null) {
     throw new TypeError();
   }
   if (typeof body === "string") {
-    return [body, contentType ?? "text/plain"];
+    return [body, contentType];
   }
   if (body instanceof FormData) {
-    return [body, null]; // Let the browser determine the right type.
+    // Let the browser determine the right type.
+    if (contentType != null) {
+      throw new TypeError(
+        process.env.NODE_ENV !== "production"
+          ? "Must not explicitly set the Content-Type header " +
+            "for a FormData body."
+          : undefined,
+      );
+    }
+    return [body, null];
   }
   if (body instanceof URLSearchParams) {
-    return [body, contentType ?? "application/x-www-form-urlencoded"];
+    // Let the browser determine the right type.
+    if (contentType != null) {
+      throw new TypeError(
+        process.env.NODE_ENV !== "production"
+          ? "Must not explicitly set the Content-Type header " +
+            "for an URLSearchParams body."
+          : undefined,
+      );
+    }
+    return [body, null];
   }
   if (body instanceof Blob) {
-    return [body, contentType ?? (body.type || "application/octet-stream")];
+    return [body, contentType ?? (body.type || null)];
   }
   if (body instanceof ArrayBuffer || ArrayBuffer.isView(body)) {
-    return [body, contentType ?? "application/octet-stream"];
+    return [body, contentType];
   }
   if (isJSON(body)) {
     return [JSON.stringify(body), contentType ?? "application/json"];
@@ -37,17 +65,15 @@ export function toFormData(
     | Map<string, unknown>
     | Record<string, unknown>
     | NameValueEntries,
-): [FormData | URLSearchParams, string | null] {
+): FormData | URLSearchParams {
   if (body == null) {
     throw new TypeError();
   }
   if (body instanceof FormData) {
-    return [body, null];
+    return body;
   }
-  if (!(body instanceof URLSearchParams)) {
-    body = new URLSearchParams([
-      ...multiEntriesOf(body as Map<string, unknown>),
-    ]);
+  if (body instanceof URLSearchParams) {
+    return body;
   }
-  return [body, "application/x-www-form-urlencoded"];
+  return new URLSearchParams([...multiEntriesOf(body as Map<string, unknown>)]);
 }
