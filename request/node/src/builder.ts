@@ -247,6 +247,7 @@ export class RequestBuilder {
       url,
       headers: this._headers,
       body,
+      eventEmitter: this._eventEmitter,
       options: this._options,
     };
   }

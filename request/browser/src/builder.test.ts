@@ -1,4 +1,4 @@
-import { HttpHeaders, MediaType } from "@webfx-http/headers";
+import { HttpHeaders } from "@webfx-http/headers";
 import test from "ava";
 import { RequestBuilder } from "./builder";
 import type { Adapter, HttpRequest, HttpResponse } from "./types";
@@ -144,7 +144,7 @@ test("send text body with custom content type", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, "some text");
-  t.is(req1.headers?.map("Content-Type", MediaType.parse)?.name, "text/html");
+  t.is(req1.headers?.get("Content-Type"), "text/html");
 });
 
 test("send blob body", async (t) => {
@@ -196,7 +196,7 @@ test("send blob body with content type in blob", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, blob);
-  t.is(req1.headers?.map("Content-Type", MediaType.parse)?.name, "foo/bar");
+  t.is(req1.headers?.get("Content-Type"), "foo/bar");
 });
 
 test("send blob body with custom content type", async (t) => {
@@ -222,7 +222,7 @@ test("send blob body with custom content type", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, blob);
-  t.is(req1.headers?.map("Content-Type", MediaType.parse)?.name, "foo/bar");
+  t.is(req1.headers?.get("Content-Type"), "foo/bar");
 });
 
 test("send array buffer body", async (t) => {
@@ -274,7 +274,7 @@ test("send array buffer body with custom content type", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
-  t.is(req1.headers?.map("Content-Type", MediaType.parse)?.name, "foo/bar");
+  t.is(req1.headers?.get("Content-Type"), "foo/bar");
 });
 
 test("send multipart form body", async (t) => {
@@ -351,10 +351,7 @@ test("send json body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, '{"type":"json"}');
-  t.is(
-    req1.headers?.map("Content-Type", MediaType.parse)?.name,
-    "application/json",
-  );
+  t.is(req1.headers?.get("Content-Type"), "application/json");
 });
 
 test("send json body with custom content type", async (t) => {
@@ -379,8 +376,5 @@ test("send json body with custom content type", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, '{"type":"json"}');
-  t.is(
-    req1.headers?.map("Content-Type", MediaType.parse)?.name,
-    "application/foo+json",
-  );
+  t.is(req1.headers?.get("Content-Type"), "application/foo+json");
 });

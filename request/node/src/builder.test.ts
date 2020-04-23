@@ -1,4 +1,4 @@
-import { HttpHeaders, MediaType } from "@webfx-http/headers";
+import { HttpHeaders } from "@webfx-http/headers";
 import test from "ava";
 import { Readable } from "stream";
 import { RequestBuilder } from "./builder";
@@ -120,7 +120,7 @@ test("send text body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, "some text");
-  t.is(req1.headers?.map("Content-Type", MediaType.parse)?.name, "text/plain");
+  t.is(req1.headers?.get("Content-Type"), "text/plain; charset=UTF-8");
 });
 
 test("send text body with custom content type", async (t) => {
@@ -145,7 +145,7 @@ test("send text body with custom content type", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, "some text");
-  t.is(req1.headers?.map("Content-Type", MediaType.parse)?.name, "text/html");
+  t.is(req1.headers?.get("Content-Type"), "text/html");
 });
 
 test("send buffer body", async (t) => {
@@ -159,7 +159,7 @@ test("send buffer body", async (t) => {
     receivedRequests.push(request);
     return res1;
   };
-  const body: Buffer = await Buffer.from("some text");
+  const body = await Buffer.from("some text");
 
   // Act.
 
@@ -171,10 +171,7 @@ test("send buffer body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
-  t.is(
-    req1.headers?.map("Content-Type", MediaType.parse)?.name,
-    "application/octet-stream",
-  );
+  t.is(req1.headers?.get("Content-Type"), "application/octet-stream");
 });
 
 test("send buffer body with custom content type", async (t) => {
@@ -188,7 +185,7 @@ test("send buffer body with custom content type", async (t) => {
     receivedRequests.push(request);
     return res1;
   };
-  const body: Buffer = await Buffer.from("some text");
+  const body = await Buffer.from("some text");
 
   // Act.
 
@@ -200,10 +197,10 @@ test("send buffer body with custom content type", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
-  t.is(req1.headers?.map("Content-Type", MediaType.parse)?.name, "foo/bar");
+  t.is(req1.headers?.get("Content-Type"), "foo/bar");
 });
 
-test("send Readable body", async (t) => {
+test("send readable body", async (t) => {
   // Arrange.
 
   const receivedRequests: HttpRequest[] = [];
@@ -226,13 +223,10 @@ test("send Readable body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
-  t.is(
-    req1.headers?.map("Content-Type", MediaType.parse)?.name,
-    "application/octet-stream",
-  );
+  t.is(req1.headers?.get("Content-Type"), "application/octet-stream");
 });
 
-test("send Readable body with custom content type", async (t) => {
+test("send readable body with custom content type", async (t) => {
   // Arrange.
 
   const receivedRequests: HttpRequest[] = [];
@@ -255,7 +249,7 @@ test("send Readable body with custom content type", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
-  t.is(req1.headers?.map("Content-Type", MediaType.parse)?.name, "foo/bar");
+  t.is(req1.headers?.get("Content-Type"), "foo/bar");
 });
 
 test("send json body", async (t) => {
@@ -280,10 +274,7 @@ test("send json body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, '{"type":"json"}');
-  t.is(
-    req1.headers?.map("Content-Type", MediaType.parse)?.name,
-    "application/json",
-  );
+  t.is(req1.headers?.get("Content-Type"), "application/json; charset=UTF-8");
 });
 
 test("send json body with custom content type", async (t) => {
@@ -308,8 +299,5 @@ test("send json body with custom content type", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, '{"type":"json"}');
-  t.is(
-    req1.headers?.map("Content-Type", MediaType.parse)?.name,
-    "application/foo+json",
-  );
+  t.is(req1.headers?.get("Content-Type"), "application/foo+json");
 });

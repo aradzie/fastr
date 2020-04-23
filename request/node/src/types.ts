@@ -1,5 +1,6 @@
 import type { Body } from "@webfx-http/body";
 import type { HttpHeaders } from "@webfx-http/headers";
+import type { EventEmitter } from "events";
 import type { Agent as HttpAgent } from "http";
 import type { Agent as HttpsAgent } from "https";
 import type { Readable } from "stream";
@@ -105,6 +106,10 @@ export interface HttpRequest {
    * The request body.
    */
   readonly body?: BodyDataType | null;
+  /**
+   * The event emitter to be notified of request or response events.
+   */
+  readonly eventEmitter?: EventEmitter | null;
   /**
    * Any additional request options.
    */

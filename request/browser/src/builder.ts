@@ -193,10 +193,10 @@ export class RequestBuilder {
    * @param contentType The content type to use.
    *                    The default value is `application/json`.
    */
-  send(body: unknown, contentType?: string): Promise<HttpResponse>;
+  send(body: object, contentType?: string): Promise<HttpResponse>;
 
   send(
-    body: string | Blob | ArrayBuffer | ArrayBufferView | unknown | null = null,
+    body: string | Blob | ArrayBuffer | ArrayBufferView | object | null = null,
     contentType: string | null = null,
   ): Promise<HttpResponse> {
     let request;
