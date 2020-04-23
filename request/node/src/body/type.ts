@@ -12,23 +12,25 @@ export function guessContentType(
   body: BodyDataType | URLSearchParams | object,
   contentType: string | null,
 ): [BodyDataType, string] {
-  if (typeof body === "string") {
-    return [body, contentType ?? S_TEXT];
-  }
-  if (Buffer.isBuffer(body)) {
-    return [body, contentType ?? S_BINARY];
-  }
-  if (body instanceof Readable) {
-    return [body, contentType ?? S_BINARY];
-  }
-  if (body instanceof Streamable) {
-    return [body, contentType ?? S_BINARY];
-  }
-  if (body instanceof URLSearchParams) {
-    return [String(body), contentType ?? S_FORM];
-  }
-  if (isJSON(body)) {
-    return [JSON.stringify(body), contentType ?? S_JSON];
+  if (body != null) {
+    if (typeof body === "string") {
+      return [body, contentType ?? S_TEXT];
+    }
+    if (Buffer.isBuffer(body)) {
+      return [body, contentType ?? S_BINARY];
+    }
+    if (body instanceof Readable) {
+      return [body, contentType ?? S_BINARY];
+    }
+    if (body instanceof Streamable) {
+      return [body, contentType ?? S_BINARY];
+    }
+    if (body instanceof URLSearchParams) {
+      return [String(body), contentType ?? S_FORM];
+    }
+    if (isJSON(body)) {
+      return [JSON.stringify(body), contentType ?? S_JSON];
+    }
   }
   throw new TypeError("Invalid body object.");
 }

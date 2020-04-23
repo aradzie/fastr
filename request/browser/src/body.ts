@@ -16,44 +16,43 @@ export function guessContentType(
   contentType: string | null,
 ): [BodyDataType, string | null] {
   // See https://fetch.spec.whatwg.org/#body-mixin
-  if (body == null) {
-    throw new TypeError();
-  }
-  if (typeof body === "string") {
-    return [body, contentType];
-  }
-  if (body instanceof FormData) {
-    // Let the browser determine the right type.
-    if (contentType != null) {
-      throw new TypeError(
-        process.env.NODE_ENV !== "production"
-          ? "Must not explicitly set the Content-Type header " +
-            "for a FormData body."
-          : undefined,
-      );
+  if (body != null) {
+    if (typeof body === "string") {
+      return [body, contentType];
     }
-    return [body, null];
-  }
-  if (body instanceof URLSearchParams) {
-    // Let the browser determine the right type.
-    if (contentType != null) {
-      throw new TypeError(
-        process.env.NODE_ENV !== "production"
-          ? "Must not explicitly set the Content-Type header " +
-            "for an URLSearchParams body."
-          : undefined,
-      );
+    if (body instanceof FormData) {
+      // Let the browser determine the right type.
+      if (contentType != null) {
+        throw new TypeError(
+          process.env.NODE_ENV !== "production"
+            ? "Must not explicitly set the Content-Type header " +
+              "for a FormData body."
+            : undefined,
+        );
+      }
+      return [body, null];
     }
-    return [body, null];
-  }
-  if (body instanceof Blob) {
-    return [body, contentType ?? (body.type || null)];
-  }
-  if (body instanceof ArrayBuffer || ArrayBuffer.isView(body)) {
-    return [body, contentType];
-  }
-  if (isJSON(body)) {
-    return [JSON.stringify(body), contentType ?? "application/json"];
+    if (body instanceof URLSearchParams) {
+      // Let the browser determine the right type.
+      if (contentType != null) {
+        throw new TypeError(
+          process.env.NODE_ENV !== "production"
+            ? "Must not explicitly set the Content-Type header " +
+              "for an URLSearchParams body."
+            : undefined,
+        );
+      }
+      return [body, null];
+    }
+    if (body instanceof Blob) {
+      return [body, contentType ?? (body.type || null)];
+    }
+    if (body instanceof ArrayBuffer || ArrayBuffer.isView(body)) {
+      return [body, contentType];
+    }
+    if (isJSON(body)) {
+      return [JSON.stringify(body), contentType ?? "application/json"];
+    }
   }
   throw new TypeError("Invalid body object.");
 }
