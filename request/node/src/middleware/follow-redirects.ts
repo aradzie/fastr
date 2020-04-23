@@ -62,8 +62,6 @@ export function followRedirects({
     let url = new URL(request.url);
     // The set of already visited urls for the loop detection purposes.
     const visited = new Set<string>();
-    // Requesting a new host in a redirect?
-    let changesOrigin = false;
 
     while (true) {
       // Send request with a new url.
@@ -95,13 +93,9 @@ export function followRedirects({
             if (status === 303) {
               // Update request, change method to GET and delete body.
               const headers = new HttpHeaders(request.headers)
-                .delete("Host")
                 .delete("Content-Type")
                 .delete("Content-Length")
                 .delete("Transfer-Encoding");
-              if (changesOrigin) {
-                headers.delete("Authorization").delete("Cookie");
-              }
               request = {
                 url: String(url),
                 method: "GET",
@@ -121,13 +115,7 @@ export function followRedirects({
       if (location == null) {
         throw new RequestError("Redirect has no location", "REDIRECT");
       }
-      const newUrl = new URL(location, url);
-      if (!changesOrigin) {
-        if (url.host !== url.host) {
-          changesOrigin = true;
-        }
-      }
-      url = newUrl;
+      url = new URL(location, url);
       const str = String(url);
       if (visited.has(str)) {
         throw new RequestError("Redirect loop detected", "REDIRECT");
