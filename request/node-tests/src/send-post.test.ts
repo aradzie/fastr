@@ -1,14 +1,13 @@
-import { Body } from "@webfx-http/body";
 import { request, Streamable } from "@webfx-request/node";
 import { start } from "@webfx-request/testlib";
 import test from "ava";
-import { IncomingMessage, ServerResponse } from "http";
 import { Readable } from "stream";
+import { reflect } from "./util";
 
 test("post text", async (t) => {
   // Arrange.
 
-  const server = start(describeRequest);
+  const server = start(reflect);
   const req = request.use(server);
 
   // Act.
@@ -38,7 +37,7 @@ test("post text", async (t) => {
 test("post buffer", async (t) => {
   // Arrange.
 
-  const server = start(describeRequest);
+  const server = start(reflect);
   const req = request.use(server);
 
   // Act.
@@ -68,7 +67,7 @@ test("post buffer", async (t) => {
 test("post readable", async (t) => {
   // Arrange.
 
-  const server = start(describeRequest);
+  const server = start(reflect);
   const req = request.use(server);
 
   // Act.
@@ -102,7 +101,7 @@ test("post readable", async (t) => {
 test("post streamable", async (t) => {
   // Arrange.
 
-  const server = start(describeRequest);
+  const server = start(reflect);
   const req = request.use(server);
 
   // Act.
@@ -140,27 +139,3 @@ test("post streamable", async (t) => {
     body: "stream body",
   });
 });
-
-function describeRequest(req: IncomingMessage, res: ServerResponse): void {
-  const { url, method } = req;
-  const headers = { ...req.headers };
-  delete headers.host;
-  Body.from(req)
-    .text()
-    .then((body) => {
-      res.setHeader("Content-Type", "application/json");
-      res.end(
-        JSON.stringify({
-          url,
-          method,
-          headers,
-          body,
-        }),
-      );
-    })
-    .catch((err) => {
-      res.statusCode = 500;
-      res.setHeader("Content-Type", "text/plain");
-      res.end(String(err));
-    });
-}

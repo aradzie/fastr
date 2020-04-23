@@ -1,31 +1,30 @@
-import { MediaType } from "@webfx-http/headers";
+import { HttpHeaders, MediaType } from "@webfx-http/headers";
 import { followRedirects, request, RequestError } from "@webfx-request/node";
 import { start } from "@webfx-request/testlib";
 import test from "ava";
+import { reflect } from "./util";
 
 const payload = "server response\n".repeat(1000);
 
-test("on redirect follow", async (t) => {
+test("on redirect follow and keep request body", async (t) => {
   // Arrange.
 
   const server = start((req, res) => {
     switch (req.url) {
       case "/a":
-        res.statusCode = 302;
+        res.statusCode = 308;
         res.setHeader("Location", "/b");
         res.setHeader("Content-Type", "text/plain");
         res.end(payload);
         break;
       case "/b":
-        res.statusCode = 302;
+        res.statusCode = 308;
         res.setHeader("Location", "/c");
         res.setHeader("Content-Type", "text/plain");
         res.end(payload);
         break;
       case "/c":
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "text/plain");
-        res.end("done");
+        reflect(req, res);
         break;
     }
   });
@@ -33,9 +32,15 @@ test("on redirect follow", async (t) => {
   // Act.
 
   const req = request.use(followRedirects({ redirect: "follow" })).use(server);
-  const { ok, status, statusText, url, headers, body } = await req({
+  const { ok, status, statusText, url, body } = await req({
     url: "/a",
-    method: "GET",
+    method: "PUT",
+    headers: new HttpHeaders([
+      ["Content-Type", "text/plain"],
+      ["Content-Length", 5],
+      ["X-Extra", "something"],
+    ]),
+    body: "hello",
   });
 
   // Assert.
@@ -44,11 +49,75 @@ test("on redirect follow", async (t) => {
   t.is(status, 200);
   t.is(statusText, "OK");
   t.true(url.endsWith("/c"));
-  t.deepEqual(
-    headers.map("Content-Type", MediaType.parse),
-    MediaType.TEXT_PLAIN,
-  );
-  t.is(await body.text(), "done");
+  t.deepEqual(await body.json(), {
+    url: "/c",
+    method: "PUT",
+    headers: {
+      "accept": "*/*",
+      "accept-encoding": "gzip, deflate, br",
+      "connection": "close",
+      "content-type": "text/plain",
+      "content-length": "5",
+      "x-extra": "something",
+    },
+    body: "hello",
+  });
+});
+
+test("on redirect follow and discard request body", async (t) => {
+  // Arrange.
+
+  const server = start((req, res) => {
+    switch (req.url) {
+      case "/a":
+        res.statusCode = 303;
+        res.setHeader("Location", "/b");
+        res.setHeader("Content-Type", "text/plain");
+        res.end(payload);
+        break;
+      case "/b":
+        res.statusCode = 303;
+        res.setHeader("Location", "/c");
+        res.setHeader("Content-Type", "text/plain");
+        res.end(payload);
+        break;
+      case "/c":
+        reflect(req, res);
+        break;
+    }
+  });
+
+  // Act.
+
+  const req = request.use(followRedirects({ redirect: "follow" })).use(server);
+  const { ok, status, statusText, url, body } = await req({
+    url: "/a",
+    method: "PUT",
+    headers: new HttpHeaders([
+      ["Content-Type", "text/plain"],
+      ["Content-Length", 5],
+      ["X-Extra", "something"],
+    ]),
+    body: "hello",
+  });
+
+  // Assert.
+
+  t.true(ok);
+  t.is(status, 200);
+  t.is(statusText, "OK");
+  t.true(url.endsWith("/c"));
+  t.deepEqual(await body.json(), {
+    url: "/c",
+    method: "GET",
+    headers: {
+      "accept": "*/*",
+      "accept-encoding": "gzip, deflate, br",
+      "connection": "close",
+      "x-extra": "something",
+    },
+    body: "",
+  });
 });
 
 test("on redirect follow to not found", async (t) => {
