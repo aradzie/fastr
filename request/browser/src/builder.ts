@@ -6,7 +6,7 @@ import {
 } from "@webfx-http/headers";
 import { mergeSearchParams } from "@webfx-http/url";
 import { EventEmitter } from "events";
-import { guessContentType, toFormData } from "./body";
+import { guessContentType, toFormData } from "./body/type";
 import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "./events";
 import type {
   Adapter,

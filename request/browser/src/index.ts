@@ -8,7 +8,7 @@ export type {
   UploadProgressEvent,
   DownloadProgressEvent,
 } from "./types";
-export { adapter, request } from "./request";
+export { adapter, request } from "./instance";
 export { xhrAdapter } from "./adapter/xhr";
 export { fetchAdapter } from "./adapter/fetch";
 export { RequestBuilder } from "./builder";

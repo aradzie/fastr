@@ -6,7 +6,7 @@ export type {
   HttpResponse,
   BodyDataType,
 } from "./types";
-export { request } from "./request";
+export { request } from "./instance";
 export { RequestBuilder } from "./builder";
 export { Streamable, FileStreamable } from "./body/streamable";
 export {

@@ -1,4 +1,4 @@
-import { adapter } from "../request";
+import { adapter } from "../instance";
 import type {
   Adapter,
   BodyDataType,

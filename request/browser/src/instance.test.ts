@@ -1,5 +1,5 @@
 import test from "ava";
-import { adapter, request } from "./request";
+import { adapter, request } from "./instance";
 import type { Adapter, HttpRequest, HttpResponse, Middleware } from "./types";
 
 const mw1: Middleware = (

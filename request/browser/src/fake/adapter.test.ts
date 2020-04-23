@@ -1,5 +1,5 @@
 import test from "ava";
-import { request } from "../request";
+import { request } from "../instance";
 import { fakeAdapter } from "./adapter";
 
 test.beforeEach(() => {

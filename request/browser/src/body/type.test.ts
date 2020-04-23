@@ -1,5 +1,5 @@
 import test from "ava";
-import { guessContentType, toFormData } from "./body";
+import { guessContentType, toFormData } from "./type";
 
 test("guess text type", (t) => {
   const body = "text";
@@ -63,6 +63,7 @@ test("guess json type", (t) => {
   const plainObject = { a: 1 };
   const nonPlainObject = new (class Dummy {
     ignored = 0;
+
     toJSON(): unknown {
       return plainObject;
     }
