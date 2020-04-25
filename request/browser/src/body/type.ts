@@ -45,10 +45,10 @@ export function guessContentType(
       return [body, null];
     }
     if (body instanceof Blob) {
-      return [body, contentType ?? (body.type || null)];
+      return [body, contentType ?? (body.type || "application/octet-stream")];
     }
     if (body instanceof ArrayBuffer || ArrayBuffer.isView(body)) {
-      return [body, contentType];
+      return [body, contentType ?? "application/octet-stream"];
     }
     if (isJSON(body)) {
       return [JSON.stringify(body), contentType ?? "application/json"];

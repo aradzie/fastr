@@ -170,7 +170,7 @@ test("send blob body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, blob);
-  t.is(req1.headers?.get("Content-Type"), null);
+  t.is(req1.headers?.get("Content-Type"), "application/octet-stream");
 });
 
 test("send blob body with content type in blob", async (t) => {
@@ -248,7 +248,7 @@ test("send array buffer body", async (t) => {
   t.is(receivedRequests.length, 1);
   const [req1] = receivedRequests;
   t.is(req1.body, body);
-  t.is(req1.headers?.get("Content-Type"), null);
+  t.is(req1.headers?.get("Content-Type"), "application/octet-stream");
 });
 
 test("send array buffer body with custom content type", async (t) => {

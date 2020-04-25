@@ -35,7 +35,7 @@ test("guess url-encoded form type", (t) => {
 
 test("guess type from blob", (t) => {
   const body = new Blob([]);
-  t.deepEqual(guessContentType(body, null), [body, null]);
+  t.deepEqual(guessContentType(body, null), [body, "application/octet-stream"]);
   t.deepEqual(guessContentType(body, "foo/bar"), [body, "foo/bar"]);
 });
 
@@ -48,14 +48,14 @@ test("guess type from blob with type", (t) => {
 test("guess array buffer type", (t) => {
   const body = new ArrayBuffer(0);
   t.false(ArrayBuffer.isView(body));
-  t.deepEqual(guessContentType(body, null), [body, null]);
+  t.deepEqual(guessContentType(body, null), [body, "application/octet-stream"]);
   t.deepEqual(guessContentType(body, "foo/bar"), [body, "foo/bar"]);
 });
 
 test("guess array buffer view type", (t) => {
   const body = new Uint8Array(0);
   t.true(ArrayBuffer.isView(body));
-  t.deepEqual(guessContentType(body, null), [body, null]);
+  t.deepEqual(guessContentType(body, null), [body, "application/octet-stream"]);
   t.deepEqual(guessContentType(body, "foo/bar"), [body, "foo/bar"]);
 });
 
