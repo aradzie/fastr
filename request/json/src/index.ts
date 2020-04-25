@@ -1,19 +1,23 @@
 /**
  * Checks at runtime that the given body argument is a proper JSON body.
- * It accepts either plain objects or objects with the `toJSON` method.
- * Anything else, e.g. non-plain objects, arrays, functions, primitives, etc.
- * are rejected.
+ * It accepts either plain objects, arrays or objects with the `toJSON` method.
+ * Anything else, e.g. non-plain objects such as Map, functions, primitives,
+ * etc. are rejected.
  */
 export function isJSON(value: any): boolean {
+  // prettier-ignore
   return (
-    isObject(value) &&
-    (isPlainObject(value) ||
-      ("toJSON" in value && typeof value.toJSON === "function"))
+    // Is this any object?
+    value != null && typeof value === "object" &&
+    (
+      // Is this a plain object?
+      isPlainObject(value) ||
+      // Is this an array?
+      Array.isArray(value) ||
+      // Has function toJSON?
+      typeof value.toJSON === "function"
+    )
   );
-}
-
-function isObject(value: any): boolean {
-  return value != null && typeof value === "object";
 }
 
 function isPlainObject(value: any): boolean {

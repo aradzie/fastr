@@ -9,32 +9,32 @@ test("accept plain object", (t) => {
 });
 
 test("accept non-plain object with the toJSON method", (t) => {
-  const o = new (class Dummy {
-    ignored = 0;
-    toJSON(): unknown {
-      return { a: 1 };
-    }
-  })();
-  t.true(isJSON(o));
-  t.is(JSON.stringify(o), '{"a":1}');
+  t.true(
+    isJSON(
+      new (class Dummy {
+        toJSON(): unknown {
+          return { a: 1 };
+        }
+      })(),
+    ),
+  );
+});
+
+test("accept array", (t) => {
+  t.true(isJSON([]));
+  t.true(isJSON([{ a: 1 }]));
 });
 
 test("reject invalid value", (t) => {
-  // Try undefined.
   t.false(isJSON(undefined));
-
-  // Try null.
   t.false(isJSON(null));
-
-  // Try array.
-  t.false(isJSON([]));
-
-  // Try function.
+  t.false(isJSON(true));
+  t.false(isJSON(0));
+  t.false(isJSON(""));
+  t.false(isJSON(Symbol()));
+  t.false(isJSON(/abc/));
   t.false(isJSON(() => null));
-
-  // Try non-plain object.
   t.false(isJSON(Object.create({})));
-
-  // Try non-plain object.
   t.false(isJSON(new (class Dummy {})()));
+  t.false(isJSON(new Map()));
 });

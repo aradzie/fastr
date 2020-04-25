@@ -92,19 +92,21 @@ test("guess json type", (t) => {
     '{"a":1}',
     "application/foobar+json",
   ]);
+
+  // Try array.
+  t.deepEqual(guessContentType([plainObject], null), [
+    '[{"a":1}]',
+    "application/json",
+  ]);
+
+  // Try array with custom type.
+  t.deepEqual(guessContentType([plainObject], "application/foobar+json"), [
+    '[{"a":1}]',
+    "application/foobar+json",
+  ]);
 });
 
 test("reject invalid type", (t) => {
-  // Try array.
-  t.throws(
-    () => {
-      guessContentType([], null);
-    },
-    {
-      instanceOf: TypeError,
-    },
-  );
-
   // Try function.
   t.throws(
     () => {
@@ -119,6 +121,16 @@ test("reject invalid type", (t) => {
   t.throws(
     () => {
       guessContentType(new (class Dummy {})(), null);
+    },
+    {
+      instanceOf: TypeError,
+    },
+  );
+
+  // Try Map.
+  t.throws(
+    () => {
+      guessContentType(new Map(), null);
     },
     {
       instanceOf: TypeError,
