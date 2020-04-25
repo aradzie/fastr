@@ -14,10 +14,10 @@
     "jsdom": "^16.2.2",
     "tslib": "^1.11.1"
   },
+  "devDependencies": {
+    "@types/jsdom": "^16.2.1"
+  },
   "scripts": {
     "compile": "rm -fr build && tsc"
-  },
-  "devDependencies": {
-    "@types/jsdom": "^16.2.0"
   }
 }
