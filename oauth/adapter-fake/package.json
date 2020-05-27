@@ -1,6 +1,6 @@
 {
   "name": "@webfx-oauth/adapter-fake",
-  "version": "0.0.8-alpha.0",
+  "version": "0.0.8-alpha.2",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "homepage": "https://github.com/aradzie/webfx#readme",
   "repository": "aradzie/webfx",
@@ -12,7 +12,7 @@
     "node": ">=12.16"
   },
   "dependencies": {
-    "@webfx-oauth/client": "^0.0.8-alpha.0"
+    "@webfx-oauth/client": "^0.0.8-alpha.2"
   },
   "scripts": {
     "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json"
