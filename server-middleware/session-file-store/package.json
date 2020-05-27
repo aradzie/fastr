@@ -12,10 +12,10 @@
     "node": ">=12.16"
   },
   "dependencies": {
-    "@aradzie/fsx": "0.0.2-alpha.3",
-    "@aradzie/fsx-file": "0.0.2-alpha.3",
-    "@aradzie/fsx-lockfile": "0.0.2-alpha.3",
-    "@aradzie/retry": "0.0.2-alpha.3",
+    "@aradzie/fsx": "0.0.2-alpha.5",
+    "@aradzie/fsx-file": "0.0.2-alpha.5",
+    "@aradzie/fsx-lockfile": "0.0.2-alpha.5",
+    "@aradzie/retry": "0.0.2-alpha.5",
     "@webfx-middleware/session": "^0.0.8-alpha.0",
     "inversify": "^5.0.1",
     "reflect-metadata": "^0.1.13",
