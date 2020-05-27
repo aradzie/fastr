@@ -2,7 +2,7 @@ import { BadRequestError } from "@webfx-http/error";
 
 // See https://encoding.spec.whatwg.org/
 
-export function normalizeCharset(charset: string): string {
+export function normalizeCharset(charset: string): BufferEncoding {
   switch (charset.toLowerCase()) {
     case "utf8":
     case "utf-8":

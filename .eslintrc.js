@@ -40,7 +40,6 @@ module.exports = {
           "error",
           { allowModules: ["ava", "mockdate"] },
         ],
-        "ava/no-ignored-test-files": "off",
       },
     },
   ],
