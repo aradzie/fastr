@@ -1,5 +1,5 @@
+import Joi from "@hapi/joi";
 import { BadRequestError } from "@webfx-http/error";
-import Joi from "joi";
 import Koa from "koa";
 
 declare module "koa" {
@@ -13,11 +13,11 @@ declare module "koa" {
 }
 
 export interface Spec {
-  readonly headers?: Joi.SchemaLike;
-  readonly query?: Joi.SchemaLike;
-  readonly params?: Joi.SchemaLike;
-  readonly json?: Joi.SchemaLike;
-  readonly form?: Joi.SchemaLike;
+  readonly headers?: Joi.AnySchema;
+  readonly query?: Joi.AnySchema;
+  readonly params?: Joi.AnySchema;
+  readonly json?: Joi.AnySchema;
+  readonly form?: Joi.AnySchema;
 
   onValidationError?(
     ctx: Koa.ParameterizedContext,
@@ -69,11 +69,11 @@ export function validateContext(ctx: Koa.ParameterizedContext, spec: Spec) {
 
   function validateObject<T>(
     object: T,
-    schema: Joi.SchemaLike,
+    schema: Joi.AnySchema,
     options?: Joi.ValidationOptions,
   ): T {
-    const { error, value } = Joi.validate(object, schema, options);
-    if (error) {
+    const { error, value } = schema.validate(object, options);
+    if (error != null) {
       onValidationError(ctx, error);
     }
     return value;
