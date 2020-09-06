@@ -222,7 +222,7 @@ function makeAdapterTests(underTest: Adapter): void {
         .post("/test/reflect")
         .header("X-Foo", "bar")
         .sendForm(formData);
-      const { body, ...val } = await response.json();
+      const { body, ...val } = await response.json<any>();
       expect(val.headers["content-type"]).to.match(
         /^multipart\/form-data; *boundary=.*$/,
       );

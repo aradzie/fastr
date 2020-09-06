@@ -1,5 +1,3 @@
-export const dummy = null; // Fix compilation error.
-
 polyfillBlob(); // Some day we will get rid of this.
 
 function polyfillBlob(): void {
