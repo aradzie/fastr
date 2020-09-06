@@ -1,6 +1,6 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
-  "extends": "./tsconfig-node.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "lib": ["es2020", "dom", "dom.iterable"],
     "target": "es2019"
