@@ -1,3 +1,4 @@
+import { URLSearchParams } from "@webfx/url";
 import type { UrlParams } from "./types";
 
 export function toUrl(

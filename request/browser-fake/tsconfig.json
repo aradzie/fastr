@@ -4,6 +4,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "lib",
+    "lib": ["DOM", "DOM.Iterable"],
     "module": "commonjs",
     "incremental": true,
     "tsBuildInfoFile": "lib/.tsbuildcache"

@@ -1,5 +1,6 @@
 import test from "ava";
 import { Readable } from "stream";
+import { URLSearchParams } from "url";
 import { Streamable } from "./streamable";
 import { guessContentType } from "./type";
 

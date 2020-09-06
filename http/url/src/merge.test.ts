@@ -1,3 +1,4 @@
+import { URLSearchParams } from "@webfx/url";
 import test from "ava";
 import { mergeSearchParams } from "./merge";
 

@@ -1,5 +1,6 @@
 import { HttpHeaders } from "@webfx-http/headers";
 import { RequestError } from "@webfx-request/error";
+import { URL } from "url";
 import { cacheStreamBody, isStreamBody } from "../body/send";
 import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
 

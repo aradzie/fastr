@@ -10,6 +10,7 @@ import {
   Middleware,
   request,
 } from "@webfx-request/node";
+import { URL } from "url";
 import { OAuthError } from "./errors";
 import type { ResourceOwner } from "./resource-owner";
 import { AccessToken } from "./token";

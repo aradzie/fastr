@@ -7,6 +7,7 @@ import {
 import { mergeSearchParams } from "@webfx-http/url";
 import { EventEmitter } from "events";
 import { Readable } from "stream";
+import { URL, URLSearchParams } from "url";
 import { Streamable } from "./body/streamable";
 import { guessContentType } from "./body/type";
 import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "./events";

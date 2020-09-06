@@ -13,6 +13,7 @@ import {
   Middleware,
 } from "@webfx-request/node";
 import { createHmac } from "crypto";
+import { URL } from "url";
 import type {
   FacebookClientConfig,
   FacebookErrorResponse,

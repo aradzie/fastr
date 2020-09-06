@@ -5,6 +5,7 @@ import type { Agent as HttpAgent } from "http";
 import type { Agent as HttpsAgent } from "https";
 import type { Readable } from "stream";
 import type { SecureContextOptions } from "tls";
+import type { URL } from "url";
 import type { Streamable } from "./body/streamable";
 import type { RequestBuilder } from "./builder";
 

@@ -12,6 +12,7 @@
     "node": ">=12.16"
   },
   "dependencies": {
+    "@webfx/url": "^0.0.8-alpha.2",
     "tslib": "^2.0.0"
   },
   "scripts": {

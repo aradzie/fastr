@@ -2,6 +2,7 @@ import { RouterContext } from "@webfx-middleware/router";
 import { IMiddleware } from "@webfx/middleware";
 import { inject, injectable } from "inversify";
 import Koa from "koa";
+import { URL } from "url";
 
 @injectable()
 export class Canonical implements IMiddleware {

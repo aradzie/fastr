@@ -4,7 +4,8 @@
     "oauth/*",
     "request/*",
     "server-middleware/*",
-    "server/*"
+    "server/*",
+    "url"
   ],
   "version": "0.0.8-alpha.2"
 }

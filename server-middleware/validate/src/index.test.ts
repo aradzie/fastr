@@ -4,6 +4,7 @@ import { request } from "@webfx-request/node";
 import { start } from "@webfx-request/testlib";
 import test from "ava";
 import Koa from "koa";
+import { URLSearchParams } from "url";
 import { validate } from "./index";
 
 test("validate query", async (t) => {

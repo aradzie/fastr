@@ -7,6 +7,7 @@ import {
 import http, { createServer, RequestListener } from "http";
 import https from "https";
 import net, { AddressInfo } from "net";
+import { URL } from "url";
 
 /**
  * Returns a new middleware which redirects all requests to the given server.

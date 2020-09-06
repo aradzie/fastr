@@ -1,3 +1,5 @@
+import { URLSearchParams } from "@webfx/url";
+
 /**
  * Merges query string from the given URL and the given list of values.
  * @param url The original URL. It may already have query string parameters.

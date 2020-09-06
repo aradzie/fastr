@@ -1,6 +1,7 @@
 import { HttpHeaders } from "@webfx-http/headers";
 import test from "ava";
 import { Readable } from "stream";
+import { URLSearchParams } from "url";
 import { RequestBuilder } from "./builder";
 import type { Adapter, HttpRequest, HttpResponse } from "./types";
 
