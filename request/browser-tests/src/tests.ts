@@ -206,6 +206,7 @@ function makeAdapterTests(underTest: Adapter): void {
         method: "POST",
         headers: {
           "accept": "*/*",
+          "content-type": "application/octet-stream",
           "content-length": "9",
           "x-foo": "bar",
         },
