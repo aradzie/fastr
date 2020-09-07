@@ -1,6 +1,6 @@
 {
   "name": "@webfx-middleware/session-sql-store",
-  "version": "0.0.9-alpha.0",
+  "version": "0.0.9-alpha.1",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "homepage": "https://github.com/aradzie/webfx#readme",
   "repository": "aradzie/webfx",
@@ -12,7 +12,7 @@
     "node": ">=12.16"
   },
   "dependencies": {
-    "@webfx-middleware/session": "^0.0.9-alpha.0",
+    "@webfx-middleware/session": "^0.0.9-alpha.1",
     "bson": "^4.0.4",
     "inversify": "^5.0.1",
     "knex": "^0.21.1",
