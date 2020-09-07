@@ -1,4 +1,4 @@
-export interface ResourceOwner<TRaw = {}> {
+export interface ResourceOwner<TRaw = unknown> {
   readonly raw: TRaw;
   readonly provider: string;
   readonly id: string;
