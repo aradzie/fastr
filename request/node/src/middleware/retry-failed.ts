@@ -1,7 +1,12 @@
 import { HttpHeaders } from "@webfx-http/headers";
 import { isServerError } from "@webfx-http/status";
-import { cacheStreamBody, isStreamBody } from "../body/send";
-import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
+import { cacheStreamBody, isStreamBody } from "../body/send.js";
+import type {
+  Adapter,
+  HttpRequest,
+  HttpResponse,
+  Middleware,
+} from "../types.js";
 
 export interface RetryFailedOptions {
   /**

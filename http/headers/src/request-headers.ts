@@ -1,11 +1,11 @@
-import type { Accept } from "./accept";
-import type { AcceptEncoding } from "./accept-encoding";
-import { Cookie } from "./cookie";
-import type { ETag } from "./etag";
-import { HttpHeaders } from "./headers";
-import type { MediaType } from "./media-type";
-import { stringifyDate } from "./syntax";
-import type { NameValueEntries } from "./types";
+import type { AcceptEncoding } from "./accept-encoding.js";
+import type { Accept } from "./accept.js";
+import { Cookie } from "./cookie.js";
+import type { ETag } from "./etag.js";
+import { HttpHeaders } from "./headers.js";
+import type { MediaType } from "./media-type.js";
+import { stringifyDate } from "./syntax.js";
+import type { NameValueEntries } from "./types.js";
 
 export class RequestHeaders extends HttpHeaders {
   constructor(

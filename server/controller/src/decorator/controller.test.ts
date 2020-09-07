@@ -1,5 +1,5 @@
 import test from "ava";
-import { controller } from "./controller";
+import { controller } from "./controller.js";
 
 test("should validate metadata", (t) => {
   t.throws(() => {

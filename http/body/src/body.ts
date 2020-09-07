@@ -4,9 +4,9 @@ import type { IncomingHttpHeaders } from "http";
 import type { IParseOptions } from "qs";
 import { parse } from "qs";
 import type { Readable } from "stream";
-import { normalizeCharset } from "./charset";
-import type { Encoding } from "./encoding";
-import { getEncoding, readAll } from "./encoding";
+import { normalizeCharset } from "./charset.js";
+import type { Encoding } from "./encoding.js";
+import { getEncoding, readAll } from "./encoding.js";
 
 export interface BodyMessage extends Readable {
   readonly headers: IncomingHttpHeaders;

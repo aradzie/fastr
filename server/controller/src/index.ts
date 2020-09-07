@@ -1,9 +1,9 @@
 import "reflect-metadata";
 
-export * from "./builder";
-export * from "./decorator/controller";
-export * from "./decorator/handler";
-export * from "./decorator/middleware";
-export * from "./decorator/parameter";
-export * from "./pipe";
-export * from "./types";
+export * from "./builder.js";
+export * from "./decorator/controller.js";
+export * from "./decorator/handler.js";
+export * from "./decorator/middleware.js";
+export * from "./decorator/parameter.js";
+export * from "./pipe.js";
+export * from "./types.js";

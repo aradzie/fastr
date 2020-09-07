@@ -1,6 +1,6 @@
 import test from "ava";
-import { request } from "../instance";
-import { fakeAdapter } from "./adapter";
+import { request } from "../instance.js";
+import { fakeAdapter } from "./adapter.js";
 
 test.beforeEach(() => {
   fakeAdapter.reset();

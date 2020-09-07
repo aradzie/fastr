@@ -11,10 +11,10 @@ import {
   getQueryParam,
   getRequest,
   getResponse,
-} from "./context";
-import { controller } from "./decorator/controller";
-import { http } from "./decorator/handler";
-import { use } from "./decorator/middleware";
+} from "./context.js";
+import { controller } from "./decorator/controller.js";
+import { http } from "./decorator/handler.js";
+import { use } from "./decorator/middleware.js";
 import {
   body,
   context,
@@ -24,14 +24,14 @@ import {
   queryParam,
   request,
   response,
-} from "./decorator/parameter";
+} from "./decorator/parameter.js";
 import {
   getControllerMetadata,
   getControllerUse,
   getHandlerMetadata,
   getHandlerUse,
   getParameterMetadata,
-} from "./metadata";
+} from "./metadata.js";
 
 function middleware1(ctx: RouterContext, next: Koa.Next): Promise<void> {
   return next();

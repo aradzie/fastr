@@ -1,4 +1,4 @@
-import { HandlerDecorator, setHandlerMetadata } from "../metadata";
+import { HandlerDecorator, setHandlerMetadata } from "../metadata.js";
 
 export interface HandlerOptions {
   readonly path?: string;

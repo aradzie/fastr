@@ -1,2 +1,2 @@
-export type { BodyOptions } from "./body";
-export { Body } from "./body";
+export type { BodyOptions } from "./body.js";
+export { Body } from "./body.js";

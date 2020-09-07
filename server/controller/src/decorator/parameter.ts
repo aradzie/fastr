@@ -7,10 +7,10 @@ import {
   getQueryParam,
   getRequest,
   getResponse,
-} from "../context";
-import { ParameterExtractor, setParameterMetadata } from "../metadata";
-import type { IPipe } from "../pipe";
-import type { Type } from "../types";
+} from "../context.js";
+import { ParameterExtractor, setParameterMetadata } from "../metadata.js";
+import type { IPipe } from "../pipe.js";
+import type { Type } from "../types.js";
 
 /**
  * An annotation factory for decorators which decorate arguments of type `Koa.Context`.

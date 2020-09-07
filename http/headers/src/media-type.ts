@@ -1,7 +1,7 @@
-import { InvalidMediaTypeError } from "./errors";
-import { escapeToken, Scanner } from "./syntax";
-import type { Header, NameValueEntries } from "./types";
-import { entriesOf } from "./util";
+import { InvalidMediaTypeError } from "./errors.js";
+import { escapeToken, Scanner } from "./syntax.js";
+import type { Header, NameValueEntries } from "./types.js";
+import { entriesOf } from "./util.js";
 
 export class MediaType implements Header {
   static from(value: MediaType | string): MediaType {

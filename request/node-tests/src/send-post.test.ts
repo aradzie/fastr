@@ -2,7 +2,7 @@ import { request, Streamable } from "@webfx-request/node";
 import { start } from "@webfx-request/testlib";
 import test from "ava";
 import { Readable } from "stream";
-import { reflect } from "./util";
+import { reflect } from "./util.js";
 
 test("post text", async (t) => {
   // Arrange.

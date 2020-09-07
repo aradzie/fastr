@@ -1,14 +1,14 @@
-import { adapter } from "../instance";
+import { adapter } from "../instance.js";
 import type {
   Adapter,
   BodyDataType,
   HttpRequest,
   HttpResponse,
-} from "../types";
-import { match } from "./match";
-import type { Recorder } from "./recorder";
-import { BodyMethodInit, FakeHttpResponse } from "./response";
-import type { FakeAdapter, ReplyBuilder, RequestMatcher } from "./types";
+} from "../types.js";
+import { match } from "./match.js";
+import type { Recorder } from "./recorder.js";
+import { BodyMethodInit, FakeHttpResponse } from "./response.js";
+import type { FakeAdapter, ReplyBuilder, RequestMatcher } from "./types.js";
 
 // TODO Better request filter.
 // TODO Intercept requests to assert request parameters.

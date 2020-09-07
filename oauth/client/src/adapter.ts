@@ -11,10 +11,10 @@ import {
   request,
 } from "@webfx-request/node";
 import { URL } from "url";
-import { OAuthError } from "./errors";
-import type { ResourceOwner } from "./resource-owner";
-import { AccessToken } from "./token";
-import type { AdapterConfig, ClientConfig, ErrorResponse } from "./types";
+import { OAuthError } from "./errors.js";
+import type { ResourceOwner } from "./resource-owner.js";
+import { AccessToken } from "./token.js";
+import type { AdapterConfig, ClientConfig, ErrorResponse } from "./types.js";
 
 export abstract class AbstractAdapter {
   protected readonly clientId: string;

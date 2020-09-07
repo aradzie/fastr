@@ -6,8 +6,8 @@ import {
 } from "@webfx-http/headers";
 import { mergeSearchParams } from "@webfx-http/url";
 import { EventEmitter } from "events";
-import { guessContentType, toFormData } from "./body/type";
-import type { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "./events";
+import { guessContentType, toFormData } from "./body/type.js";
+import type { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "./events.js";
 import type {
   Adapter,
   BodyDataType,
@@ -19,7 +19,7 @@ import type {
   Middleware,
   NameValueEntries,
   UploadProgressEvent,
-} from "./types";
+} from "./types.js";
 
 export class RequestBuilder {
   readonly adapter: Adapter;

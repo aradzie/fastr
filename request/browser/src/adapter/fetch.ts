@@ -1,6 +1,6 @@
 import { HttpHeaders } from "@webfx-http/headers";
-import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "../events";
-import type { HttpRequest, HttpResponse } from "../types";
+import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "../events.js";
+import type { HttpRequest, HttpResponse } from "../types.js";
 
 /**
  * An adapter which is implemented using the fetch API.

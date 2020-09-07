@@ -1,8 +1,8 @@
-import { InvalidHeaderNameError, InvalidHeaderValueError } from "./errors";
-import { splitLines, splitPair } from "./strings";
-import { isToken, isValidHeaderValue } from "./syntax";
-import type { NameValueEntries } from "./types";
-import { multiEntriesOf } from "./util";
+import { InvalidHeaderNameError, InvalidHeaderValueError } from "./errors.js";
+import { splitLines, splitPair } from "./strings.js";
+import { isToken, isValidHeaderValue } from "./syntax.js";
+import type { NameValueEntries } from "./types.js";
+import { multiEntriesOf } from "./util.js";
 
 const kMap = Symbol("kMap");
 

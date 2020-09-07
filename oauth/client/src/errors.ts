@@ -1,4 +1,4 @@
-import type { ErrorResponse } from "./types";
+import type { ErrorResponse } from "./types.js";
 
 export class OAuthError<TRaw = {}> extends Error {
   constructor(message: string, readonly code: string, readonly raw: TRaw) {

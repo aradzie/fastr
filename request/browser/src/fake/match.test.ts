@@ -1,5 +1,5 @@
 import test from "ava";
-import { match } from "./match";
+import { match } from "./match.js";
 
 test("match method exact", (t) => {
   const matcher = match("GET", "/");

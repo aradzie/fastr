@@ -1,7 +1,12 @@
 import { UnsupportedMediaTypeError } from "@webfx-http/error";
 import { Accept, HttpHeaders, MediaType } from "@webfx-http/headers";
 import { isSuccess } from "@webfx-http/status";
-import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
+import type {
+  Adapter,
+  HttpRequest,
+  HttpResponse,
+  Middleware,
+} from "../types.js";
 
 /**
  * Returns a new middleware which sets the `Accept` header in requests and

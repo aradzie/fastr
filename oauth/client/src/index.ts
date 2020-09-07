@@ -4,8 +4,8 @@ export type {
   ErrorResponse,
   AdapterConfig,
   TokenResponse,
-} from "./types";
-export type { ResourceOwner } from "./resource-owner";
-export { OAuthError } from "./errors";
-export { AccessToken } from "./token";
-export { AbstractAdapter } from "./adapter";
+} from "./types.js";
+export type { ResourceOwner } from "./resource-owner.js";
+export { OAuthError } from "./errors.js";
+export { AccessToken } from "./token.js";
+export { AbstractAdapter } from "./adapter.js";

@@ -1,7 +1,7 @@
-import { CookieCodec } from "./cookie-codec";
-import { InvalidSetCookieHeaderError } from "./errors";
-import { isToken, isValidCookieValue, parseDate, Scanner } from "./syntax";
-import type { Header } from "./types";
+import { CookieCodec } from "./cookie-codec.js";
+import { InvalidSetCookieHeaderError } from "./errors.js";
+import { isToken, isValidCookieValue, parseDate, Scanner } from "./syntax.js";
+import type { Header } from "./types.js";
 
 export interface SetCookieInit {
   readonly path?: string | null;

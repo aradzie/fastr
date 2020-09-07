@@ -1,5 +1,5 @@
 import test from "ava";
-import { splitLines, splitPair } from "./strings";
+import { splitLines, splitPair } from "./strings.js";
 
 test("split pair", (t) => {
   t.deepEqual(splitPair("", ","), ["", ""]);

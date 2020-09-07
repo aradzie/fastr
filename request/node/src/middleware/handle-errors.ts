@@ -1,6 +1,11 @@
 import { throwError } from "@webfx-http/error";
 import { isClientError, isServerError, isSuccess } from "@webfx-http/status";
-import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
+import type {
+  Adapter,
+  HttpRequest,
+  HttpResponse,
+  Middleware,
+} from "../types.js";
 
 export interface HandleErrorOptions {
   /**

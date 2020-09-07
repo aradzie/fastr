@@ -2,8 +2,8 @@ import { Body } from "@webfx-http/body";
 import fs from "fs";
 import { Readable } from "stream";
 import util from "util";
-import { index } from "./mainpage";
-import { startServer } from "./server";
+import { index } from "./mainpage.js";
+import { startServer } from "./server.js";
 
 const readFile = util.promisify(fs.readFile);
 

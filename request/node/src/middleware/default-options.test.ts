@@ -1,7 +1,7 @@
 import test from "ava";
-import { reflect } from "../fake/response";
-import type { HttpRequest, HttpResponse } from "../types";
-import { defaultOptions } from "./default-options";
+import { reflect } from "../fake/response.js";
+import type { HttpRequest, HttpResponse } from "../types.js";
+import { defaultOptions } from "./default-options.js";
 
 test("set default values", async (t) => {
   // Arrange.

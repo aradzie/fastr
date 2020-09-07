@@ -1,5 +1,10 @@
 import test from "ava";
-import { isClientError, isRedirect, isServerError, isSuccess } from "./status";
+import {
+  isClientError,
+  isRedirect,
+  isServerError,
+  isSuccess,
+} from "./status.js";
 
 test("check success", (t) => {
   t.false(isSuccess(199));

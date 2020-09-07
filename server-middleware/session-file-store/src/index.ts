@@ -1,1 +1,1 @@
-export * from "./filestore";
+export * from "./filestore.js";

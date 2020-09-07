@@ -1,5 +1,5 @@
-import { parse } from "./parser";
-import { makePath, MatchedPathParams, matchPrefix, Segment } from "./path";
+import { parse } from "./parser.js";
+import { makePath, MatchedPathParams, matchPrefix, Segment } from "./path.js";
 
 export class Prefix {
   /**

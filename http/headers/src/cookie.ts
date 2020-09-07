@@ -1,8 +1,8 @@
-import { CookieCodec } from "./cookie-codec";
-import { InvalidCookieHeaderError } from "./errors";
-import { isToken, isValidCookieValue, Scanner } from "./syntax";
-import type { Header, NameValueEntries } from "./types";
-import { entriesOf } from "./util";
+import { CookieCodec } from "./cookie-codec.js";
+import { InvalidCookieHeaderError } from "./errors.js";
+import { isToken, isValidCookieValue, Scanner } from "./syntax.js";
+import type { Header, NameValueEntries } from "./types.js";
+import { entriesOf } from "./util.js";
 
 const kMap = Symbol("kMap");
 

@@ -1,5 +1,5 @@
-import type { Adapter } from "./adapter";
-import type { Session as SessionInterface } from "./types";
+import type { Adapter } from "./adapter.js";
+import type { Session as SessionInterface } from "./types.js";
 
 const kAdapter = Symbol();
 

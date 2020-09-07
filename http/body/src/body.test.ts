@@ -3,7 +3,7 @@ import test from "ava";
 import type { IncomingHttpHeaders } from "http";
 import { Readable } from "stream";
 import { brotliCompressSync, gzipSync } from "zlib";
-import { Body } from "./body";
+import { Body } from "./body.js";
 
 test("parse buffer body", async (t) => {
   t.deepEqual(

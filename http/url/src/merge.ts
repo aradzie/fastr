@@ -1,4 +1,4 @@
-import { URLSearchParams } from "./url";
+import { URLSearchParams } from "./url.js";
 
 /**
  * Merges query string from the given URL and the given list of values.

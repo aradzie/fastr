@@ -2,7 +2,7 @@ import type { RouterContext } from "@webfx-middleware/router";
 import { controller, http, IPipe, queryParam } from "@webfx/controller";
 import test from "ava";
 import { Container, injectable } from "inversify";
-import { makeHelper } from "./helper";
+import { makeHelper } from "./helper.js";
 
 test("should pass through pipes", async (t) => {
   // Arrange.

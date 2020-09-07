@@ -1,8 +1,8 @@
 import type Cookies from "cookies";
-import { Adapter } from "../adapter";
-import type { ParsedOptions } from "../options";
-import type { Store } from "../store";
-import { now } from "../util";
+import { Adapter } from "../adapter.js";
+import type { ParsedOptions } from "../options.js";
+import type { Store } from "../store.js";
+import { now } from "../util.js";
 
 /**
  * The adapter which keeps all session data in external store.

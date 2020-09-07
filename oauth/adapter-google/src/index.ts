@@ -1,2 +1,2 @@
-export type { GoogleProfileResponse } from "./types";
-export { GoogleAdapter } from "./adapter";
+export type { GoogleProfileResponse } from "./types.js";
+export { GoogleAdapter } from "./adapter.js";

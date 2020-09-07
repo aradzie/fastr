@@ -1,5 +1,5 @@
 import test from "ava";
-import { MediaType } from "./media-type";
+import { MediaType } from "./media-type.js";
 
 test("matches", (t) => {
   t.false(new MediaType("text", "plain").matches("text/html"));

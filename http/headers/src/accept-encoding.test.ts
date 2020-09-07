@@ -1,6 +1,6 @@
 import test from "ava";
-import { Entry } from "./accept";
-import { AcceptEncoding } from "./accept-encoding";
+import { AcceptEncoding } from "./accept-encoding.js";
+import { Entry } from "./accept.js";
 
 test("accepts with empty list", (t) => {
   const accept = new AcceptEncoding();

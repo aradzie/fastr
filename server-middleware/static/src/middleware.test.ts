@@ -5,8 +5,8 @@ import test from "ava";
 import Koa from "koa";
 import { join } from "path";
 import { brotliCompressSync, gzipSync } from "zlib";
-import { preciseTagger } from "./etag";
-import { staticFiles } from "./middleware";
+import { preciseTagger } from "./etag.js";
+import { staticFiles } from "./middleware.js";
 
 const dir = "/tmp/static-files-middleware/";
 

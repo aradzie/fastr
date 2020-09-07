@@ -3,7 +3,7 @@ import {
   ClientConfig,
   ResourceOwner,
 } from "@webfx-oauth/client";
-import type { GoogleProfileResponse } from "./types";
+import type { GoogleProfileResponse } from "./types.js";
 
 // See https://developers.google.com/identity/protocols/OpenIDConnect
 // See https://accounts.google.com/.well-known/openid-configuration

@@ -15,7 +15,7 @@ import {
 import test from "ava";
 import { Container, injectable } from "inversify";
 import Koa from "koa";
-import { makeHelper } from "./helper";
+import { makeHelper } from "./helper.js";
 
 test("should provide standard objects", async (t) => {
   // Arrange.

@@ -1,12 +1,12 @@
-export { Accept } from "./accept";
-export { AcceptEncoding } from "./accept-encoding";
-export { CacheControl } from "./cache-control";
-export { Cookie } from "./cookie";
-export { CookieCodec, CodecDelegate } from "./cookie-codec";
-export { ETag } from "./etag";
-export { HttpHeaders } from "./headers";
-export { MediaType } from "./media-type";
-export { SetCookie } from "./set-cookie";
+export { Accept } from "./accept.js";
+export { AcceptEncoding } from "./accept-encoding.js";
+export { CacheControl } from "./cache-control.js";
+export { Cookie } from "./cookie.js";
+export { CookieCodec, CodecDelegate } from "./cookie-codec.js";
+export { ETag } from "./etag.js";
+export { HttpHeaders } from "./headers.js";
+export { MediaType } from "./media-type.js";
+export { SetCookie } from "./set-cookie.js";
 export {
   createError,
   InvalidHeaderNameError,
@@ -17,5 +17,5 @@ export {
   InvalidAcceptError,
   InvalidAcceptEncodingError,
   InvalidCacheControlHeaderError,
-} from "./errors";
-export { entriesOf, multiEntriesOf } from "./util";
+} from "./errors.js";
+export { entriesOf, multiEntriesOf } from "./util.js";

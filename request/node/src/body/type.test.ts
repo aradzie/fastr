@@ -1,8 +1,8 @@
 import test from "ava";
 import { Readable } from "stream";
 import { URLSearchParams } from "url";
-import { Streamable } from "./streamable";
-import { guessContentType } from "./type";
+import { Streamable } from "./streamable.js";
+import { guessContentType } from "./type.js";
 
 test("guess text type", (t) => {
   const body = "text";

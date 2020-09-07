@@ -1,15 +1,15 @@
 import { HttpHeaders, MediaType } from "@webfx-http/headers";
 import { isSuccess } from "@webfx-http/status";
 import type { EventEmitter } from "events";
-import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "../events";
+import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "../events.js";
 import type {
   DownloadProgressEvent,
   HttpRequest,
   HttpResponse,
   UploadProgressEvent,
-} from "../types";
+} from "../types.js";
 
-import "./polyfills"; // Automatically install the necessary polyfills.
+import "./polyfills.js"; // Automatically install the necessary polyfills.
 
 /**
  * An adapter which is implemented using the XMLHttpRequest API.

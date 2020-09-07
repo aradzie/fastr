@@ -1,5 +1,5 @@
 import test from "ava";
-import { SetCookie } from "./set-cookie";
+import { SetCookie } from "./set-cookie.js";
 
 test("parse", (t) => {
   t.deepEqual(

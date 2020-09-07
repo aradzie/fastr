@@ -1,6 +1,6 @@
-import { InvalidCacheControlHeaderError } from "./errors";
-import { Scanner } from "./syntax";
-import type { Header } from "./types";
+import { InvalidCacheControlHeaderError } from "./errors.js";
+import { Scanner } from "./syntax.js";
+import type { Header } from "./types.js";
 
 export interface CacheControlInit {
   readonly isPublic?: boolean;

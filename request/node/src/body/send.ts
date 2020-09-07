@@ -1,8 +1,8 @@
 import type { OutgoingMessage } from "http";
 import { pipeline, Readable } from "stream";
 import { createGzip } from "zlib";
-import type { BodyDataType } from "../types";
-import { Streamable } from "./streamable";
+import type { BodyDataType } from "../types.js";
+import { Streamable } from "./streamable.js";
 
 const GZIP_SIZE_THRESHOLD = 1024;
 

@@ -1,6 +1,6 @@
 import type { RouterContext } from "@webfx-middleware/router";
 import test from "ava";
-import { IPipe, isPipeClass, isPipeObject } from "./pipe";
+import { IPipe, isPipeClass, isPipeObject } from "./pipe.js";
 
 test("should detect pipe class", (t) => {
   class Pipe1 implements IPipe {

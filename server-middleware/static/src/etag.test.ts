@@ -1,7 +1,7 @@
 import { mkdir, removeDir, stat, Stats, writeFile } from "@aradzie/fsx";
 import test from "ava";
 import { join } from "path";
-import { fastTagger, preciseTagger } from "./etag";
+import { fastTagger, preciseTagger } from "./etag.js";
 
 const dir = "/tmp/static-files-etag/";
 const path1 = join(dir, "file1.txt");

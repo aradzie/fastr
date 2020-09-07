@@ -1,6 +1,6 @@
-import type { Adapter, BodyDataType, HttpRequest } from "../types";
-import type { Recorder } from "./recorder";
-import type { BodyMethodInit } from "./response";
+import type { Adapter, BodyDataType, HttpRequest } from "../types.js";
+import type { Recorder } from "./recorder.js";
+import type { BodyMethodInit } from "./response.js";
 
 /**
  * The fake adapter extends the base interface with additional method for adding

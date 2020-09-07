@@ -1,5 +1,5 @@
 import test from "ava";
-import { Encoding } from "./encoding";
+import { Encoding } from "./encoding.js";
 
 test("detect encoding", (t) => {
   t.deepEqual(Encoding.forPath("file.txt"), {

@@ -1,9 +1,9 @@
 import type Koa from "koa";
-import type { Adapter } from "./adapter";
-import { Cookie } from "./adapter/cookie";
-import { External } from "./adapter/external";
-import { Options, ParsedOptions, parseOptions } from "./options";
-import { Session } from "./session";
+import type { Adapter } from "./adapter.js";
+import { Cookie } from "./adapter/cookie.js";
+import { External } from "./adapter/external.js";
+import { Options, ParsedOptions, parseOptions } from "./options.js";
+import { Session } from "./session.js";
 
 export function session(app: Koa, options: Options): Koa.Middleware {
   return sessionImpl(app, parseOptions(options));

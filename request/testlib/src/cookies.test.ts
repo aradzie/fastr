@@ -2,9 +2,9 @@ import { Cookie, HttpHeaders, SetCookie } from "@webfx-http/headers";
 import { request } from "@webfx-request/node";
 import test from "ava";
 import type { IncomingMessage, ServerResponse } from "http";
-import { CookieJar } from "./cookiejar";
-import { cookies } from "./cookies";
-import { start } from "./start";
+import { CookieJar } from "./cookiejar.js";
+import { cookies } from "./cookies.js";
+import { start } from "./start.js";
 
 test("update cookie", async (t) => {
   const jar = new CookieJar();

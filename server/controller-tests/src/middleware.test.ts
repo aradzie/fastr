@@ -4,7 +4,7 @@ import type { IMiddleware } from "@webfx/middleware";
 import test from "ava";
 import { Container, injectable } from "inversify";
 import type Koa from "koa";
-import { makeHelper } from "./helper";
+import { makeHelper } from "./helper.js";
 
 test("should use injectable middlewares", async (t) => {
   // Arrange.

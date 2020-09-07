@@ -1,8 +1,8 @@
 import { isJSON } from "@webfx-request/json";
 import { Readable } from "stream";
 import { URLSearchParams } from "url";
-import type { BodyDataType } from "../types";
-import { Streamable } from "./streamable";
+import type { BodyDataType } from "../types.js";
+import { Streamable } from "./streamable.js";
 
 const S_TEXT = "text/plain; charset=UTF-8";
 const S_FORM = "application/x-www-form-urlencoded; charset=UTF-8";

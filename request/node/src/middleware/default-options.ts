@@ -4,7 +4,7 @@ import type {
   HttpRequestOptions,
   HttpResponse,
   Middleware,
-} from "../types";
+} from "../types.js";
 
 /**
  * Returns a new middleware which sets the specified request options if not

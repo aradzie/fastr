@@ -8,7 +8,7 @@ import {
   xhrAdapter,
 } from "@webfx-request/browser";
 import { expect } from "chai";
-import { formDataEntries, parseFormData } from "./util";
+import { formDataEntries, parseFormData } from "./util.js";
 
 mocha.setup({
   ui: "bdd",

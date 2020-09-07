@@ -1,6 +1,6 @@
-import { InvalidAcceptEncodingError } from "./errors";
-import { findQualityParam, Scanner } from "./syntax";
-import type { Header } from "./types";
+import { InvalidAcceptEncodingError } from "./errors.js";
+import { findQualityParam, Scanner } from "./syntax.js";
+import type { Header } from "./types.js";
 
 const kList = Symbol("kList");
 

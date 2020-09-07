@@ -1,5 +1,5 @@
-import type { UrlParams } from "./types";
-import { URLSearchParams } from "./url";
+import type { UrlParams } from "./types.js";
+import { URLSearchParams } from "./url.js";
 
 export function toUrl(
   template: string,

@@ -21,6 +21,7 @@ module.exports = {
     "no-constant-condition": ["error", { checkLoops: false }],
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-use-before-define": "off",
+    "node/file-extension-in-import": ["error", "always"],
     "node/no-unsupported-features/es-syntax": "off",
     "node/no-missing-import": "off",
     "node/no-missing-require": "off",

@@ -1,6 +1,6 @@
 import test from "ava";
-import { kMethodNotAllowed, kNotFound, Node } from "./node";
-import { Route } from "./route";
+import { kMethodNotAllowed, kNotFound, Node } from "./node.js";
+import { Route } from "./route.js";
 
 test("insert literal segments", (t) => {
   const route1 = new Route({

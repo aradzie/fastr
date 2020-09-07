@@ -1,5 +1,5 @@
-import type { Store } from "./store";
-import { decode, encode, randomString } from "./util";
+import type { Store } from "./store.js";
+import { decode, encode, randomString } from "./util.js";
 
 export interface Options {
   /**

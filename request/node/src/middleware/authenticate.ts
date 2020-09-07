@@ -1,5 +1,10 @@
 import { HttpHeaders } from "@webfx-http/headers";
-import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
+import type {
+  Adapter,
+  HttpRequest,
+  HttpResponse,
+  Middleware,
+} from "../types.js";
 
 /**
  * Returns a new middleware which sets the `Authorization` header in requests

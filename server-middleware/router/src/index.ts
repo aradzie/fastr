@@ -1,7 +1,7 @@
-export { Router, RouterOptions } from "./router";
+export { Router, RouterOptions } from "./router.js";
 export {
   RouterMiddleware,
   RouterContext,
   RouterParamContext,
   ParamMiddleware,
-} from "./types";
+} from "./types.js";

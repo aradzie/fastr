@@ -3,8 +3,8 @@ import { HttpHeaders } from "@webfx-http/headers";
 import { isSuccess } from "@webfx-http/status";
 import http, { ClientRequest, IncomingMessage } from "http";
 import https from "https";
-import { sendBody } from "./body/send";
-import type { HttpRequest, HttpResponse } from "./types";
+import { sendBody } from "./body/send.js";
+import type { HttpRequest, HttpResponse } from "./types.js";
 
 export function requestAdapter(request: HttpRequest): Promise<HttpResponse> {
   const { url, body } = request;

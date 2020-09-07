@@ -1,7 +1,7 @@
 import test from "ava";
-import { reflect } from "../fake/response";
-import type { HttpRequest, HttpResponse } from "../types";
-import { authenticate } from "./authenticate";
+import { reflect } from "../fake/response.js";
+import type { HttpRequest, HttpResponse } from "../types.js";
+import { authenticate } from "./authenticate.js";
 
 test("custom header value", async (t) => {
   // Arrange.

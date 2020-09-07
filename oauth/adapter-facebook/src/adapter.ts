@@ -18,7 +18,7 @@ import type {
   FacebookClientConfig,
   FacebookErrorResponse,
   FacebookProfileResponse,
-} from "./types";
+} from "./types.js";
 
 // See https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/
 // See https://developers.facebook.com/docs/graph-api/using-graph-api/error-handling

@@ -1,2 +1,2 @@
-export { Tagger, fastTagger, preciseTagger } from "./etag";
-export { staticFiles, Options, CacheControl } from "./middleware";
+export { Tagger, fastTagger, preciseTagger } from "./etag.js";
+export { staticFiles, Options, CacheControl } from "./middleware.js";

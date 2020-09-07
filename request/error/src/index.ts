@@ -1,1 +1,1 @@
-export { RequestError } from "./errors";
+export { RequestError } from "./errors.js";

@@ -1,5 +1,5 @@
 import type Koa from "koa";
-import type { Router } from "./router";
+import type { Router } from "./router.js";
 
 export interface RouterParamContext<StateT = any, CustomT = {}> {
   readonly params: { [key: string]: any };

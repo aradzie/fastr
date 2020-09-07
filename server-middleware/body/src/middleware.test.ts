@@ -3,7 +3,12 @@ import { start } from "@webfx-request/testlib";
 import test from "ava";
 import Koa from "koa";
 import { brotliCompressSync, gzipSync } from "zlib";
-import { expectBinary, expectForm, expectJson, expectText } from "./middleware";
+import {
+  expectBinary,
+  expectForm,
+  expectJson,
+  expectText,
+} from "./middleware.js";
 
 test("expect buffer", async (t) => {
   const app = new Koa();

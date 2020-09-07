@@ -2,9 +2,9 @@ import { HttpHeaders } from "@webfx-http/headers";
 import { RequestError } from "@webfx-request/error";
 import test from "ava";
 import { Readable } from "stream";
-import { FakeResponse, reflect } from "../fake/response";
-import type { Adapter, HttpRequest, HttpResponse } from "../types";
-import { followRedirects } from "./follow-redirects";
+import { FakeResponse, reflect } from "../fake/response.js";
+import type { Adapter, HttpRequest, HttpResponse } from "../types.js";
+import { followRedirects } from "./follow-redirects.js";
 
 test("pass through if response status is not redirect", async (t) => {
   // Arrange.

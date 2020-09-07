@@ -1,4 +1,4 @@
-export type { UrlParams } from "./types";
-export { toUrl } from "./template";
-export { mergeSearchParams } from "./merge";
-export { URL, URLSearchParams } from "./url";
+export type { UrlParams } from "./types.js";
+export { toUrl } from "./template.js";
+export { mergeSearchParams } from "./merge.js";
+export { URL, URLSearchParams } from "./url.js";

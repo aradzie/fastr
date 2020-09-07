@@ -1,6 +1,6 @@
 import type { HttpHeaders } from "@webfx-http/headers";
 import type { EventEmitter } from "events";
-import type { RequestBuilder } from "./builder";
+import type { RequestBuilder } from "./builder.js";
 
 /**
  * Adapter is a function which takes a request and returns a response promise.

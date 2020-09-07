@@ -8,7 +8,7 @@ import type {
   HttpRequest,
   HttpResponse,
   NameValueEntries,
-} from "../types";
+} from "../types.js";
 
 export type BodyData = string | Buffer | Error;
 

@@ -1,7 +1,7 @@
 import { HttpHeaders } from "@webfx-http/headers";
 import test from "ava";
-import { RequestBuilder } from "./builder";
-import type { Adapter, HttpRequest, HttpResponse } from "./types";
+import { RequestBuilder } from "./builder.js";
+import type { Adapter, HttpRequest, HttpResponse } from "./types.js";
 
 test("build url query string", async (t) => {
   // Arrange.

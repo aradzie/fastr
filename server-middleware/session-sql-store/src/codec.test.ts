@@ -1,5 +1,5 @@
 import test from "ava";
-import { BSON_CODEC } from "./codec";
+import { BSON_CODEC } from "./codec.js";
 
 test("bson encode and decode", (t) => {
   t.deepEqual(BSON_CODEC.decode(BSON_CODEC.encode({})), {});

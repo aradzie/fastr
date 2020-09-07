@@ -1,5 +1,5 @@
 import test from "ava";
-import { ETag } from "./etag";
+import { ETag } from "./etag.js";
 
 test("parse", (t) => {
   t.deepEqual({ ...new ETag('"') }, { value: '"', weak: false });

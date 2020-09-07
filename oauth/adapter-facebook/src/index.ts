@@ -2,5 +2,5 @@ export type {
   FacebookClientConfig,
   FacebookErrorResponse,
   FacebookProfileResponse,
-} from "./types";
-export { FacebookAdapter } from "./adapter";
+} from "./types.js";
+export { FacebookAdapter } from "./adapter.js";

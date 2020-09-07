@@ -1,9 +1,9 @@
 import { request } from "@webfx-request/node";
 import { CookieJar, cookies, start } from "@webfx-request/testlib";
 import Koa from "koa";
-import { session } from "../../middleware";
-import type { Options } from "../../options";
-import type { Session } from "../../types";
+import { session } from "../../middleware.js";
+import type { Options } from "../../options.js";
+import type { Session } from "../../types.js";
 
 type SessionTypes = { count: number };
 

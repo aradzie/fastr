@@ -1,5 +1,5 @@
 import test from "ava";
-import { FacebookAdapter } from "./adapter";
+import { FacebookAdapter } from "./adapter.js";
 
 const adapter = new FacebookAdapter({
   clientId: "client_id",

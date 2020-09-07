@@ -4,7 +4,7 @@ import { Builder } from "@webfx/controller";
 import test from "ava";
 import { Container } from "inversify";
 import Koa from "koa";
-import { Canonical } from "./index";
+import { Canonical } from "./index.js";
 
 test("redirect to canonical url", async (t) => {
   const app = new Koa();

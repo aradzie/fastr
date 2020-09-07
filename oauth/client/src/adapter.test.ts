@@ -1,7 +1,7 @@
 import test from "ava";
-import { AbstractAdapter } from "./adapter";
-import type { ResourceOwner } from "./resource-owner";
-import type { ClientConfig } from "./types";
+import { AbstractAdapter } from "./adapter.js";
+import type { ResourceOwner } from "./resource-owner.js";
+import type { ClientConfig } from "./types.js";
 
 class TestAdapter extends AbstractAdapter {
   constructor(clientConfig: ClientConfig) {

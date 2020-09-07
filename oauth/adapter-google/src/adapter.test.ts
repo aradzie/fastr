@@ -1,5 +1,5 @@
 import test from "ava";
-import { GoogleAdapter } from "./adapter";
+import { GoogleAdapter } from "./adapter.js";
 
 const adapter = new GoogleAdapter({
   clientId: "client_id",

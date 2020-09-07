@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import type { Store, StoredSession } from "../store";
+import type { Store, StoredSession } from "../store.js";
 
 @injectable()
 export class TransientStore implements Store {

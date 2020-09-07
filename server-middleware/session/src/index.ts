@@ -1,8 +1,8 @@
-import * as util from "./util";
+import * as util from "./util.js";
 
 export { util }; // TODO Fix when webpack begins to understand this.
-export { Options } from "./options";
-export { session } from "./middleware";
-export { SessionTypes, Session } from "./types";
-export { StoredSession, Store } from "./store";
-export { TransientStore } from "./store/transient";
+export { Options } from "./options.js";
+export { session } from "./middleware.js";
+export { SessionTypes, Session } from "./types.js";
+export { StoredSession, Store } from "./store.js";
+export { TransientStore } from "./store/transient.js";

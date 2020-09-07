@@ -1,6 +1,6 @@
 import { mkdir, removeDir } from "@aradzie/fsx";
 import test from "ava";
-import { FileStore } from "./filestore";
+import { FileStore } from "./filestore.js";
 
 const directory = "/tmp/wfx-session-test";
 

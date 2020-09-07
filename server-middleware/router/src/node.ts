@@ -3,8 +3,8 @@ import {
   MatchedPathParams,
   matchFragment,
   PatternSegment,
-} from "./path";
-import type { Route } from "./route";
+} from "./path.js";
+import type { Route } from "./route.js";
 
 export const kNotFound = Symbol("kNotFound");
 export const kMethodNotAllowed = Symbol("kMethodNotAllowed");

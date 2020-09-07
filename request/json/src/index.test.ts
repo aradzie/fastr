@@ -1,5 +1,5 @@
 import test from "ava";
-import { isJSON } from "./index";
+import { isJSON } from "./index.js";
 
 test("accept plain object", (t) => {
   t.true(isJSON({}));

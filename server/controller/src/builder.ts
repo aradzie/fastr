@@ -17,9 +17,9 @@ import {
   getHandlerUse,
   getParameterMetadata,
   ParameterMetadata,
-} from "./metadata";
-import type { IPipe } from "./pipe";
-import { kApp, kContext, kRequest, kResponse, kRouter } from "./types";
+} from "./metadata.js";
+import type { IPipe } from "./pipe.js";
+import { kApp, kContext, kRequest, kResponse, kRouter } from "./types.js";
 
 const kContainer = Symbol("kContainer");
 

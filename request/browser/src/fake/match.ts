@@ -1,5 +1,5 @@
-import type { HttpRequest } from "../types";
-import type { RequestMatcher } from "./types";
+import type { HttpRequest } from "../types.js";
+import type { RequestMatcher } from "./types.js";
 
 // TODO Match query params.
 

@@ -1,5 +1,5 @@
 import test from "ava";
-import { http } from "./handler";
+import { http } from "./handler.js";
 
 test("should validate metadata", (t) => {
   t.throws(() => {

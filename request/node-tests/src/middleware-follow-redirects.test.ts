@@ -2,7 +2,7 @@ import { HttpHeaders, MediaType } from "@webfx-http/headers";
 import { followRedirects, request, RequestError } from "@webfx-request/node";
 import { start } from "@webfx-request/testlib";
 import test from "ava";
-import { reflect } from "./util";
+import { reflect } from "./util.js";
 
 const payload = "server response\n".repeat(1000);
 

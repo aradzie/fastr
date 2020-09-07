@@ -1,6 +1,6 @@
 import test from "ava";
-import { Recorder } from "./recorder";
-import { FakeHttpResponse } from "./response";
+import { Recorder } from "./recorder.js";
+import { FakeHttpResponse } from "./response.js";
 
 test("successful response", async (t) => {
   const recorder = new Recorder();

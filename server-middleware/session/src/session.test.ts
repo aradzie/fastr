@@ -1,9 +1,9 @@
 import test from "ava";
 import Cookies from "cookies";
 import type { IncomingMessage, ServerResponse } from "http";
-import { Adapter } from "./adapter";
-import { ParsedOptions, parseOptions } from "./options";
-import { Session } from "./session";
+import { Adapter } from "./adapter.js";
+import { ParsedOptions, parseOptions } from "./options.js";
+import { Session } from "./session.js";
 
 test("set value", (t) => {
   const session = new Session(new FakeAdapter());

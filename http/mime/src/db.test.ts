@@ -1,6 +1,6 @@
 import { MediaType } from "@webfx-http/headers";
 import test from "ava";
-import { MimeDb } from "./db";
+import { MimeDb } from "./db.js";
 
 test("classify mime type", (t) => {
   t.true(MimeDb.isJson(MediaType.from("application/json")));

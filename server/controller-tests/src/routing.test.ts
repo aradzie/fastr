@@ -2,7 +2,7 @@ import { controller, http, response } from "@webfx/controller";
 import test from "ava";
 import { Container, injectable } from "inversify";
 import Koa from "koa";
-import { makeHelper } from "./helper";
+import { makeHelper } from "./helper.js";
 
 test("should handle HTTP methods", async (t) => {
   // Arrange.

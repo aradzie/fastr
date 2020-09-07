@@ -1,6 +1,6 @@
 import { multiEntriesOf } from "@webfx-http/headers";
 import { isJSON } from "@webfx-request/json";
-import type { BodyDataType, NameValueEntries } from "../types";
+import type { BodyDataType, NameValueEntries } from "../types.js";
 
 /**
  * The native Fetch API understands a limited amount of body types. This method

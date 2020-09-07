@@ -5,7 +5,7 @@ import { start } from "@webfx-request/testlib";
 import test from "ava";
 import Koa from "koa";
 import { URLSearchParams } from "url";
-import { validate } from "./index";
+import { validate } from "./index.js";
 
 test("validate query", async (t) => {
   const app = new Koa();

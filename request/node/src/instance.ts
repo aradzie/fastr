@@ -1,11 +1,11 @@
-import { requestAdapter } from "./adapter";
-import { RequestBuilder } from "./builder";
+import { requestAdapter } from "./adapter.js";
+import { RequestBuilder } from "./builder.js";
 import type {
   Adapter,
   BuildableRequest,
   HttpRequest,
   HttpResponse,
-} from "./types";
+} from "./types.js";
 
 let currentAdapter: Adapter = requestAdapter;
 

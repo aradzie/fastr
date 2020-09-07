@@ -1,6 +1,6 @@
 import test from "ava";
-import { mergeSearchParams } from "./merge";
-import { URLSearchParams } from "./url";
+import { mergeSearchParams } from "./merge.js";
+import { URLSearchParams } from "./url.js";
 
 test("merge with URLSearchParams", (t) => {
   t.is(mergeSearchParams("/", new URLSearchParams()), "/");

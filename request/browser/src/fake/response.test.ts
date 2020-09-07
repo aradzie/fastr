@@ -1,6 +1,6 @@
 import { HttpHeaders } from "@webfx-http/headers";
 import test from "ava";
-import { FakeHttpResponse } from "./response";
+import { FakeHttpResponse } from "./response.js";
 
 test("throw error", async (t) => {
   const error = new Error("omg");

@@ -1,5 +1,5 @@
 import test from "ava";
-import { HttpHeaders } from "./headers-browser";
+import { HttpHeaders } from "./headers-browser.js";
 
 test("reject invalid header names", (t) => {
   const headers = new HttpHeaders();

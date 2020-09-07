@@ -1,6 +1,6 @@
 import test from "ava";
 import type Koa from "koa";
-import { compose } from "./compose";
+import { compose } from "./compose.js";
 
 test("compose middlewares", async (t) => {
   const context = { state: {} } as Koa.Context;

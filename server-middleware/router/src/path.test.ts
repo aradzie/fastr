@@ -1,5 +1,5 @@
 import test from "ava";
-import { parse } from "./parser";
+import { parse } from "./parser.js";
 import {
   LiteralSegment,
   makePath,
@@ -7,7 +7,7 @@ import {
   matchFragment,
   matchPrefix,
   PatternSegment,
-} from "./path";
+} from "./path.js";
 
 test("match fragment", (t) => {
   const [literal] = parse("/something") as [LiteralSegment];

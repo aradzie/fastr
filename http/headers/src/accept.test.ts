@@ -1,5 +1,5 @@
 import test from "ava";
-import { Accept, Entry } from "./accept";
+import { Accept, Entry } from "./accept.js";
 
 test("accepts with empty list", (t) => {
   const accept = new Accept();

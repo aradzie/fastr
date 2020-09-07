@@ -1,7 +1,7 @@
 import test from "ava";
-import { FakeResponse } from "../fake/response";
-import type { HttpRequest, HttpResponse } from "../types";
-import { handleErrors } from "./handle-errors";
+import { FakeResponse } from "../fake/response.js";
+import type { HttpRequest, HttpResponse } from "../types.js";
+import { handleErrors } from "./handle-errors.js";
 
 test("passes through if response status is successful", async (t) => {
   // Arrange.

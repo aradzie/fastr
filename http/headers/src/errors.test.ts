@@ -1,5 +1,5 @@
 import test from "ava";
-import { createError } from "./errors";
+import { createError } from "./errors.js";
 
 test("create error with default options", (t) => {
   const ctor = createError("OMG", "What a terrible failure.");

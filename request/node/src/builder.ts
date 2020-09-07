@@ -8,9 +8,9 @@ import { mergeSearchParams } from "@webfx-http/url";
 import { EventEmitter } from "events";
 import type { Readable } from "stream";
 import { URL, URLSearchParams } from "url";
-import type { Streamable } from "./body/streamable";
-import { guessContentType } from "./body/type";
-import type { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "./events";
+import type { Streamable } from "./body/streamable.js";
+import { guessContentType } from "./body/type.js";
+import type { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "./events.js";
 import type {
   Adapter,
   AnyAgent,
@@ -23,7 +23,7 @@ import type {
   Middleware,
   NameValueEntries,
   UploadProgressEvent,
-} from "./types";
+} from "./types.js";
 
 export class RequestBuilder {
   readonly adapter: Adapter;

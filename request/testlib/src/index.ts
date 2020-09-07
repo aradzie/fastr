@@ -1,3 +1,3 @@
-export { start } from "./start";
-export { cookies } from "./cookies";
-export { CookieJar } from "./cookiejar";
+export { start } from "./start.js";
+export { cookies } from "./cookies.js";
+export { CookieJar } from "./cookiejar.js";

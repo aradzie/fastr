@@ -1,5 +1,5 @@
 import type { MiddlewareId } from "@webfx/middleware";
-import { addControllerUse, addHandlerUse } from "../metadata";
+import { addControllerUse, addHandlerUse } from "../metadata.js";
 
 export function use(
   ...middleware: readonly MiddlewareId[]

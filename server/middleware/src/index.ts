@@ -3,6 +3,6 @@ export {
   IMiddleware,
   isMiddlewareClass,
   isMiddlewareObject,
-} from "./middleware";
-export { compose } from "./compose";
-export { conditional } from "./conditional";
+} from "./middleware.js";
+export { compose } from "./compose.js";
+export { conditional } from "./conditional/index.js";

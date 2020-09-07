@@ -1,5 +1,5 @@
 import test from "ava";
-import { TransientStore } from "./transient";
+import { TransientStore } from "./transient.js";
 
 test("store and load", async (t) => {
   const store = new TransientStore();

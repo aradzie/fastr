@@ -1,5 +1,5 @@
 import test from "ava";
-import { guessContentType, toFormData } from "./type";
+import { guessContentType, toFormData } from "./type.js";
 
 test("guess text type", (t) => {
   const body = "text";

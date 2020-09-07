@@ -12,7 +12,7 @@ import type { IMiddleware } from "@webfx/middleware";
 import test from "ava";
 import { Container, inject, injectable } from "inversify";
 import Koa from "koa";
-import { makeHelper } from "./helper";
+import { makeHelper } from "./helper.js";
 
 test("should inject arbitrary dependencies", async (t) => {
   // Arrange.

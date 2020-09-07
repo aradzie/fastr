@@ -5,7 +5,7 @@ import type {
   BodyDataType,
   HttpRequest,
   HttpResponse,
-} from "../types";
+} from "../types.js";
 
 export interface ResponseInit {
   readonly url?: string;

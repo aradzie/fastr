@@ -1,6 +1,6 @@
 import test from "ava";
 import { types } from "util";
-import { BadRequestError, createError, HttpError } from "./errors";
+import { BadRequestError, createError, HttpError } from "./errors.js";
 
 test("create error returns an http error constructor", (t) => {
   const ctor = createError(400);

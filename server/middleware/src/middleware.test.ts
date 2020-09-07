@@ -4,7 +4,7 @@ import {
   IMiddleware,
   isMiddlewareClass,
   isMiddlewareObject,
-} from "./middleware";
+} from "./middleware.js";
 
 test("detect middleware class and object", (t) => {
   class Middleware1 implements IMiddleware {

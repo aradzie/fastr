@@ -2,8 +2,8 @@ import { request } from "@webfx-request/node";
 import test from "ava";
 import http, { IncomingMessage, ServerResponse } from "http";
 import https from "https";
-import { start } from "./start";
-import { cert, key } from "./test/cert";
+import { start } from "./start.js";
+import { cert, key } from "./test/cert.js";
 
 test("start with a listener function", async (t) => {
   const response = await request //

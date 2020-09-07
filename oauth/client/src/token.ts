@@ -1,4 +1,4 @@
-import type { TokenResponse } from "./types";
+import type { TokenResponse } from "./types.js";
 
 export class AccessToken {
   public readonly token: string;

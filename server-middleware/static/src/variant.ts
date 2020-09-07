@@ -1,6 +1,6 @@
 import { stat, Stats } from "@aradzie/fsx";
 import type Koa from "koa";
-import { Encoding } from "./encoding";
+import { Encoding } from "./encoding.js";
 
 export interface Variant {
   /**

@@ -4,7 +4,7 @@ import test from "ava";
 import crypto from "crypto";
 import Koa from "koa";
 import { Readable } from "stream";
-import { compress } from "./index";
+import { compress } from "./index.js";
 
 const content = crypto.randomBytes(1024).toString("hex");
 

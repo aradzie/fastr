@@ -5,7 +5,7 @@ import {
   isValidCookieValue,
   isValidHeaderValue,
   Scanner,
-} from "./syntax";
+} from "./syntax.js";
 
 test("isToken", (t) => {
   t.false(isToken(""));

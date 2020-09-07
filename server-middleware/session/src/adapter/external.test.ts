@@ -1,7 +1,7 @@
 import test from "ava";
 import MockDate from "mockdate";
-import { TransientStore } from "../store/transient";
-import { Helper } from "./test/helper";
+import { TransientStore } from "../store/transient.js";
+import { Helper } from "./test/helper.js";
 
 test.beforeEach(() => {
   MockDate.set(new Date("2001-01-01T00:00:00Z"));

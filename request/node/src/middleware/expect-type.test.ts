@@ -1,8 +1,13 @@
 import test from "ava";
-import { FakeResponse } from "../fake/response";
-import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
-import { compose } from "./compose";
-import { expectType } from "./expect-type";
+import { FakeResponse } from "../fake/response.js";
+import type {
+  Adapter,
+  HttpRequest,
+  HttpResponse,
+  Middleware,
+} from "../types.js";
+import { compose } from "./compose.js";
+import { expectType } from "./expect-type.js";
 
 test("return response if content type matches", async (t) => {
   // Arrange.

@@ -1,5 +1,5 @@
 import test from "ava";
-import { multiEntriesOf } from "./util";
+import { multiEntriesOf } from "./util.js";
 
 test("flatten map entries", (t) => {
   t.deepEqual([...multiEntriesOf(new Map<string, unknown>())], []);

@@ -1,8 +1,13 @@
 import { HttpHeaders } from "@webfx-http/headers";
 import { RequestError } from "@webfx-request/error";
 import { URL } from "url";
-import { cacheStreamBody, isStreamBody } from "../body/send";
-import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
+import { cacheStreamBody, isStreamBody } from "../body/send.js";
+import type {
+  Adapter,
+  HttpRequest,
+  HttpResponse,
+  Middleware,
+} from "../types.js";
 
 export interface FollowRedirectOptions {
   /**

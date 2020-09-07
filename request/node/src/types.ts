@@ -6,8 +6,8 @@ import type { Agent as HttpsAgent } from "https";
 import type { Readable } from "stream";
 import type { SecureContextOptions } from "tls";
 import type { URL } from "url";
-import type { Streamable } from "./body/streamable";
-import type { RequestBuilder } from "./builder";
+import type { Streamable } from "./body/streamable.js";
+import type { RequestBuilder } from "./builder.js";
 
 /**
  * Adapter is a function which takes a request and returns a response promise.

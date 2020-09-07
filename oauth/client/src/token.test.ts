@@ -1,6 +1,6 @@
 import test from "ava";
 import MockDate from "mockdate";
-import { AccessToken } from "./token";
+import { AccessToken } from "./token.js";
 
 test.beforeEach(() => {
   MockDate.reset();

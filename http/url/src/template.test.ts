@@ -1,5 +1,5 @@
 import test from "ava";
-import { toUrl } from "./template";
+import { toUrl } from "./template.js";
 
 test("verbatim", (t) => {
   t.is(toUrl("/foo/bar"), "/foo/bar");

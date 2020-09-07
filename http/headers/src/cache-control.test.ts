@@ -1,5 +1,5 @@
 import test from "ava";
-import { CacheControl } from "./cache-control";
+import { CacheControl } from "./cache-control.js";
 
 test("parse", (t) => {
   t.deepEqual(

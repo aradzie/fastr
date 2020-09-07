@@ -1,4 +1,9 @@
-import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
+import type {
+  Adapter,
+  HttpRequest,
+  HttpResponse,
+  Middleware,
+} from "../types.js";
 
 const id: Middleware = (
   request: HttpRequest,

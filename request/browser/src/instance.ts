@@ -1,11 +1,11 @@
-import { xhrAdapter } from "./adapter/xhr";
-import { RequestBuilder } from "./builder";
+import { xhrAdapter } from "./adapter/xhr.js";
+import { RequestBuilder } from "./builder.js";
 import type {
   Adapter,
   BuildableRequest,
   HttpRequest,
   HttpResponse,
-} from "./types";
+} from "./types.js";
 
 let currentAdapter: Adapter = xhrAdapter;
 

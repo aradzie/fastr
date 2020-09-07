@@ -1,8 +1,8 @@
 import { HttpHeaders } from "@webfx-http/headers";
 import test from "ava";
-import { FakeResponse } from "../fake/response";
-import type { Adapter, HttpRequest, HttpResponse } from "../types";
-import { compose } from "./compose";
+import { FakeResponse } from "../fake/response.js";
+import type { Adapter, HttpRequest, HttpResponse } from "../types.js";
+import { compose } from "./compose.js";
 
 test("compose zero middleware", async (t) => {
   // Arrange.

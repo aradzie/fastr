@@ -1,4 +1,4 @@
-import type { NameValueEntries } from "./types";
+import type { NameValueEntries } from "./types.js";
 
 export function entriesOf(
   value: Map<string, unknown>,

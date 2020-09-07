@@ -1,6 +1,6 @@
-import { parse } from "./parser";
-import { makePath, Segment } from "./path";
-import type { RouterMiddleware } from "./types";
+import { parse } from "./parser.js";
+import { makePath, Segment } from "./path.js";
+import type { RouterMiddleware } from "./types.js";
 
 export class Route {
   /**

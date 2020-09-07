@@ -1,2 +1,2 @@
-export * from "./sqlstore";
-export * from "./codec";
+export * from "./sqlstore.js";
+export * from "./codec.js";

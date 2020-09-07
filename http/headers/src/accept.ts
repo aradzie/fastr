@@ -1,7 +1,7 @@
-import { InvalidAcceptError } from "./errors";
-import { MediaType } from "./media-type";
-import { findQualityParam, Scanner } from "./syntax";
-import type { Header } from "./types";
+import { InvalidAcceptError } from "./errors.js";
+import { MediaType } from "./media-type.js";
+import { findQualityParam, Scanner } from "./syntax.js";
+import type { Header } from "./types.js";
 
 const kList = Symbol("kList");
 

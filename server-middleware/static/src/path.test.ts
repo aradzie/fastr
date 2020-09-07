@@ -1,6 +1,6 @@
 import { BadRequestError, ForbiddenError } from "@webfx-http/error";
 import test from "ava";
-import { normalizeUriPath } from "./path";
+import { normalizeUriPath } from "./path.js";
 
 test("normal paths", (t) => {
   t.is(normalizeUriPath("/"), "/");

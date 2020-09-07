@@ -5,7 +5,7 @@ import type {
   HttpResponse,
   Middleware,
 } from "@webfx-request/node";
-import { CookieJar } from "./cookiejar";
+import { CookieJar } from "./cookiejar.js";
 
 /**
  * Returns a new middleware which remembers cookies sent in the responses and

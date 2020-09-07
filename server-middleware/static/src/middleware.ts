@@ -1,10 +1,10 @@
 import { createReadStream } from "@aradzie/fsx";
 import type Koa from "koa";
 import { join, normalize, resolve } from "path";
-import { Encoding } from "./encoding";
-import { fastTagger, Tagger } from "./etag";
-import { normalizeUriPath } from "./path";
-import { findVariant } from "./variant";
+import { Encoding } from "./encoding.js";
+import { fastTagger, Tagger } from "./etag.js";
+import { normalizeUriPath } from "./path.js";
+import { findVariant } from "./variant.js";
 
 export interface CacheControl {
   readonly maxAge?: number;

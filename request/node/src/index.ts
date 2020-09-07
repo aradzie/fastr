@@ -5,10 +5,10 @@ export type {
   HttpRequest,
   HttpResponse,
   BodyDataType,
-} from "./types";
-export { request } from "./instance";
-export { RequestBuilder } from "./builder";
-export { Streamable, FileStreamable } from "./body/streamable";
+} from "./types.js";
+export { request } from "./instance.js";
+export { RequestBuilder } from "./builder.js";
+export { Streamable, FileStreamable } from "./body/streamable.js";
 export {
   authenticate,
   compose,
@@ -17,10 +17,11 @@ export {
   followRedirects,
   handleErrors,
   retryFailed,
-} from "./middleware";
+} from "./middleware/index.js";
 export type {
   FollowRedirectOptions,
   HandleErrorOptions,
   RetryFailedOptions,
-} from "./middleware";
+} from "./middleware/index.js";
 export { RequestError } from "@webfx-request/error";
+export { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "./events.js";

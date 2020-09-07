@@ -1,5 +1,5 @@
 import test from "ava";
-import { decode, encode, randomString } from "./util";
+import { decode, encode, randomString } from "./util.js";
 
 test("encode and decode", (t) => {
   t.deepEqual(decode(encode({})), {});

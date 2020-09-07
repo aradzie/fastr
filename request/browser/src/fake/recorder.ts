@@ -1,4 +1,4 @@
-import type { Adapter, HttpRequest, HttpResponse } from "../types";
+import type { Adapter, HttpRequest, HttpResponse } from "../types.js";
 
 export type RecorderState = "not called" | "called" | "ended" | "failed";
 

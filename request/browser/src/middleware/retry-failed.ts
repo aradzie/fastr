@@ -1,5 +1,10 @@
 import { isServerError } from "@webfx-http/status";
-import type { Adapter, HttpRequest, HttpResponse, Middleware } from "../types";
+import type {
+  Adapter,
+  HttpRequest,
+  HttpResponse,
+  Middleware,
+} from "../types.js";
 
 export interface RetryFailedOptions {
   /**
