@@ -1,4 +1,5 @@
 import { MediaType } from "@webfx-http/headers";
+import { mergeSearchParams, URL, URLSearchParams } from "@webfx-http/url";
 import {
   Adapter,
   adapter,
@@ -12,9 +13,37 @@ import { formDataEntries, parseFormData } from "./util";
 mocha.setup({
   ui: "bdd",
 });
+makeMiscTests();
 makeAdapterTests(xhrAdapter);
 makeAdapterTests(fetchAdapter);
 mocha.run();
+
+function makeMiscTests(): void {
+  describe("URL", () => {
+    it("convert URL to string", () => {
+      expect(String(new URL("/a/b/c", "http://hello/"))).to.eq(
+        "http://hello/a/b/c",
+      );
+    });
+
+    it("convert URLSearchParams to string", () => {
+      expect(
+        String(
+          new URLSearchParams([
+            ["a", "1"],
+            ["b", "2"],
+          ]),
+        ),
+      ).to.eq("a=1&b=2");
+    });
+
+    it("merge search params", () => {
+      expect(mergeSearchParams("/?a=1", new URLSearchParams("b=2"))).to.eq(
+        "/?a=1&b=2",
+      );
+    });
+  });
+}
 
 function makeAdapterTests(underTest: Adapter): void {
   describe(`Adapter [${underTest.name}]`, () => {
@@ -31,7 +60,7 @@ function makeAdapterTests(underTest: Adapter): void {
 
     it("get blob url", async () => {
       const blob = new Blob(["blob data"], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
+      const url = window.URL.createObjectURL(blob);
       const response = await request.get(url).send();
       expect(await response.text()).to.eq("blob data");
     });

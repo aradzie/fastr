@@ -8,11 +8,14 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "module": "lib-esm/index.js",
+  "browser": {
+    "./lib/url.js": "./lib/url.browser.js",
+    "./lib-esm/url.js": "./lib-esm/url.browser.js"
+  },
   "engines": {
     "node": ">=12.16"
   },
   "dependencies": {
-    "@webfx/url": "^0.0.9-alpha.1",
     "tslib": "^2.0.0"
   },
   "scripts": {

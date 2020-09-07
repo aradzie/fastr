@@ -1,6 +1,6 @@
-import { URLSearchParams } from "@webfx/url";
 import test from "ava";
 import { mergeSearchParams } from "./merge";
+import { URLSearchParams } from "./url";
 
 test("merge with URLSearchParams", (t) => {
   t.is(mergeSearchParams("/", new URLSearchParams()), "/");

@@ -1,3 +1,4 @@
+import { URL } from "@webfx-http/url";
 import {
   DownloadProgressEvent,
   expectType,
@@ -12,7 +13,7 @@ run().catch((err) => {
 async function run(): Promise<void> {
   const response = await request
     .use(expectType("text/plain"))
-    .post("http://localhost:3456/")
+    .post(new URL("http://localhost:3456/"))
     .on("upload-progress", (ev: UploadProgressEvent): void => {
       console.log(ev);
     })
