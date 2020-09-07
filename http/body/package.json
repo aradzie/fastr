@@ -17,10 +17,10 @@
     "@webfx-http/mimetype": "^0.0.9-alpha.2",
     "qs": "^6.9.4",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.1"
   },
   "devDependencies": {
-    "@types/qs": "^6.9.3"
+    "@types/qs": "^6.9.4"
   },
   "scripts": {
     "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json",

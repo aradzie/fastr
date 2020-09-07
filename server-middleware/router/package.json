@@ -15,11 +15,11 @@
     "@webfx-http/error": "^0.0.9-alpha.2",
     "@webfx/middleware": "^0.0.9-alpha.2",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.1"
   },
   "devDependencies": {
-    "@types/koa": "^2.11.3",
-    "koa": "^2.12.0"
+    "@types/koa": "^2.11.4",
+    "koa": "^2.13.0"
   },
   "scripts": {
     "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json",

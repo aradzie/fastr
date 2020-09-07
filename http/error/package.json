@@ -14,7 +14,7 @@
   "dependencies": {
     "@webfx-http/headers": "^0.0.9-alpha.2",
     "@webfx-http/status": "^0.0.9-alpha.2",
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.1"
   },
   "scripts": {
     "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json",
