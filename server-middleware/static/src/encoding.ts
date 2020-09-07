@@ -1,4 +1,4 @@
-import Koa from "koa";
+import type Koa from "koa";
 
 export class Encoding {
   static readonly identity = new Encoding("identity", "");

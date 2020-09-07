@@ -1,7 +1,7 @@
-import { RouterContext } from "@webfx-middleware/router";
-import { IMiddleware } from "@webfx/middleware";
+import type { RouterContext } from "@webfx-middleware/router";
+import type { IMiddleware } from "@webfx/middleware";
 import test from "ava";
-import Koa from "koa";
+import type Koa from "koa";
 import {
   getBody,
   getContext,

@@ -1,5 +1,5 @@
 import { createReadStream } from "@aradzie/fsx";
-import Koa from "koa";
+import type Koa from "koa";
 import { join, normalize, resolve } from "path";
 import { Encoding } from "./encoding";
 import { fastTagger, Tagger } from "./etag";

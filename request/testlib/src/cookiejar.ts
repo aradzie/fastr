@@ -1,4 +1,4 @@
-import { SetCookie } from "@webfx-http/headers";
+import type { SetCookie } from "@webfx-http/headers";
 
 export class CookieJar implements Iterable<[string, string]> {
   readonly #data = new Map<string, Entry>();

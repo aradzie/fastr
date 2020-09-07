@@ -1,6 +1,6 @@
-import Joi from "@hapi/joi";
+import type Joi from "@hapi/joi";
 import { BadRequestError } from "@webfx-http/error";
-import Koa from "koa";
+import type Koa from "koa";
 
 declare module "koa" {
   // TODO Remove this.

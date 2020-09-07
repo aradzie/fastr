@@ -8,11 +8,9 @@ import {
 
 export class FakeAdapter extends AbstractAdapter {
   tokenResponse: () => TokenResponse = () => ({
-    /* eslint-disable @typescript-eslint/camelcase */
     token_type: "Bearer",
     access_token: "xyz",
     expires_in: 3600,
-    /* eslint-enable @typescript-eslint/camelcase */
   });
   resourceOwner: () => ResourceOwner = () => ({
     raw: {},

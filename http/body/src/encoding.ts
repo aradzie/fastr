@@ -1,5 +1,5 @@
 import { BadRequestError, PayloadTooLargeError } from "@webfx-http/error";
-import { Readable } from "stream";
+import type { Readable } from "stream";
 import { createBrotliDecompress, createUnzip } from "zlib";
 
 export interface Encoding {

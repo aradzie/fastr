@@ -1,4 +1,4 @@
-import Koa from "koa";
+import type Koa from "koa";
 
 export function conditional(): Koa.Middleware {
   return async (ctx: Koa.ParameterizedContext, next: Koa.Next) => {

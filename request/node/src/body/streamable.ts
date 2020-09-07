@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import { createReadStream, PathLike, stat, Stats } from "fs";
-import { Readable } from "stream";
+import type { Readable } from "stream";
 import { promisify } from "util";
 
 const statAsync = promisify(stat);

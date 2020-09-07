@@ -1,6 +1,6 @@
-import Cookies from "cookies";
+import type Cookies from "cookies";
 import { Adapter } from "../adapter";
-import { ParsedOptions } from "../options";
+import type { ParsedOptions } from "../options";
 
 const kId = "@i";
 const kExpires = "@e";

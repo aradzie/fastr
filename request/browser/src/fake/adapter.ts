@@ -6,7 +6,7 @@ import type {
   HttpResponse,
 } from "../types";
 import { match } from "./match";
-import { Recorder } from "./recorder";
+import type { Recorder } from "./recorder";
 import { BodyMethodInit, FakeHttpResponse } from "./response";
 import type { FakeAdapter, ReplyBuilder, RequestMatcher } from "./types";
 

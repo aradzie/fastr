@@ -8,7 +8,7 @@ import {
   kRouter,
   use,
 } from "@webfx/controller";
-import { IMiddleware } from "@webfx/middleware";
+import type { IMiddleware } from "@webfx/middleware";
 import test from "ava";
 import { Container, inject, injectable } from "inversify";
 import Koa from "koa";

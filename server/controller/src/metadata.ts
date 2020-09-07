@@ -1,7 +1,7 @@
-import { RouterContext } from "@webfx-middleware/router";
-import { MiddlewareId } from "@webfx/middleware";
-import { IPipe } from "./pipe";
-import { Type } from "./types";
+import type { RouterContext } from "@webfx-middleware/router";
+import type { MiddlewareId } from "@webfx/middleware";
+import type { IPipe } from "./pipe";
+import type { Type } from "./types";
 import { Metadata, newMetadataKey } from "./util";
 
 export interface ControllerDecorator extends ClassDecorator {}

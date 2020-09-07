@@ -1,5 +1,5 @@
-import { RouterContext } from "@webfx-middleware/router";
-import { Type } from "./types";
+import type { RouterContext } from "@webfx-middleware/router";
+import type { Type } from "./types";
 
 export interface IPipe {
   transform(ctx: RouterContext, value: string): any;

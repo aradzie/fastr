@@ -1,4 +1,4 @@
-import { OutgoingMessage } from "http";
+import type { OutgoingMessage } from "http";
 import { pipeline, Readable } from "stream";
 import { createGzip } from "zlib";
 import type { BodyDataType } from "../types";

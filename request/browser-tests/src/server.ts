@@ -1,6 +1,7 @@
 import http, { IncomingMessage, ServerResponse } from "http";
 import https from "https";
-import net, { AddressInfo } from "net";
+import type net from "net";
+import type { AddressInfo } from "net";
 
 export type AsyncRequestListener = (
   req: IncomingMessage,

@@ -1,7 +1,7 @@
-import Cookies from "cookies";
+import type Cookies from "cookies";
 import { Adapter } from "../adapter";
-import { ParsedOptions } from "../options";
-import { Store } from "../store";
+import type { ParsedOptions } from "../options";
+import type { Store } from "../store";
 import { now } from "../util";
 
 /**

@@ -1,5 +1,5 @@
-import { interfaces } from "inversify";
-import Koa from "koa";
+import type { interfaces } from "inversify";
+import type Koa from "koa";
 
 export type Type<T> = { new (...args: any[]): T };
 

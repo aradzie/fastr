@@ -1,8 +1,8 @@
-import { CacheControl } from "./cache-control";
-import { ETag } from "./etag";
+import type { CacheControl } from "./cache-control";
+import type { ETag } from "./etag";
 import { HttpHeaders } from "./headers";
-import { MediaType } from "./media-type";
-import { SetCookie } from "./set-cookie";
+import type { MediaType } from "./media-type";
+import type { SetCookie } from "./set-cookie";
 import { stringifyDate } from "./syntax";
 import type { NameValueEntries } from "./types";
 

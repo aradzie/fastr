@@ -1,6 +1,6 @@
-import Cookies from "cookies";
+import type Cookies from "cookies";
 import { sha1 } from "object-hash";
-import { ParsedOptions } from "./options";
+import type { ParsedOptions } from "./options";
 import { now } from "./util";
 
 export abstract class Adapter<CookieData = {}> {

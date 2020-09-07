@@ -1,6 +1,6 @@
 import { BadRequestError, PayloadTooLargeError } from "@webfx-http/error";
 import test from "ava";
-import { IncomingHttpHeaders } from "http";
+import type { IncomingHttpHeaders } from "http";
 import { Readable } from "stream";
 import { brotliCompressSync, gzipSync } from "zlib";
 import { Body } from "./body";

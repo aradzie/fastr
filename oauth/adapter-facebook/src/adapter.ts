@@ -6,7 +6,7 @@ import {
   OAuthError,
   ResourceOwner,
 } from "@webfx-oauth/client";
-import {
+import type {
   Adapter,
   HttpRequest,
   HttpResponse,

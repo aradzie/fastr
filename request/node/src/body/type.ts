@@ -1,7 +1,7 @@
 import { isJSON } from "@webfx-request/json";
 import { Readable } from "stream";
 import { URLSearchParams } from "url";
-import { BodyDataType } from "../types";
+import type { BodyDataType } from "../types";
 import { Streamable } from "./streamable";
 
 const S_TEXT = "text/plain; charset=UTF-8";

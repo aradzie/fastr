@@ -1,6 +1,6 @@
 import test from "ava";
 import { parse } from "./parser";
-import { PatternSegment } from "./path";
+import type { PatternSegment } from "./path";
 
 test("parse simple", (t) => {
   t.deepEqual(parse("/"), [

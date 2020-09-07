@@ -1,5 +1,5 @@
 import { ControllerDecorator, setControllerMetadata } from "../metadata";
-import { HandlerOptions } from "./handler";
+import type { HandlerOptions } from "./handler";
 
 export interface ControllerOptions {
   readonly path?: string;

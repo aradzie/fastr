@@ -1,4 +1,4 @@
-import {
+import type {
   Router,
   RouterContext,
   RouterMiddleware,
@@ -9,7 +9,7 @@ import {
   MiddlewareId,
 } from "@webfx/middleware";
 import { Container } from "inversify";
-import Koa from "koa";
+import type Koa from "koa";
 import {
   getControllerMetadata,
   getControllerUse,
@@ -18,7 +18,7 @@ import {
   getParameterMetadata,
   ParameterMetadata,
 } from "./metadata";
-import { IPipe } from "./pipe";
+import type { IPipe } from "./pipe";
 import { kApp, kContext, kRequest, kResponse, kRouter } from "./types";
 
 const kContainer = Symbol("kContainer");

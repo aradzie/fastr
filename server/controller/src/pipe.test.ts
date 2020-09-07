@@ -1,4 +1,4 @@
-import { RouterContext } from "@webfx-middleware/router";
+import type { RouterContext } from "@webfx-middleware/router";
 import test from "ava";
 import { IPipe, isPipeClass, isPipeObject } from "./pipe";
 

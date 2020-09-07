@@ -1,5 +1,5 @@
 import { Cookie, HttpHeaders, SetCookie } from "@webfx-http/headers";
-import {
+import type {
   Adapter,
   HttpRequest,
   HttpResponse,

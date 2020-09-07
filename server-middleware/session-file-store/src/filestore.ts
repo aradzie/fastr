@@ -2,7 +2,7 @@ import { scanDir, Stats } from "@aradzie/fsx";
 import { File } from "@aradzie/fsx-file";
 import { LockFile } from "@aradzie/fsx-lockfile";
 import { exponentialDelay, RetryOptions } from "@aradzie/retry";
-import { Store, StoredSession } from "@webfx-middleware/session";
+import type { Store, StoredSession } from "@webfx-middleware/session";
 import { inject, injectable } from "inversify";
 import { join } from "path";
 

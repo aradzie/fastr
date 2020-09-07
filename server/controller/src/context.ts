@@ -1,5 +1,5 @@
-import { RouterContext } from "@webfx-middleware/router";
-import Koa from "koa";
+import type { RouterContext } from "@webfx-middleware/router";
+import type Koa from "koa";
 
 export function getContext(ctx: RouterContext): RouterContext {
   return ctx;

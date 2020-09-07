@@ -1,5 +1,5 @@
 import compressible from "compressible";
-import Koa from "koa";
+import type Koa from "koa";
 import { Stream, Transform } from "stream";
 import { createGzip } from "zlib";
 

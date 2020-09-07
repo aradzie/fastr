@@ -1,4 +1,4 @@
-import { RouterContext } from "@webfx-middleware/router";
+import type { RouterContext } from "@webfx-middleware/router";
 import { controller, http, IPipe, queryParam } from "@webfx/controller";
 import test from "ava";
 import { Container, injectable } from "inversify";

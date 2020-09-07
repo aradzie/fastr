@@ -1,6 +1,6 @@
 import { Body, BodyOptions } from "@webfx-http/body";
 import { UnsupportedMediaTypeError } from "@webfx-http/error";
-import Koa from "koa";
+import type Koa from "koa";
 
 declare module "koa" {
   interface Request {

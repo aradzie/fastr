@@ -1,9 +1,9 @@
-import { RouterContext } from "@webfx-middleware/router";
+import type { RouterContext } from "@webfx-middleware/router";
 import { controller, http, use } from "@webfx/controller";
-import { IMiddleware } from "@webfx/middleware";
+import type { IMiddleware } from "@webfx/middleware";
 import test from "ava";
 import { Container, injectable } from "inversify";
-import Koa from "koa";
+import type Koa from "koa";
 import { makeHelper } from "./helper";
 
 test("should use injectable middlewares", async (t) => {

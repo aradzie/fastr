@@ -1,4 +1,4 @@
-import { Store } from "./store";
+import type { Store } from "./store";
 import { decode, encode, randomString } from "./util";
 
 export interface Options {

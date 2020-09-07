@@ -1,7 +1,7 @@
 import { MethodNotAllowedError } from "@webfx-http/error";
 import test from "ava";
 import { Router } from "./router";
-import { RouterContext } from "./types";
+import type { RouterContext } from "./types";
 
 test("empty router", async (t) => {
   const router = new Router();

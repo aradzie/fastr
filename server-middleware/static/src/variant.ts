@@ -1,5 +1,5 @@
 import { stat, Stats } from "@aradzie/fsx";
-import Koa from "koa";
+import type Koa from "koa";
 import { Encoding } from "./encoding";
 
 export interface Variant {

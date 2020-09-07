@@ -1,6 +1,6 @@
 import test from "ava";
 import Cookies from "cookies";
-import { IncomingMessage, ServerResponse } from "http";
+import type { IncomingMessage, ServerResponse } from "http";
 import { Adapter } from "./adapter";
 import { ParsedOptions, parseOptions } from "./options";
 import { Session } from "./session";

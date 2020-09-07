@@ -1,4 +1,4 @@
-import {
+import type {
   Adapter,
   HttpRequest,
   HttpResponse,
@@ -6,7 +6,8 @@ import {
 } from "@webfx-request/node";
 import http, { createServer, RequestListener } from "http";
 import https from "https";
-import net, { AddressInfo } from "net";
+import type net from "net";
+import type { AddressInfo } from "net";
 import { URL } from "url";
 
 /**

@@ -1,5 +1,5 @@
 import test from "ava";
-import Koa from "koa";
+import type Koa from "koa";
 import { compose } from "./compose";
 
 test("compose middlewares", async (t) => {

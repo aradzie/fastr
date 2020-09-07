@@ -1,6 +1,6 @@
 import { HttpHeaders, MediaType } from "@webfx-http/headers";
 import { isSuccess } from "@webfx-http/status";
-import { EventEmitter } from "events";
+import type { EventEmitter } from "events";
 import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "../events";
 import type {
   DownloadProgressEvent,

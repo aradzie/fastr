@@ -1,5 +1,5 @@
 import { Body } from "@webfx-http/body";
-import { IncomingMessage, ServerResponse } from "http";
+import type { IncomingMessage, ServerResponse } from "http";
 
 export function reflect(req: IncomingMessage, res: ServerResponse): void {
   const { url, method } = req;

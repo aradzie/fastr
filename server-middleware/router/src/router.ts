@@ -1,11 +1,11 @@
 import { MethodNotAllowedError } from "@webfx-http/error";
 import { compose } from "@webfx/middleware";
-import Koa from "koa";
+import type Koa from "koa";
 import { kMethodNotAllowed, kNotFound, Node } from "./node";
-import { MatchedPathParams } from "./path";
+import type { MatchedPathParams } from "./path";
 import { Prefix } from "./prefix";
 import { Route } from "./route";
-import { ParamMiddleware, RouterContext, RouterMiddleware } from "./types";
+import type { ParamMiddleware, RouterContext, RouterMiddleware } from "./types";
 
 // TODO Improve pattern parsing.
 // TODO Hierarchical router and merge routes.

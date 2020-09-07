@@ -1,5 +1,5 @@
-import Koa from "koa";
-import { Adapter } from "./adapter";
+import type Koa from "koa";
+import type { Adapter } from "./adapter";
 import { Cookie } from "./adapter/cookie";
 import { External } from "./adapter/external";
 import { Options, ParsedOptions, parseOptions } from "./options";

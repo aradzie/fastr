@@ -4,7 +4,7 @@ import {
   matchFragment,
   PatternSegment,
 } from "./path";
-import { Route } from "./route";
+import type { Route } from "./route";
 
 export const kNotFound = Symbol("kNotFound");
 export const kMethodNotAllowed = Symbol("kMethodNotAllowed");

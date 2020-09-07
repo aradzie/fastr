@@ -9,8 +9,8 @@ import {
   getResponse,
 } from "../context";
 import { ParameterExtractor, setParameterMetadata } from "../metadata";
-import { IPipe } from "../pipe";
-import { Type } from "../types";
+import type { IPipe } from "../pipe";
+import type { Type } from "../types";
 
 /**
  * An annotation factory for decorators which decorate arguments of type `Koa.Context`.

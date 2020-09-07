@@ -1,6 +1,6 @@
-import { Store, StoredSession } from "@webfx-middleware/session";
+import type { Store, StoredSession } from "@webfx-middleware/session";
 import { inject, injectable } from "inversify";
-import Knex from "knex";
+import type Knex from "knex";
 import { BSON_CODEC, Codec } from "./codec";
 
 export const kSqlStoreOptions = Symbol("kFileStoreOptions");

@@ -1,4 +1,4 @@
-import { PatternSegment, Segment } from "./path";
+import type { PatternSegment, Segment } from "./path";
 
 /**
  * Splits the given path with parameter placeholders into a list of parsed segments.

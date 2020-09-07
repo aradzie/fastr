@@ -1,9 +1,9 @@
-import { Accept } from "./accept";
-import { AcceptEncoding } from "./accept-encoding";
+import type { Accept } from "./accept";
+import type { AcceptEncoding } from "./accept-encoding";
 import { Cookie } from "./cookie";
-import { ETag } from "./etag";
+import type { ETag } from "./etag";
 import { HttpHeaders } from "./headers";
-import { MediaType } from "./media-type";
+import type { MediaType } from "./media-type";
 import { stringifyDate } from "./syntax";
 import type { NameValueEntries } from "./types";
 

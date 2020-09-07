@@ -1,7 +1,7 @@
 import { Cookie, HttpHeaders, SetCookie } from "@webfx-http/headers";
 import { request } from "@webfx-request/node";
 import test from "ava";
-import { IncomingMessage, ServerResponse } from "http";
+import type { IncomingMessage, ServerResponse } from "http";
 import { CookieJar } from "./cookiejar";
 import { cookies } from "./cookies";
 import { start } from "./start";

@@ -1,6 +1,6 @@
 import { parse } from "./parser";
 import { makePath, Segment } from "./path";
-import { RouterMiddleware } from "./types";
+import type { RouterMiddleware } from "./types";
 
 export class Route {
   /**
