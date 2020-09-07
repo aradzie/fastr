@@ -4,6 +4,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "build",
+    "lib": ["dom", "dom.iterable"],
     "module": "commonjs",
     "target": "es2019",
     "incremental": true,

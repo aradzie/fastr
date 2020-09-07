@@ -1,6 +1,3 @@
-/// <reference lib="dom" />
-/// <reference lib="dom.iterable" />
-
 import { JSDOM } from "jsdom";
 
 // Install just enough browser API, only what we actually use in tests.

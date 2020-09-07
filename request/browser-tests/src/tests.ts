@@ -1,6 +1,3 @@
-/// <reference lib="dom" />
-/// <reference lib="dom.iterable" />
-
 import { MediaType } from "@webfx-http/headers";
 import {
   Adapter,

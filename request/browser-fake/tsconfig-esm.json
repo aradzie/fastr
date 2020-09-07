@@ -4,7 +4,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "lib-esm",
-    "lib": ["DOM", "DOM.Iterable"],
+    "lib": ["dom", "dom.iterable"],
     "module": "esnext",
     "declaration": false,
     "incremental": true,
