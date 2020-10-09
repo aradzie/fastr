@@ -8,6 +8,7 @@ export interface SetCookieInit {
   readonly domain?: string | null;
   readonly maxAge?: number | null;
   readonly expires?: Date | null;
+  readonly sameSite?: "Strict" | "Lax" | "None" | null;
   readonly secure?: boolean;
   readonly httpOnly?: boolean;
 }
@@ -79,6 +80,7 @@ export class SetCookie implements Header {
     let domain = null;
     let maxAge = null;
     let expires = null;
+    let sameSite = null;
     let secure = false;
     let httpOnly = false;
     while (scanner.readSeparator(0x3b /* ; */)) {
@@ -119,6 +121,22 @@ export class SetCookie implements Header {
             }
           }
           break;
+        case "samesite":
+          if (scanner.readSeparator(0x3d /* = */)) {
+            const value = scanner.readUntil(0x3b /* ; */, /* trim= */ true);
+            switch (value.toLowerCase()) {
+              case "strict":
+                sameSite = "Strict" as const;
+                break;
+              case "lax":
+                sameSite = "Lax" as const;
+                break;
+              case "none":
+                sameSite = "None" as const;
+                break;
+            }
+          }
+          break;
         case "secure":
           secure = true;
           break;
@@ -132,6 +150,7 @@ export class SetCookie implements Header {
       domain,
       maxAge,
       expires,
+      sameSite,
       secure,
       httpOnly,
     });
@@ -162,6 +181,11 @@ export class SetCookie implements Header {
    */
   readonly expires: Date | null;
   /**
+   * Asserts that a cookie must not be sent with cross-origin requests,
+   * providing some protection against cross-site request forgery attacks.
+   */
+  readonly sameSite: "Strict" | "Lax" | "None" | null;
+  /**
    * Specifies whether the cookie will only be sent over a secure
    * connection.
    */
@@ -180,6 +204,7 @@ export class SetCookie implements Header {
       domain = null,
       maxAge = null,
       expires = null,
+      sameSite = null,
       secure = false,
       httpOnly = false,
     }: SetCookieInit = {},
@@ -190,6 +215,7 @@ export class SetCookie implements Header {
     this.domain = domain;
     this.maxAge = maxAge;
     this.expires = expires;
+    this.sameSite = sameSite;
     this.secure = secure;
     this.httpOnly = httpOnly;
   }
@@ -202,28 +228,32 @@ export class SetCookie implements Header {
       domain,
       maxAge,
       expires,
+      sameSite,
       secure,
       httpOnly,
     } = this;
     const parts: string[] = [];
     parts.push(`${name}=${CookieCodec.encode(value)}`);
     if (path != null) {
-      parts.push(`path=${path}`);
+      parts.push(`Path=${path}`);
     }
     if (domain != null) {
-      parts.push(`domain=${domain}`);
+      parts.push(`Domain=${domain}`);
     }
     if (maxAge != null) {
-      parts.push(`maxAge=${maxAge}`);
+      parts.push(`MaxAge=${maxAge}`);
     }
     if (expires != null) {
-      parts.push(`expires=${expires.toUTCString()}`);
+      parts.push(`Expires=${expires.toUTCString()}`);
+    }
+    if (sameSite != null) {
+      parts.push(`SameSite=${sameSite}`);
     }
     if (secure) {
-      parts.push("secure");
+      parts.push("Secure");
     }
     if (httpOnly) {
-      parts.push("httpOnly");
+      parts.push("HttpOnly");
     }
     return parts.join("; ");
   }

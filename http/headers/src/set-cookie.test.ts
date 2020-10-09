@@ -31,6 +31,12 @@ test("parse", (t) => {
     }),
   );
   t.deepEqual(
+    SetCookie.parse("Name0=Value0; sameSite=strict"),
+    new SetCookie("Name0", "Value0", {
+      sameSite: "Strict",
+    }),
+  );
+  t.deepEqual(
     SetCookie.parse("Name0=Value0; secure"),
     new SetCookie("Name0", "Value0", {
       secure: true,
@@ -53,6 +59,7 @@ test("parse", (t) => {
         "Domain = domain0 ; " +
         "MaxAge = 123 ; " +
         "Expires = Thu, 01 Jan 1970 00:00:01 GMT ; " +
+        "SameSite = STRICT ; " +
         "Secure ; " +
         "HttpOnly ; ",
     ),
@@ -61,6 +68,7 @@ test("parse", (t) => {
       domain: "domain0",
       maxAge: 123,
       expires: new Date(1000),
+      sameSite: "Strict",
       secure: true,
       httpOnly: true,
     }),
@@ -75,7 +83,7 @@ test("toString", (t) => {
         path: "path0",
       }),
     ),
-    "Name0=Value0; path=path0",
+    "Name0=Value0; Path=path0",
   );
   t.is(
     String(
@@ -83,7 +91,7 @@ test("toString", (t) => {
         domain: "domain0",
       }),
     ),
-    "Name0=Value0; domain=domain0",
+    "Name0=Value0; Domain=domain0",
   );
   t.is(
     String(
@@ -91,7 +99,7 @@ test("toString", (t) => {
         maxAge: 123,
       }),
     ),
-    "Name0=Value0; maxAge=123",
+    "Name0=Value0; MaxAge=123",
   );
   t.is(
     String(
@@ -99,7 +107,15 @@ test("toString", (t) => {
         expires: new Date(1000),
       }),
     ),
-    "Name0=Value0; expires=Thu, 01 Jan 1970 00:00:01 GMT",
+    "Name0=Value0; Expires=Thu, 01 Jan 1970 00:00:01 GMT",
+  );
+  t.is(
+    String(
+      new SetCookie("Name0", "Value0", {
+        sameSite: "Strict",
+      }),
+    ),
+    "Name0=Value0; SameSite=Strict",
   );
   t.is(
     String(
@@ -107,7 +123,7 @@ test("toString", (t) => {
         secure: true,
       }),
     ),
-    "Name0=Value0; secure",
+    "Name0=Value0; Secure",
   );
   t.is(
     String(
@@ -115,7 +131,7 @@ test("toString", (t) => {
         httpOnly: true,
       }),
     ),
-    "Name0=Value0; httpOnly",
+    "Name0=Value0; HttpOnly",
   );
   t.is(
     String(
@@ -124,17 +140,19 @@ test("toString", (t) => {
         domain: "domain0",
         maxAge: 123,
         expires: new Date(1000),
+        sameSite: "Strict",
         secure: true,
         httpOnly: true,
       }),
     ),
     "Name0=Value0; " +
-      "path=path0; " +
-      "domain=domain0; " +
-      "maxAge=123; " +
-      "expires=Thu, 01 Jan 1970 00:00:01 GMT; " +
-      "secure; " +
-      "httpOnly",
+      "Path=path0; " +
+      "Domain=domain0; " +
+      "MaxAge=123; " +
+      "Expires=Thu, 01 Jan 1970 00:00:01 GMT; " +
+      "SameSite=Strict; " +
+      "Secure; " +
+      "HttpOnly",
   );
 });
 
