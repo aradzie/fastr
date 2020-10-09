@@ -73,6 +73,7 @@ export function readAll({
     const decoder = encoding.decoder(stream);
     decoder.on("data", onData);
     decoder.on("end", onEnd);
+    decoder.on("close", onClose);
     stream.on("error", onError);
 
     if (lengthLimit != null && length != null && length > lengthLimit) {
@@ -83,6 +84,7 @@ export function readAll({
     function cleanup(): void {
       decoder.off("data", onData);
       decoder.off("end", onEnd);
+      decoder.off("close", onClose);
       stream.off("error", onError);
     }
 
@@ -99,6 +101,11 @@ export function readAll({
     }
 
     function onEnd(): void {
+      cleanup();
+      resolve(Buffer.concat(chunks));
+    }
+
+    function onClose(): void {
       cleanup();
       resolve(Buffer.concat(chunks));
     }
