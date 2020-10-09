@@ -31,6 +31,8 @@ export interface BodyOptions {
 }
 
 export class Body {
+  static acceptsEncoding = ["gzip", "deflate", "br"] as const;
+
   static from(incomingMessage: BodyMessage, options: BodyOptions = {}): Body {
     return new Body(incomingMessage, options);
   }

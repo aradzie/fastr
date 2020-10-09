@@ -25,7 +25,7 @@ export function requestAdapter(request: HttpRequest): Promise<HttpResponse> {
       req.setHeader("Accept", "*/*");
     }
     if (req.getHeader("Accept-Encoding") == null) {
-      req.setHeader("Accept-Encoding", "gzip, deflate, br");
+      req.setHeader("Accept-Encoding", Body.acceptsEncoding.join(", "));
     }
     if (body != null) {
       sendBody(req, body, (err) => {

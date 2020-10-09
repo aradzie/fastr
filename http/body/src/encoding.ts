@@ -40,8 +40,8 @@ export function getEncoding(name: string): Encoding {
   switch (name) {
     case "identity":
       return identity;
-    case "deflate":
     case "gzip":
+    case "deflate":
       return gzip;
     case "br":
       return brotli;
