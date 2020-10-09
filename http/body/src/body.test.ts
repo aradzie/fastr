@@ -142,7 +142,7 @@ test("demand binary stream", async (t) => {
   );
 });
 
-test("honor data limit", async (t) => {
+test("honor length limit", async (t) => {
   {
     const req = new FakeIncomingMessage("body");
     t.false(req.isPaused());

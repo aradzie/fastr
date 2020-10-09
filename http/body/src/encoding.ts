@@ -67,28 +67,16 @@ export function readAll({
       return;
     }
 
-    const chunks: Buffer[] = [];
-    let received = 0;
-
-    const decoder = encoding.decoder(stream);
-    decoder.on("data", onData);
-    decoder.on("end", onEnd);
-    decoder.on("close", onClose);
-    stream.on("error", onError);
-
     if (lengthLimit != null && length != null && length > lengthLimit) {
-      onError(new PayloadTooLargeError());
+      stream.pause();
+      reject(new PayloadTooLargeError());
       return;
     }
 
-    function cleanup(): void {
-      decoder.off("data", onData);
-      decoder.off("end", onEnd);
-      decoder.off("close", onClose);
-      stream.off("error", onError);
-    }
+    let chunks: Buffer[] = [];
+    let received = 0;
 
-    function onData(chunk: Buffer): void {
+    const onData = (chunk: Buffer): void => {
       if (Buffer.isBuffer(chunk)) {
         chunks.push(chunk);
         received += chunk.length;
@@ -98,22 +86,37 @@ export function readAll({
       } else {
         onError(new TypeError("Not a binary stream"));
       }
-    }
+    };
 
-    function onEnd(): void {
+    const onEnd = (): void => {
       cleanup();
       resolve(Buffer.concat(chunks));
-    }
+    };
 
-    function onClose(): void {
+    const onClose = (): void => {
       cleanup();
       resolve(Buffer.concat(chunks));
-    }
+    };
 
-    function onError(err: Error): void {
-      stream.pause(); // Stop reading from the incoming message stream.
+    const onError = (err: Error): void => {
+      chunks = [];
+      received = 0;
+      stream.pause();
       cleanup();
       reject(err);
-    }
+    };
+
+    const cleanup = (): void => {
+      decoder.off("data", onData);
+      decoder.off("end", onEnd);
+      decoder.off("close", onClose);
+      stream.off("error", onError);
+    };
+
+    const decoder = encoding.decoder(stream);
+    decoder.on("data", onData);
+    decoder.on("end", onEnd);
+    decoder.on("close", onClose);
+    stream.on("error", onError);
   });
 }
