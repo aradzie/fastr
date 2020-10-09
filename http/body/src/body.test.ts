@@ -93,83 +93,51 @@ test("use body once", async (t) => {
   await body.buffer();
 
   t.true(body.bodyUsed);
-  await t.throwsAsync(
-    async () => {
-      await body.buffer();
-    },
-    {
-      message: "Body already used",
-    },
-  );
-  await t.throwsAsync(
-    async () => {
-      await body.text();
-    },
-    {
-      message: "Body already used",
-    },
-  );
-  await t.throwsAsync(
-    async () => {
-      await body.json();
-    },
-    {
-      message: "Body already used",
-    },
-  );
-  await t.throwsAsync(
-    async () => {
-      await body.form();
-    },
-    {
-      message: "Body already used",
-    },
-  );
+
+  await t.throwsAsync(body.buffer(), {
+    message: "Body already used",
+  });
+  await t.throwsAsync(body.text(), {
+    message: "Body already used",
+  });
+  await t.throwsAsync(body.json(), {
+    message: "Body already used",
+  });
+  await t.throwsAsync(body.form(), {
+    message: "Body already used",
+  });
 });
 
 test("demand binary stream", async (t) => {
   const req = new FakeIncomingMessage("buffer");
   req.setEncoding("utf8");
 
-  await t.throwsAsync(
-    async () => {
-      await Body.from(req).buffer();
-    },
-    {
-      instanceOf: Error,
-      message: "Not a binary stream",
-    },
-  );
+  await t.throwsAsync(Body.from(req).buffer(), {
+    instanceOf: Error,
+    message: "Not a binary stream",
+  });
 });
 
 test("honor length limit", async (t) => {
   {
     const req = new FakeIncomingMessage("body");
     t.false(req.isPaused());
-    await t.throwsAsync(
-      async () => {
-        await Body.from(req, { lengthLimit: 3 }).text();
-      },
-      {
-        instanceOf: PayloadTooLargeError,
-        message: "Payload Too Large",
-      },
-    );
+    const body = Body.from(req, { lengthLimit: 3 });
+    await t.throwsAsync(body.text(), {
+      instanceOf: PayloadTooLargeError,
+      message: "Payload Too Large",
+    });
     t.true(req.isPaused());
   }
 
   {
     const req = new FakeIncomingMessage("body", { "content-length": "4" });
     t.false(req.isPaused());
-    await t.throwsAsync(
-      async () => {
-        await Body.from(req, { lengthLimit: 3 }).text();
-      },
-      {
-        instanceOf: PayloadTooLargeError,
-        message: "Payload Too Large",
-      },
-    );
+    const body = Body.from(req, { lengthLimit: 3 });
+    await t.throwsAsync(body.text(), {
+      instanceOf: PayloadTooLargeError,
+      message: "Payload Too Large",
+    });
     t.true(req.isPaused());
   }
 
@@ -213,11 +181,11 @@ test("decompress data", async (t) => {
 });
 
 test("handle invalid compressed data", async (t) => {
-  await t.throwsAsync(
-    async () => {
-      await Body.from(
+  await t.throws(
+    () => {
+      Body.from(
         new FakeIncomingMessage("body", { "content-encoding": "invalid" }),
-      ).text();
+      );
     },
     {
       instanceOf: BadRequestError,
@@ -225,33 +193,27 @@ test("handle invalid compressed data", async (t) => {
     },
   );
   await t.throwsAsync(
-    async () => {
-      await Body.from(
-        new FakeIncomingMessage("invalid", { "content-encoding": "gzip" }),
-      ).text();
-    },
+    Body.from(
+      new FakeIncomingMessage("invalid", { "content-encoding": "gzip" }),
+    ).text(),
     {
       instanceOf: BadRequestError,
       message: "Invalid gzip data",
     },
   );
   await t.throwsAsync(
-    async () => {
-      await Body.from(
-        new FakeIncomingMessage("invalid", { "content-encoding": "deflate" }),
-      ).text();
-    },
+    Body.from(
+      new FakeIncomingMessage("invalid", { "content-encoding": "deflate" }),
+    ).text(),
     {
       instanceOf: BadRequestError,
       message: "Invalid gzip data",
     },
   );
   await t.throwsAsync(
-    async () => {
-      await Body.from(
-        new FakeIncomingMessage("invalid", { "content-encoding": "br" }),
-      ).text();
-    },
+    Body.from(
+      new FakeIncomingMessage("invalid", { "content-encoding": "br" }),
+    ).text(),
     {
       instanceOf: BadRequestError,
       message: "Invalid brotli data",
@@ -263,15 +225,10 @@ test("read from destroyed stream", async (t) => {
   const req = new FakeIncomingMessage("buffer");
   req.destroy();
 
-  await t.throwsAsync(
-    async () => {
-      await Body.from(req).buffer();
-    },
-    {
-      name: "Error",
-      message: "Destroyed stream",
-    },
-  );
+  await t.throwsAsync(Body.from(req).buffer(), {
+    name: "Error",
+    message: "Destroyed stream",
+  });
 });
 
 class FakeIncomingMessage extends Readable {

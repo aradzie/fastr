@@ -81,7 +81,7 @@ export class Body {
    * @throws PayloadTooLargeError If received body size is above the configured
    *                              limit.
    */
-  buffer(): Promise<Buffer> {
+  async buffer(): Promise<Buffer> {
     this.setBodyUsed();
     const {
       _length: length,
