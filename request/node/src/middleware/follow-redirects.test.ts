@@ -136,12 +136,10 @@ test("throw error if the redirect option is error", async (t) => {
   // Assert.
 
   await t.throwsAsync(
-    async () => {
-      await adapter({
-        url: "http://test/",
-        method: "GET",
-      });
-    },
+    adapter({
+      url: "http://test/",
+      method: "GET",
+    }),
     {
       instanceOf: RequestError,
       code: "REDIRECT",
@@ -160,12 +158,10 @@ test("throw error if too many redirects", async (t) => {
   // Assert.
 
   await t.throwsAsync(
-    async () => {
-      await adapter({
-        url: "http://test/a",
-        method: "GET",
-      });
-    },
+    adapter({
+      url: "http://test/a",
+      method: "GET",
+    }),
     {
       instanceOf: RequestError,
       code: "REDIRECT",
@@ -184,12 +180,10 @@ test("throw error if redirect loop detected", async (t) => {
   // Assert.
 
   await t.throwsAsync(
-    async () => {
-      await adapter({
-        url: "http://test/a",
-        method: "GET",
-      });
-    },
+    adapter({
+      url: "http://test/a",
+      method: "GET",
+    }),
     {
       instanceOf: RequestError,
       code: "REDIRECT",
@@ -211,12 +205,10 @@ test("pass through error", async (t) => {
   // Assert.
 
   await t.throwsAsync(
-    async () => {
-      await adapter({
-        url: "http://test/",
-        method: "GET",
-      });
-    },
+    adapter({
+      url: "http://test/",
+      method: "GET",
+    }),
     {
       is: error,
     },

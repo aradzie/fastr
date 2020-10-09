@@ -60,12 +60,10 @@ test("throw error if content type does not match", async (t) => {
   // Assert.
 
   await t.throwsAsync(
-    async () => {
-      await adapter({
-        url: "http://test/",
-        method: "GET",
-      });
-    },
+    adapter({
+      url: "http://test/",
+      method: "GET",
+    }),
     {
       name: "HttpError [415]",
       message: "Unsupported Media Type",
@@ -86,12 +84,10 @@ test("pass through error", async (t) => {
   // Assert.
 
   await t.throwsAsync(
-    async () => {
-      await adapter({
-        url: "http://test/",
-        method: "GET",
-      });
-    },
+    adapter({
+      url: "http://test/",
+      method: "GET",
+    }),
     {
       is: error,
     },

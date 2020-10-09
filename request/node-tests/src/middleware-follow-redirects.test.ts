@@ -203,12 +203,10 @@ test("on redirect throw", async (t) => {
 
   const req = request.use(followRedirects({ redirect: "error" })).use(server);
   await t.throwsAsync(
-    async () => {
-      await req({
-        url: "/a",
-        method: "GET",
-      });
-    },
+    req({
+      url: "/a",
+      method: "GET",
+    }),
     {
       instanceOf: RequestError,
       code: "REDIRECT",
@@ -229,12 +227,10 @@ test("handle no redirect location", async (t) => {
 
   const req = request.use(followRedirects({ redirect: "follow" })).use(server);
   await t.throwsAsync(
-    async () => {
-      await req({
-        url: "/a",
-        method: "GET",
-      });
-    },
+    req({
+      url: "/a",
+      method: "GET",
+    }),
     {
       instanceOf: RequestError,
       code: "REDIRECT",
@@ -265,12 +261,10 @@ test("handle redirect loop", async (t) => {
 
   const req = request.use(followRedirects({ redirect: "follow" })).use(server);
   await t.throwsAsync(
-    async () => {
-      await req({
-        url: "/a",
-        method: "GET",
-      });
-    },
+    req({
+      url: "/a",
+      method: "GET",
+    }),
     {
       instanceOf: RequestError,
       code: "REDIRECT",
@@ -311,12 +305,10 @@ test("handle too many redirects", async (t) => {
 
   const req = request.use(followRedirects({ redirect: "follow" })).use(server);
   await t.throwsAsync(
-    async () => {
-      await req({
-        url: "/a",
-        method: "GET",
-      });
-    },
+    req({
+      url: "/a",
+      method: "GET",
+    }),
     {
       instanceOf: RequestError,
       code: "REDIRECT",

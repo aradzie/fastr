@@ -34,12 +34,10 @@ test("throw error if response status is a client error", async (t) => {
   // Assert.
 
   await t.throwsAsync(
-    async () => {
-      await adapter({
-        url: "http://test/",
-        method: "GET",
-      });
-    },
+    adapter({
+      url: "http://test/",
+      method: "GET",
+    }),
     {
       name: "HttpError [404]",
       message: "Not Found",
@@ -57,12 +55,10 @@ test("throw error if response status is a server error", async (t) => {
   // Assert.
 
   await t.throwsAsync(
-    async () => {
-      await adapter({
-        url: "http://test/",
-        method: "GET",
-      });
-    },
+    adapter({
+      url: "http://test/",
+      method: "GET",
+    }),
     {
       name: "HttpError [500]",
       message: "Internal Server Error",
@@ -80,12 +76,10 @@ test("throw error if response status is not successful", async (t) => {
   // Assert.
 
   await t.throwsAsync(
-    async () => {
-      await adapter({
-        url: "http://test/",
-        method: "GET",
-      });
-    },
+    adapter({
+      url: "http://test/",
+      method: "GET",
+    }),
     {
       name: "TypeError",
       message: "Excepted successful HTTP status but got 302.",
@@ -127,12 +121,10 @@ test("pass through error", async (t) => {
   // Assert.
 
   await t.throwsAsync(
-    async () => {
-      await adapter({
-        url: "http://test/",
-        method: "GET",
-      });
-    },
+    adapter({
+      url: "http://test/",
+      method: "GET",
+    }),
     {
       is: error,
     },

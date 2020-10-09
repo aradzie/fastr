@@ -5,12 +5,10 @@ import { Readable } from "stream";
 
 test("handle connection refused", async (t) => {
   await t.throwsAsync(
-    async () => {
-      await request({
-        url: "http://127.0.0.1:1/",
-        method: "GET",
-      });
-    },
+    request({
+      url: "http://127.0.0.1:1/",
+      method: "GET",
+    }),
     {
       name: "Error",
       code: "ECONNREFUSED",
@@ -33,13 +31,11 @@ test("handle request aborted", async (t) => {
   // Assert.
 
   await t.throwsAsync(
-    async () => {
-      await req({
-        url: "/test",
-        method: "POST",
-        body: "payload\n".repeat(1000),
-      });
-    },
+    req({
+      url: "/test",
+      method: "POST",
+      body: "payload\n".repeat(1000),
+    }),
     {
       name: "Error",
       code: "ECONNRESET",
@@ -62,13 +58,11 @@ test("handle response aborted", async (t) => {
   // Assert.
 
   await t.throwsAsync(
-    async () => {
-      await req({
-        url: "/test",
-        method: "POST",
-        body: "payload\n".repeat(1000),
-      });
-    },
+    req({
+      url: "/test",
+      method: "POST",
+      body: "payload\n".repeat(1000),
+    }),
     {
       name: "Error",
       code: "ECONNRESET",
@@ -92,12 +86,10 @@ test("handle invalid content encoding", async (t) => {
   // Assert.
 
   await t.throwsAsync(
-    async () => {
-      await req({
-        url: "/test",
-        method: "GET",
-      });
-    },
+    req({
+      url: "/test",
+      method: "GET",
+    }),
     {
       name: "HttpError [400]",
       message: "Invalid content encoding",
@@ -126,15 +118,10 @@ test("handle malformed content encoding", async (t) => {
 
   // Assert.
 
-  await t.throwsAsync(
-    async () => {
-      await response.body.text();
-    },
-    {
-      name: "HttpError [400]",
-      message: "Invalid gzip data",
-    },
-  );
+  await t.throwsAsync(response.body.text(), {
+    name: "HttpError [400]",
+    message: "Invalid gzip data",
+  });
 });
 
 test("handle send body error", async (t) => {
@@ -149,33 +136,29 @@ test("handle send body error", async (t) => {
   // Assert.
 
   await t.throwsAsync(
-    async () => {
-      await req({
-        url: "/test",
-        method: "GET",
-        body: new Readable({
-          read(): void {
-            this.emit("error", error);
-          },
-        }),
-      });
-    },
+    req({
+      url: "/test",
+      method: "GET",
+      body: new Readable({
+        read(): void {
+          this.emit("error", error);
+        },
+      }),
+    }),
     {
       is: error,
     },
   );
   await t.throwsAsync(
-    async () => {
-      await req({
-        url: "/test",
-        method: "GET",
-        body: new Readable({
-          read(): void {
-            this.destroy(error);
-          },
-        }),
-      });
-    },
+    req({
+      url: "/test",
+      method: "GET",
+      body: new Readable({
+        read(): void {
+          this.destroy(error);
+        },
+      }),
+    }),
     {
       is: error,
     },

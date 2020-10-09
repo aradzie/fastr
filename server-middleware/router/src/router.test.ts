@@ -117,9 +117,7 @@ test("router matches methods", async (t) => {
   t.is(await middleware(fakeContext(router, "/", "GET"), dummyNext), "get /");
   t.is(await middleware(fakeContext(router, "/", "PUT"), dummyNext), "put /");
   await t.throwsAsync(
-    async () => {
-      await middleware(fakeContext(router, "/", "DELETE"), dummyNext);
-    },
+    middleware(fakeContext(router, "/", "DELETE"), dummyNext),
     { instanceOf: MethodNotAllowedError },
   );
 

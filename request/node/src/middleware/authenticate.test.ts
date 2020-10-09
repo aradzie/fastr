@@ -84,7 +84,7 @@ test("bearer authorization header", async (t) => {
   });
 });
 
-test("check that HTTPS is used", async (t) => {
+test("check that HTTPS is used", (t) => {
   // Arrange.
 
   const underTest = authenticate("xyz");
@@ -93,9 +93,9 @@ test("check that HTTPS is used", async (t) => {
 
   // Assert.
 
-  await t.throwsAsync(
-    async () => {
-      await adapter({
+  t.throws(
+    () => {
+      adapter({
         url: "http://test/",
         method: "GET",
       });

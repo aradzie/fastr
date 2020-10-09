@@ -39,12 +39,10 @@ test("throw error if content type does not match", async (t) => {
   // Assert.
 
   await t.throwsAsync(
-    async () => {
-      await req({
-        url: "/test",
-        method: "GET",
-      });
-    },
+    req({
+      url: "/test",
+      method: "GET",
+    }),
     {
       name: "HttpError [415]",
       message: "Unsupported Media Type",

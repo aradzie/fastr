@@ -59,38 +59,38 @@ test("catch errors", async (t) => {
 
   {
     const middleware = compose([]);
-    await t.throwsAsync(() => middleware(context, fail), { message: "omg" });
+    await t.throwsAsync(middleware(context, fail), { message: "omg" });
   }
 
   {
     const middleware = compose([fail]);
-    await t.throwsAsync(() => middleware(context), { message: "omg" });
+    await t.throwsAsync(middleware(context), { message: "omg" });
   }
 
   {
     const middleware = compose([a]) as compose.ComposedMiddleware<Koa.Context>;
-    await t.throwsAsync(() => middleware(context, fail), { message: "omg" });
+    await t.throwsAsync(middleware(context, fail), { message: "omg" });
   }
 
   {
     const middleware = compose([a, fail]) as compose.ComposedMiddleware<
       Koa.Context
     >;
-    await t.throwsAsync(() => middleware(context), { message: "omg" });
+    await t.throwsAsync(middleware(context), { message: "omg" });
   }
 
   {
     const middleware = compose([a, b, c]) as compose.ComposedMiddleware<
       Koa.Context
     >;
-    await t.throwsAsync(() => middleware(context, fail), { message: "omg" });
+    await t.throwsAsync(middleware(context, fail), { message: "omg" });
   }
 
   {
     const middleware = compose([a, b, c, fail]) as compose.ComposedMiddleware<
       Koa.Context
     >;
-    await t.throwsAsync(() => middleware(context), { message: "omg" });
+    await t.throwsAsync(middleware(context), { message: "omg" });
   }
 });
 
@@ -98,9 +98,12 @@ test("call next multiple times", async (t) => {
   const context = { state: {} } as Koa.Context;
   const middleware = compose([buggy]);
 
-  await t.throwsAsync(async () => await middleware(context, async () => {}), {
-    message: "next() called multiple times",
-  });
+  await t.throwsAsync(
+    middleware(context, () => Promise.resolve()),
+    {
+      message: "next() called multiple times",
+    },
+  );
 });
 
 async function a(ctx: Koa.Context, next: Koa.Next) {

@@ -81,12 +81,10 @@ test("pass through error", async (t) => {
   // Assert.
 
   await t.throwsAsync(
-    async () => {
-      await adapter({
-        url: "http://test/",
-        method: "GET",
-      });
-    },
+    adapter({
+      url: "http://test/",
+      method: "GET",
+    }),
     {
       is: error,
     },

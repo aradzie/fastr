@@ -7,14 +7,9 @@ test("throw error", async (t) => {
 
   const adapter = FakeHttpResponse.throwError(error);
 
-  await t.throwsAsync(
-    async () => {
-      await adapter({ method: "GET", url: "/" });
-    },
-    {
-      is: error,
-    },
-  );
+  await t.throwsAsync(adapter({ method: "GET", url: "/" }), {
+    is: error,
+  });
 });
 
 test("text body", async (t) => {
