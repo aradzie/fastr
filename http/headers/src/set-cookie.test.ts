@@ -19,7 +19,7 @@ test("parse", (t) => {
     }),
   );
   t.deepEqual(
-    SetCookie.parse("Name0=Value0; maxAge=123"),
+    SetCookie.parse("Name0=Value0; max-Age=123"),
     new SetCookie("Name0", "Value0", {
       maxAge: 123,
     }),
@@ -57,7 +57,7 @@ test("parse", (t) => {
       "Name0=Value0; " +
         "Path = path0 ; " +
         "Domain = domain0 ; " +
-        "MaxAge = 123 ; " +
+        "Max-Age = 123 ; " +
         "Expires = Thu, 01 Jan 1970 00:00:01 GMT ; " +
         "SameSite = STRICT ; " +
         "Secure ; " +
@@ -99,7 +99,7 @@ test("toString", (t) => {
         maxAge: 123,
       }),
     ),
-    "Name0=Value0; MaxAge=123",
+    "Name0=Value0; Max-Age=123",
   );
   t.is(
     String(
@@ -148,7 +148,7 @@ test("toString", (t) => {
     "Name0=Value0; " +
       "Path=path0; " +
       "Domain=domain0; " +
-      "MaxAge=123; " +
+      "Max-Age=123; " +
       "Expires=Thu, 01 Jan 1970 00:00:01 GMT; " +
       "SameSite=Strict; " +
       "Secure; " +

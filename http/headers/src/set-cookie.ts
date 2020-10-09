@@ -105,7 +105,7 @@ export class SetCookie implements Header {
             }
           }
           break;
-        case "maxage":
+        case "max-age":
           if (scanner.readSeparator(0x3d /* = */)) {
             const value = scanner.readUntil(0x3b /* ; */, /* trim= */ true);
             if (value) {
@@ -241,7 +241,7 @@ export class SetCookie implements Header {
       parts.push(`Domain=${domain}`);
     }
     if (maxAge != null) {
-      parts.push(`MaxAge=${maxAge}`);
+      parts.push(`Max-Age=${maxAge}`);
     }
     if (expires != null) {
       parts.push(`Expires=${expires.toUTCString()}`);
