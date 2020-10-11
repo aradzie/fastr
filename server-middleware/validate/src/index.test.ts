@@ -1,8 +1,8 @@
-import Joi from "@hapi/joi";
 import { expectForm, expectJson } from "@webfx-middleware/body";
 import { request } from "@webfx-request/node";
 import { start } from "@webfx-request/testlib";
 import test from "ava";
+import Joi from "joi";
 import Koa from "koa";
 import { URLSearchParams } from "url";
 import { validate } from "./index.js";
