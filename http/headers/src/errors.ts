@@ -38,35 +38,39 @@ export const InvalidCacheControlHeaderError = createError(
   "Invalid Cache-Control header.",
 );
 
+export interface HeaderError extends Error {
+  /**
+   * Error code.
+   */
+  readonly code: string;
+  /**
+   * HTTP status code.
+   */
+  readonly status: number;
+}
+
+export interface HeaderErrorConstructor {
+  new (): HeaderError;
+}
+
 /**
- * Creates new error constructor with the given options.
- * @param code Error code.
- * @param message Error message.
- * @param status HTTP status code.
- * @param Base Base error class.
+ * Creates a new error constructor with the given options.
+ * @param code An error code.
+ * @param message An error message.
+ * @param status A HTTP status code.
+ * @param Base The base error class.
  */
 export function createError(
   code: string,
   message: string,
   status = 500,
   Base = TypeError,
-): {
-  new (): Error & {
-    /**
-     * Error code.
-     */
-    readonly code: string;
-    /**
-     * HTTP status code.
-     */
-    readonly status: number;
-  };
-} {
+): HeaderErrorConstructor {
   if (code === "") {
-    throw new Error("Error code must not be empty.");
+    throw new TypeError("Error code must not be empty.");
   }
   if (message === "") {
-    throw new Error("Error message must not be empty.");
+    throw new TypeError("Error message must not be empty.");
   }
 
   return class HeaderError extends Base {
