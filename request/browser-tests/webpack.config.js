@@ -16,14 +16,7 @@ module.exports = [
       rules: [
         {
           test: /\.js$/,
-          use: [
-            {
-              loader: "babel-loader",
-            },
-            {
-              loader: "source-map-loader",
-            },
-          ],
+          use: "babel-loader",
         },
       ],
     },
@@ -44,14 +37,7 @@ module.exports = [
       rules: [
         {
           test: /\.js$/,
-          use: [
-            {
-              loader: "babel-loader",
-            },
-            {
-              loader: "source-map-loader",
-            },
-          ],
+          use: "babel-loader",
         },
       ],
     },
@@ -72,14 +58,7 @@ module.exports = [
       rules: [
         {
           test: /\.js$/,
-          use: [
-            {
-              loader: "babel-loader",
-            },
-            {
-              loader: "source-map-loader",
-            },
-          ],
+          use: "babel-loader",
         },
       ],
     },
@@ -100,14 +79,7 @@ module.exports = [
       rules: [
         {
           test: /\.js$/,
-          use: [
-            {
-              loader: "babel-loader",
-            },
-            {
-              loader: "source-map-loader",
-            },
-          ],
+          use: "babel-loader",
         },
       ],
     },
