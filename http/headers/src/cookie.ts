@@ -70,7 +70,9 @@ export class Cookie implements Header, Iterable<[string, string]> {
     const map = new Map<string, string>();
     if (data != null) {
       for (const [name, value] of entriesOf(data as Map<string, unknown>)) {
-        map.set(name, value);
+        if (!map.has(name)) {
+          map.set(name, value);
+        }
       }
     }
     Object.defineProperty(this, kMap, {

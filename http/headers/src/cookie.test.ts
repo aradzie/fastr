@@ -4,28 +4,40 @@ import { Cookie } from "./cookie.js";
 test("parse", (t) => {
   t.deepEqual(
     Cookie.parse("=; X=; Name0=Value0; Name1=Value1"),
-    new Cookie(
-      new Map([
-        ["", ""],
-        ["X", ""],
-        ["Name0", "Value0"],
-        ["Name1", "Value1"],
-      ]),
-    ),
+    new Cookie([
+      ["", ""],
+      ["X", ""],
+      ["Name0", "Value0"],
+      ["Name1", "Value1"],
+    ]),
   );
 });
 
 test("toString", (t) => {
   t.is(
     String(
-      new Cookie(
-        new Map([
-          ["Name0", "Value0"],
-          ["Name1", "Value1"],
-        ]),
-      ),
+      new Cookie([
+        ["Name0", "Value0"],
+        ["Name1", "Value1"],
+      ]),
     ),
     "Name0=Value0; Name1=Value1",
+  );
+});
+
+test("first entry wins", (t) => {
+  t.deepEqual(
+    [
+      ...new Cookie([
+        ["a", "1"],
+        ["b", "2"],
+        ["a", "x"],
+      ]),
+    ],
+    [
+      ["a", "1"],
+      ["b", "2"],
+    ],
   );
 });
 
