@@ -1,5 +1,6 @@
 import { CookieCodec } from "./cookie-codec.js";
 import { InvalidSetCookieHeaderError } from "./errors.js";
+import { splitPair } from "./strings.js";
 import { isToken, isValidCookieValue, parseDate, Scanner } from "./syntax.js";
 import type { Header } from "./types.js";
 
@@ -22,7 +23,10 @@ export interface SetCookieInit {
  * See https://tools.ietf.org/html/rfc6265
  */
 export class SetCookie implements Header {
-  static from(value: SetCookie | string): SetCookie {
+  static from(value: SetCookie): SetCookie;
+  static from(value: string): SetCookie | null;
+  static from(value: SetCookie | string): SetCookie | null;
+  static from(value: SetCookie | string): SetCookie | null {
     if (typeof value === "string") {
       return SetCookie.parse(value);
     } else {
@@ -35,7 +39,7 @@ export class SetCookie implements Header {
    * See https://tools.ietf.org/html/rfc6265#section-4.1.1
    * See https://tools.ietf.org/html/rfc6265#section-5.2
    */
-  static parse(input: string): SetCookie {
+  static parse(input: string): SetCookie | null {
     const scanner = new Scanner(input);
     // set-cookie-header = "Set-Cookie:" SP set-cookie-string
     // set-cookie-string = cookie-pair *( ";" SP cookie-av )
@@ -63,17 +67,14 @@ export class SetCookie implements Header {
     //                      ; defined in [RFC2616], Section 3.3.1
     // secure-av         = "Secure"
     // httponly-av       = "HttpOnly"
-    const name = scanner.readUntil(0x3d /* = */, /* trim= */ true);
-    if (name !== "" && !isToken(name)) {
-      throw new InvalidSetCookieHeaderError();
-    }
-    if (!scanner.readSeparator(0x3d /* = */)) {
-      throw new InvalidSetCookieHeaderError();
-    }
 
-    const value = scanner.readUntil(0x3b /* ; */, /* trim= */ true);
+    const entry = scanner.readUntil(0x3b /* ; */, /* trim= */ false);
+    const [name, value] = splitPair(entry, 0x3d /* = */);
+    if (!isToken(name)) {
+      return null;
+    }
     if (!isValidCookieValue(value)) {
-      throw new InvalidSetCookieHeaderError();
+      return null;
     }
 
     let path = null;
@@ -81,8 +82,8 @@ export class SetCookie implements Header {
     let maxAge = null;
     let expires = null;
     let sameSite = null;
-    let secure = false;
-    let httpOnly = false;
+    let secure = null;
+    let httpOnly = null;
     while (scanner.readSeparator(0x3b /* ; */)) {
       const param = scanner.readToken();
       if (param == null) {
@@ -90,38 +91,69 @@ export class SetCookie implements Header {
       }
       switch (param.toLowerCase()) {
         case "path":
+          if (path != null) {
+            return null;
+          }
           if (scanner.readSeparator(0x3d /* = */)) {
             const value = scanner.readUntil(0x3b /* ; */, /* trim= */ true);
             if (value) {
               path = value;
+            } else {
+              return null;
             }
+          } else {
+            return null;
           }
           break;
         case "domain":
+          if (domain != null) {
+            return null;
+          }
           if (scanner.readSeparator(0x3d /* = */)) {
             const value = scanner.readUntil(0x3b /* ; */, /* trim= */ true);
             if (value) {
               domain = value;
+            } else {
+              return null;
             }
+          } else {
+            return null;
           }
           break;
         case "max-age":
+          if (maxAge != null) {
+            return null;
+          }
           if (scanner.readSeparator(0x3d /* = */)) {
             const value = scanner.readUntil(0x3b /* ; */, /* trim= */ true);
             if (value) {
               maxAge = Number(value);
+            } else {
+              return null;
             }
+          } else {
+            return null;
           }
           break;
         case "expires":
+          if (expires != null) {
+            return null;
+          }
           if (scanner.readSeparator(0x3d /* = */)) {
             const value = scanner.readUntil(0x3b /* ; */, /* trim= */ true);
             if (value) {
               expires = parseDate(value);
+            } else {
+              return null;
             }
+          } else {
+            return null;
           }
           break;
         case "samesite":
+          if (sameSite != null) {
+            return null;
+          }
           if (scanner.readSeparator(0x3d /* = */)) {
             const value = scanner.readUntil(0x3b /* ; */, /* trim= */ true);
             switch (value.toLowerCase()) {
@@ -134,15 +166,35 @@ export class SetCookie implements Header {
               case "none":
                 sameSite = "None" as const;
                 break;
+              default:
+                return null;
             }
+          } else {
+            return null;
           }
           break;
         case "secure":
+          if (secure != null) {
+            return null;
+          }
+          if (scanner.readSeparator(0x3d /* = */)) {
+            return null;
+          }
           secure = true;
           break;
         case "httponly":
+          if (httpOnly != null) {
+            return null;
+          }
+          if (scanner.readSeparator(0x3d /* = */)) {
+            return null;
+          }
           httpOnly = true;
           break;
+        default:
+          if (scanner.readSeparator(0x3d /* = */)) {
+            scanner.readUntil(0x3b /* ; */, /* trim= */ true);
+          }
       }
     }
     return new SetCookie(name, CookieCodec.decode(value), {
@@ -151,8 +203,8 @@ export class SetCookie implements Header {
       maxAge,
       expires,
       sameSite,
-      secure,
-      httpOnly,
+      secure: secure != null,
+      httpOnly: httpOnly != null,
     });
   }
 
@@ -209,6 +261,9 @@ export class SetCookie implements Header {
       httpOnly = false,
     }: SetCookieInit = {},
   ) {
+    if (!isToken(name)) {
+      throw new InvalidSetCookieHeaderError();
+    }
     this.name = name;
     this.value = value;
     this.path = path;

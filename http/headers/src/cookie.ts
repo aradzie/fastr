@@ -1,5 +1,6 @@
 import { CookieCodec } from "./cookie-codec.js";
 import { InvalidCookieHeaderError } from "./errors.js";
+import { splitPair } from "./strings.js";
 import { isToken, isValidCookieValue, Scanner } from "./syntax.js";
 import type { Header, NameValueEntries } from "./types.js";
 import { entriesOf } from "./util.js";
@@ -35,27 +36,19 @@ export class Cookie implements Header, Iterable<[string, string]> {
     //                   ; US-ASCII characters excluding CTLs,
     //                   ; whitespace DQUOTE, comma, semicolon,
     //                   ; and backslash
-    const data: [string, string][] = [];
+    const cookie = new Cookie();
     const scanner = new Scanner(input);
     while (scanner.hasNext()) {
-      const name = scanner.readUntil(0x3d /* = */, /* trim= */ true);
-      if (name !== "" && !isToken(name)) {
-        throw new InvalidCookieHeaderError();
+      const entry = scanner.readUntil(0x3b /* ; */, /* trim= */ false);
+      const [name, value] = splitPair(entry, 0x3d /* = */);
+      if (isToken(name) && isValidCookieValue(value)) {
+        cookie[kMap].set(name, CookieCodec.decode(value));
       }
-      if (!scanner.readSeparator(0x3d /* = */)) {
-        throw new InvalidCookieHeaderError();
-      }
-
-      const value = scanner.readUntil(0x3b /* ; */, /* trim= */ true);
-      if (!isValidCookieValue(value)) {
-        throw new InvalidCookieHeaderError();
-      }
-      data.push([name, CookieCodec.decode(value)]);
       if (!scanner.readSeparator(0x3b /* ; */)) {
         break;
       }
     }
-    return new Cookie(data);
+    return cookie;
   }
 
   private readonly [kMap]: Map<string, string>;
@@ -70,9 +63,10 @@ export class Cookie implements Header, Iterable<[string, string]> {
     const map = new Map<string, string>();
     if (data != null) {
       for (const [name, value] of entriesOf(data as Map<string, unknown>)) {
-        if (!map.has(name)) {
-          map.set(name, value);
+        if (!isToken(name)) {
+          throw new InvalidCookieHeaderError();
         }
+        map.set(name, value);
       }
     }
     Object.defineProperty(this, kMap, {
@@ -99,19 +93,31 @@ export class Cookie implements Header, Iterable<[string, string]> {
   }
 
   has(name: string): boolean {
+    if (!isToken(name)) {
+      throw new InvalidCookieHeaderError();
+    }
     return this[kMap].has(name);
   }
 
   get(name: string): string | null {
+    if (!isToken(name)) {
+      throw new InvalidCookieHeaderError();
+    }
     return this[kMap].get(name) ?? null;
   }
 
   set(name: string, value: unknown): this {
+    if (!isToken(name)) {
+      throw new InvalidCookieHeaderError();
+    }
     this[kMap].set(name, String(value));
     return this;
   }
 
   delete(name: string): this {
+    if (!isToken(name)) {
+      throw new InvalidCookieHeaderError();
+    }
     this[kMap].delete(name);
     return this;
   }
