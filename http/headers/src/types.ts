@@ -8,4 +8,7 @@ export interface HeadersLike {
   append(name: string, value: string): void;
 }
 
-export type NameValueEntries = readonly (readonly [string, unknown])[];
+export type NameValueEntries = readonly (readonly [
+  name: string,
+  value: unknown,
+])[];

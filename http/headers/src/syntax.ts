@@ -140,12 +140,13 @@ const charTypeTable: CharType[] = [
  * Returns a value indicating whether the given string includes only
  * token characters.
  */
-export function isToken(s: string): boolean {
-  if (s.length === 0) {
+export function isToken(value: string): boolean {
+  const { length } = value;
+  if (length === 0) {
     return false;
   }
-  for (let i = 0; i < s.length; i++) {
-    if (charTypeTable[s.charCodeAt(i)] !== CharType.TOKEN) {
+  for (let i = 0; i < length; i++) {
+    if (charTypeTable[value.charCodeAt(i)] !== CharType.TOKEN) {
       return false;
     }
   }
@@ -159,9 +160,10 @@ export function escapeToken(value: string): string {
   if (isToken(value)) {
     return value;
   } else {
+    const { length } = value;
     const a: number[] = [];
     a.push(0x22 /* opening double quote */);
-    for (let i = 0; i < value.length; i++) {
+    for (let i = 0; i < length; i++) {
       const ch = value.charCodeAt(i);
       switch (ch) {
         case 0x5c /* \ */:
@@ -188,7 +190,8 @@ export function escapeToken(value: string): string {
  * contains valid characters.
  */
 export function isValidHeaderValue(value: string): boolean {
-  for (let i = 0; i < value.length; i++) {
+  const { length } = value;
+  for (let i = 0; i < length; i++) {
     const ch = value.charCodeAt(i);
     if (ch === /* NUL */ 0x00 || ch === /* LF */ 0x0a || ch === /* CR */ 0x0d) {
       return false;
@@ -209,9 +212,10 @@ export function isValidHeaderValue(value: string): boolean {
  * ```
  */
 export function isValidCookieValue(value: string): boolean {
+  const { length } = value;
   let begin = 0;
-  let end = value.length;
-  if (value.length >= 2 && value.startsWith('"') && value.endsWith('"')) {
+  let end = length;
+  if (length >= 2 && value.startsWith('"') && value.endsWith('"')) {
     begin += 1;
     end -= 1;
   }
