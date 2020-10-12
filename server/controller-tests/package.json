@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@webfx/controller-tests",
-  "version": "0.0.12-alpha.0",
+  "version": "0.0.13-alpha.0",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "homepage": "https://github.com/aradzie/webfx#readme",
   "repository": "aradzie/webfx",
@@ -19,12 +19,12 @@
   },
   "devDependencies": {
     "@types/koa": "^2.11.4",
-    "@webfx-middleware/body": "^0.0.12-alpha.0",
-    "@webfx-middleware/router": "^0.0.12-alpha.0",
-    "@webfx-request/node": "^0.0.12-alpha.0",
-    "@webfx-request/testlib": "^0.0.12-alpha.0",
-    "@webfx/controller": "^0.0.12-alpha.0",
-    "@webfx/middleware": "^0.0.12-alpha.0",
+    "@webfx-middleware/body": "^0.0.13-alpha.0",
+    "@webfx-middleware/router": "^0.0.13-alpha.0",
+    "@webfx-request/node": "^0.0.13-alpha.0",
+    "@webfx-request/testlib": "^0.0.13-alpha.0",
+    "@webfx/controller": "^0.0.13-alpha.0",
+    "@webfx/middleware": "^0.0.13-alpha.0",
     "koa": "^2.13.0"
   },
   "scripts": {
