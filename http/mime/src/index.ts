@@ -1,1 +1,1 @@
-export { MimeDb } from "./db.js";
+export * from "./db.js";

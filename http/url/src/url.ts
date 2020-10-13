@@ -1,3 +1,1 @@
-import { URL, URLSearchParams } from "url";
-
-export { URL, URLSearchParams };
+export { URL, URLSearchParams } from "url";
