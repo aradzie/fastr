@@ -1,6 +1,4 @@
-import { expectText } from "@webfx-middleware/body";
 import {
-  body,
   context,
   controller,
   cookieParam,
@@ -10,7 +8,6 @@ import {
   queryParam,
   request,
   response,
-  use,
 } from "@webfx/controller";
 import test from "ava";
 import { Container, injectable } from "inversify";
@@ -57,12 +54,6 @@ test("should provide parameters", async (t) => {
   @injectable()
   @controller()
   class Controller1 {
-    @http.post("/body")
-    @use(expectText())
-    body(@body() value: string | null) {
-      return `body=${format(value)}`;
-    }
-
     @http.get("/path/{value}")
     param(@pathParam("value") value: string | null) {
       return `pathParam=${format(value)}`;
@@ -92,14 +83,6 @@ test("should provide parameters", async (t) => {
 
   // Act. Assert.
 
-  t.is(
-    await (
-      await httpRequest //
-        .post("/body")
-        .send("BodyValue", "text/plain")
-    ).body.text(),
-    "body=[BodyValue]",
-  );
   t.is(
     await (
       await httpRequest //
@@ -161,7 +144,7 @@ test("should provide parameters", async (t) => {
   );
 });
 
-function format(value: string | null): string {
+function format(value: string | null | undefined): string {
   if (value == null) {
     return `null`;
   } else {

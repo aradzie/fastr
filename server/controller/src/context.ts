@@ -21,7 +21,7 @@ export function getBody(ctx: RouterContext): any {
     request.buffer ??
     request.text ??
     request.json ??
-    request.from ??
+    request.form ??
     null
   );
 }
