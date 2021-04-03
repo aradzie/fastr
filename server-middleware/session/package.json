@@ -1,6 +1,6 @@
 {
   "name": "@webfx-middleware/session",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "homepage": "https://github.com/aradzie/webfx#readme",
   "repository": "aradzie/webfx",
@@ -24,8 +24,8 @@
     "@types/cookies": "^0.7.6",
     "@types/koa": "^2.13.1",
     "@types/object-hash": "^2.1.0",
-    "@webfx-request/node": "^0.0.13",
-    "@webfx-request/testlib": "^0.0.13",
+    "@webfx-request/node": "^0.0.14",
+    "@webfx-request/testlib": "^0.0.14",
     "koa": "^2.13.1"
   },
   "scripts": {
