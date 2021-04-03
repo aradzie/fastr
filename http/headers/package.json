@@ -16,7 +16,7 @@
     "node": ">=12.16"
   },
   "dependencies": {
-    "tslib": "^2.0.1"
+    "tslib": "^2.1.0"
   },
   "scripts": {
     "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json",

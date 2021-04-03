@@ -17,8 +17,8 @@
     "@webfx-http/status": "^0.0.13",
     "@webfx-http/url": "^0.0.13",
     "@webfx-request/json": "^0.0.13",
-    "events": "^3.2.0",
-    "tslib": "^2.0.1"
+    "events": "^3.3.0",
+    "tslib": "^2.1.0"
   },
   "scripts": {
     "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json",

@@ -11,11 +11,11 @@
     "node": ">=12.16"
   },
   "dependencies": {
-    "jsdom": "^16.4.0",
-    "tslib": "^2.0.1"
+    "jsdom": "^16.5.2",
+    "tslib": "^2.1.0"
   },
   "devDependencies": {
-    "@types/jsdom": "^16.2.4"
+    "@types/jsdom": "^16.2.10"
   },
   "scripts": {
     "compile": "rm -fr build && tsc"

@@ -15,12 +15,12 @@
     "@webfx-http/error": "^0.0.13",
     "@webfx-http/headers": "^0.0.13",
     "@webfx-http/mimetype": "^0.0.13",
-    "qs": "^6.9.4",
+    "qs": "^6.10.1",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.0.1"
+    "tslib": "^2.1.0"
   },
   "devDependencies": {
-    "@types/qs": "^6.9.4"
+    "@types/qs": "^6.9.6"
   },
   "scripts": {
     "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json",

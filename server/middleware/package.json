@@ -12,13 +12,13 @@
     "node": ">=12.16"
   },
   "dependencies": {
-    "inversify": "^5.0.1",
+    "inversify": "^5.0.5",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.0.1"
+    "tslib": "^2.1.0"
   },
   "devDependencies": {
-    "@types/koa": "^2.11.4",
-    "koa": "^2.13.0"
+    "@types/koa": "^2.13.1",
+    "koa": "^2.13.1"
   },
   "scripts": {
     "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json",

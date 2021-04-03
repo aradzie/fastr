@@ -36,14 +36,14 @@ export function getPathParam(
 export function getQueryParam(
   ctx: RouterContext,
   key: string | null,
-): string | null {
+): string | string[] | null {
   return ctx.request.query[key!] ?? null;
 }
 
 export function getHeaderParam(
   ctx: RouterContext,
   key: string | null,
-): string | null {
+): string | string[] | null {
   return ctx.request.headers[key!] ?? null;
 }
 

@@ -1,6 +1,6 @@
 import type { Store, StoredSession } from "@webfx-middleware/session";
 import { inject, injectable } from "inversify";
-import type Knex from "knex";
+import type { Knex } from "knex";
 import { BSON_CODEC, Codec } from "./codec.js";
 
 export const kSqlStoreOptions = Symbol("kFileStoreOptions");
@@ -80,7 +80,7 @@ export class SqlStore implements Store {
     await this.newQueryBuilder().where("id", sessionId).delete();
   }
 
-  async gc() {
+  async gc(): Promise<void> {
     await this.newQueryBuilder().where("expires_at", "<", new Date()).delete();
   }
 
@@ -88,7 +88,7 @@ export class SqlStore implements Store {
     return this.knex.table<SessionTable>(this.table);
   }
 
-  async createSchema() {
+  async createSchema(): Promise<void> {
     if (!(await this.knex.schema.hasTable(this.table))) {
       await this.knex.schema.createTable(this.table, (table) => {
         table.string("id").primary();
@@ -99,7 +99,7 @@ export class SqlStore implements Store {
     }
   }
 
-  async dropSchema() {
+  async dropSchema(): Promise<void> {
     await this.knex.schema.dropTableIfExists(this.table);
   }
 }

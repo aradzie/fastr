@@ -12,18 +12,18 @@
     "node": ">=12.16"
   },
   "dependencies": {
-    "@types/joi": "^14.3.4",
+    "@types/joi": "^17.2.3",
     "@webfx-http/error": "^0.0.13",
-    "joi": "^17.2.1",
+    "joi": "^17.4.0",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.0.1"
+    "tslib": "^2.1.0"
   },
   "devDependencies": {
-    "@types/koa": "^2.11.4",
+    "@types/koa": "^2.13.1",
     "@webfx-middleware/body": "^0.0.13",
     "@webfx-request/node": "^0.0.13",
     "@webfx-request/testlib": "^0.0.13",
-    "koa": "^2.13.0"
+    "koa": "^2.13.1"
   },
   "scripts": {
     "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json",

@@ -14,14 +14,14 @@
   "dependencies": {
     "compressible": "^2.0.18",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.0.1"
+    "tslib": "^2.1.0"
   },
   "devDependencies": {
     "@types/compressible": "^2.0.0",
-    "@types/koa": "^2.11.4",
+    "@types/koa": "^2.13.1",
     "@webfx-request/node": "^0.0.13",
     "@webfx-request/testlib": "^0.0.13",
-    "koa": "^2.13.0"
+    "koa": "^2.13.1"
   },
   "scripts": {
     "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json",
