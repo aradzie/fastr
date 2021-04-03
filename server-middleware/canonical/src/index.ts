@@ -6,20 +6,14 @@ import { URL } from "url";
 
 @injectable()
 export class Canonical implements IMiddleware {
-  private readonly protocol: string;
-  private readonly hostname: string;
-  private readonly port: string;
+  private readonly canonicalUrl: URL;
 
   constructor(@inject("canonicalUrl") canonicalUrl: string) {
-    const url = new URL(canonicalUrl);
-    const { protocol, hostname, port } = url;
-    this.protocol = protocol;
-    this.hostname = hostname;
-    this.port = port;
+    this.canonicalUrl = new URL(canonicalUrl);
   }
 
   async handle(ctx: RouterContext, next: Koa.Next): Promise<any> {
-    const { protocol, hostname, port } = this;
+    const { protocol, hostname, port } = this.canonicalUrl;
     let url = ctx.request.URL as URL;
     if (
       url.protocol !== protocol ||
@@ -31,6 +25,9 @@ export class Canonical implements IMiddleware {
       url.hostname = hostname;
       url.port = port;
       ctx.response.redirect(String(url));
+      // The koa.redirect method uses status 302, moved temporarily,
+      // but we want 301, moved permanently.
+      ctx.response.status = 301;
     } else {
       return next();
     }

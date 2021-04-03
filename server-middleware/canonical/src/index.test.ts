@@ -18,52 +18,47 @@ test("redirect to canonical url", async (t) => {
   });
   const req = request.use(start(app.callback()));
 
-  // Match canonical URL.
+  {
+    // Match canonical URL.
+    const res = await req
+      .get("/foo/bar?a=b#x")
+      .header("X-Forwarded-Host", "www.example.com")
+      .header("X-Forwarded-Proto", "https")
+      .send();
+    t.is(res.status, 200);
+    t.is(res.headers.get("location"), null);
+  }
 
-  t.is(
-    (
-      await req
-        .get("/foo/bar?a=b#x")
-        .header("X-Forwarded-Host", "www.example.com")
-        .header("X-Forwarded-Proto", "https")
-        .send()
-    ).headers.get("location"),
-    null,
-  );
+  {
+    // Change domain name.
+    const res = await req
+      .get("/foo/bar?a=b#x")
+      .header("X-Forwarded-Host", "example.com")
+      .header("X-Forwarded-Proto", "https")
+      .send();
+    t.is(res.status, 301);
+    t.is(res.headers.get("location"), "https://www.example.com/foo/bar?a=b");
+  }
 
-  // Change domain name.
-  t.is(
-    (
-      await req
-        .get("/foo/bar?a=b#x")
-        .header("X-Forwarded-Host", "example.com")
-        .header("X-Forwarded-Proto", "https")
-        .send()
-    ).headers.get("location"),
-    "https://www.example.com/foo/bar?a=b",
-  );
-
-  // Change protocol.
-  t.is(
-    (
-      await req
-        .get("/foo/bar?a=b#x")
-        .header("X-Forwarded-Host", "www.example.com")
-        .header("X-Forwarded-Proto", "http")
-        .send()
-    ).headers.get("location"),
-    "https://www.example.com/foo/bar?a=b",
-  );
+  {
+    // Change protocol.
+    const res = await req
+      .get("/foo/bar?a=b#x")
+      .header("X-Forwarded-Host", "www.example.com")
+      .header("X-Forwarded-Proto", "http")
+      .send();
+    t.is(res.status, 301);
+    t.is(res.headers.get("location"), "https://www.example.com/foo/bar?a=b");
+  }
 
   // Change domain name and protocol.
-  t.is(
-    (
-      await req
-        .get("/foo/bar?a=b#x")
-        .header("X-Forwarded-Host", "example.com")
-        .header("X-Forwarded-Proto", "http")
-        .send()
-    ).headers.get("location"),
-    "https://www.example.com/foo/bar?a=b",
-  );
+  {
+    const res = await req
+      .get("/foo/bar?a=b#x")
+      .header("X-Forwarded-Host", "example.com")
+      .header("X-Forwarded-Proto", "http")
+      .send();
+    t.is(res.status, 301);
+    t.is(res.headers.get("location"), "https://www.example.com/foo/bar?a=b");
+  }
 });
