@@ -14,7 +14,7 @@
   "dependencies": {
     "inversify": "^5.0.5",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.1.0"
+    "tslib": "^2.2.0"
   },
   "devDependencies": {
     "@types/koa": "^2.13.1",

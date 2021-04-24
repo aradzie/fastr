@@ -12,11 +12,10 @@
     "node": ">=12.16"
   },
   "dependencies": {
-    "@types/joi": "^17.2.3",
     "@webfx-http/error": "^0.0.14",
     "joi": "^17.4.0",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.1.0"
+    "tslib": "^2.2.0"
   },
   "devDependencies": {
     "@types/koa": "^2.13.1",
