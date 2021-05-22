@@ -11,7 +11,10 @@ export interface Options {
   readonly tagger?: Tagger;
   readonly include?: RegExp;
   readonly exclude?: RegExp;
-  readonly cacheControl?: CacheControl | ((path: string) => CacheControl);
+  readonly cacheControl?:
+    | CacheControl
+    | ((path: string) => CacheControl | null)
+    | null;
 }
 
 export function staticFiles(
@@ -65,9 +68,9 @@ export function staticFiles(
       ctx.response.etag = etag;
     }
 
-    const cacheHeader = getCacheHeader(ctx, path);
+    const cacheHeader = getCacheHeader(path);
     if (cacheHeader != null) {
-      ctx.response.set("Cache-Control", cacheHeader);
+      ctx.response.set("Cache-Control", String(cacheHeader));
     }
   };
   Object.defineProperty(middleware, "name", {
@@ -75,13 +78,13 @@ export function staticFiles(
   });
   return middleware;
 
-  function getCacheHeader(ctx: Koa.Context, path: string): string | null {
+  function getCacheHeader(path: string): CacheControl | null {
     if (cacheControl != null) {
       if (typeof cacheControl === "function") {
-        return String(cacheControl(path));
+        return cacheControl(path);
       }
       if (typeof cacheControl === "object") {
-        return String(cacheControl);
+        return cacheControl;
       }
     }
     return null;
