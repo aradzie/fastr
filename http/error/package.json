@@ -1,6 +1,6 @@
 {
   "name": "@webfx-http/error",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "homepage": "https://github.com/aradzie/webfx#readme",
   "repository": "aradzie/webfx",
@@ -12,8 +12,8 @@
     "node": ">=12.16"
   },
   "dependencies": {
-    "@webfx-http/headers": "^0.0.15",
-    "@webfx-http/status": "^0.0.15",
+    "@webfx-http/headers": "^0.0.16",
+    "@webfx-http/status": "^0.0.16",
     "tslib": "^2.2.0"
   },
   "scripts": {
