@@ -10,6 +10,7 @@ export interface CacheControlInit {
   readonly noTransform?: boolean;
   readonly mustRevalidate?: boolean;
   readonly proxyRevalidate?: boolean;
+  readonly immutable?: boolean;
   readonly maxAge?: number | null;
   readonly sMaxAge?: number | null;
 }
@@ -45,6 +46,7 @@ export class CacheControl implements Header {
     let noTransform = false;
     let mustRevalidate = false;
     let proxyRevalidate = false;
+    let immutable = false;
     let maxAge: number | null = null;
     let sMaxAge: number | null = null;
     const scanner = new Scanner(input);
@@ -74,6 +76,9 @@ export class CacheControl implements Header {
           break;
         case "proxy-revalidate":
           proxyRevalidate = true;
+          break;
+        case "immutable":
+          immutable = true;
           break;
         case "max-age":
           if (scanner.readSeparator(0x3d /* = */)) {
@@ -115,6 +120,7 @@ export class CacheControl implements Header {
       noTransform,
       mustRevalidate,
       proxyRevalidate,
+      immutable,
       maxAge,
       sMaxAge,
     });
@@ -127,6 +133,7 @@ export class CacheControl implements Header {
   readonly noTransform: boolean;
   readonly mustRevalidate: boolean;
   readonly proxyRevalidate: boolean;
+  readonly immutable: boolean;
   readonly maxAge: number | null = null;
   readonly sMaxAge: number | null = null;
 
@@ -138,6 +145,7 @@ export class CacheControl implements Header {
     noTransform = false,
     mustRevalidate = false,
     proxyRevalidate = false,
+    immutable = false,
     maxAge = null,
     sMaxAge = null,
   }: CacheControlInit = {}) {
@@ -148,6 +156,7 @@ export class CacheControl implements Header {
     this.noTransform = noTransform;
     this.mustRevalidate = mustRevalidate;
     this.proxyRevalidate = proxyRevalidate;
+    this.immutable = immutable;
     this.maxAge = maxAge;
     this.sMaxAge = sMaxAge;
   }
@@ -175,11 +184,14 @@ export class CacheControl implements Header {
     if (this.proxyRevalidate) {
       tokens.push("proxy-revalidate");
     }
+    if (this.immutable) {
+      tokens.push("immutable");
+    }
     if (this.maxAge != null) {
-      tokens.push(`max-age=${this.maxAge}`);
+      tokens.push(`max-age=${Math.max(0, Math.floor(this.maxAge))}`);
     }
     if (this.sMaxAge != null) {
-      tokens.push(`s-maxage=${this.sMaxAge}`);
+      tokens.push(`s-maxage=${Math.max(0, Math.floor(this.sMaxAge))}`);
     }
     return tokens.join(", ");
   }
