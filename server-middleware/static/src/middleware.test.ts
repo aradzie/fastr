@@ -1,4 +1,5 @@
 import { mkdir, removeDir, writeFile } from "@aradzie/fsx";
+import { CacheControl } from "@webfx-http/headers";
 import { request } from "@webfx-request/node";
 import { start } from "@webfx-request/testlib";
 import test from "ava";
@@ -105,10 +106,12 @@ test("cache control", async (t) => {
   const app = new Koa();
   app.use(
     staticFiles(dir, {
-      cacheControl: {
-        maxAge: 3600,
+      cacheControl: new CacheControl({
+        isPublic: true,
+        noTransform: true,
         immutable: true,
-      },
+        maxAge: 3600,
+      }),
     }),
   );
   const srv = start(app.listen());
@@ -121,7 +124,10 @@ test("cache control", async (t) => {
 
   const { status, headers } = response;
   t.is(status, 200);
-  t.is(headers.get("Cache-Control"), "public, max-age=3600, immutable");
+  t.is(
+    headers.get("Cache-Control"),
+    "public, no-transform, immutable, max-age=3600",
+  );
 });
 
 function compress(method: "gzip" | "br", input: string | Buffer): Buffer {

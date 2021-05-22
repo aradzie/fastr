@@ -1,15 +1,11 @@
 import { createReadStream } from "@aradzie/fsx";
+import type { CacheControl } from "@webfx-http/headers";
 import type Koa from "koa";
 import { join, normalize, resolve } from "path";
 import { Encoding } from "./encoding.js";
 import { fastTagger, Tagger } from "./etag.js";
 import { normalizeUriPath } from "./path.js";
 import { findVariant } from "./variant.js";
-
-export interface CacheControl {
-  readonly maxAge?: number;
-  readonly immutable?: boolean;
-}
 
 export interface Options {
   readonly tagger?: Tagger;
@@ -81,25 +77,11 @@ export function staticFiles(
 
   function getCacheHeader(ctx: Koa.Context, path: string): string | null {
     if (cacheControl != null) {
-      let cc: CacheControl;
-      switch (typeof cacheControl) {
-        case "object":
-          cc = cacheControl;
-          break;
-        case "function":
-          cc = cacheControl(path);
-          break;
+      if (typeof cacheControl === "function") {
+        return String(cacheControl(path));
       }
-      const { maxAge = null, immutable = false } = cc;
-      if (maxAge != null || immutable) {
-        const fields = ["public"];
-        if (maxAge != null) {
-          fields.push("max-age=" + Math.max(0, Math.floor(maxAge)));
-        }
-        if (immutable) {
-          fields.push("immutable");
-        }
-        return fields.join(", ");
+      if (typeof cacheControl === "object") {
+        return String(cacheControl);
       }
     }
     return null;
