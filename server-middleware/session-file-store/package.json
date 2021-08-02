@@ -1,6 +1,6 @@
 {
   "name": "@webfx-middleware/session-file-store",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "homepage": "https://github.com/aradzie/webfx#readme",
   "repository": "aradzie/webfx",
@@ -16,7 +16,7 @@
     "@aradzie/fsx-file": "^0.1.0",
     "@aradzie/fsx-lockfile": "^0.1.0",
     "@aradzie/retry": "^0.1.0",
-    "@webfx-middleware/session": "^0.0.17",
+    "@webfx-middleware/session": "^0.0.18",
     "inversify": "^5.0.5",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.3.0"
