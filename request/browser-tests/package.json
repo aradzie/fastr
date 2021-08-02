@@ -11,19 +11,19 @@
     "node": ">=12.16"
   },
   "dependencies": {
-    "@types/chai": "^4.2.16",
-    "@types/mocha": "^8.2.2",
-    "@types/serve-static": "^1.13.9",
+    "@types/chai": "^4.2.21",
+    "@types/mocha": "^8.2.3",
+    "@types/serve-static": "^1.13.10",
     "@webfx-http/body": "^0.0.17",
     "@webfx-http/headers": "^0.0.17",
     "@webfx-http/url": "^0.0.17",
     "@webfx-request/browser": "^0.0.17",
     "babel-loader": "^8.2.2",
     "chai": "^4.3.4",
-    "mocha": "^8.3.2",
-    "tslib": "^2.2.0",
-    "webpack": "^5.35.1",
-    "webpack-cli": "^4.6.0"
+    "mocha": "^8.4.0",
+    "tslib": "^2.3.0",
+    "webpack": "^5.47.1",
+    "webpack-cli": "^4.7.2"
   },
   "scripts": {
     "compile": "rm -fr build && tsc && webpack",

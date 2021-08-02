@@ -17,12 +17,12 @@
     "inversify": "^5.0.5",
     "object-hash": "^2.1.1",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.2.0"
+    "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@types/bson": "^4.0.3",
     "@types/cookies": "^0.7.6",
-    "@types/koa": "^2.13.1",
+    "@types/koa": "^2.13.4",
     "@types/object-hash": "^2.1.0",
     "@webfx-request/node": "^0.0.17",
     "@webfx-request/testlib": "^0.0.17",

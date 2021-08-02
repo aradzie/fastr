@@ -18,11 +18,11 @@
     "@webfx-http/mimetype": "^0.0.17",
     "qs": "^6.10.1",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.2.0"
+    "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@types/koa": "^2.13.1",
-    "@types/qs": "^6.9.6",
+    "@types/koa": "^2.13.4",
+    "@types/qs": "^6.9.7",
     "@webfx-request/node": "^0.0.17",
     "@webfx-request/testlib": "^0.0.17",
     "koa": "^2.13.1"
