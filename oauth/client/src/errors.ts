@@ -5,7 +5,7 @@ export class OAuthError<TRaw = {}> extends Error {
     super(message);
   }
 
-  get name(): string {
+  override get name(): string {
     return "OAuthError";
   }
 

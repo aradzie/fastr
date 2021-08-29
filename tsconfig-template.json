@@ -18,6 +18,7 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
+    "noImplicitOverride": true,
     "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,

@@ -26,8 +26,8 @@ import type {
 export class FacebookAdapter extends AbstractAdapter {
   constructor(config: FacebookClientConfig) {
     const {
-      apiVersion = "v3.2",
-      profileFields = ["id", "name", "email"],
+      apiVersion = "v3.2", //
+      profileFields = ["id", "name", "email"], //
     } = config;
     const authorizationUri = `https://www.facebook.com/${apiVersion}/dialog/oauth`;
     const tokenUri = `https://graph.facebook.com/${apiVersion}/oauth/access_token`;
@@ -41,7 +41,7 @@ export class FacebookAdapter extends AbstractAdapter {
     });
   }
 
-  protected parseProfileResponse(
+  protected override parseProfileResponse(
     response: FacebookProfileResponse,
   ): ResourceOwner<FacebookProfileResponse> {
     const { id, name, email } = response;
@@ -56,7 +56,7 @@ export class FacebookAdapter extends AbstractAdapter {
     };
   }
 
-  authenticate({ token }: AccessToken): Middleware {
+  override authenticate({ token }: AccessToken): Middleware {
     const proof = createHmac("sha256", this.clientSecret)
       .update(token)
       .digest("hex");
@@ -74,7 +74,7 @@ export class FacebookAdapter extends AbstractAdapter {
     };
   }
 
-  handleErrors(): Middleware {
+  override handleErrors(): Middleware {
     return async (
       request: HttpRequest,
       adapter: Adapter,

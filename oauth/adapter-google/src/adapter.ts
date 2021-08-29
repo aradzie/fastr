@@ -17,7 +17,7 @@ export class GoogleAdapter extends AbstractAdapter {
     });
   }
 
-  protected parseProfileResponse(
+  protected override parseProfileResponse(
     response: GoogleProfileResponse,
   ): ResourceOwner<GoogleProfileResponse> {
     const { sub, name, picture, email } = response;

@@ -42,11 +42,11 @@ test("guess readable type", (t) => {
 
 test("guess streamable type", (t) => {
   const body = new (class extends Streamable {
-    length(): number | null {
+    override length(): number | null {
       return 0;
     }
 
-    open(): Readable {
+    override open(): Readable {
       return Readable.from([]);
     }
   })();

@@ -59,15 +59,15 @@ export class FileStreamable extends Streamable {
     this.etag = etag(stats);
   }
 
-  length(): number | null {
+  override length(): number | null {
     return this.stats.size;
   }
 
-  open(): Readable {
+  override open(): Readable {
     return createReadStream(this.path);
   }
 
-  get [Symbol.toStringTag](): string {
+  override get [Symbol.toStringTag](): string {
     return "FileStreamable";
   }
 }

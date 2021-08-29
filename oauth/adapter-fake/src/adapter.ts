@@ -30,15 +30,15 @@ export class FakeAdapter extends AbstractAdapter {
     });
   }
 
-  async getAccessToken(): Promise<AccessToken> {
+  override async getAccessToken(): Promise<AccessToken> {
     return new AccessToken({ ...this.tokenResponse() });
   }
 
-  async getProfile(): Promise<ResourceOwner> {
+  override async getProfile(): Promise<ResourceOwner> {
     return { ...this.resourceOwner() };
   }
 
-  protected parseProfileResponse(): ResourceOwner {
+  protected override parseProfileResponse(): ResourceOwner {
     throw new Error("Unreachable");
   }
 }
