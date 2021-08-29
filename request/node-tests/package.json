@@ -7,7 +7,7 @@
   "repository": "aradzie/webfx",
   "license": "MIT",
   "engines": {
-    "node": ">=12.16"
+    "node": ">=16.0"
   },
   "dependencies": {
     "@webfx-http/body": "^0.0.18",

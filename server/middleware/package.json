@@ -9,7 +9,7 @@
   "types": "lib/index.d.ts",
   "module": "lib-esm/index.js",
   "engines": {
-    "node": ">=12.16"
+    "node": ">=16.0"
   },
   "dependencies": {
     "inversify": "^5.1.1",

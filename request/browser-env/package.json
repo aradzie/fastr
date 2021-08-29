@@ -8,7 +8,7 @@
   "license": "MIT",
   "main": "lib/index.js",
   "engines": {
-    "node": ">=12.16"
+    "node": ">=16.0"
   },
   "dependencies": {
     "jsdom": "^17.0.0",

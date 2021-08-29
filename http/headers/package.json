@@ -13,7 +13,7 @@
     "./lib-esm/headers.js": "./lib-esm/headers-browser.js"
   },
   "engines": {
-    "node": ">=12.16"
+    "node": ">=16.0"
   },
   "dependencies": {
     "tslib": "^2.3.1"

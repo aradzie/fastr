@@ -9,7 +9,7 @@
   "types": "lib/index.d.ts",
   "module": "lib-esm/index.js",
   "engines": {
-    "node": ">=12.16"
+    "node": ">=16.0"
   },
   "dependencies": {
     "@aradzie/fsx": "^0.1.0",
