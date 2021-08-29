@@ -14,10 +14,10 @@
   "dependencies": {
     "@webfx-middleware/session": "^0.0.18",
     "bson": "^4.3.0",
-    "inversify": "^5.0.5",
+    "inversify": "^5.1.1",
     "knex": "^0.95.4",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@types/bson": "^4.0.3",

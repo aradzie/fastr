@@ -17,7 +17,7 @@
     "@webfx-http/status": "^0.0.18",
     "@webfx-request/node": "^0.0.18",
     "@webfx-request/testlib": "^0.0.18",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.1"
   },
   "scripts": {
     "compile": "rm -fr build && tsc",

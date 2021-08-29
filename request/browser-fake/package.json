@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@webfx-request/browser": "^0.0.18",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.1"
   },
   "scripts": {
     "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json"

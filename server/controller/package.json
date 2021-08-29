@@ -14,9 +14,9 @@
   "dependencies": {
     "@webfx-middleware/router": "^0.0.18",
     "@webfx/middleware": "^0.0.18",
-    "inversify": "^5.0.5",
+    "inversify": "^5.1.1",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@types/koa": "^2.13.4",

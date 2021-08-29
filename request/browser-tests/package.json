@@ -21,9 +21,9 @@
     "babel-loader": "^8.2.2",
     "chai": "^4.3.4",
     "mocha": "^8.4.0",
-    "tslib": "^2.3.0",
-    "webpack": "^5.47.1",
-    "webpack-cli": "^4.7.2"
+    "tslib": "^2.3.1",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0"
   },
   "scripts": {
     "compile": "rm -fr build && tsc && webpack",
