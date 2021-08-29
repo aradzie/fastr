@@ -144,7 +144,7 @@ function makeAdapterTests(underTest: Adapter): void {
         // The XHR adapter cannot read multipart form data.
         try {
           await response.formData();
-        } catch (ex) {
+        } catch (ex: any) {
           expect(ex.message).to.eq(
             process.env.NODE_ENV !== "production"
               ? "Implement your own 'multipart/form-data' parser."
@@ -359,7 +359,7 @@ function makeAdapterTests(underTest: Adapter): void {
       controller.abort();
       try {
         await response.text();
-      } catch (ex) {
+      } catch (ex: any) {
         expect(ex).to.instanceof(DOMException);
         expect(ex.code).to.eq(DOMException.ABORT_ERR);
         return;
@@ -378,7 +378,7 @@ function makeAdapterTests(underTest: Adapter): void {
       }, 10);
       try {
         await response.text();
-      } catch (ex) {
+      } catch (ex: any) {
         expect(ex).to.instanceof(DOMException);
         expect(ex.code).to.eq(DOMException.ABORT_ERR);
         return;
@@ -394,7 +394,7 @@ function makeAdapterTests(underTest: Adapter): void {
           .get("/test/infinite-response")
           .signal(controller.signal)
           .send();
-      } catch (ex) {
+      } catch (ex: any) {
         expect(ex).to.instanceof(DOMException);
         expect(ex.code).to.eq(DOMException.ABORT_ERR);
         return;
