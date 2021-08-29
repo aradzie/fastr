@@ -30,5 +30,13 @@ test("abort response", async (t) => {
   t.is(status, 200);
   t.is(statusText, "OK");
   response.abort();
-  t.true((await body.buffer()).length < 1024 * 1024); // TODO Throw RequestAbortedError?
+  await t.throwsAsync(
+    async () => {
+      await body.buffer();
+    },
+    {
+      name: "Error",
+      message: "Destroyed stream",
+    },
+  );
 });
