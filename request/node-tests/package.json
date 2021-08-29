@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@webfx-request/node-tests",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "homepage": "https://github.com/aradzie/webfx#readme",
   "repository": "aradzie/webfx",
@@ -10,13 +10,13 @@
     "node": ">=16.0"
   },
   "dependencies": {
-    "@webfx-http/body": "^0.0.18",
-    "@webfx-http/error": "^0.0.18",
-    "@webfx-http/headers": "^0.0.18",
-    "@webfx-http/mimetype": "^0.0.18",
-    "@webfx-http/status": "^0.0.18",
-    "@webfx-request/node": "^0.0.18",
-    "@webfx-request/testlib": "^0.0.18",
+    "@webfx-http/body": "^0.0.19",
+    "@webfx-http/error": "^0.0.19",
+    "@webfx-http/headers": "^0.0.19",
+    "@webfx-http/mimetype": "^0.0.19",
+    "@webfx-http/status": "^0.0.19",
+    "@webfx-request/node": "^0.0.19",
+    "@webfx-request/testlib": "^0.0.19",
     "tslib": "^2.3.1"
   },
   "scripts": {

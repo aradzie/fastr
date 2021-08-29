@@ -1,6 +1,6 @@
 {
   "name": "@webfx-middleware/static",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "homepage": "https://github.com/aradzie/webfx#readme",
   "repository": "aradzie/webfx",
@@ -13,15 +13,15 @@
   },
   "dependencies": {
     "@aradzie/fsx": "^0.1.0",
-    "@webfx-http/error": "^0.0.18",
-    "@webfx-http/headers": "^0.0.18",
+    "@webfx-http/error": "^0.0.19",
+    "@webfx-http/headers": "^0.0.19",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@types/koa": "^2.13.4",
-    "@webfx-request/node": "^0.0.18",
-    "@webfx-request/testlib": "^0.0.18",
+    "@webfx-request/node": "^0.0.19",
+    "@webfx-request/testlib": "^0.0.19",
     "koa": "^2.13.1"
   },
   "scripts": {
