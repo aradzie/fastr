@@ -1,6 +1,6 @@
 {
   "packages": [
-    "http/*",
+    "packages/*",
     "oauth/*",
     "request/*",
     "server-middleware/*",
