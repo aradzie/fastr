@@ -14,7 +14,7 @@
   "dependencies": {
     "bson": "^4.3.0",
     "cookies": "^0.8.0",
-    "inversify": "^5.1.1",
+    "inversify": "=5.0.5",
     "object-hash": "^2.1.1",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.3.1"
