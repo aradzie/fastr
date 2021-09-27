@@ -12,7 +12,7 @@
     "node": ">=16.0"
   },
   "dependencies": {
-    "@aradzie/fsx": "^0.1.0",
+    "@aradzie/fsx": "^0.2.0",
     "@webfx-http/error": "^0.0.19",
     "@webfx-http/headers": "^0.0.19",
     "reflect-metadata": "^0.1.13",
