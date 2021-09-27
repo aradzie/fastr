@@ -1,9 +1,7 @@
 {
   "packages": [
     "packages/*",
-    "oauth/*",
     "request/*",
-    "server-middleware/*",
     "server/*"
   ],
   "version": "0.0.20"
