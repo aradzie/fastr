@@ -34,7 +34,7 @@
       "src/**/*.test.ts"
     ],
     "require": [
-      "../browser-env",
+      "../request-browser-env",
       "./lib/adapter/polyfills.js"
     ]
   }
