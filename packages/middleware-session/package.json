@@ -12,21 +12,21 @@
     "node": ">=16.0"
   },
   "dependencies": {
-    "bson": "^4.3.0",
+    "bson": "^4.6.1",
     "cookies": "^0.8.0",
     "inversify": "=5.0.5",
-    "object-hash": "^2.1.1",
+    "object-hash": "^2.2.0",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.3.1"
   },
   "devDependencies": {
-    "@types/bson": "^4.0.3",
-    "@types/cookies": "^0.7.6",
+    "@types/bson": "^4.2.0",
+    "@types/cookies": "^0.7.7",
     "@types/koa": "^2.13.4",
-    "@types/object-hash": "^2.1.0",
+    "@types/object-hash": "^2.2.1",
     "@webfx-request/node": "^0.0.21",
     "@webfx-request/testlib": "^0.0.21",
-    "koa": "^2.13.1"
+    "koa": "^2.13.4"
   },
   "scripts": {
     "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json",
@@ -36,7 +36,8 @@
     "typescript": {
       "rewritePaths": {
         "src/": "lib/"
-      }
+      },
+      "compile": false
     },
     "files": [
       "src/**/*.test.ts"

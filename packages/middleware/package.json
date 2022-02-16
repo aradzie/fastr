@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@types/koa": "^2.13.4",
-    "koa": "^2.13.1"
+    "koa": "^2.13.4"
   },
   "scripts": {
     "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json",
@@ -28,7 +28,8 @@
     "typescript": {
       "rewritePaths": {
         "src/": "lib/"
-      }
+      },
+      "compile": false
     },
     "files": [
       "src/**/*.test.ts"

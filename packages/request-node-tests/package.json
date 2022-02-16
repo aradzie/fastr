@@ -27,7 +27,8 @@
     "typescript": {
       "rewritePaths": {
         "src/": "build/"
-      }
+      },
+      "compile": false
     },
     "files": [
       "src/**/*.test.ts"

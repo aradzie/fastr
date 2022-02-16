@@ -6,7 +6,7 @@ import { Agent } from "http";
 test("get text", async (t) => {
   // Arrange.
 
-  let lastReq = null;
+  let lastReq: any = null;
   const server = start((req, res) => {
     const { url, method } = req;
     const headers = { ...req.headers };

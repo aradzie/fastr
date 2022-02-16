@@ -6,7 +6,7 @@ import test from "ava";
 test("set headers to default values", async (t) => {
   // Arrange.
 
-  let lastReq = null;
+  let lastReq: any = null;
   const server = start((req, res) => {
     const { url, method } = req;
     const headers = { ...req.headers };
@@ -44,7 +44,7 @@ test("set headers to default values", async (t) => {
 test("use custom header values", async (t) => {
   // Arrange.
 
-  let lastReq = null;
+  let lastReq: any = null;
   const server = start((req, res) => {
     const { url, method } = req;
     const headers = { ...req.headers };

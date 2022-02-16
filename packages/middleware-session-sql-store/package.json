@@ -13,18 +13,17 @@
   },
   "dependencies": {
     "@webfx-middleware/session": "^0.0.21",
-    "bson": "^4.3.0",
+    "bson": "^4.6.1",
     "inversify": "=5.0.5",
-    "knex": "^0.95.4",
+    "knex": "^1.0.3",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.3.1"
   },
   "devDependencies": {
-    "@types/bson": "^4.0.3",
-    "@types/knex": "^0.16.1",
+    "@types/bson": "^4.2.0",
     "@types/koa": "^2.13.4",
-    "koa": "^2.13.1",
-    "sqlite3": "^5.0.2"
+    "koa": "^2.13.4",
+    "@vscode/sqlite3": "^5.0.7"
   },
   "scripts": {
     "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json",
@@ -34,7 +33,8 @@
     "typescript": {
       "rewritePaths": {
         "src/": "lib/"
-      }
+      },
+      "compile": false
     },
     "files": [
       "src/**/*.test.ts"
