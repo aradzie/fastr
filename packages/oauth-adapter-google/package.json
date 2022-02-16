@@ -1,6 +1,6 @@
 {
   "name": "@webfx-oauth/adapter-google",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "homepage": "https://github.com/aradzie/webfx#readme",
   "repository": "aradzie/webfx",
@@ -12,11 +12,11 @@
     "node": ">=16.0"
   },
   "dependencies": {
-    "@webfx-oauth/client": "^0.0.21",
-    "@webfx-request/node": "^0.0.21"
+    "@webfx-oauth/client": "^0.0.22",
+    "@webfx-request/node": "^0.0.22"
   },
   "devDependencies": {
-    "@webfx-request/node-fake": "^0.0.21"
+    "@webfx-request/node-fake": "^0.0.22"
   },
   "scripts": {
     "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json",

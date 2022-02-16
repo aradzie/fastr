@@ -1,6 +1,6 @@
 {
   "name": "@webfx-middleware/session-sql-store",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "homepage": "https://github.com/aradzie/webfx#readme",
   "repository": "aradzie/webfx",
@@ -12,7 +12,7 @@
     "node": ">=16.0"
   },
   "dependencies": {
-    "@webfx-middleware/session": "^0.0.21",
+    "@webfx-middleware/session": "^0.0.22",
     "bson": "^4.6.1",
     "inversify": "=5.0.5",
     "knex": "^1.0.3",
@@ -22,8 +22,8 @@
   "devDependencies": {
     "@types/bson": "^4.2.0",
     "@types/koa": "^2.13.4",
-    "koa": "^2.13.4",
-    "@vscode/sqlite3": "^5.0.7"
+    "@vscode/sqlite3": "^5.0.7",
+    "koa": "^2.13.4"
   },
   "scripts": {
     "compile": "rm -fr lib && rm -fr lib-esm && tsc && tsc -b tsconfig-esm.json",
