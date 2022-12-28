@@ -7,13 +7,13 @@
   "license": "MIT",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "scripts": {
-    "postinstall": "lerna bootstrap",
     "clean": "lerna run clean",
     "compile": "lerna run compile",
-    "test": "lerna run test",
+    "format": "prettier --write '**/*.ts'",
+    "postinstall": "lerna bootstrap",
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --ext .ts --fix",
-    "format": "prettier --write '**/*.ts'"
+    "test": "lerna run test"
   },
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
