@@ -17,7 +17,7 @@
     "@fastr/middleware-session": "^0.0.1-alpha.0",
     "@sosimple/inversify": "^6.0.1",
     "bson": "^4.7.0",
-    "knex": "^2.3.0",
+    "knex": "^2.4.0",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.4.1"
   },
