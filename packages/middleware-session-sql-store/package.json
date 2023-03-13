@@ -22,7 +22,7 @@
     "tslib": "^2.4.1"
   },
   "devDependencies": {
-    "sqlite3": "^5.1.4"
+    "sqlite3": "^5.1.5"
   },
   "engines": {
     "node": ">=18.12"
