@@ -16,10 +16,10 @@
   "dependencies": {
     "@fastr/core": "^0.0.1-alpha.0",
     "@sosimple/inversify": "^6.0.1",
-    "bson": "^4.7.0",
+    "bson": "^4.7.2",
     "object-hash": "^3.0.0",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.4.1"
+    "tslib": "^2.5.0"
   },
   "devDependencies": {
     "@fastr/client": "^0.0.1-alpha.0",

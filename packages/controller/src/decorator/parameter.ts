@@ -2,6 +2,7 @@ import { type Newable } from "@fastr/core";
 import {
   getBody,
   getCookieParam,
+  getFormParam,
   getHeaderParam,
   getPathParam,
   getQueryParam,
@@ -41,14 +42,11 @@ export function cookieParam(
   return makeParamDecorator(getCookieParam, key, pipe);
 }
 
-export function formParam(name: string): ParameterDecorator {
-  return (
-    target: object,
-    propertyKey: string | symbol,
-    parameterIndex: number,
-  ): void => {
-    // TODO implement me
-  };
+export function formParam(
+  key: string,
+  pipe?: Newable<Pipe>,
+): ParameterDecorator {
+  return makeParamDecorator(getFormParam, key, pipe);
 }
 
 function makeParamDecorator(
@@ -58,9 +56,12 @@ function makeParamDecorator(
 ): ParameterDecorator {
   return (
     target: object,
-    propertyKey: string | symbol,
+    propertyKey: string | symbol | undefined,
     parameterIndex: number,
   ): void => {
+    if (propertyKey == null) {
+      throw new TypeError();
+    }
     setParameterMetadata(target, propertyKey, {
       parameterIndex,
       extractor,

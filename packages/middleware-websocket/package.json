@@ -18,13 +18,13 @@
     "@fastr/headers": "^0.0.1-alpha.0",
     "@fastr/status": "^0.0.1-alpha.0",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.4.1",
-    "ws": "^8.11.0"
+    "tslib": "^2.5.0",
+    "ws": "^8.13.0"
   },
   "devDependencies": {
     "@fastr/client": "^0.0.1-alpha.0",
     "@fastr/client-testlib": "^0.0.1-alpha.0",
-    "@types/ws": "^8.5.3"
+    "@types/ws": "^8.5.4"
   },
   "engines": {
     "node": ">=18.12"

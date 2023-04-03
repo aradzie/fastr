@@ -16,13 +16,13 @@
   "dependencies": {
     "@fastr/middleware-session": "^0.0.1-alpha.0",
     "@sosimple/inversify": "^6.0.1",
-    "bson": "^4.7.0",
-    "knex": "^2.3.0",
+    "bson": "^4.7.2",
+    "knex": "^2.4.2",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.4.1"
+    "tslib": "^2.5.0"
   },
   "devDependencies": {
-    "sqlite3": "^5.1.4"
+    "sqlite3": "^5.1.6"
   },
   "engines": {
     "node": ">=18.12"

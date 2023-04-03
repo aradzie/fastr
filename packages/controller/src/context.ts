@@ -85,3 +85,10 @@ export const getCookieParam = (
 ): string | null => {
   return ctx.cookies.get(key!);
 };
+
+export const getFormParam = (
+  ctx: Context,
+  key: string | null,
+): string | null => {
+  throw new TypeError("Not implemented");
+};
