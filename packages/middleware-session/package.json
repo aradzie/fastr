@@ -1,6 +1,6 @@
 {
   "name": "@fastr/middleware-session",
-  "version": "0.0.1-alpha.0",
+  "version": "0.0.1-alpha.1",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/core": "^0.0.1-alpha.0",
+    "@fastr/core": "^0.0.1-alpha.1",
     "@sosimple/inversify": "^6.0.1",
     "bson": "^5.1.0",
     "object-hash": "^3.0.0",
@@ -22,8 +22,8 @@
     "tslib": "^2.5.0"
   },
   "devDependencies": {
-    "@fastr/client": "^0.0.1-alpha.0",
-    "@fastr/client-testlib": "^0.0.1-alpha.0",
+    "@fastr/client": "^0.0.1-alpha.1",
+    "@fastr/client-testlib": "^0.0.1-alpha.1",
     "@types/object-hash": "^3.0.2"
   },
   "engines": {
