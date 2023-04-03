@@ -14,7 +14,7 @@ export interface SessionTable {
   /**
    * Serialized session data.
    */
-  readonly [kData]: Buffer;
+  readonly [kData]: Uint8Array;
   /**
    * Session update timestamp.
    */
