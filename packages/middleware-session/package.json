@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@fastr/core": "^0.0.1-alpha.1",
-    "@sosimple/inversify": "^6.0.1",
+    "@fastr/invert": "^0.0.1-alpha.1",
     "bson": "^5.1.0",
     "object-hash": "^3.0.0",
     "reflect-metadata": "^0.1.13",

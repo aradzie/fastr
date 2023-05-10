@@ -14,11 +14,11 @@
   "dependencies": {
     "@fastr/controller": "^0.0.1-alpha.1",
     "@fastr/core": "^0.0.1-alpha.1",
+    "@fastr/invert": "^0.0.1-alpha.1",
     "@fastr/middleware-body": "^0.0.1-alpha.1",
     "@fastr/middleware-compress": "^0.0.1-alpha.1",
     "@fastr/middleware-conditional": "^0.0.1-alpha.1",
     "@fastr/middleware-router": "^0.0.1-alpha.1",
-    "@sosimple/inversify": "^6.0.1",
     "tslib": "^2.5.0"
   },
   "engines": {

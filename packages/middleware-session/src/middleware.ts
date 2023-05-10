@@ -18,7 +18,7 @@ export function session<StateT = unknown>(
       adapter.start();
     }
     const session = new Session(adapter);
-    ctx.container.bind(Session).toConstantValue(session);
+    ctx.container.bind(Session).toValue(session);
     ctx.state.session = session;
     await next();
     await adapter.commit();

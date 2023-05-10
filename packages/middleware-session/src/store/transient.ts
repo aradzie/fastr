@@ -1,4 +1,4 @@
-import { injectable } from "@sosimple/inversify";
+import { injectable } from "@fastr/invert";
 import { type Store, type StoredSession } from "../store.js";
 
 @injectable()

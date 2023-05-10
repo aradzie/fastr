@@ -6,8 +6,8 @@ import {
   Request,
   Response,
 } from "@fastr/core";
+import { injectable } from "@fastr/invert";
 import { Router, type RouterState } from "@fastr/middleware-router";
-import { injectable } from "@sosimple/inversify";
 import test from "ava";
 import { helper } from "./helper.js";
 

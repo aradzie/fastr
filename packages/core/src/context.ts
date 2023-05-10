@@ -1,4 +1,4 @@
-import { type Container } from "@sosimple/inversify";
+import { type Container } from "@fastr/invert";
 import { Cookies } from "./cookies.js";
 import { type DefaultState } from "./middleware.js";
 import { Request } from "./request.js";
@@ -15,9 +15,9 @@ export class Context<StateT = unknown> {
     readonly response: Response,
     readonly state: DefaultState & StateT,
   ) {
-    container.bind(Context).toConstantValue(this);
-    container.bind(Request).toConstantValue(this.request);
-    container.bind(Response).toConstantValue(this.response);
+    container.bind(Context).toValue(this);
+    container.bind(Request).toValue(this.request);
+    container.bind(Response).toValue(this.response);
   }
 
   get cookies(): Cookies {

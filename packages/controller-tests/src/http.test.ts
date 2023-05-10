@@ -1,6 +1,6 @@
 import { controller, http } from "@fastr/controller";
 import { Response } from "@fastr/core";
-import { injectable } from "@sosimple/inversify";
+import { injectable } from "@fastr/invert";
 import test from "ava";
 import { helper } from "./helper.js";
 

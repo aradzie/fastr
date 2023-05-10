@@ -1,7 +1,7 @@
 import { controller, http, use } from "@fastr/controller";
 import { type Context, type Handler, type Next } from "@fastr/core";
+import { injectable } from "@fastr/invert";
 import { type RouterState } from "@fastr/middleware-router";
-import { injectable } from "@sosimple/inversify";
 import test from "ava";
 import { helper } from "./helper.js";
 

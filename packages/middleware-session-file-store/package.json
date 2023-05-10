@@ -14,11 +14,11 @@
     "test": "ava"
   },
   "dependencies": {
+    "@fastr/invert": "^0.0.1-alpha.1",
     "@fastr/middleware-session": "^0.0.1-alpha.1",
     "@sosimple/fsx": "^0.1.0",
     "@sosimple/fsx-file": "^0.1.0",
     "@sosimple/fsx-lockfile": "^0.1.0",
-    "@sosimple/inversify": "^6.0.1",
     "@sosimple/retry": "^0.1.0",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.5.0"

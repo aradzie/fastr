@@ -1,11 +1,11 @@
 import { body, controller, http, use } from "@fastr/controller";
+import { injectable } from "@fastr/invert";
 import {
   expectBinary,
   expectForm,
   expectJson,
   expectText,
 } from "@fastr/middleware-body";
-import { injectable } from "@sosimple/inversify";
 import test from "ava";
 import { helper } from "./helper.js";
 

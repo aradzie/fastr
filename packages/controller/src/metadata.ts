@@ -1,7 +1,7 @@
 import { type AnyMiddleware, type Context, type Newable } from "@fastr/core";
+import { Metadata, newMetadataKey } from "@fastr/metadata";
 import { type RouterState } from "@fastr/middleware-router";
 import { type Pipe } from "./pipe.js";
-import { Metadata, newMetadataKey } from "./util.js";
 
 export interface ControllerDecorator extends ClassDecorator {}
 
@@ -37,7 +37,7 @@ export function addControllerUse(
   target: object,
   ...middleware: AnyMiddleware[]
 ): void {
-  Metadata.forClass(target) //
+  Metadata.ofClass(target) //
     .update(kUseMiddleware, (list = []) => {
       list.unshift(...middleware);
       return list;
@@ -45,7 +45,7 @@ export function addControllerUse(
 }
 
 export function getControllerUse(target: object): readonly AnyMiddleware[] {
-  return Metadata.forClass(target).get(kUseMiddleware) ?? [];
+  return Metadata.ofClass(target).get(kUseMiddleware) ?? [];
 }
 
 export function addHandlerUse(
@@ -53,7 +53,7 @@ export function addHandlerUse(
   propertyKey: string | symbol,
   ...middleware: AnyMiddleware[]
 ): void {
-  Metadata.forProperty(target, propertyKey) //
+  Metadata.ofProperty(target, propertyKey) //
     .update(kUseMiddleware, (list = []) => {
       list.unshift(...middleware);
       return list;
@@ -65,7 +65,7 @@ export function getHandlerUse(
   propertyKey: string | symbol,
 ): readonly AnyMiddleware[] {
   return (
-    Metadata.forProperty(target, propertyKey) //
+    Metadata.ofProperty(target, propertyKey) //
       .get(kUseMiddleware) ?? []
   );
 }
@@ -74,13 +74,13 @@ export function setControllerMetadata(
   target: object,
   metadata: ControllerMetadata,
 ): void {
-  Metadata.forClass(target).set(kController, metadata);
+  Metadata.ofClass(target).set(kController, metadata);
 }
 
 export function getControllerMetadata(
   target: object,
 ): ControllerMetadata | null {
-  return Metadata.forClass(target).get(kController) ?? null;
+  return Metadata.ofClass(target).get(kController) ?? null;
 }
 
 export function setHandlerMetadata(
@@ -88,7 +88,7 @@ export function setHandlerMetadata(
   propertyKey: string | symbol,
   metadata: HandlerMetadata,
 ): void {
-  Metadata.forProperty(target, propertyKey) //
+  Metadata.ofProperty(target, propertyKey) //
     .set(kHandler, metadata);
 }
 
@@ -97,7 +97,7 @@ export function getHandlerMetadata(
   propertyKey: string | symbol,
 ): HandlerMetadata | null {
   return (
-    Metadata.forProperty(target, propertyKey) //
+    Metadata.ofProperty(target, propertyKey) //
       .get(kHandler) ?? null
   );
 }
@@ -107,7 +107,7 @@ export function setParameterMetadata(
   propertyKey: string | symbol,
   metadata: ParameterMetadata,
 ): void {
-  Metadata.forProperty(target, propertyKey) //
+  Metadata.ofProperty(target, propertyKey) //
     .update(kParameter, (list = []) => {
       list[metadata.parameterIndex] = metadata;
       return list;
@@ -119,7 +119,7 @@ export function getParameterMetadata(
   propertyKey: string | symbol,
 ): readonly ParameterMetadata[] {
   return (
-    Metadata.forProperty(target, propertyKey) //
+    Metadata.ofProperty(target, propertyKey) //
       .get(kParameter) ?? []
   );
 }

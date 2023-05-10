@@ -1,6 +1,6 @@
 import { type Context } from "@fastr/core";
 import { MethodNotAllowedError } from "@fastr/errors";
-import { Container } from "@sosimple/inversify";
+import { Container } from "@fastr/invert";
 import test from "ava";
 import { Router } from "./router.js";
 import { type RouterState } from "./types.js";

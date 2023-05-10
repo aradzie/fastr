@@ -1,5 +1,5 @@
 import { type Context, type Handler, type Next } from "@fastr/core";
-import { inject, injectable } from "@sosimple/inversify";
+import { inject, injectable } from "@fastr/invert";
 import { compress, type CompressOptions } from "./middleware.js";
 
 @injectable()

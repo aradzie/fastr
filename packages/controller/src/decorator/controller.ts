@@ -1,6 +1,7 @@
 import { Context, type Newable, Request, Response } from "@fastr/core";
+import { Container } from "@fastr/invert";
+import { kDesignParamTypes, ownMethods } from "@fastr/metadata";
 import { Router } from "@fastr/middleware-router";
-import { Container } from "@sosimple/inversify";
 import {
   getContainer,
   getContext,
@@ -24,92 +25,62 @@ export function controller(options?: ControllerOptions): ControllerDecorator;
 export function controller(
   arg0?: string | ControllerOptions,
 ): ControllerDecorator {
-  const { path } = makeOptions(arg0);
-  return (target: object): void => {
-    setControllerMetadata(target, {
-      path,
-    });
-    annotateProperties(target as Newable);
-  };
-}
-
-const kDesignType = "design:type";
-const kDesignParamTypes = "design:paramtypes";
-const hasOwn = Reflect.hasOwnMetadata;
-const getOwn = Reflect.getOwnMetadata;
-
-function annotateProperties(target: object): void {
-  const { prototype } = target as Newable;
-
-  for (const [propertyKey, descriptor] of Object.entries(
-    Object.getOwnPropertyDescriptors(prototype),
-  )) {
-    if (
-      !hasOwn(kDesignType, prototype, propertyKey) ||
-      !hasOwn(kDesignParamTypes, prototype, propertyKey) ||
-      typeof descriptor.value !== "function"
-    ) {
-      continue;
-    }
-
-    const designType = getOwn(kDesignType, prototype, propertyKey);
-    const designParamTypes = getOwn(kDesignParamTypes, prototype, propertyKey);
-
-    if (designType !== Function) {
-      continue;
-    }
-
-    const { length } = designParamTypes;
-    for (let i = 0; i < length; i++) {
-      const designParamType = designParamTypes[i];
-      switch (designParamType) {
-        case Context:
-          setParameterMetadata(prototype, propertyKey, {
-            parameterIndex: i,
-            extractor: getContext,
-            key: null,
-            pipe: null,
-          });
-          break;
-
-        case Container:
-          setParameterMetadata(prototype, propertyKey, {
-            parameterIndex: i,
-            extractor: getContainer,
-            key: null,
-            pipe: null,
-          });
-          break;
-
-        case Request:
-          setParameterMetadata(prototype, propertyKey, {
-            parameterIndex: i,
-            extractor: getRequest,
-            key: null,
-            pipe: null,
-          });
-          break;
-
-        case Response:
-          setParameterMetadata(prototype, propertyKey, {
-            parameterIndex: i,
-            extractor: getResponse,
-            key: null,
-            pipe: null,
-          });
-          break;
-
-        case Router:
-          setParameterMetadata(prototype, propertyKey, {
-            parameterIndex: i,
-            extractor: getRouter,
-            key: null,
-            pipe: null,
-          });
-          break;
+  const options = makeOptions(arg0);
+  return ((target: Newable): void => {
+    setControllerMetadata(target, options);
+    const { prototype } = target;
+    for (const [propertyKey, { value }] of ownMethods(prototype)) {
+      const paramTypes =
+        Reflect.getMetadata(kDesignParamTypes, prototype, propertyKey) ?? [];
+      if (value.length !== paramTypes.length) {
+        throw new Error(`Design types are missing on ${target.name}`);
+      }
+      for (let i = 0; i < value.length; i++) {
+        switch (paramTypes[i]) {
+          case Context:
+            setParameterMetadata(prototype, propertyKey, {
+              parameterIndex: i,
+              extractor: getContext,
+              key: null,
+              pipe: null,
+            });
+            break;
+          case Container:
+            setParameterMetadata(prototype, propertyKey, {
+              parameterIndex: i,
+              extractor: getContainer,
+              key: null,
+              pipe: null,
+            });
+            break;
+          case Request:
+            setParameterMetadata(prototype, propertyKey, {
+              parameterIndex: i,
+              extractor: getRequest,
+              key: null,
+              pipe: null,
+            });
+            break;
+          case Response:
+            setParameterMetadata(prototype, propertyKey, {
+              parameterIndex: i,
+              extractor: getResponse,
+              key: null,
+              pipe: null,
+            });
+            break;
+          case Router:
+            setParameterMetadata(prototype, propertyKey, {
+              parameterIndex: i,
+              extractor: getRouter,
+              key: null,
+              pipe: null,
+            });
+            break;
+        }
       }
     }
-  }
+  }) as ControllerDecorator;
 }
 
 function makeOptions(options?: string | HandlerOptions): {

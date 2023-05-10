@@ -1,9 +1,9 @@
 import { body, controller, http, routing, use } from "@fastr/controller";
 import { Application, Context } from "@fastr/core";
+import { injectable } from "@fastr/invert";
 import { expectJson } from "@fastr/middleware-body";
 import { compress } from "@fastr/middleware-compress";
 import { conditional } from "@fastr/middleware-conditional";
-import { injectable } from "@sosimple/inversify";
 import { createServer } from "http";
 
 @injectable()

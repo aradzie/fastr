@@ -373,7 +373,7 @@ export class Router<StateT = unknown> {
 
   middleware(): Middleware<RouterState> {
     return async (ctx: Context<RouterState>, next: Next): Promise<void> => {
-      ctx.container.bind(Router).toConstantValue(this);
+      ctx.container.bind(Router).toValue(this);
 
       let { path, method } = ctx.request;
       const {

@@ -4,8 +4,8 @@ import {
   TEXT_TYPE,
   toPayload,
 } from "@fastr/body";
+import { Container } from "@fastr/invert";
 import { statusMessage } from "@fastr/status";
-import { Container } from "@sosimple/inversify";
 import { EventEmitter } from "events";
 import { type IncomingMessage, type ServerResponse } from "http";
 import { type Http2ServerRequest, type Http2ServerResponse } from "http2";

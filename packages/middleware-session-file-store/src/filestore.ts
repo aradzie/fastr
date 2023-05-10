@@ -1,7 +1,7 @@
+import { inject, injectable } from "@fastr/invert";
 import { type Store, type StoredSession } from "@fastr/middleware-session";
 import { scanDir, type Stats } from "@sosimple/fsx";
 import { File } from "@sosimple/fsx-file";
-import { inject, injectable } from "@sosimple/inversify";
 import { join } from "path";
 import { loadSession, storeSession } from "./io.js";
 

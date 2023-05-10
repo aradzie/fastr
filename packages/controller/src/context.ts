@@ -1,8 +1,8 @@
 import { type Context, type Request, type Response } from "@fastr/core";
+import { type Container } from "@fastr/invert";
 import { type BodyState } from "@fastr/middleware-body";
 import { type Router, type RouterState } from "@fastr/middleware-router";
 import { type Session, type SessionState } from "@fastr/middleware-session";
-import { type Container } from "@sosimple/inversify";
 
 export const getContext = (ctx: Context): Context => {
   return ctx;

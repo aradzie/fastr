@@ -6,6 +6,7 @@ import {
   type Newable,
   type Next,
 } from "@fastr/core";
+import { ownMethods } from "@fastr/metadata";
 import { Router, type RouterState } from "@fastr/middleware-router";
 import {
   getControllerMetadata,
@@ -46,27 +47,15 @@ export function routing(app: Application, router = new Router()): Routing {
       throw new Error("Not a controller class");
     }
     const controllerMiddleware = toMiddleware(getControllerUse(controller));
-    const descriptors = Object.getOwnPropertyDescriptors(controller.prototype);
-    for (const [propertyKey, descriptor] of Object.entries(descriptors)) {
-      if (propertyKey === "constructor") {
-        continue;
-      }
-      if (typeof descriptor.value !== "function") {
-        continue;
-      }
-      const handlerMetadata = getHandlerMetadata(
-        controller.prototype,
-        propertyKey,
-      );
+    const { prototype } = controller;
+    for (const [propertyKey] of ownMethods(prototype)) {
+      const handlerMetadata = getHandlerMetadata(prototype, propertyKey);
       if (handlerMetadata == null) {
         continue;
       }
-      const parameterMetadata = getParameterMetadata(
-        controller.prototype,
-        propertyKey,
-      );
+      const parameterMetadata = getParameterMetadata(prototype, propertyKey);
       const handlerMiddleware = toMiddleware(
-        getHandlerUse(controller.prototype, propertyKey),
+        getHandlerUse(prototype, propertyKey),
       );
       const handler = makeHandler(controller, propertyKey, parameterMetadata);
       router.register({
@@ -86,7 +75,7 @@ function makeHandler(
 ): Middleware<RouterState> {
   return async (ctx: Context<RouterState>, next: Next): Promise<void> => {
     const instance = ctx.container.get(controller);
-    const handler = instance[propertyKey];
+    const handler = (instance as any)[propertyKey]; // TODO why any?
     const args = await getArgs(ctx, parameterMetadata);
     const body = await Reflect.apply(handler, instance, args);
     if (body != null) {

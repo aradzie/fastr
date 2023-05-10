@@ -1,5 +1,5 @@
+import { inject, injectable } from "@fastr/invert";
 import { type Store, type StoredSession } from "@fastr/middleware-session";
-import { inject, injectable } from "@sosimple/inversify";
 import { type Knex } from "knex";
 import { BSON_CODEC, type Codec } from "./codec.js";
 import {
