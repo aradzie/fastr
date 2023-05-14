@@ -39,9 +39,15 @@ export function createError(
 
     constructor() {
       super(`${code}: ${message}`);
-      Object.defineProperty(this, "name", { value: `HeaderError [${code}]` });
-      Object.defineProperty(this, "code", { value: code });
-      Object.defineProperty(this, "status", { value: status });
+      Object.defineProperty(this, "name", {
+        value: `HeaderError [${code}]`,
+      });
+      Object.defineProperty(this, "code", {
+        value: code,
+      });
+      Object.defineProperty(this, "status", {
+        value: status,
+      });
     }
 
     get [Symbol.toStringTag](): string {

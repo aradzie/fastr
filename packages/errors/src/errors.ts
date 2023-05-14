@@ -3,15 +3,21 @@ import { isClientError, isServerError, statusMessage } from "@fastr/status";
 const cache = new Map<number, { new (): HttpError }>();
 
 export class HttpError extends Error {
-  readonly status: number;
-  readonly expose: boolean;
+  readonly status!: number;
+  readonly expose!: boolean;
 
   constructor(status: number, message?: string, options?: ErrorOptions) {
     super(message ?? statusMessage(status), options);
     assertValidErrorStatusCode(status);
-    this.name = `HttpError [${status}]`;
-    this.status = status;
-    this.expose = isClientError(status);
+    Object.defineProperty(this, "name", {
+      value: `HttpError [${status}]`,
+    });
+    Object.defineProperty(this, "status", {
+      value: status,
+    });
+    Object.defineProperty(this, "expose", {
+      value: isClientError(status),
+    });
   }
 
   get [Symbol.toStringTag](): string {

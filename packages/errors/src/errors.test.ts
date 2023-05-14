@@ -14,6 +14,7 @@ test("create error returns an http error constructor", (t) => {
   t.is(instance.name, "HttpError [400]");
   t.is(instance.message, "Bad Request");
   t.is(instance.status, 400);
+  t.deepEqual({ ...instance }, {});
   t.is(String(instance), "HttpError [400]: Bad Request");
   t.is(Object.prototype.toString.call(instance), "[object HttpError]");
 });

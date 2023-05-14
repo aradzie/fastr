@@ -1,12 +1,20 @@
 import { type ErrorResponse } from "./types.js";
 
 export class OAuthError<TRaw = unknown> extends Error {
-  constructor(message: string, readonly code: string, readonly raw: TRaw) {
-    super(message);
-  }
+  readonly code!: string;
+  readonly raw!: TRaw;
 
-  override get name(): string {
-    return "OAuthError";
+  constructor(message: string, code: string, raw: TRaw) {
+    super(message);
+    Object.defineProperty(this, "name", {
+      value: "OAuthError",
+    });
+    Object.defineProperty(this, "code", {
+      value: code,
+    });
+    Object.defineProperty(this, "raw", {
+      value: raw,
+    });
   }
 
   get [Symbol.toStringTag](): string {

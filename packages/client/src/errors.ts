@@ -1,10 +1,14 @@
 export class RequestError extends Error {
-  readonly code: string;
+  readonly code!: string;
 
   constructor(message: string, code: string) {
     super(message);
-    this.name = "RequestError";
-    this.code = code;
+    Object.defineProperty(this, "name", {
+      value: "RequestError",
+    });
+    Object.defineProperty(this, "code", {
+      value: code,
+    });
   }
 
   get [Symbol.toStringTag](): string {

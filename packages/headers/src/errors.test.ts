@@ -13,7 +13,7 @@ test("create error with default options", (t) => {
   t.is(instance.message, "OMG: What a terrible failure.");
   t.is(instance.code, "OMG");
   t.is(instance.status, 500);
-  t.deepEqual({ ...instance }, {} as any);
+  t.deepEqual({ ...instance }, {});
   t.is(String(instance), "HeaderError [OMG]: OMG: What a terrible failure.");
   t.is(Object.prototype.toString.call(instance), "[object HeaderError]");
 });
@@ -30,7 +30,7 @@ test("create error with custom options", (t) => {
   t.is(instance.message, "OMG: What a terrible failure.");
   t.is(instance.code, "OMG");
   t.is(instance.status, 400);
-  t.deepEqual({ ...instance }, {} as any);
+  t.deepEqual({ ...instance }, {});
   t.is(String(instance), "HeaderError [OMG]: OMG: What a terrible failure.");
   t.is(Object.prototype.toString.call(instance), "[object HeaderError]");
 });
@@ -40,7 +40,7 @@ test("standard error", (t) => {
 
   t.is(instance.name, "Error");
   t.is(instance.message, "OMG");
-  t.deepEqual({ ...instance }, {} as any);
+  t.deepEqual({ ...instance }, {});
   t.is(String(instance), "Error: OMG");
   t.is(Object.prototype.toString.call(instance), "[object Error]");
 });
