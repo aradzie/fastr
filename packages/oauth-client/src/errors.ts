@@ -1,8 +1,8 @@
 import { type ErrorResponse } from "./types.js";
 
 export class OAuthError<TRaw = unknown> extends Error {
-  readonly code!: string;
-  readonly raw!: TRaw;
+  declare readonly code: string;
+  declare readonly raw: TRaw;
 
   constructor(message: string, code: string, raw: TRaw) {
     super(message);

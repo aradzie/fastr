@@ -1,5 +1,5 @@
 export class RequestError extends Error {
-  readonly code!: string;
+  declare readonly code: string;
 
   constructor(message: string, code: string) {
     super(message);

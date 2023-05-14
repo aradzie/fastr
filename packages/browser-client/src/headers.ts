@@ -13,7 +13,7 @@ const kMap = Symbol("kMap");
  * A collection of HTTP headers.
  */
 export class HttpHeaders implements Headers, Iterable<[string, string]> {
-  private readonly [kMap]!: Map<string, Entry>;
+  private declare readonly [kMap]: Map<string, Entry>;
 
   constructor(
     data:

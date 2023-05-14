@@ -3,8 +3,8 @@ import { isClientError, isServerError, statusMessage } from "@fastr/status";
 const cache = new Map<number, { new (): HttpError }>();
 
 export class HttpError extends Error {
-  readonly status!: number;
-  readonly expose!: boolean;
+  declare readonly status: number;
+  declare readonly expose: boolean;
 
   constructor(status: number, message?: string, options?: ErrorOptions) {
     super(message ?? statusMessage(status), options);

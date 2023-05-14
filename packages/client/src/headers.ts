@@ -20,7 +20,7 @@ export class HttpHeaders
     OutgoingHeaders,
     Iterable<[string, string | string[]]>
 {
-  private readonly [kMap]!: Map<string, Entry>;
+  private declare readonly [kMap]: Map<string, Entry>;
 
   constructor(
     data:

@@ -34,8 +34,8 @@ export function createError(
   }
 
   return class HeaderError extends Base {
-    readonly code!: string;
-    readonly status!: number;
+    declare readonly code: string;
+    declare readonly status: number;
 
     constructor() {
       super(`${code}: ${message}`);
