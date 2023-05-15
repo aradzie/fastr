@@ -13,21 +13,21 @@
     "start": "node lib/start-server.js"
   },
   "dependencies": {
-    "@babel/core": "^7.21.4",
-    "@babel/preset-env": "^7.21.4",
+    "@babel/core": "^7.21.8",
+    "@babel/preset-env": "^7.21.5",
     "@fastr/body": "^0.0.1-alpha.1",
     "@fastr/browser-client": "^0.0.1-alpha.1",
     "@fastr/headers": "^0.0.1-alpha.1",
     "@fastr/url": "^0.0.1-alpha.1",
-    "@types/chai": "^4.3.4",
+    "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.1",
     "@types/serve-static": "^1.15.1",
     "babel-loader": "^9.1.2",
     "chai": "^4.3.7",
     "mocha": "^10.2.0",
     "tslib": "^2.5.0",
-    "webpack": "^5.77.0",
-    "webpack-cli": "^5.0.1"
+    "webpack": "^5.82.1",
+    "webpack-cli": "^5.1.1"
   },
   "engines": {
     "node": ">=18.12"
