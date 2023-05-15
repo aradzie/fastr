@@ -2,9 +2,9 @@ import {
   kDesignParamTypes,
   kDesignReturnType,
   kDesignType,
-} from "./constants.js";
+} from "./impl/constants.js";
+import { defineMetadata, getMetadata, hasMetadata } from "./impl/reflect.js";
 import { isConstructor, type Newable } from "./newable.js";
-import { defineMetadata, getMetadata, hasMetadata } from "./util.js";
 
 const kPropKeys = Symbol("props");
 
@@ -124,9 +124,9 @@ export type Method = {
 } & HasMetadata;
 
 class MethodReflector implements Method {
+  readonly type: unknown;
   readonly paramTypes: readonly unknown[];
   readonly returnType: unknown;
-  readonly type: unknown;
 
   constructor(
     readonly prototype: object,
