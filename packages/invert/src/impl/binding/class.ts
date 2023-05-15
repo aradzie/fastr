@@ -8,8 +8,12 @@ export class ClassBinding<T = unknown> implements Binding<T> {
 
   getValue(factory: ReadonlyContainer): T {
     // TODO singleton
-    const { newable, params } = this.metadata;
-    return Reflect.construct(newable, getArgs(factory, params));
+    const { newable, params, props } = this.metadata;
+    const value = Reflect.construct(newable, getArgs(factory, params));
+    for (const { propertyKey, id, name } of props) {
+      Reflect.set(value, propertyKey, factory.get(id, name));
+    }
+    return value;
   }
 
   get [Symbol.toStringTag](): string {

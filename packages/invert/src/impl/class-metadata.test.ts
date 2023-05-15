@@ -36,8 +36,8 @@ test("annotated class", (t) => {
 
 test("simple class with props", (t) => {
   class Foo {
-    @prop("x") private readonly a!: string;
-    @prop("y") private readonly b!: string;
+    @prop({ id: "x" }) private readonly a!: string;
+    @prop({ id: "y" }) private readonly b!: string;
     constructor() {}
   }
 
@@ -57,8 +57,8 @@ test("simple class with props", (t) => {
 test("annotated class with props", (t) => {
   @injectable({ id: "foo", name: "a", singleton: true })
   class Foo {
-    @prop("x") private readonly a!: string;
-    @prop("y") private readonly b!: string;
+    @prop({ id: "x" }) private readonly a!: string;
+    @prop({ id: "y" }) private readonly b!: string;
     constructor() {}
   }
 
@@ -118,8 +118,8 @@ test("annotated class with simple parameters", (t) => {
 test("annotated class with annotated parameters with props", (t) => {
   @injectable({ id: "foo", singleton: true })
   class Foo {
-    @prop("x", { name: "a" }) private readonly a!: string;
-    @prop("y", { name: "b" }) private readonly b!: string;
+    @prop({ id: "x", name: "a" }) private readonly a!: string;
+    @prop({ id: "y", name: "b" }) private readonly b!: string;
     constructor(@inject("baz") x: string, @inject("bar") y: number) {}
   }
 

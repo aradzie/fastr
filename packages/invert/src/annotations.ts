@@ -111,12 +111,12 @@ export const inject = <T = unknown>(
  * Property annotation options.
  */
 export type PropOptions = {
+  readonly id: ValueId;
   readonly name: Name;
 };
 
 export const prop = <T = unknown>(
-  id: ValueId<T> | null = null,
-  { name }: Partial<PropOptions> = {}, //
+  { id, name }: Partial<PropOptions> = {}, //
 ) => {
   return ((target: object, propertyKey: PropertyKey): void => {
     reflector.addProperty(target, propertyKey);
@@ -127,7 +127,7 @@ export const prop = <T = unknown>(
     }
     metadata[propertyKey] = {
       propertyKey,
-      id,
+      id: id ?? null,
       name: name ?? null,
     } satisfies PropAnn;
     Reflect.defineMetadata(kProp, metadata, constructor);

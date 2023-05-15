@@ -33,7 +33,7 @@ test("report duplicate @prop annotation", (t) => {
     () => {
       @injectable()
       class Demo {
-        @prop("foo") @prop("bar") private readonly foo!: string;
+        @prop({ id: "foo" }) @prop({ id: "bar" }) private readonly foo!: string;
         constructor() {}
       }
     },
