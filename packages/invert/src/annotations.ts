@@ -76,7 +76,7 @@ export type InjectOptions = {
  * @example
  * ```
  * class MyModule implements Module {
- *   @provides()
+ *   @provides({ id: "url" }})
  *   provideUrl(@inject("base") base: string): string {
  *     ...
  *   }

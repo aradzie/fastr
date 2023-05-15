@@ -101,42 +101,50 @@ test("reflect", (t) => {
 test("metadata", (t) => {
   const r = reflector(Demo);
 
-  t.false(r.hasMetadata("m0"));
-  t.false(r.hasMetadata("m1"));
-  t.is(r.getMetadata("m0"), undefined);
-  t.is(r.getMetadata("m1"), undefined);
-  r.setMetadata("m0", "v0");
-  r.setMetadata("m1", "v1");
-  t.true(r.hasMetadata("m0"));
-  t.true(r.hasMetadata("m1"));
-  t.is(r.getMetadata("m0"), "v0");
-  t.is(r.getMetadata("m1"), "v1");
-
   {
-    const p1 = r.properties["prop1"];
-    t.false(p1.hasMetadata("m0"));
-    t.false(p1.hasMetadata("m1"));
-    t.is(p1.getMetadata("m0"), undefined);
-    t.is(p1.getMetadata("m1"), undefined);
-    p1.setMetadata("m0", "v0");
-    p1.setMetadata("m1", "v1");
-    t.true(p1.hasMetadata("m0"));
-    t.true(p1.hasMetadata("m1"));
-    t.is(p1.getMetadata("m0"), "v0");
-    t.is(p1.getMetadata("m1"), "v1");
+    const k0 = Symbol("k0");
+    const k1 = Symbol("k1");
+    t.false(r.hasMetadata(k0));
+    t.false(r.hasMetadata(k1));
+    t.is(r.getMetadata(k0), undefined);
+    t.is(r.getMetadata(k1), undefined);
+    r.setMetadata(k0, "v0");
+    r.setMetadata(k1, "v1");
+    t.true(r.hasMetadata(k0));
+    t.true(r.hasMetadata(k1));
+    t.is(r.getMetadata(k0), "v0");
+    t.is(r.getMetadata(k1), "v1");
   }
 
   {
+    const k0 = Symbol("prop1k0");
+    const k1 = Symbol("prop1k1");
+    const p1 = r.properties["prop1"];
+    t.false(p1.hasMetadata(k0));
+    t.false(p1.hasMetadata(k1));
+    t.is(p1.getMetadata(k0), undefined);
+    t.is(p1.getMetadata(k1), undefined);
+    p1.setMetadata(k0, "v0");
+    p1.setMetadata(k1, "v1");
+    t.true(p1.hasMetadata(k0));
+    t.true(p1.hasMetadata(k1));
+    t.is(p1.getMetadata(k0), "v0");
+    t.is(p1.getMetadata(k1), "v1");
+  }
+
+  {
+    const k0 = Symbol("method1k0");
+    const k1 = Symbol("method1k1");
     const m1 = r.methods["method1"];
-    t.false(m1.hasMetadata("m0"));
-    t.false(m1.hasMetadata("m1"));
-    t.is(m1.getMetadata("m0"), undefined);
-    t.is(m1.getMetadata("m1"), undefined);
-    m1.setMetadata("m0", "v0");
-    m1.setMetadata("m1", "v1");
-    t.true(m1.hasMetadata("m0"));
-    t.true(m1.hasMetadata("m1"));
-    t.is(m1.getMetadata("m0"), "v0");
-    t.is(m1.getMetadata("m1"), "v1");
+    t.false(m1.hasMetadata(k0));
+    t.false(m1.hasMetadata(k1));
+    t.is(m1.getMetadata(k0), undefined);
+    t.is(m1.getMetadata(k1), undefined);
+    m1.setMetadata(k0, "v0");
+    m1.setMetadata(k1, "v1");
+    t.true(m1.hasMetadata(k0));
+    t.true(m1.hasMetadata(k1));
+    t.is(m1.getMetadata(k0), "v0");
+    t.is(m1.getMetadata(k1), "v1");
   }
 });

@@ -1,4 +1,5 @@
 import { type Context } from "@fastr/core";
+import { type PropertyKey } from "../impl/types.js";
 import {
   addHandlerUse,
   type HandlerDecorator,
@@ -59,7 +60,7 @@ export namespace http {
     const { path, name } = makeOptions(arg1);
     return (
       target: object,
-      propertyKey: string | symbol,
+      propertyKey: PropertyKey,
       descriptor: PropertyDescriptor,
     ): void => {
       setHandlerMetadata(target, propertyKey, {
@@ -76,7 +77,7 @@ export namespace http {
   export function type(type: string): HandlerDecorator {
     return (
       target: object,
-      propertyKey: string | symbol,
+      propertyKey: PropertyKey,
       descriptor: PropertyDescriptor,
     ): void => {
       addHandlerUse(target, propertyKey, (ctx, next) => {
@@ -95,7 +96,7 @@ export namespace http {
   ): HandlerDecorator {
     return (
       target: object,
-      propertyKey: string | symbol,
+      propertyKey: PropertyKey,
       descriptor: PropertyDescriptor,
     ): void => {
       if (typeof value === "function") {

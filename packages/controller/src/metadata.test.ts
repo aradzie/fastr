@@ -7,16 +7,6 @@ import {
 } from "@fastr/core";
 import { type RouterState } from "@fastr/middleware-router";
 import test from "ava";
-import {
-  getBody,
-  getContext,
-  getCookieParam,
-  getHeaderParam,
-  getPathParam,
-  getQueryParam,
-  getRequest,
-  getResponse,
-} from "./context.js";
 import { controller } from "./decorator/controller.js";
 import { http } from "./decorator/handler.js";
 import { use } from "./decorator/middleware.js";
@@ -27,6 +17,16 @@ import {
   pathParam,
   queryParam,
 } from "./decorator/parameter.js";
+import {
+  getBody,
+  getContext,
+  getCookieParam,
+  getHeaderParam,
+  getPathParam,
+  getQueryParam,
+  getRequest,
+  getResponse,
+} from "./impl/context.js";
 import {
   getControllerMetadata,
   getControllerUse,

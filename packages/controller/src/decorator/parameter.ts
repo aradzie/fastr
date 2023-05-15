@@ -6,57 +6,19 @@ import {
   getHeaderParam,
   getPathParam,
   getQueryParam,
-} from "../context.js";
+} from "../impl/context.js";
+import { type PropertyKey } from "../impl/types.js";
 import { type ParameterExtractor, setParameterMetadata } from "../metadata.js";
 import { type Pipe } from "../pipe.js";
 
-export function body(): ParameterDecorator {
-  return makeParamDecorator(getBody, null, null);
-}
-
-export function pathParam(
-  key: string,
-  pipe?: Newable<Pipe>,
-): ParameterDecorator {
-  return makeParamDecorator(getPathParam, key, pipe);
-}
-
-export function queryParam(
-  key: string,
-  pipe?: Newable<Pipe>,
-): ParameterDecorator {
-  return makeParamDecorator(getQueryParam, key, pipe);
-}
-
-export function headerParam(
-  key: string,
-  pipe?: Newable<Pipe>,
-): ParameterDecorator {
-  return makeParamDecorator(getHeaderParam, key.toLowerCase(), pipe);
-}
-
-export function cookieParam(
-  key: string,
-  pipe?: Newable<Pipe>,
-): ParameterDecorator {
-  return makeParamDecorator(getCookieParam, key, pipe);
-}
-
-export function formParam(
-  key: string,
-  pipe?: Newable<Pipe>,
-): ParameterDecorator {
-  return makeParamDecorator(getFormParam, key, pipe);
-}
-
-function makeParamDecorator(
+const makeParameterDecorator = (
   extractor: ParameterExtractor,
-  key: string | null = null,
-  pipe: Newable<Pipe> | null = null,
-): ParameterDecorator {
-  return (
+  key: string | null,
+  pipe: Newable<Pipe> | null,
+) => {
+  return ((
     target: object,
-    propertyKey: string | symbol | undefined,
+    propertyKey: PropertyKey,
     parameterIndex: number,
   ): void => {
     if (propertyKey == null) {
@@ -68,5 +30,44 @@ function makeParamDecorator(
       key,
       pipe,
     });
-  };
-}
+  }) as ParameterDecorator;
+};
+
+export let body = (): ParameterDecorator => {
+  return makeParameterDecorator(getBody, null, null);
+};
+
+export const pathParam = (
+  key: string,
+  pipe: Newable<Pipe> | null = null,
+): ParameterDecorator => {
+  return makeParameterDecorator(getPathParam, key, pipe);
+};
+
+export const queryParam = (
+  key: string,
+  pipe: Newable<Pipe> | null = null,
+): ParameterDecorator => {
+  return makeParameterDecorator(getQueryParam, key, pipe);
+};
+
+export const headerParam = (
+  key: string,
+  pipe: Newable<Pipe> | null = null,
+): ParameterDecorator => {
+  return makeParameterDecorator(getHeaderParam, key.toLowerCase(), pipe);
+};
+
+export const cookieParam = (
+  key: string,
+  pipe: Newable<Pipe> | null = null,
+): ParameterDecorator => {
+  return makeParameterDecorator(getCookieParam, key, pipe);
+};
+
+export const formParam = (
+  key: string,
+  pipe: Newable<Pipe> | null = null,
+): ParameterDecorator => {
+  return makeParameterDecorator(getFormParam, key, pipe);
+};

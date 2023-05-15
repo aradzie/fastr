@@ -1,4 +1,5 @@
 import { type AnyMiddleware } from "@fastr/core";
+import { type PropertyKey } from "../impl/types.js";
 import { addControllerUse, addHandlerUse } from "../metadata.js";
 
 export function use(
@@ -20,7 +21,7 @@ export function use(
 
   function useOnMethod(
     target: object,
-    propertyKey: string | symbol,
+    propertyKey: PropertyKey,
     descriptor: PropertyDescriptor,
   ): void {
     addHandlerUse(target, propertyKey, ...middleware);

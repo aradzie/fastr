@@ -8,6 +8,7 @@ import {
 } from "@fastr/core";
 import { reflector } from "@fastr/metadata";
 import { Router, type RouterState } from "@fastr/middleware-router";
+import { type PropertyKey } from "./impl/types.js";
 import {
   getControllerMetadata,
   getControllerUse,
@@ -69,12 +70,12 @@ export function routing(app: Application, router = new Router()): Routing {
 
 function makeHandler(
   controller: Newable,
-  propertyKey: string | symbol,
+  propertyKey: PropertyKey,
   parameterMetadata: readonly ParameterMetadata[],
 ): Middleware<RouterState> {
   return async (ctx: Context<RouterState>, next: Next): Promise<void> => {
-    const instance = ctx.container.get(controller);
-    const handler = (instance as any)[propertyKey]; // TODO why any?
+    const instance = ctx.container.get<any>(controller); // TODO why any?
+    const handler = instance[propertyKey];
     const args = await getArgs(ctx, parameterMetadata);
     const body = await Reflect.apply(handler, instance, args);
     if (body != null) {

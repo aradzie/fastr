@@ -5,6 +5,7 @@ import {
   propertyMetadata,
 } from "@fastr/metadata";
 import { type RouterState } from "@fastr/middleware-router";
+import { type PropertyKey } from "./impl/types.js";
 import { type Pipe } from "./pipe.js";
 
 export interface ControllerDecorator extends ClassDecorator {}
@@ -54,7 +55,7 @@ export function getControllerUse(target: object): readonly AnyMiddleware[] {
 
 export function addHandlerUse(
   target: object,
-  propertyKey: string | symbol,
+  propertyKey: PropertyKey,
   ...middleware: AnyMiddleware[]
 ): void {
   propertyMetadata(target, propertyKey) //
@@ -66,7 +67,7 @@ export function addHandlerUse(
 
 export function getHandlerUse(
   target: object,
-  propertyKey: string | symbol,
+  propertyKey: PropertyKey,
 ): readonly AnyMiddleware[] {
   return (
     propertyMetadata(target, propertyKey) //
@@ -89,7 +90,7 @@ export function getControllerMetadata(
 
 export function setHandlerMetadata(
   target: object,
-  propertyKey: string | symbol,
+  propertyKey: PropertyKey,
   metadata: HandlerMetadata,
 ): void {
   propertyMetadata(target, propertyKey) //
@@ -98,7 +99,7 @@ export function setHandlerMetadata(
 
 export function getHandlerMetadata(
   target: object,
-  propertyKey: string | symbol,
+  propertyKey: PropertyKey,
 ): HandlerMetadata | null {
   return (
     propertyMetadata(target, propertyKey) //
@@ -108,7 +109,7 @@ export function getHandlerMetadata(
 
 export function setParameterMetadata(
   target: object,
-  propertyKey: string | symbol,
+  propertyKey: PropertyKey,
   metadata: ParameterMetadata,
 ): void {
   propertyMetadata(target, propertyKey) //
@@ -120,7 +121,7 @@ export function setParameterMetadata(
 
 export function getParameterMetadata(
   target: object,
-  propertyKey: string | symbol,
+  propertyKey: PropertyKey,
 ): readonly ParameterMetadata[] {
   return (
     propertyMetadata(target, propertyKey) //

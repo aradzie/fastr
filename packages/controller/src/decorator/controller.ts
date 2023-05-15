@@ -8,7 +8,7 @@ import {
   getRequest,
   getResponse,
   getRouter,
-} from "../context.js";
+} from "../impl/context.js";
 import {
   type ControllerDecorator,
   setControllerMetadata,
