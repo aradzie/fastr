@@ -1,8 +1,10 @@
+import { reflector } from "@fastr/metadata";
 import { kInject, kInjectable, kProp, kProvides } from "./impl/constants.js";
 import {
   type InjectableAnn,
   type InjectAnn,
   type PropAnn,
+  type PropertyKey,
   type ProvidesAnn,
 } from "./impl/types.js";
 import { type Name, type ValueId } from "./types.js";
@@ -90,7 +92,7 @@ export const inject = <T = unknown>(
   }
   return ((
     target: object,
-    propertyKey: string | symbol,
+    propertyKey: PropertyKey,
     parameterIndex: number,
   ): void => {
     const metadata = Reflect.getMetadata(kInject, target, propertyKey) ?? [];
@@ -116,7 +118,8 @@ export const prop = <T = unknown>(
   id: ValueId<T> | null = null,
   { name }: Partial<PropOptions> = {}, //
 ) => {
-  return ((target: object, propertyKey: string | symbol): void => {
+  return ((target: object, propertyKey: PropertyKey): void => {
+    reflector.addProperty(target, propertyKey);
     const { constructor } = target;
     const metadata = Reflect.getMetadata(kProp, constructor) ?? {};
     if (metadata[propertyKey] != null) {
@@ -156,7 +159,7 @@ export type ProvidesOptions = {
 export const provides = (
   { id, name, singleton }: Partial<ProvidesOptions> = {}, //
 ) => {
-  return ((target: object, propertyKey: string | symbol): void => {
+  return ((target: object, propertyKey: PropertyKey): void => {
     if (Reflect.hasMetadata(kProvides, target, propertyKey)) {
       throw new Error("Duplicate annotation @provides");
     }

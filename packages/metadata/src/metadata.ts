@@ -16,10 +16,6 @@ export function newMetadataKey<T>(id: string | symbol): MetadataKey<T> {
 
 export abstract class Metadata {
   static ofClass(target: object): Metadata {
-    if (typeof target !== "function") {
-      throw new TypeError();
-    }
-
     return new (class extends Metadata {
       hasOwn({ id }: MetadataKey<any>): boolean {
         return hasOwnMetadata(id, target);

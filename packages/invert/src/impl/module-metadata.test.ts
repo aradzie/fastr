@@ -32,7 +32,7 @@ test("basic annotation", (t) => {
       name: null,
       singleton: false,
       module: foo,
-      callable: foo.provideFoo,
+      value: foo.provideFoo,
       params: [],
     },
   ] satisfies ProviderMetadata[]);
@@ -56,7 +56,7 @@ test("annotation with options without id", (t) => {
       name: "a",
       singleton: true,
       module: foo,
-      callable: foo.provideFoo,
+      value: foo.provideFoo,
       params: [],
     },
   ] satisfies ProviderMetadata[]);
@@ -80,7 +80,7 @@ test("annotation with options with id", (t) => {
       name: "a",
       singleton: true,
       module: foo,
-      callable: foo.provideFoo,
+      value: foo.provideFoo,
       params: [],
     },
   ] satisfies ProviderMetadata[]);
@@ -104,7 +104,7 @@ test("with params", (t) => {
       name: "a",
       singleton: true,
       module: foo,
-      callable: foo.provideFoo,
+      value: foo.provideFoo,
       params: [
         {
           index: 0,

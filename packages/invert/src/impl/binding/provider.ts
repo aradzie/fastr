@@ -8,8 +8,8 @@ export class ProviderBinding<T = unknown> implements Binding<T> {
 
   getValue(factory: ReadonlyContainer): T {
     // TODO singleton
-    const { module, callable, params } = this.metadata;
-    return Reflect.apply(callable, module, getArgs(factory, params));
+    const { module, value, params } = this.metadata;
+    return Reflect.apply(value, module, getArgs(factory, params));
   }
 
   get [Symbol.toStringTag](): string {

@@ -1,7 +1,9 @@
+import { type PropertyKey } from "../impl/types.js";
+
 export const named = (name: string) => {
   return (
     target: object,
-    propertyKey?: string | symbol,
+    propertyKey?: PropertyKey,
     parameterIndexOrDescriptor?: any,
   ): void => {
     if (parameterIndexOrDescriptor != null) {

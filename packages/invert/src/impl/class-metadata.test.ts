@@ -1,5 +1,4 @@
 import test from "ava";
-import "reflect-metadata";
 import { inject, injectable, prop } from "../annotations.js";
 import { getClassMetadata } from "./class-metadata.js";
 import { type ClassMetadata } from "./types.js";

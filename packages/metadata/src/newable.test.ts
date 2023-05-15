@@ -27,30 +27,30 @@ test("get constructor", (t) => {
     () => {
       getConstructor(undefined);
     },
-    { message: "Not an object" },
+    { instanceOf: TypeError },
   );
   t.throws(
     () => {
       getConstructor(null);
     },
-    { message: "Not an object" },
+    { instanceOf: TypeError },
   );
   t.throws(
     () => {
       getConstructor("");
     },
-    { message: "Not an object" },
+    { instanceOf: TypeError },
   );
   t.throws(
     () => {
       getConstructor(0);
     },
-    { message: "Not an object" },
+    { instanceOf: TypeError },
   );
   t.throws(
     () => {
       getConstructor(Object.create(null));
     },
-    { message: "Not an instance" },
+    { instanceOf: TypeError },
   );
 });

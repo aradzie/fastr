@@ -6,7 +6,7 @@ import {
   type Newable,
   type Next,
 } from "@fastr/core";
-import { ownMethods } from "@fastr/metadata";
+import { reflector } from "@fastr/metadata";
 import { Router, type RouterState } from "@fastr/middleware-router";
 import {
   getControllerMetadata,
@@ -48,16 +48,15 @@ export function routing(app: Application, router = new Router()): Routing {
     }
     const controllerMiddleware = toMiddleware(getControllerUse(controller));
     const { prototype } = controller;
-    for (const [propertyKey] of ownMethods(prototype)) {
-      const handlerMetadata = getHandlerMetadata(prototype, propertyKey);
+    const ref = reflector(controller);
+    for (const { key } of Object.values(ref.methods)) {
+      const handlerMetadata = getHandlerMetadata(prototype, key);
       if (handlerMetadata == null) {
         continue;
       }
-      const parameterMetadata = getParameterMetadata(prototype, propertyKey);
-      const handlerMiddleware = toMiddleware(
-        getHandlerUse(prototype, propertyKey),
-      );
-      const handler = makeHandler(controller, propertyKey, parameterMetadata);
+      const parameterMetadata = getParameterMetadata(prototype, key);
+      const handlerMiddleware = toMiddleware(getHandlerUse(prototype, key));
+      const handler = makeHandler(controller, key, parameterMetadata);
       router.register({
         name: handlerMetadata.name,
         method: handlerMetadata.method,

@@ -22,7 +22,7 @@ test("check params", (t) => {
     },
     {
       instanceOf: TypeError,
-      message: "Property xyz is missing in class Foo",
+      message: "Method xyz is missing in class Foo",
     },
   );
 
@@ -32,7 +32,7 @@ test("check params", (t) => {
     },
     {
       instanceOf: TypeError,
-      message: "Property xyz is missing in class Object",
+      message: "Method xyz is missing in class Object",
     },
   );
 
@@ -42,7 +42,7 @@ test("check params", (t) => {
     },
     {
       instanceOf: TypeError,
-      message: "Property xyz is missing in class Array",
+      message: "Method xyz is missing in class Array",
     },
   );
 
@@ -52,7 +52,6 @@ test("check params", (t) => {
     },
     {
       instanceOf: TypeError,
-      message: "Not an object",
     },
   );
 });
