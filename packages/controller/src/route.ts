@@ -1,12 +1,16 @@
 import {
-  type AnyMiddleware,
   type Context,
   type Middleware,
   type Next,
   toMiddleware,
 } from "@fastr/core";
-import { type Newable, type PropertyKey, reflector } from "@fastr/lang";
-import { type Router, type RouterState } from "@fastr/middleware-router";
+import {
+  isConstructor,
+  type Newable,
+  type PropertyKey,
+  reflector,
+} from "@fastr/lang";
+import { type RouteOptions, type RouterState } from "@fastr/middleware-router";
 import {
   getControllerMetadata,
   getControllerUse,
@@ -17,50 +21,54 @@ import {
 } from "./impl/metadata.js";
 import { type Pipe } from "./pipe.js";
 
-export function addController(
-  router: Router,
-  ...controllers: Newable[]
-): Router {
-  for (const controller of controllers) {
-    const controllerMetadata = getControllerMetadata(controller);
-    if (controllerMetadata == null) {
-      throw new Error(`Not a controller class ${controller.name}`);
+export function* allToRoutes(
+  ...newables: readonly Newable[]
+): Iterable<RouteOptions> {
+  for (const newable of newables) {
+    for (const route of toRoutes(newable)) {
+      yield route;
     }
-    const { prototype } = controller;
-    const ref = reflector(controller);
-    for (const method of Object.values(ref.methods)) {
-      const { key } = method;
-      const handlerMetadata = getHandlerMetadata(prototype, key);
-      if (handlerMetadata == null) {
-        continue; // Not a handler method.
-      }
+  }
+}
+
+export function* toRoutes(newable: Newable): Iterable<RouteOptions> {
+  if (!isConstructor(newable)) {
+    throw new TypeError();
+  }
+  const controllerMetadata = getControllerMetadata(newable);
+  if (controllerMetadata == null) {
+    throw new Error(`Not a controller class ${newable.name}`);
+  }
+  const { prototype } = newable;
+  const ref = reflector(newable);
+  for (const method of Object.values(ref.methods)) {
+    const { key } = method;
+    const handlerMetadata = getHandlerMetadata(prototype, key);
+    if (handlerMetadata != null) {
+      const controllerUse = getControllerUse(newable);
+      const handlerUse = getHandlerUse(prototype, key);
       const parameterMetadata = getParameterMetadata(prototype, key);
-      router.register({
+      yield {
         name: handlerMetadata.name,
         method: handlerMetadata.method,
         path: joinPaths(controllerMetadata.path, handlerMetadata.path),
         middleware: [
-          ...toMiddlewareList(getControllerUse(controller)),
-          ...toMiddlewareList(getHandlerUse(prototype, key)),
-          makeMiddleware(controller, key, parameterMetadata),
+          ...controllerUse.map(toMiddleware),
+          ...handlerUse.map(toMiddleware),
+          toHandlerMiddleware(newable, key, parameterMetadata),
         ],
-      });
+      };
     }
   }
-  return router;
 }
 
-function toMiddlewareList(list: readonly AnyMiddleware[]): Middleware[] {
-  return list.map(toMiddleware);
-}
-
-function makeMiddleware(
-  controller: Newable,
+function toHandlerMiddleware(
+  newable: Newable,
   propertyKey: PropertyKey,
   parameterMetadata: readonly ParameterMetadata[],
 ): Middleware<RouterState> {
   return async (ctx: Context<RouterState>, next: Next): Promise<void> => {
-    const instance = ctx.container.get<any>(controller);
+    const instance = ctx.container.get<any>(newable);
     const handler = instance[propertyKey];
     const args = await getArgs(ctx, parameterMetadata);
     const body = await Reflect.apply(handler, instance, args);

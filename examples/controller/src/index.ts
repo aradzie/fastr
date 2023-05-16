@@ -1,4 +1,4 @@
-import { addController, body, controller, http, use } from "@fastr/controller";
+import { body, controller, http, toRoutes, use } from "@fastr/controller";
 import { Application, Context } from "@fastr/core";
 import { injectable } from "@fastr/invert";
 import { expectJson } from "@fastr/middleware-body";
@@ -31,11 +31,9 @@ class Controller {
   }
 }
 
+const router = new Router().registerAll(toRoutes(Controller));
 const app = new Application();
-app
-  .use(conditional())
-  .use(compress())
-  .use(addController(new Router(), Controller).middleware());
+app.use(conditional()).use(compress()).use(router.middleware());
 
 createServer(app.callback()).listen(8080, () => {
   console.log("Application started on http://localhost:8080/");

@@ -1,6 +1,6 @@
 import { type BuildableRequest, request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
-import { addController } from "@fastr/controller";
+import { allToRoutes } from "@fastr/controller";
 import { type AnyMiddleware, Application } from "@fastr/core";
 import { Container } from "@fastr/invert";
 import { type Newable } from "@fastr/lang";
@@ -14,7 +14,8 @@ export function helper(
   const app = new Application(
     container ?? new Container({ autoBindInjectable: true }),
   );
+  const router = new Router().registerAll(allToRoutes(...controllers));
   app.useAll(middleware);
-  app.use(addController(new Router(), ...controllers).middleware());
+  app.use(router.middleware());
   return request.use(start(app.callback()));
 }

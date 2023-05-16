@@ -358,7 +358,7 @@ export class Router<StateT = unknown> {
   register(options: RouteOptions): Route {
     let { name = null, path, method, middleware } = options;
     if (!Array.isArray(middleware)) {
-      middleware = [middleware] as readonly Middleware<RouterState>[];
+      middleware = [middleware] as Middleware<RouterState>[];
     }
     const route = new Route({ name, path, method, middleware });
     if (name != null) {
@@ -369,6 +369,13 @@ export class Router<StateT = unknown> {
     }
     Node.insert(this._root, route);
     return route;
+  }
+
+  registerAll(list: Iterable<RouteOptions>): this {
+    for (const options of list) {
+      this.register(options);
+    }
+    return this;
   }
 
   middleware(): Middleware<RouterState> {
