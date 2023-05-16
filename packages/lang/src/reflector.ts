@@ -1,16 +1,11 @@
-import {
-  kDesignParamTypes,
-  kDesignReturnType,
-  kDesignType,
-} from "./impl/constants.js";
-import { defineMetadata, getMetadata, hasMetadata } from "./impl/reflect.js";
+import { getMetadata, hasMetadata, setMetadata } from "./metadata.js";
 import { isConstructor, type Newable } from "./newable.js";
+import { type Callable, type MetadataKey, type PropertyKey } from "./types.js";
 
 const kPropertyKeys = Symbol("kPropertyKeys");
-
-export type PropertyKey = string | symbol;
-export type MetadataKey = string | symbol;
-export type Callable = (...args: any) => any;
+const kDesignType = "design:type";
+const kDesignParamTypes = "design:paramtypes";
+const kDesignReturnType = "design:returntype";
 
 export type HasMetadata = {
   hasMetadata(metadataKey: MetadataKey): boolean;
@@ -67,7 +62,7 @@ class ClassReflector<T = unknown> implements Reflector<T> {
   }
 
   setMetadata(metadataKey: MetadataKey, metadataValue: unknown): void {
-    defineMetadata(metadataKey, metadataValue, this.newable);
+    setMetadata(metadataKey, metadataValue, this.newable);
   }
 
   get [Symbol.toStringTag](): string {
@@ -106,7 +101,7 @@ class PropertyReflector implements Property {
   }
 
   setMetadata(metadataKey: MetadataKey, metadataValue: unknown): void {
-    defineMetadata(metadataKey, metadataValue, this.prototype, this.key);
+    setMetadata(metadataKey, metadataValue, this.prototype, this.key);
   }
 
   get [Symbol.toStringTag](): string {
@@ -154,7 +149,7 @@ class MethodReflector implements Method {
   }
 
   setMetadata(metadataKey: MetadataKey, metadataValue: unknown): void {
-    defineMetadata(metadataKey, metadataValue, this.prototype, this.key);
+    setMetadata(metadataKey, metadataValue, this.prototype, this.key);
   }
 
   get [Symbol.toStringTag](): string {
@@ -175,7 +170,7 @@ export const reflectorOf = <T = unknown>(newable: Newable<T>): Reflector<T> => {
 reflectorOf.addPropertyKey = (prototype: object, key: PropertyKey): void => {
   let propertyKeys = getMetadata(kPropertyKeys, prototype) as Set<PropertyKey>;
   if (propertyKeys == null) {
-    defineMetadata(kPropertyKeys, (propertyKeys = new Set()), prototype);
+    setMetadata(kPropertyKeys, (propertyKeys = new Set()), prototype);
   }
   propertyKeys.add(key);
 };

@@ -1,8 +1,13 @@
 import { type AnyMiddleware } from "@fastr/core";
-import { type Newable, type PropertyKey } from "@fastr/lang";
+import {
+  getMetadata,
+  hasMetadata,
+  type Newable,
+  type PropertyKey,
+  setMetadata,
+} from "@fastr/lang";
 import { type Pipe } from "../pipe.js";
 import { type ParameterExtractor } from "./context.js";
-import { defineMetadata, getMetadata, hasMetadata } from "./reflect.js";
 
 export type ControllerMetadata = {
   readonly path: string;
@@ -32,7 +37,7 @@ export const addControllerUse = (
 ): void => {
   let list: AnyMiddleware[] = getMetadata(kUseMiddleware, target);
   if (list == null) {
-    defineMetadata(kUseMiddleware, (list = []), target);
+    setMetadata(kUseMiddleware, (list = []), target);
   }
   list.unshift(...middleware);
 };
@@ -48,7 +53,7 @@ export const addHandlerUse = (
 ): void => {
   let list: AnyMiddleware[] = getMetadata(kUseMiddleware, target, propertyKey);
   if (list == null) {
-    defineMetadata(kUseMiddleware, (list = []), target, propertyKey);
+    setMetadata(kUseMiddleware, (list = []), target, propertyKey);
   }
   list.unshift(...middleware);
 };
@@ -67,7 +72,7 @@ export const setControllerMetadata = (
   if (hasMetadata(kController, target)) {
     throw new TypeError();
   }
-  defineMetadata(kController, metadata, target);
+  setMetadata(kController, metadata, target);
 };
 
 export const getControllerMetadata = (
@@ -84,7 +89,7 @@ export const setHandlerMetadata = (
   if (hasMetadata(kHandler, target, propertyKey)) {
     throw new TypeError();
   }
-  defineMetadata(kHandler, metadata, target, propertyKey);
+  setMetadata(kHandler, metadata, target, propertyKey);
 };
 
 export const getHandlerMetadata = (
@@ -101,7 +106,7 @@ export const setParameterMetadata = (
 ): void => {
   let list: ParameterMetadata[] = getMetadata(kParameter, target, propertyKey);
   if (list == null) {
-    defineMetadata(kParameter, (list = []), target, propertyKey);
+    setMetadata(kParameter, (list = []), target, propertyKey);
   }
   list[metadata.parameterIndex] = metadata;
 };

@@ -7,19 +7,23 @@ export const makeParameterDecorator = (
   extractor: ParameterExtractor,
   key: string | null,
   pipe: Newable<Pipe> | null,
-) => {
-  return ((
+): ParameterDecorator => {
+  return (
     target: object,
-    propertyKey: PropertyKey,
+    propertyKey: PropertyKey | undefined,
     parameterIndex: number,
   ): void => {
+    if (propertyKey == null) {
+      // Cannot be used on a constructor parameter.
+      throw new TypeError();
+    }
     setParameterMetadata(target, propertyKey, {
       parameterIndex,
       extractor,
       key,
       pipe,
     });
-  }) as ParameterDecorator;
+  };
 };
 
 export const annotateParameters = (ref: Reflector): void => {

@@ -1,4 +1,10 @@
-import { type PropertyKey, reflectorOf } from "@fastr/lang";
+import {
+  getMetadata,
+  hasMetadata,
+  type PropertyKey,
+  reflectorOf,
+  setMetadata,
+} from "@fastr/lang";
 import { kInject, kInjectable, kProp, kProvides } from "./impl/constants.js";
 import {
   type InjectableAnn,
@@ -34,14 +40,12 @@ export type InjectableOptions = {
  */
 export const injectable = (
   { id, name, singleton }: Partial<InjectableOptions> = {}, //
-) => {
-  return (<T extends abstract new (...args: any) => unknown>(
-    target: T,
-  ): void => {
-    if (Reflect.hasMetadata(kInjectable, target)) {
+): ClassDecorator => {
+  return (target: object): void => {
+    if (hasMetadata(kInjectable, target)) {
       throw new Error("Duplicate annotation @injectable");
     }
-    Reflect.defineMetadata(
+    setMetadata(
       kInjectable,
       {
         id: id ?? null,
@@ -50,7 +54,7 @@ export const injectable = (
       } satisfies InjectableAnn,
       target,
     );
-  }) as ClassDecorator;
+  };
 };
 
 /**
@@ -85,16 +89,16 @@ export type InjectOptions = {
 export const inject = <T = unknown>(
   id: ValueId<T>,
   { name }: Partial<InjectOptions> = {}, //
-) => {
+): ParameterDecorator => {
   if (id == null) {
     throw new TypeError();
   }
-  return ((
+  return (
     target: object,
-    propertyKey: PropertyKey,
+    propertyKey: PropertyKey | undefined,
     parameterIndex: number,
   ): void => {
-    const metadata = Reflect.getMetadata(kInject, target, propertyKey) ?? [];
+    const metadata = getMetadata(kInject, target, propertyKey) ?? [];
     if (metadata[parameterIndex] != null) {
       throw new Error("Duplicate annotation @inject");
     }
@@ -102,8 +106,8 @@ export const inject = <T = unknown>(
       id,
       name: name ?? null,
     } satisfies InjectAnn;
-    Reflect.defineMetadata(kInject, metadata, target, propertyKey);
-  }) as ParameterDecorator;
+    setMetadata(kInject, metadata, target, propertyKey);
+  };
 };
 
 /**
@@ -116,11 +120,11 @@ export type PropOptions = {
 
 export const prop = <T = unknown>(
   { id, name }: Partial<PropOptions> = {}, //
-) => {
-  return ((target: object, propertyKey: PropertyKey): void => {
+): PropertyDecorator => {
+  return (target: object, propertyKey: PropertyKey): void => {
     reflectorOf.addPropertyKey(target, propertyKey);
     const { constructor } = target;
-    const metadata = Reflect.getMetadata(kProp, constructor) ?? {};
+    const metadata = getMetadata(kProp, constructor) ?? {};
     if (metadata[propertyKey] != null) {
       throw new Error("Duplicate annotation @prop");
     }
@@ -129,8 +133,8 @@ export const prop = <T = unknown>(
       id: id ?? null,
       name: name ?? null,
     } satisfies PropAnn;
-    Reflect.defineMetadata(kProp, metadata, constructor);
-  }) as PropertyDecorator;
+    setMetadata(kProp, metadata, constructor);
+  };
 };
 
 /**
@@ -157,12 +161,12 @@ export type ProvidesOptions = {
  */
 export const provides = (
   { id, name, singleton }: Partial<ProvidesOptions> = {}, //
-) => {
-  return ((target: object, propertyKey: PropertyKey): void => {
-    if (Reflect.hasMetadata(kProvides, target, propertyKey)) {
+): MethodDecorator => {
+  return (target: object, propertyKey: PropertyKey): void => {
+    if (hasMetadata(kProvides, target, propertyKey)) {
       throw new Error("Duplicate annotation @provides");
     }
-    Reflect.defineMetadata(
+    setMetadata(
       kProvides,
       {
         id: id ?? null,
@@ -172,5 +176,5 @@ export const provides = (
       target,
       propertyKey,
     );
-  }) as MethodDecorator;
+  };
 };

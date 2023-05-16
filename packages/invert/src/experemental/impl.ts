@@ -1,11 +1,10 @@
-import { type PropertyKey } from "@fastr/lang";
+import { getMetadata, type PropertyKey, setMetadata } from "@fastr/lang";
 import { type Name } from "../types.js";
 import { addTag, type TagMap } from "./tags.js";
 
 const kPropertyTags = Symbol("kPropertyTags");
 const kParameterTags = Symbol("kParameterTags");
 const newMap = (): TagMap => Object.create(null);
-const { getMetadata, defineMetadata } = Reflect;
 
 export const tagParameter = (
   target: object,
@@ -14,17 +13,9 @@ export const tagParameter = (
   name: Name,
   value: Name,
 ): void => {
-  let list: TagMap[];
-  if (propertyKey != null) {
-    list = getMetadata(kParameterTags, target, propertyKey) as TagMap[];
-    if (list == null) {
-      defineMetadata(kParameterTags, (list = []), target, propertyKey);
-    }
-  } else {
-    list = getMetadata(kParameterTags, target) as TagMap[];
-    if (list == null) {
-      defineMetadata(kParameterTags, (list = []), target);
-    }
+  let list = getMetadata(kParameterTags, target, propertyKey) as TagMap[];
+  if (list == null) {
+    setMetadata(kParameterTags, (list = []), target, propertyKey);
   }
   let map = list[parameterIndex];
   if (map == null) {
@@ -35,21 +26,13 @@ export const tagParameter = (
 
 export const tagProperty = (
   target: object,
-  propertyKey: PropertyKey | undefined,
+  propertyKey: PropertyKey,
   name: Name,
   value: Name,
 ): void => {
-  let map: TagMap;
-  if (propertyKey != null) {
-    map = getMetadata(kPropertyTags, target, propertyKey) as TagMap;
-    if (map == null) {
-      defineMetadata(kPropertyTags, (map = newMap()), target, propertyKey);
-    }
-  } else {
-    map = getMetadata(kPropertyTags, target) as TagMap;
-    if (map == null) {
-      defineMetadata(kPropertyTags, (map = newMap()), target);
-    }
+  let map = getMetadata(kPropertyTags, target, propertyKey) as TagMap;
+  if (map == null) {
+    setMetadata(kPropertyTags, (map = newMap()), target, propertyKey);
   }
   addTag(map, name, value);
 };
@@ -58,20 +41,12 @@ export const getParameterTags = (
   target: object,
   propertyKey: PropertyKey | undefined,
 ): readonly TagMap[] => {
-  if (propertyKey != null) {
-    return getMetadata(kParameterTags, target, propertyKey) ?? [];
-  } else {
-    return getMetadata(kParameterTags, target) ?? [];
-  }
+  return getMetadata(kParameterTags, target, propertyKey) ?? [];
 };
 
 export const getPropertyTags = (
   target: object,
-  propertyKey: PropertyKey | undefined,
+  propertyKey: PropertyKey,
 ): TagMap | null => {
-  if (propertyKey != null) {
-    return getMetadata(kPropertyTags, target, propertyKey) ?? null;
-  } else {
-    return getMetadata(kPropertyTags, target) ?? null;
-  }
+  return getMetadata(kPropertyTags, target, propertyKey) ?? null;
 };

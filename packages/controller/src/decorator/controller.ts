@@ -11,10 +11,10 @@ export function controller(path?: string): ClassDecorator;
 export function controller(options?: ControllerOptions): ClassDecorator;
 export function controller(arg0?: string | ControllerOptions): ClassDecorator {
   const options = makeOptions(arg0);
-  return ((target: Newable): void => {
+  return (target: object): void => {
     setControllerMetadata(target, options);
-    annotateParameters(reflectorOf(target));
-  }) as ClassDecorator;
+    annotateParameters(reflectorOf(target as Newable));
+  };
 }
 
 function makeOptions(options?: string | HandlerOptions): {
