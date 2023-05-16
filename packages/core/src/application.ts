@@ -17,13 +17,11 @@ import {
   type DefaultState,
   type Handler,
   type HandlerClass,
-  isHandlerClass,
-  isHandlerObject,
   type Middleware,
-  type Next,
 } from "./middleware.js";
 import { type ProxyOptions, Request } from "./request.js";
 import { Response } from "./response.js";
+import { toMiddleware } from "./util.js";
 
 export interface ApplicationOptions extends ProxyOptions {
   readonly defaultState: DefaultState;
@@ -71,7 +69,7 @@ export class Application<StateT = unknown> extends EventEmitter {
     middleware: Middleware<StateT & NewStateT>,
   ): Application<StateT & NewStateT>;
   use(middleware: AnyMiddleware): this {
-    this.middleware.push(this.toMiddleware(middleware as any));
+    this.middleware.push(toMiddleware(middleware));
     return this;
   }
 
@@ -144,25 +142,6 @@ export class Application<StateT = unknown> extends EventEmitter {
     });
   }
 
-  toMiddleware(middleware: HandlerClass): Middleware;
-  toMiddleware(middleware: Handler): Middleware;
-  toMiddleware(middleware: Middleware): Middleware;
-  toMiddleware(middleware: AnyMiddleware): Middleware {
-    if (isHandlerClass(middleware)) {
-      return this.useHandlerClass(middleware);
-    }
-
-    if (isHandlerObject(middleware)) {
-      return this.useHandlerObject(middleware);
-    }
-
-    if (typeof middleware === "function") {
-      return middleware as Middleware;
-    }
-
-    throw new TypeError();
-  }
-
   protected handleError(
     req: IncomingMessage,
     res: ServerResponse,
@@ -200,18 +179,6 @@ export class Application<StateT = unknown> extends EventEmitter {
         console.error(err);
       }
     }
-  }
-
-  private useHandlerClass(target: HandlerClass): Middleware {
-    return (ctx: Context, next: Next): void | Promise<void> => {
-      return ctx.container.get(target).handle(ctx, next);
-    };
-  }
-
-  private useHandlerObject(target: Handler): Middleware {
-    return (ctx: Context, next: Next): void | Promise<void> => {
-      return target.handle(ctx, next);
-    };
   }
 
   get [Symbol.toStringTag](): string {

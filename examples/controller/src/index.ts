@@ -1,9 +1,10 @@
-import { body, controller, http, routing, use } from "@fastr/controller";
+import { addController, body, controller, http, use } from "@fastr/controller";
 import { Application, Context } from "@fastr/core";
 import { injectable } from "@fastr/invert";
 import { expectJson } from "@fastr/middleware-body";
 import { compress } from "@fastr/middleware-compress";
 import { conditional } from "@fastr/middleware-conditional";
+import { Router } from "@fastr/middleware-router";
 import { createServer } from "http";
 
 @injectable()
@@ -31,9 +32,10 @@ class Controller {
 }
 
 const app = new Application();
-app.use(conditional());
-app.use(compress());
-app.use(routing(app).add(Controller).middleware());
+app
+  .use(conditional())
+  .use(compress())
+  .use(addController(new Router(), Controller).middleware());
 
 createServer(app.callback()).listen(8080, () => {
   console.log("Application started on http://localhost:8080/");

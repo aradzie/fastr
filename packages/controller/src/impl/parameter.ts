@@ -2,7 +2,7 @@ import { type Newable } from "@fastr/core";
 import { type Reflector } from "@fastr/metadata";
 import { type Pipe } from "../pipe.js";
 import { getStandardExtractor, type ParameterExtractor } from "./context.js";
-import { setParameterMetadata } from "./metadata.js";
+import { getHandlerMetadata, setParameterMetadata } from "./metadata.js";
 import { type PropertyKey } from "./types.js";
 
 export const makeParameterDecorator = (
@@ -27,6 +27,10 @@ export const makeParameterDecorator = (
 export const annotateParameters = (ref: Reflector): void => {
   const { prototype } = ref.newable;
   for (const { key, value, paramTypes } of Object.values(ref.methods)) {
+    const handlerMetadata = getHandlerMetadata(prototype, key);
+    if (handlerMetadata == null) {
+      continue;
+    }
     if (value.length !== paramTypes.length) {
       throw new Error(`Design types are missing on ${ref.newable.name}`);
     }
@@ -39,6 +43,8 @@ export const annotateParameters = (ref: Reflector): void => {
           key: null,
           pipe: null,
         });
+      } else {
+        // TODO throw new TypeError();
       }
     }
   }
