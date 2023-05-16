@@ -1,6 +1,6 @@
 {
   "name": "@fastr/oauth-adapter-facebook",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.2-alpha.0",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,10 +14,10 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/client": "^0.0.1-alpha.1",
-    "@fastr/headers": "^0.0.1-alpha.1",
-    "@fastr/oauth-client": "^0.0.1-alpha.1",
-    "@fastr/status": "^0.0.1-alpha.1"
+    "@fastr/client": "^0.0.2-alpha.0",
+    "@fastr/headers": "^0.0.2-alpha.0",
+    "@fastr/oauth-client": "^0.0.2-alpha.0",
+    "@fastr/status": "^0.0.2-alpha.0"
   },
   "engines": {
     "node": ">=18.12"
