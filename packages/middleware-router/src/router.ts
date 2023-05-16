@@ -16,7 +16,7 @@ import {
 // TODO Case sensitivity.
 // TODO Trailing slash.
 // TODO Trailing star.
-// TODO Parameter middlewares.
+// TODO Parameter middleware.
 // TODO Escape URI components.
 
 const kRouterPath = Symbol("kRouterPath");
@@ -28,45 +28,52 @@ export interface RouterOptions {
   readonly matchTrailingSlash?: boolean;
 }
 
+export type RouteOptions = {
+  readonly name?: string | null;
+  readonly path: string;
+  readonly method: string;
+  readonly middleware:
+    | Middleware<RouterState>
+    | readonly Middleware<RouterState>[];
+};
+
 export class Router<StateT = unknown> {
-  private readonly prefix: Prefix | null;
-  private readonly caseSensitive: boolean;
-  private readonly matchTrailingSlash: boolean;
-  private readonly middlewares: Array<Middleware<RouterState>> = [];
-  private readonly paramMiddlewaresByName = new Map<string, ParamMiddleware>();
-  private readonly routesByName = new Map<string, Route>();
-  private readonly root = new Node();
+  private readonly _prefix: Prefix | null;
+  private readonly _caseSensitive: boolean;
+  private readonly _matchTrailingSlash: boolean;
+  private readonly _middleware: Array<Middleware<RouterState>> = [];
+  private readonly _paramMiddlewareByName = new Map<string, ParamMiddleware>();
+  private readonly _routesByName = new Map<string, Route>();
+  private readonly _root = new Node();
 
   constructor({
     prefix = "",
     caseSensitive = true,
     matchTrailingSlash = true,
   }: RouterOptions = {}) {
-    this.prefix = prefix ? new Prefix(prefix) : null;
-    this.caseSensitive = caseSensitive;
-    this.matchTrailingSlash = matchTrailingSlash;
+    this._prefix = prefix ? new Prefix(prefix) : null;
+    this._caseSensitive = caseSensitive;
+    this._matchTrailingSlash = matchTrailingSlash;
   }
 
-  use(...middlewares: readonly Middleware<RouterState>[]): Router<StateT> {
-    this.middlewares.push(
-      ...(middlewares as ReadonlyArray<Middleware<RouterState>>),
-    );
+  use(...middleware: readonly Middleware<RouterState>[]): Router<StateT> {
+    this._middleware.push(...middleware);
     return this;
   }
 
   param(param: string, middleware: ParamMiddleware): Router<StateT> {
-    this.paramMiddlewaresByName.set(param, middleware);
+    this._paramMiddlewareByName.set(param, middleware);
     return this;
   }
 
   get(
     name: string,
     path: string,
-    ...middlewares: readonly Middleware<RouterState>[]
+    ...middleware: readonly Middleware<RouterState>[]
   ): Router<StateT>;
   get(
     path: string,
-    ...middlewares: readonly Middleware<RouterState>[]
+    ...middleware: readonly Middleware<RouterState>[]
   ): Router<StateT>;
   get(
     name: string,
@@ -85,21 +92,21 @@ export class Router<StateT = unknown> {
       typeof args[0] === "string" &&
       typeof args[1] === "string"
     ) {
-      const [name, path, ...middlewares] = args;
+      const [name, path, ...middleware] = args;
       this.register({
         name,
         path,
         method: "GET",
-        middlewares,
+        middleware,
       });
       return this;
     }
     if (args.length > 1 && typeof args[0] === "string") {
-      const [path, ...middlewares] = args;
+      const [path, ...middleware] = args;
       this.register({
         path,
         method: "GET",
-        middlewares,
+        middleware,
       });
       return this;
     }
@@ -109,11 +116,11 @@ export class Router<StateT = unknown> {
   post(
     name: string,
     path: string,
-    ...middlewares: readonly Middleware<RouterState>[]
+    ...middleware: readonly Middleware<RouterState>[]
   ): Router<StateT>;
   post(
     path: string,
-    ...middlewares: readonly Middleware<RouterState>[]
+    ...middleware: readonly Middleware<RouterState>[]
   ): Router<StateT>;
   post(
     name: string,
@@ -132,21 +139,21 @@ export class Router<StateT = unknown> {
       typeof args[0] === "string" &&
       typeof args[1] === "string"
     ) {
-      const [name, path, ...middlewares] = args;
+      const [name, path, ...middleware] = args;
       this.register({
         name,
         path,
         method: "POST",
-        middlewares,
+        middleware: middleware,
       });
       return this;
     }
     if (args.length > 1 && typeof args[0] === "string") {
-      const [path, ...middlewares] = args;
+      const [path, ...middleware] = args;
       this.register({
         path,
         method: "POST",
-        middlewares,
+        middleware,
       });
       return this;
     }
@@ -156,11 +163,11 @@ export class Router<StateT = unknown> {
   put(
     name: string,
     path: string,
-    ...middlewares: readonly Middleware<RouterState>[]
+    ...middleware: readonly Middleware<RouterState>[]
   ): Router<StateT>;
   put(
     path: string,
-    ...middlewares: readonly Middleware<RouterState>[]
+    ...middleware: readonly Middleware<RouterState>[]
   ): Router<StateT>;
   put(
     name: string,
@@ -179,21 +186,21 @@ export class Router<StateT = unknown> {
       typeof args[0] === "string" &&
       typeof args[1] === "string"
     ) {
-      const [name, path, ...middlewares] = args;
+      const [name, path, ...middleware] = args;
       this.register({
         name,
         path,
         method: "PUT",
-        middlewares,
+        middleware: middleware,
       });
       return this;
     }
     if (args.length > 1 && typeof args[0] === "string") {
-      const [path, ...middlewares] = args;
+      const [path, ...middleware] = args;
       this.register({
         path,
         method: "PUT",
-        middlewares,
+        middleware: middleware,
       });
       return this;
     }
@@ -203,11 +210,11 @@ export class Router<StateT = unknown> {
   delete(
     name: string,
     path: string,
-    ...middlewares: readonly Middleware<RouterState>[]
+    ...middleware: readonly Middleware<RouterState>[]
   ): Router<StateT>;
   delete(
     path: string,
-    ...middlewares: readonly Middleware<RouterState>[]
+    ...middleware: readonly Middleware<RouterState>[]
   ): Router<StateT>;
   delete(
     name: string,
@@ -226,21 +233,21 @@ export class Router<StateT = unknown> {
       typeof args[0] === "string" &&
       typeof args[1] === "string"
     ) {
-      const [name, path, ...middlewares] = args;
+      const [name, path, ...middleware] = args;
       this.register({
         name,
         path,
         method: "DELETE",
-        middlewares,
+        middleware: middleware,
       });
       return this;
     }
     if (args.length > 1 && typeof args[0] === "string") {
-      const [path, ...middlewares] = args;
+      const [path, ...middleware] = args;
       this.register({
         path,
         method: "DELETE",
-        middlewares,
+        middleware: middleware,
       });
       return this;
     }
@@ -250,11 +257,11 @@ export class Router<StateT = unknown> {
   patch(
     name: string,
     path: string,
-    ...middlewares: readonly Middleware<RouterState>[]
+    ...middleware: readonly Middleware<RouterState>[]
   ): Router<StateT>;
   patch(
     path: string,
-    ...middlewares: readonly Middleware<RouterState>[]
+    ...middleware: readonly Middleware<RouterState>[]
   ): Router<StateT>;
   patch(
     name: string,
@@ -273,21 +280,21 @@ export class Router<StateT = unknown> {
       typeof args[0] === "string" &&
       typeof args[1] === "string"
     ) {
-      const [name, path, ...middlewares] = args;
+      const [name, path, ...middleware] = args;
       this.register({
         name,
         path,
         method: "PATCH",
-        middlewares,
+        middleware: middleware,
       });
       return this;
     }
     if (args.length > 1 && typeof args[0] === "string") {
-      const [path, ...middlewares] = args;
+      const [path, ...middleware] = args;
       this.register({
         path,
         method: "PATCH",
-        middlewares,
+        middleware: middleware,
       });
       return this;
     }
@@ -297,11 +304,11 @@ export class Router<StateT = unknown> {
   any(
     name: string,
     path: string,
-    ...middlewares: readonly Middleware<RouterState>[]
+    ...middleware: readonly Middleware<RouterState>[]
   ): Router<StateT>;
   any(
     path: string,
-    ...middlewares: readonly Middleware<RouterState>[]
+    ...middleware: readonly Middleware<RouterState>[]
   ): Router<StateT>;
   any(
     name: string,
@@ -320,21 +327,21 @@ export class Router<StateT = unknown> {
       typeof args[0] === "string" &&
       typeof args[1] === "string"
     ) {
-      const [name, path, ...middlewares] = args;
+      const [name, path, ...middleware] = args;
       this.register({
         name,
         path,
         method: "*",
-        middlewares,
+        middleware: middleware,
       });
       return this;
     }
     if (args.length > 1 && typeof args[0] === "string") {
-      const [path, ...middlewares] = args;
+      const [path, ...middleware] = args;
       this.register({
         path,
         method: "*",
-        middlewares,
+        middleware: middleware,
       });
       return this;
     }
@@ -348,26 +355,19 @@ export class Router<StateT = unknown> {
     return this;
   }
 
-  register(config: {
-    readonly name?: string | null;
-    readonly path: string;
-    readonly method: string;
-    readonly middlewares:
-      | Middleware<RouterState>
-      | readonly Middleware<RouterState>[];
-  }): Route {
-    let { name = null, path, method, middlewares } = config;
-    if (!Array.isArray(middlewares)) {
-      middlewares = [middlewares] as readonly Middleware<RouterState>[];
+  register(options: RouteOptions): Route {
+    let { name = null, path, method, middleware } = options;
+    if (!Array.isArray(middleware)) {
+      middleware = [middleware] as readonly Middleware<RouterState>[];
     }
-    const route = new Route({ name, path, method, middlewares });
+    const route = new Route({ name, path, method, middleware });
     if (name != null) {
-      if (this.routesByName.has(name)) {
+      if (this._routesByName.has(name)) {
         throw new Error(`Duplicate route name "${name}"`);
       }
-      this.routesByName.set(name, route);
+      this._routesByName.set(name, route);
     }
-    Node.insert(this.root, route);
+    Node.insert(this._root, route);
     return route;
   }
 
@@ -394,8 +394,8 @@ export class Router<StateT = unknown> {
       const params = Object.create(null) as MatchedPathParams;
 
       // Match prefix.
-      if (this.prefix != null) {
-        const match = this.prefix.match(path, params);
+      if (this._prefix != null) {
+        const match = this._prefix.match(path, params);
         if (match != null) {
           path = match.suffix;
         } else {
@@ -404,7 +404,7 @@ export class Router<StateT = unknown> {
       }
 
       // Find route.
-      const match = Node.find(this.root, path, method, params);
+      const match = Node.find(this._root, path, method, params);
       if (match === kNotFound) {
         return next();
       }
@@ -420,7 +420,7 @@ export class Router<StateT = unknown> {
       Object.assign((ctx.state.params ??= {}), updatedParams);
 
       // Call route middleware.
-      return compose([...this.middlewares, ...route.middlewares])(ctx, next);
+      return compose([...this._middleware, ...route.middleware])(ctx, next);
     };
   }
 
@@ -430,7 +430,7 @@ export class Router<StateT = unknown> {
   ): Promise<Params> {
     const result = Object.create(null);
     for (const [name, value] of Object.entries(params)) {
-      const middleware = this.paramMiddlewaresByName.get(name);
+      const middleware = this._paramMiddlewareByName.get(name);
       if (middleware != null) {
         result[name] = await middleware(value, ctx);
       } else {
@@ -446,7 +446,7 @@ export class Router<StateT = unknown> {
    * @throws Error If route with the given name does not exist.
    */
   namedRoute(name: string): Route {
-    const route = this.routesByName.get(name);
+    const route = this._routesByName.get(name);
     if (route == null) {
       throw new Error(`Unknown route name "${name}"`);
     }
@@ -474,8 +474,10 @@ export class Router<StateT = unknown> {
    */
   makePath(name: string, params: Params): string {
     const route = this.namedRoute(name);
-    if (this.prefix != null) {
-      return this.prefix.makePath(params) + route.makePath(params).substring(1);
+    if (this._prefix != null) {
+      return (
+        this._prefix.makePath(params) + route.makePath(params).substring(1)
+      );
     } else {
       return route.makePath(params);
     }

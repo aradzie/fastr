@@ -5,7 +5,7 @@ import { type RouterState } from "@fastr/middleware-router";
 import test from "ava";
 import { helper } from "./helper.js";
 
-test("use injectable middlewares", async (t) => {
+test("use injectable middleware", async (t) => {
   // Arrange.
 
   @injectable()
@@ -71,7 +71,7 @@ test("use injectable middlewares", async (t) => {
   t.is(await body.text(), "1>2>3>4>5>result");
 });
 
-test("use function middlewares", async (t) => {
+test("use function middleware", async (t) => {
   // Arrange.
 
   async function middleware1(ctx: Context<RouterState>, next: Next) {

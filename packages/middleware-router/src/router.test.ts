@@ -222,7 +222,7 @@ test("router matches methods", async (t) => {
   }
 });
 
-test("router uses middlewares", async (t) => {
+test("router uses middleware", async (t) => {
   const router = new Router<State>();
 
   router

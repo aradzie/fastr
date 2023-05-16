@@ -19,9 +19,9 @@ export class Route {
    */
   readonly method: string;
   /**
-   * The list of middlewares to apply to the path.
+   * The list of middleware to apply to the path.
    */
-  readonly middlewares: readonly Middleware<RouterState>[];
+  readonly middleware: readonly Middleware<RouterState>[];
   /**
    * Segments obtained by parsing the path.
    */
@@ -31,17 +31,17 @@ export class Route {
     name,
     path,
     method,
-    middlewares,
+    middleware,
   }: {
     readonly name: string | null;
     readonly path: string;
     readonly method: string;
-    readonly middlewares: readonly Middleware<RouterState>[];
+    readonly middleware: readonly Middleware<RouterState>[];
   }) {
     this.name = name;
     this.path = path;
     this.method = method.toUpperCase();
-    this.middlewares = middlewares;
+    this.middleware = middleware;
     this.segments = parse(path);
   }
 

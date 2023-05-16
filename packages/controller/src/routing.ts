@@ -39,7 +39,7 @@ export function addController(
         name: handlerMetadata.name,
         method: handlerMetadata.method,
         path: joinPaths(controllerMetadata.path, handlerMetadata.path),
-        middlewares: [
+        middleware: [
           ...toMiddlewareList(getControllerUse(controller)),
           ...toMiddlewareList(getHandlerUse(prototype, key)),
           makeMiddleware(controller, key, parameterMetadata),

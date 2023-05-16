@@ -3,7 +3,7 @@ import { compose } from "./compose.js";
 import { type Context } from "./context.js";
 import { type Next } from "./middleware.js";
 
-test("compose middlewares", async (t) => {
+test("compose middleware", async (t) => {
   {
     const middleware = compose([]);
     const ctx = { state: { answer: "x" } } as Context<State>;

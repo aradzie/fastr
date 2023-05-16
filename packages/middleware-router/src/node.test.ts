@@ -7,25 +7,25 @@ test("insert literal segments", (t) => {
     name: "route1",
     path: "/",
     method: "GET",
-    middlewares: [],
+    middleware: [],
   });
   const route2 = new Route({
     name: "route2",
     path: "/",
     method: "PUT",
-    middlewares: [],
+    middleware: [],
   });
   const route3 = new Route({
     name: "route3",
     path: "/a/b/c",
     method: "GET",
-    middlewares: [],
+    middleware: [],
   });
   const route4 = new Route({
     name: "route4",
     path: "/a/b/c",
     method: "PUT",
-    middlewares: [],
+    middleware: [],
   });
   const root = new Node();
 
@@ -71,13 +71,13 @@ test("insert param segments", (t) => {
     name: "route1",
     path: "/{param}",
     method: "GET",
-    middlewares: [],
+    middleware: [],
   });
   const route2 = new Route({
     name: "route2",
     path: "/prefix/{p1:[a-z]+}/{p2:[a-z]+}-{p3:[a-z]+}/suffix",
     method: "GET",
-    middlewares: [],
+    middleware: [],
   });
   const root = new Node();
 
@@ -118,37 +118,37 @@ test("literal segments take precedence", (t) => {
     name: "route1",
     path: "/prefix",
     method: "*",
-    middlewares: [],
+    middleware: [],
   });
   const route2 = new Route({
     name: "route2",
     path: "/{param1}",
     method: "*",
-    middlewares: [],
+    middleware: [],
   });
   const route3 = new Route({
     name: "route3",
     path: "/prefix/suffix",
     method: "*",
-    middlewares: [],
+    middleware: [],
   });
   const route4 = new Route({
     name: "route4",
     path: "/{param1}/{param2}",
     method: "*",
-    middlewares: [],
+    middleware: [],
   });
   const route5 = new Route({
     name: "route5",
     path: "/prefix/{param2}",
     method: "*",
-    middlewares: [],
+    middleware: [],
   });
   const route6 = new Route({
     name: "route6",
     path: "/{param1}/suffix",
     method: "*",
-    middlewares: [],
+    middleware: [],
   });
   const root = new Node();
 
@@ -202,19 +202,19 @@ test("specific methods take precedence", (t) => {
     name: "route1",
     path: "/",
     method: "GET",
-    middlewares: [],
+    middleware: [],
   });
   const route2 = new Route({
     name: "route2",
     path: "/",
     method: "PUT",
-    middlewares: [],
+    middleware: [],
   });
   const route3 = new Route({
     name: "route3",
     path: "/",
     method: "*",
-    middlewares: [],
+    middleware: [],
   });
   const root = new Node();
 
