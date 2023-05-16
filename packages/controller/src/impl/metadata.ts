@@ -1,11 +1,8 @@
 import { type AnyMiddleware, type Newable } from "@fastr/core";
-import {
-  newMetadataKey,
-  objectMetadata,
-  propertyMetadata,
-} from "@fastr/metadata";
+
 import { type Pipe } from "../pipe.js";
 import { type ParameterExtractor } from "./context.js";
+import { defineMetadata, getMetadata, hasMetadata } from "./reflect.js";
 import { type PropertyKey } from "./types.js";
 
 export type ControllerMetadata = {
@@ -25,57 +22,59 @@ export type ParameterMetadata = {
   readonly pipe: Newable<Pipe> | null;
 };
 
-const kUseMiddleware = newMetadataKey<AnyMiddleware[]>(Symbol());
-const kController = newMetadataKey<ControllerMetadata>(Symbol());
-const kHandler = newMetadataKey<HandlerMetadata>(Symbol());
-const kParameter = newMetadataKey<ParameterMetadata[]>(Symbol());
+const kUseMiddleware = Symbol("kUseMiddleware");
+const kController = Symbol("kController");
+const kHandler = Symbol("kHandler");
+const kParameter = Symbol("kParameter");
 
 export const addControllerUse = (
   target: object,
-  ...middleware: AnyMiddleware[]
-): void =>
-  objectMetadata(target) //
-    .update(kUseMiddleware, (list = []) => {
-      list.unshift(...middleware);
-      return list;
-    });
+  ...middleware: readonly AnyMiddleware[]
+): void => {
+  let list: AnyMiddleware[] = getMetadata(kUseMiddleware, target);
+  if (list == null) {
+    defineMetadata(kUseMiddleware, (list = []), target);
+  }
+  list.unshift(...middleware);
+};
 
 export const getControllerUse = (target: object): readonly AnyMiddleware[] => {
-  return objectMetadata(target).get(kUseMiddleware) ?? [];
+  return getMetadata(kUseMiddleware, target) ?? [];
 };
 
 export const addHandlerUse = (
   target: object,
   propertyKey: PropertyKey,
-  ...middleware: AnyMiddleware[]
-): void =>
-  propertyMetadata(target, propertyKey) //
-    .update(kUseMiddleware, (list = []) => {
-      list.unshift(...middleware);
-      return list;
-    });
+  ...middleware: readonly AnyMiddleware[]
+): void => {
+  let list: AnyMiddleware[] = getMetadata(kUseMiddleware, target, propertyKey);
+  if (list == null) {
+    defineMetadata(kUseMiddleware, (list = []), target, propertyKey);
+  }
+  list.unshift(...middleware);
+};
 
 export const getHandlerUse = (
   target: object,
   propertyKey: PropertyKey,
 ): readonly AnyMiddleware[] => {
-  return (
-    propertyMetadata(target, propertyKey) //
-      .get(kUseMiddleware) ?? []
-  );
+  return getMetadata(kUseMiddleware, target, propertyKey) ?? [];
 };
 
 export const setControllerMetadata = (
   target: object,
   metadata: ControllerMetadata,
 ): void => {
-  objectMetadata(target).set(kController, metadata);
+  if (hasMetadata(kController, target)) {
+    throw new TypeError();
+  }
+  defineMetadata(kController, metadata, target);
 };
 
 export const getControllerMetadata = (
   target: object,
 ): ControllerMetadata | null => {
-  return objectMetadata(target).get(kController) ?? null;
+  return getMetadata(kController, target) ?? null;
 };
 
 export const setHandlerMetadata = (
@@ -83,18 +82,17 @@ export const setHandlerMetadata = (
   propertyKey: PropertyKey,
   metadata: HandlerMetadata,
 ): void => {
-  propertyMetadata(target, propertyKey) //
-    .set(kHandler, metadata);
+  if (hasMetadata(kHandler, target, propertyKey)) {
+    throw new TypeError();
+  }
+  defineMetadata(kHandler, metadata, target, propertyKey);
 };
 
 export const getHandlerMetadata = (
   target: object,
   propertyKey: PropertyKey,
 ): HandlerMetadata | null => {
-  return (
-    propertyMetadata(target, propertyKey) //
-      .get(kHandler) ?? null
-  );
+  return getMetadata(kHandler, target, propertyKey) ?? null;
 };
 
 export const setParameterMetadata = (
@@ -102,19 +100,16 @@ export const setParameterMetadata = (
   propertyKey: PropertyKey,
   metadata: ParameterMetadata,
 ): void => {
-  propertyMetadata(target, propertyKey) //
-    .update(kParameter, (list = []) => {
-      list[metadata.parameterIndex] = metadata;
-      return list;
-    });
+  let list: ParameterMetadata[] = getMetadata(kParameter, target, propertyKey);
+  if (list == null) {
+    defineMetadata(kParameter, (list = []), target, propertyKey);
+  }
+  list[metadata.parameterIndex] = metadata;
 };
 
 export const getParameterMetadata = (
   target: object,
   propertyKey: PropertyKey,
 ): readonly ParameterMetadata[] => {
-  return (
-    propertyMetadata(target, propertyKey) //
-      .get(kParameter) ?? []
-  );
+  return getMetadata(kParameter, target, propertyKey) ?? [];
 };
