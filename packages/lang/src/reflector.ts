@@ -6,7 +6,7 @@ import {
 import { defineMetadata, getMetadata, hasMetadata } from "./impl/reflect.js";
 import { isConstructor, type Newable } from "./newable.js";
 
-const kPropKeys = Symbol("props");
+const kPropertyKeys = Symbol("kPropertyKeys");
 
 export type PropertyKey = string | symbol;
 export type MetadataKey = string | symbol;
@@ -46,7 +46,7 @@ class ClassReflector<T = unknown> implements Reflector<T> {
         this.methods[key] = new MethodReflector(prototype, key, value);
       }
     }
-    for (const key of getMetadata(kPropKeys, prototype) ?? []) {
+    for (const key of getMetadata(kPropertyKeys, prototype) ?? []) {
       this.properties[key] = new PropertyReflector(prototype, key);
     }
   }
@@ -172,10 +172,10 @@ export const reflectorOf = <T = unknown>(newable: Newable<T>): Reflector<T> => {
   return reflector as Reflector<T>;
 };
 
-reflectorOf.addProperty = (prototype: object, key: PropertyKey): void => {
-  let propKeys = getMetadata(kPropKeys, prototype) as Set<PropertyKey>;
-  if (propKeys == null) {
-    defineMetadata(kPropKeys, (propKeys = new Set()), prototype);
+reflectorOf.addPropertyKey = (prototype: object, key: PropertyKey): void => {
+  let propertyKeys = getMetadata(kPropertyKeys, prototype) as Set<PropertyKey>;
+  if (propertyKeys == null) {
+    defineMetadata(kPropertyKeys, (propertyKeys = new Set()), prototype);
   }
-  propKeys.add(key);
+  propertyKeys.add(key);
 };

@@ -17,7 +17,7 @@ const paramDec = <T = unknown>() => {
 
 const propDec = <T = unknown>() => {
   return ((target: object, propertyKey: string | symbol): void => {
-    reflectorOf.addProperty(target, propertyKey);
+    reflectorOf.addPropertyKey(target, propertyKey);
   }) as PropertyDecorator;
 };
 

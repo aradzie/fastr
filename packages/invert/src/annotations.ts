@@ -118,7 +118,7 @@ export const prop = <T = unknown>(
   { id, name }: Partial<PropOptions> = {}, //
 ) => {
   return ((target: object, propertyKey: PropertyKey): void => {
-    reflectorOf.addProperty(target, propertyKey);
+    reflectorOf.addPropertyKey(target, propertyKey);
     const { constructor } = target;
     const metadata = Reflect.getMetadata(kProp, constructor) ?? {};
     if (metadata[propertyKey] != null) {
