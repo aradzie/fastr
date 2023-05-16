@@ -1,5 +1,4 @@
 import test from "ava";
-import "reflect-metadata";
 import { reflector } from "./reflector.js";
 
 const classDec = () => {

@@ -1,5 +1,4 @@
 import test from "ava";
-import "reflect-metadata";
 import { inject, injectable, prop, provides } from "./annotations.js";
 import { type Binder, type Module } from "./types.js";
 
