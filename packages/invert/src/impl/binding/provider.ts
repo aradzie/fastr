@@ -4,12 +4,24 @@ import { getArgs } from "../util.js";
 import { type Binding } from "./types.js";
 
 export class ProviderBinding<T = unknown> implements Binding<T> {
+  private value: T | undefined;
+
   constructor(readonly metadata: ProviderMetadata) {}
 
   getValue(factory: ReadonlyContainer): T {
-    // TODO singleton
-    const { module, value, params } = this.metadata;
-    return Reflect.apply(value, module, getArgs(factory, params));
+    const { singleton, value, module, params } = this.metadata;
+    const makeValue = (): T => {
+      return Reflect.apply(value, module, getArgs(factory, params));
+    };
+    if (singleton) {
+      let value = this.value;
+      if (value == null) {
+        value = this.value = makeValue();
+      }
+      return value;
+    } else {
+      return makeValue();
+    }
   }
 
   get [Symbol.toStringTag](): string {

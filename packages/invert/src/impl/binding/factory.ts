@@ -5,7 +5,6 @@ export class FactoryBinding<T = unknown> implements Binding<T> {
   constructor(readonly factory: (container: ReadonlyContainer) => T) {}
 
   getValue(container: ReadonlyContainer): T {
-    // TODO singleton
     return this.factory(container);
   }
 
