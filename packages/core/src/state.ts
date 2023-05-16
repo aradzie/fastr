@@ -1,4 +1,4 @@
-import { type PropertyKey } from "@fastr/metadata";
+import { type PropertyKey } from "@fastr/lang";
 
 export type DefaultParams = {
   [key: PropertyKey]: unknown;

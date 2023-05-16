@@ -1,4 +1,4 @@
-import { isConstructor, type Newable, reflector } from "@fastr/metadata";
+import { isConstructor, type Newable, reflector } from "@fastr/lang";
 import { kInjectable } from "./constants.js";
 import { type ClassMetadata, type InjectableAnn } from "./types.js";
 import { getConstructorParamsMetadata, getPropsMetadata } from "./util.js";

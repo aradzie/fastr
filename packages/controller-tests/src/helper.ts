@@ -3,7 +3,7 @@ import { start } from "@fastr/client-testlib";
 import { addController } from "@fastr/controller";
 import { type AnyMiddleware, Application } from "@fastr/core";
 import { Container } from "@fastr/invert";
-import { type Newable } from "@fastr/metadata";
+import { type Newable } from "@fastr/lang";
 import { Router } from "@fastr/middleware-router";
 
 export function helper(

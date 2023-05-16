@@ -1,4 +1,4 @@
-import { isConstructor } from "@fastr/metadata";
+import { isConstructor } from "@fastr/lang";
 import { ContainerError } from "./errors.js";
 import { makeBinder } from "./impl/binder.js";
 import { ClassBinding } from "./impl/binding/class.js";

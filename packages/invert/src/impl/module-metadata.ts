@@ -1,4 +1,4 @@
-import { getConstructor, reflector } from "@fastr/metadata";
+import { getConstructor, reflector } from "@fastr/lang";
 import { type Module } from "../types.js";
 import { kProvides } from "./constants.js";
 import { type ProviderMetadata, type ProvidesAnn } from "./types.js";

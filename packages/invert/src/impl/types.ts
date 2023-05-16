@@ -1,4 +1,4 @@
-import { type Callable, type Newable, type PropertyKey } from "@fastr/metadata";
+import { type Callable, type Newable, type PropertyKey } from "@fastr/lang";
 import { type Name, type ValueId } from "../types.js";
 
 export type InjectableAnn = {

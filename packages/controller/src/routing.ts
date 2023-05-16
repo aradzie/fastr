@@ -5,7 +5,7 @@ import {
   type Next,
   toMiddleware,
 } from "@fastr/core";
-import { type Newable, type PropertyKey, reflector } from "@fastr/metadata";
+import { type Newable, type PropertyKey, reflector } from "@fastr/lang";
 import { type Router, type RouterState } from "@fastr/middleware-router";
 import {
   getControllerMetadata,

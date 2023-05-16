@@ -16,7 +16,7 @@
   "dependencies": {
     "@fastr/core": "^0.0.1-alpha.1",
     "@fastr/invert": "^0.0.1-alpha.1",
-    "@fastr/metadata": "^0.0.1-alpha.1",
+    "@fastr/lang": "^0.0.1-alpha.1",
     "@fastr/middleware-body": "^0.0.1-alpha.1",
     "@fastr/middleware-router": "^0.0.1-alpha.1",
     "@fastr/middleware-session": "^0.0.1-alpha.1",

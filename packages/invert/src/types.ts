@@ -1,4 +1,4 @@
-import { type Newable } from "@fastr/metadata";
+import { type Newable } from "@fastr/lang";
 
 export type Name = string | symbol;
 

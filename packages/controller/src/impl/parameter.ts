@@ -1,8 +1,4 @@
-import {
-  type Newable,
-  type PropertyKey,
-  type Reflector,
-} from "@fastr/metadata";
+import { type Newable, type PropertyKey, type Reflector } from "@fastr/lang";
 import { type Pipe } from "../pipe.js";
 import { getStandardExtractor, type ParameterExtractor } from "./context.js";
 import { getHandlerMetadata, setParameterMetadata } from "./metadata.js";

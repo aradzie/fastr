@@ -4,7 +4,7 @@ import {
   type Method,
   type Newable,
   type Reflector,
-} from "@fastr/metadata";
+} from "@fastr/lang";
 import { type ReadonlyContainer, type ValueId } from "../types.js";
 import { kInject, kProp } from "./constants.js";
 import {

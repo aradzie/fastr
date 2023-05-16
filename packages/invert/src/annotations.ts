@@ -1,4 +1,4 @@
-import { type PropertyKey, reflector } from "@fastr/metadata";
+import { type PropertyKey, reflector } from "@fastr/lang";
 import { kInject, kInjectable, kProp, kProvides } from "./impl/constants.js";
 import {
   type InjectableAnn,

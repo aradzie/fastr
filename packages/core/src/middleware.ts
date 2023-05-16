@@ -1,4 +1,4 @@
-import { type Newable } from "@fastr/metadata";
+import { type Newable } from "@fastr/lang";
 import { type Context } from "./context.js";
 
 export type Next = () => Promise<void>;

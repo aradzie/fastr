@@ -1,4 +1,4 @@
-import { isConstructor, type Newable } from "@fastr/metadata";
+import { isConstructor, type Newable } from "@fastr/lang";
 import {
   type Binder,
   type BindTo,

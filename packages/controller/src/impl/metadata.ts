@@ -1,5 +1,5 @@
 import { type AnyMiddleware } from "@fastr/core";
-import { type Newable, type PropertyKey } from "@fastr/metadata";
+import { type Newable, type PropertyKey } from "@fastr/lang";
 import { type Pipe } from "../pipe.js";
 import { type ParameterExtractor } from "./context.js";
 import { defineMetadata, getMetadata, hasMetadata } from "./reflect.js";

@@ -1,5 +1,5 @@
 import { type AnyMiddleware } from "@fastr/core";
-import { type PropertyKey } from "@fastr/metadata";
+import { type PropertyKey } from "@fastr/lang";
 import { addControllerUse, addHandlerUse } from "../impl/metadata.js";
 
 export function use(
