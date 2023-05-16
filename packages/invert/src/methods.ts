@@ -1,4 +1,4 @@
-import { getConstructor, type PropertyKey, reflector } from "@fastr/lang";
+import { getConstructor, type PropertyKey, reflectorOf } from "@fastr/lang";
 import { getArgs, getMethodParamsMetadata } from "./impl/util.js";
 import { type MethodHandle, type ReadonlyContainer } from "./types.js";
 
@@ -6,7 +6,7 @@ export function methodHandle<T = unknown>(
   target: object,
   propertyKey: PropertyKey,
 ): MethodHandle<T> {
-  const ref = reflector(getConstructor(target));
+  const ref = reflectorOf(getConstructor(target));
   const method = ref.methods[propertyKey];
   if (method == null) {
     if (method == null) {

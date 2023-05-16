@@ -162,9 +162,9 @@ class MethodReflector implements Method {
   }
 }
 
-const cache = new Map<Newable<any>, Reflector>();
+const cache = new WeakMap<Newable<any>, Reflector>();
 
-export const reflector = <T = unknown>(newable: Newable<T>): Reflector<T> => {
+export const reflectorOf = <T = unknown>(newable: Newable<T>): Reflector<T> => {
   let reflector = cache.get(newable);
   if (reflector == null) {
     cache.set(newable, (reflector = new ClassReflector<T>(newable)));
@@ -172,7 +172,7 @@ export const reflector = <T = unknown>(newable: Newable<T>): Reflector<T> => {
   return reflector as Reflector<T>;
 };
 
-reflector.addProperty = (prototype: object, key: PropertyKey): void => {
+reflectorOf.addProperty = (prototype: object, key: PropertyKey): void => {
   let propKeys = getMetadata(kPropKeys, prototype) as Set<PropertyKey>;
   if (propKeys == null) {
     defineMetadata(kPropKeys, (propKeys = new Set()), prototype);

@@ -1,5 +1,5 @@
 import test from "ava";
-import { reflector } from "./reflector.js";
+import { reflectorOf } from "./reflector.js";
 
 const classDec = () => {
   return (<T extends abstract new (...args: any) => unknown>(
@@ -17,7 +17,7 @@ const paramDec = <T = unknown>() => {
 
 const propDec = <T = unknown>() => {
   return ((target: object, propertyKey: string | symbol): void => {
-    reflector.addProperty(target, propertyKey);
+    reflectorOf.addProperty(target, propertyKey);
   }) as PropertyDecorator;
 };
 
@@ -47,20 +47,20 @@ class Demo {
 }
 
 test("return cached reflector", (t) => {
-  t.is(reflector(Demo), reflector(Demo));
-  t.is(reflector(Demo), reflector(Demo));
+  t.is(reflectorOf(Demo), reflectorOf(Demo));
+  t.is(reflectorOf(Demo), reflectorOf(Demo));
 });
 
 test("reflect", (t) => {
-  const r = reflector(Demo);
-  const demo = r.construct("a", 1);
+  const ref = reflectorOf(Demo);
+  const demo = ref.construct("a", 1);
 
-  t.is(r.newable, Demo);
-  t.deepEqual(r.paramTypes, [String, Number]);
+  t.is(ref.newable, Demo);
+  t.deepEqual(ref.paramTypes, [String, Number]);
 
-  t.deepEqual(Object.keys(r.properties), ["prop1", "prop2"]);
-  const p1 = r.properties["prop1"];
-  const p2 = r.properties["prop2"];
+  t.deepEqual(Object.keys(ref.properties), ["prop1", "prop2"]);
+  const p1 = ref.properties["prop1"];
+  const p2 = ref.properties["prop2"];
   t.like(p1, {
     key: "prop1",
     type: String,
@@ -78,9 +78,9 @@ test("reflect", (t) => {
   t.is(demo.prop1, "a");
   t.is(demo.prop2, 1);
 
-  t.deepEqual(Object.keys(r.methods), ["method1", "method2"]);
-  const m1 = r.methods["method1"];
-  const m2 = r.methods["method2"];
+  t.deepEqual(Object.keys(ref.methods), ["method1", "method2"]);
+  const m1 = ref.methods["method1"];
+  const m2 = ref.methods["method2"];
   t.like(m1, {
     key: "method1",
     type: Function,
@@ -98,27 +98,27 @@ test("reflect", (t) => {
 });
 
 test("metadata", (t) => {
-  const r = reflector(Demo);
+  const ref = reflectorOf(Demo);
 
   {
     const k0 = Symbol("k0");
     const k1 = Symbol("k1");
-    t.false(r.hasMetadata(k0));
-    t.false(r.hasMetadata(k1));
-    t.is(r.getMetadata(k0), undefined);
-    t.is(r.getMetadata(k1), undefined);
-    r.setMetadata(k0, "v0");
-    r.setMetadata(k1, "v1");
-    t.true(r.hasMetadata(k0));
-    t.true(r.hasMetadata(k1));
-    t.is(r.getMetadata(k0), "v0");
-    t.is(r.getMetadata(k1), "v1");
+    t.false(ref.hasMetadata(k0));
+    t.false(ref.hasMetadata(k1));
+    t.is(ref.getMetadata(k0), undefined);
+    t.is(ref.getMetadata(k1), undefined);
+    ref.setMetadata(k0, "v0");
+    ref.setMetadata(k1, "v1");
+    t.true(ref.hasMetadata(k0));
+    t.true(ref.hasMetadata(k1));
+    t.is(ref.getMetadata(k0), "v0");
+    t.is(ref.getMetadata(k1), "v1");
   }
 
   {
     const k0 = Symbol("prop1k0");
     const k1 = Symbol("prop1k1");
-    const p1 = r.properties["prop1"];
+    const p1 = ref.properties["prop1"];
     t.false(p1.hasMetadata(k0));
     t.false(p1.hasMetadata(k1));
     t.is(p1.getMetadata(k0), undefined);
@@ -134,7 +134,7 @@ test("metadata", (t) => {
   {
     const k0 = Symbol("method1k0");
     const k1 = Symbol("method1k1");
-    const m1 = r.methods["method1"];
+    const m1 = ref.methods["method1"];
     t.false(m1.hasMetadata(k0));
     t.false(m1.hasMetadata(k1));
     t.is(m1.getMetadata(k0), undefined);

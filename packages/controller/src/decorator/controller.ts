@@ -1,4 +1,4 @@
-import { type Newable, reflector } from "@fastr/lang";
+import { type Newable, reflectorOf } from "@fastr/lang";
 import { setControllerMetadata } from "../impl/metadata.js";
 import { annotateParameters } from "../impl/parameter.js";
 import { type HandlerOptions } from "./handler.js";
@@ -13,7 +13,7 @@ export function controller(arg0?: string | ControllerOptions): ClassDecorator {
   const options = makeOptions(arg0);
   return ((target: Newable): void => {
     setControllerMetadata(target, options);
-    annotateParameters(reflector(target));
+    annotateParameters(reflectorOf(target));
   }) as ClassDecorator;
 }
 

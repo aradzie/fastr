@@ -8,7 +8,7 @@ import {
   isConstructor,
   type Newable,
   type PropertyKey,
-  reflector,
+  reflectorOf,
 } from "@fastr/lang";
 import { type RouteOptions, type RouterState } from "@fastr/middleware-router";
 import {
@@ -40,7 +40,7 @@ export function* toRoutes(newable: Newable): Iterable<RouteOptions> {
     throw new Error(`Not a controller class ${newable.name}`);
   }
   const { prototype } = newable;
-  const ref = reflector(newable);
+  const ref = reflectorOf(newable);
   for (const method of Object.values(ref.methods)) {
     const { key } = method;
     const handlerMetadata = getHandlerMetadata(prototype, key);

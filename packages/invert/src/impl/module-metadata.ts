@@ -1,11 +1,11 @@
-import { getConstructor, reflector } from "@fastr/lang";
+import { getConstructor, reflectorOf } from "@fastr/lang";
 import { type Module } from "../types.js";
 import { kProvides } from "./constants.js";
 import { type ProviderMetadata, type ProvidesAnn } from "./types.js";
 import { getMethodParamsMetadata, typeToValueId } from "./util.js";
 
 export function* getProviders(module: Module): Iterable<ProviderMetadata> {
-  const ref = reflector(getConstructor(module));
+  const ref = reflectorOf(getConstructor(module));
   for (const method of Object.values(ref.methods)) {
     const providesAnn = method.getMetadata<ProvidesAnn>(kProvides) ?? null;
     if (providesAnn != null) {

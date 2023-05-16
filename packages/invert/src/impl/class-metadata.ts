@@ -1,4 +1,4 @@
-import { isConstructor, type Newable, reflector } from "@fastr/lang";
+import { isConstructor, type Newable, reflectorOf } from "@fastr/lang";
 import { kInjectable } from "./constants.js";
 import { type ClassMetadata, type InjectableAnn } from "./types.js";
 import { getConstructorParamsMetadata, getPropsMetadata } from "./util.js";
@@ -7,7 +7,7 @@ export function getClassMetadata(newable: Newable): ClassMetadata {
   if (!isConstructor(newable)) {
     throw new TypeError();
   }
-  const ref = reflector(newable);
+  const ref = reflectorOf(newable);
   const injectableAnn = ref.getMetadata<InjectableAnn>(kInjectable);
   const params = getConstructorParamsMetadata(ref);
   const props = getPropsMetadata(ref);

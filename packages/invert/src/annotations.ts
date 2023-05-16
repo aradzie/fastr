@@ -1,4 +1,4 @@
-import { type PropertyKey, reflector } from "@fastr/lang";
+import { type PropertyKey, reflectorOf } from "@fastr/lang";
 import { kInject, kInjectable, kProp, kProvides } from "./impl/constants.js";
 import {
   type InjectableAnn,
@@ -118,7 +118,7 @@ export const prop = <T = unknown>(
   { id, name }: Partial<PropOptions> = {}, //
 ) => {
   return ((target: object, propertyKey: PropertyKey): void => {
-    reflector.addProperty(target, propertyKey);
+    reflectorOf.addProperty(target, propertyKey);
     const { constructor } = target;
     const metadata = Reflect.getMetadata(kProp, constructor) ?? {};
     if (metadata[propertyKey] != null) {
