@@ -1,8 +1,31 @@
-import { type Context, type Request, type Response } from "@fastr/core";
-import { type Container } from "@fastr/invert";
+import { Context, Request, Response } from "@fastr/core";
+import { Container } from "@fastr/invert";
 import { type BodyState } from "@fastr/middleware-body";
-import { type Router, type RouterState } from "@fastr/middleware-router";
+import { Router, type RouterState } from "@fastr/middleware-router";
 import { type Session, type SessionState } from "@fastr/middleware-session";
+
+export type ParameterExtractor = (
+  ctx: Context<RouterState>,
+  key: string | null,
+) => any;
+
+export const getStandardExtractor = (
+  type: unknown,
+): ParameterExtractor | null => {
+  switch (type) {
+    case Context:
+      return getContext;
+    case Container:
+      return getContainer;
+    case Request:
+      return getRequest;
+    case Response:
+      return getResponse;
+    case Router:
+      return getRouter;
+  }
+  return null;
+};
 
 export const getContext = (ctx: Context): Context => {
   return ctx;

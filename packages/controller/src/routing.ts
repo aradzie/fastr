@@ -8,7 +8,6 @@ import {
 } from "@fastr/core";
 import { reflector } from "@fastr/metadata";
 import { Router, type RouterState } from "@fastr/middleware-router";
-import { type PropertyKey } from "./impl/types.js";
 import {
   getControllerMetadata,
   getControllerUse,
@@ -16,7 +15,8 @@ import {
   getHandlerUse,
   getParameterMetadata,
   type ParameterMetadata,
-} from "./metadata.js";
+} from "./impl/metadata.js";
+import { type PropertyKey } from "./impl/types.js";
 import { type Pipe } from "./pipe.js";
 
 interface Routing {

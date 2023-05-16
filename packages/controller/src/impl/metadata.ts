@@ -1,130 +1,120 @@
-import { type AnyMiddleware, type Context, type Newable } from "@fastr/core";
+import { type AnyMiddleware, type Newable } from "@fastr/core";
 import {
   newMetadataKey,
   objectMetadata,
   propertyMetadata,
 } from "@fastr/metadata";
-import { type RouterState } from "@fastr/middleware-router";
-import { type PropertyKey } from "./impl/types.js";
-import { type Pipe } from "./pipe.js";
+import { type Pipe } from "../pipe.js";
+import { type ParameterExtractor } from "./context.js";
+import { type PropertyKey } from "./types.js";
 
-export interface ControllerDecorator extends ClassDecorator {}
-
-export interface HandlerDecorator extends MethodDecorator {}
-
-export interface ControllerMetadata {
+export type ControllerMetadata = {
   readonly path: string;
-}
+};
 
-export interface HandlerMetadata {
+export type HandlerMetadata = {
   readonly method: string;
   readonly path: string;
   readonly name: string | null;
-}
+};
 
-export interface ParameterMetadata {
+export type ParameterMetadata = {
   readonly parameterIndex: number;
   readonly extractor: ParameterExtractor;
   readonly key: string | null;
   readonly pipe: Newable<Pipe> | null;
-}
-
-export interface ParameterExtractor {
-  (ctx: Context<RouterState>, key: string | null): any;
-}
+};
 
 const kUseMiddleware = newMetadataKey<AnyMiddleware[]>(Symbol());
 const kController = newMetadataKey<ControllerMetadata>(Symbol());
 const kHandler = newMetadataKey<HandlerMetadata>(Symbol());
 const kParameter = newMetadataKey<ParameterMetadata[]>(Symbol());
 
-export function addControllerUse(
+export const addControllerUse = (
   target: object,
   ...middleware: AnyMiddleware[]
-): void {
+): void =>
   objectMetadata(target) //
     .update(kUseMiddleware, (list = []) => {
       list.unshift(...middleware);
       return list;
     });
-}
 
-export function getControllerUse(target: object): readonly AnyMiddleware[] {
+export const getControllerUse = (target: object): readonly AnyMiddleware[] => {
   return objectMetadata(target).get(kUseMiddleware) ?? [];
-}
+};
 
-export function addHandlerUse(
+export const addHandlerUse = (
   target: object,
   propertyKey: PropertyKey,
   ...middleware: AnyMiddleware[]
-): void {
+): void =>
   propertyMetadata(target, propertyKey) //
     .update(kUseMiddleware, (list = []) => {
       list.unshift(...middleware);
       return list;
     });
-}
 
-export function getHandlerUse(
+export const getHandlerUse = (
   target: object,
   propertyKey: PropertyKey,
-): readonly AnyMiddleware[] {
+): readonly AnyMiddleware[] => {
   return (
     propertyMetadata(target, propertyKey) //
       .get(kUseMiddleware) ?? []
   );
-}
+};
 
-export function setControllerMetadata(
+export const setControllerMetadata = (
   target: object,
   metadata: ControllerMetadata,
-): void {
+): void => {
   objectMetadata(target).set(kController, metadata);
-}
+};
 
-export function getControllerMetadata(
+export const getControllerMetadata = (
   target: object,
-): ControllerMetadata | null {
+): ControllerMetadata | null => {
   return objectMetadata(target).get(kController) ?? null;
-}
+};
 
-export function setHandlerMetadata(
+export const setHandlerMetadata = (
   target: object,
   propertyKey: PropertyKey,
   metadata: HandlerMetadata,
-): void {
+): void => {
   propertyMetadata(target, propertyKey) //
     .set(kHandler, metadata);
-}
+};
 
-export function getHandlerMetadata(
+export const getHandlerMetadata = (
   target: object,
   propertyKey: PropertyKey,
-): HandlerMetadata | null {
+): HandlerMetadata | null => {
   return (
     propertyMetadata(target, propertyKey) //
       .get(kHandler) ?? null
   );
-}
+};
 
-export function setParameterMetadata(
+export const setParameterMetadata = (
   target: object,
   propertyKey: PropertyKey,
   metadata: ParameterMetadata,
-): void {
+): void => {
   propertyMetadata(target, propertyKey) //
     .update(kParameter, (list = []) => {
       list[metadata.parameterIndex] = metadata;
       return list;
     });
-}
+};
 
-export function getParameterMetadata(
+export const getParameterMetadata = (
   target: object,
   propertyKey: PropertyKey,
-): readonly ParameterMetadata[] {
+): readonly ParameterMetadata[] => {
   return (
     propertyMetadata(target, propertyKey) //
       .get(kParameter) ?? []
   );
-}
+};

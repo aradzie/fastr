@@ -7,33 +7,10 @@ import {
   getPathParam,
   getQueryParam,
 } from "../impl/context.js";
-import { type PropertyKey } from "../impl/types.js";
-import { type ParameterExtractor, setParameterMetadata } from "../metadata.js";
+import { makeParameterDecorator } from "../impl/parameter.js";
 import { type Pipe } from "../pipe.js";
 
-const makeParameterDecorator = (
-  extractor: ParameterExtractor,
-  key: string | null,
-  pipe: Newable<Pipe> | null,
-) => {
-  return ((
-    target: object,
-    propertyKey: PropertyKey,
-    parameterIndex: number,
-  ): void => {
-    if (propertyKey == null) {
-      throw new TypeError();
-    }
-    setParameterMetadata(target, propertyKey, {
-      parameterIndex,
-      extractor,
-      key,
-      pipe,
-    });
-  }) as ParameterDecorator;
-};
-
-export let body = (): ParameterDecorator => {
+export const body = (): ParameterDecorator => {
   return makeParameterDecorator(getBody, null, null);
 };
 

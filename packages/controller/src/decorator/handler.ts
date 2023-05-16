@@ -1,10 +1,6 @@
 import { type Context } from "@fastr/core";
+import { addHandlerUse, setHandlerMetadata } from "../impl/metadata.js";
 import { type PropertyKey } from "../impl/types.js";
-import {
-  addHandlerUse,
-  type HandlerDecorator,
-  setHandlerMetadata,
-} from "../metadata.js";
 
 export interface HandlerOptions {
   readonly path?: string;
@@ -12,51 +8,51 @@ export interface HandlerOptions {
 }
 
 export namespace http {
-  export function any(path?: string): HandlerDecorator;
-  export function any(options?: HandlerOptions): HandlerDecorator;
-  export function any(arg0?: string | HandlerOptions): HandlerDecorator {
+  export function any(path?: string): MethodDecorator;
+  export function any(options?: HandlerOptions): MethodDecorator;
+  export function any(arg0?: string | HandlerOptions): MethodDecorator {
     return method("*", arg0 as HandlerOptions);
   }
 
-  export function get(path?: string): HandlerDecorator;
-  export function get(options?: HandlerOptions): HandlerDecorator;
-  export function get(arg0?: string | HandlerOptions): HandlerDecorator {
+  export function get(path?: string): MethodDecorator;
+  export function get(options?: HandlerOptions): MethodDecorator;
+  export function get(arg0?: string | HandlerOptions): MethodDecorator {
     return method("GET", arg0 as HandlerOptions);
   }
 
-  export function post(path?: string): HandlerDecorator;
-  export function post(options?: HandlerOptions): HandlerDecorator;
-  export function post(arg0?: string | HandlerOptions): HandlerDecorator {
+  export function post(path?: string): MethodDecorator;
+  export function post(options?: HandlerOptions): MethodDecorator;
+  export function post(arg0?: string | HandlerOptions): MethodDecorator {
     return method("POST", arg0 as HandlerOptions);
   }
 
-  export function put(path?: string): HandlerDecorator;
-  export function put(options?: HandlerOptions): HandlerDecorator;
-  export function put(arg0?: string | HandlerOptions): HandlerDecorator {
+  export function put(path?: string): MethodDecorator;
+  export function put(options?: HandlerOptions): MethodDecorator;
+  export function put(arg0?: string | HandlerOptions): MethodDecorator {
     return method("PUT", arg0 as HandlerOptions);
   }
 
-  export function patch(path?: string): HandlerDecorator;
-  export function patch(options?: HandlerOptions): HandlerDecorator;
-  export function patch(arg0?: string | HandlerOptions): HandlerDecorator {
+  export function patch(path?: string): MethodDecorator;
+  export function patch(options?: HandlerOptions): MethodDecorator;
+  export function patch(arg0?: string | HandlerOptions): MethodDecorator {
     return method("PATCH", arg0 as HandlerOptions);
   }
 
-  export function del(path: string): HandlerDecorator;
-  export function del(options: HandlerOptions): HandlerDecorator;
-  export function del(arg0?: string | HandlerOptions): HandlerDecorator {
+  export function del(path: string): MethodDecorator;
+  export function del(options: HandlerOptions): MethodDecorator;
+  export function del(arg0?: string | HandlerOptions): MethodDecorator {
     return method("DELETE", arg0 as HandlerOptions);
   }
 
-  export function method(method: string, path?: string): HandlerDecorator;
+  export function method(method: string, path?: string): MethodDecorator;
   export function method(
     method: string,
     options?: HandlerOptions,
-  ): HandlerDecorator;
+  ): MethodDecorator;
   export function method(
     method: string,
     arg1?: string | HandlerOptions,
-  ): HandlerDecorator {
+  ): MethodDecorator {
     const { path, name } = makeOptions(arg1);
     return (
       target: object,
@@ -74,7 +70,7 @@ export namespace http {
   /**
    * Sets the given response type.
    */
-  export function type(type: string): HandlerDecorator {
+  export function type(type: string): MethodDecorator {
     return (
       target: object,
       propertyKey: PropertyKey,
@@ -93,7 +89,7 @@ export namespace http {
   export function header(
     name: string,
     value: string | ((ctx: Context) => string),
-  ): HandlerDecorator {
+  ): MethodDecorator {
     return (
       target: object,
       propertyKey: PropertyKey,
