@@ -1,6 +1,6 @@
 {
   "name": "@fastr/oauth-adapter-google",
-  "version": "0.0.2-alpha.0",
+  "version": "0.0.2-alpha.1",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,8 +14,8 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/client": "^0.0.2-alpha.0",
-    "@fastr/oauth-client": "^0.0.2-alpha.0"
+    "@fastr/client": "^0.0.2-alpha.1",
+    "@fastr/oauth-client": "^0.0.2-alpha.1"
   },
   "engines": {
     "node": ">=18.12"
