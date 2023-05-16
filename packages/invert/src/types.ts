@@ -2,7 +2,11 @@ import { type Newable } from "@fastr/lang";
 
 export type Name = string | symbol;
 
-export type ValueId<T = unknown> = Name | Newable<T>;
+export type Abstract<T> = {
+  prototype: T;
+};
+
+export type ValueId<T = unknown> = Name | Newable<T> | Abstract<T>;
 
 export type Module = {
   configure(binder: Binder): void;
@@ -15,7 +19,7 @@ export type Binder = {
 
 export type BindTo<T> = {
   toSelf(): void;
-  to(constructor: Newable<T>): void;
+  to(constructor: Newable<T> | Abstract<T>): void;
   toFactory(factory: (container: ReadonlyContainer) => T): void;
   toValue(value: T): void;
 };
