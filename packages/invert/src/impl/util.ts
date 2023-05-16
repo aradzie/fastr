@@ -1,4 +1,5 @@
 import {
+  type Callable,
   isConstructor,
   type Method,
   type Newable,
@@ -7,7 +8,6 @@ import {
 import { type ReadonlyContainer, type ValueId } from "../types.js";
 import { kInject, kProp } from "./constants.js";
 import {
-  type Callable,
   type InjectAnn,
   type ParamMetadata,
   type PropAnnRecord,
@@ -32,7 +32,7 @@ export const typeToValueId = (type: unknown): ValueId => {
 };
 
 const mergeParams = (
-  callable: Newable<any> | Callable,
+  callable: Newable | Callable,
   paramTypes: readonly unknown[],
   injectAnn: readonly InjectAnn[],
 ) => {

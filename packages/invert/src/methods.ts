@@ -1,5 +1,4 @@
-import { getConstructor, reflector } from "@fastr/metadata";
-import { type PropertyKey } from "./impl/types.js";
+import { getConstructor, type PropertyKey, reflector } from "@fastr/metadata";
 import { getArgs, getMethodParamsMetadata } from "./impl/util.js";
 import { type MethodHandle, type ReadonlyContainer } from "./types.js";
 

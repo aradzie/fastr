@@ -2,11 +2,10 @@ import {
   type AnyMiddleware,
   type Context,
   type Middleware,
-  type Newable,
   type Next,
   toMiddleware,
 } from "@fastr/core";
-import { reflector } from "@fastr/metadata";
+import { type Newable, type PropertyKey, reflector } from "@fastr/metadata";
 import { type Router, type RouterState } from "@fastr/middleware-router";
 import {
   getControllerMetadata,
@@ -16,12 +15,11 @@ import {
   getParameterMetadata,
   type ParameterMetadata,
 } from "./impl/metadata.js";
-import { type PropertyKey } from "./impl/types.js";
 import { type Pipe } from "./pipe.js";
 
 export function addController(
   router: Router,
-  ...controllers: Newable<any>[]
+  ...controllers: Newable[]
 ): Router {
   for (const controller of controllers) {
     const controllerMetadata = getControllerMetadata(controller);
@@ -57,12 +55,12 @@ function toMiddlewareList(list: readonly AnyMiddleware[]): Middleware[] {
 }
 
 function makeMiddleware(
-  controller: Newable<any>,
+  controller: Newable,
   propertyKey: PropertyKey,
   parameterMetadata: readonly ParameterMetadata[],
 ): Middleware<RouterState> {
   return async (ctx: Context<RouterState>, next: Next): Promise<void> => {
-    const instance = ctx.container.get(controller);
+    const instance = ctx.container.get<any>(controller);
     const handler = instance[propertyKey];
     const args = await getArgs(ctx, parameterMetadata);
     const body = await Reflect.apply(handler, instance, args);

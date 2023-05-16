@@ -1,4 +1,4 @@
-import { type Newable } from "@fastr/core";
+import { type Newable } from "@fastr/metadata";
 import {
   getBody,
   getCookieParam,

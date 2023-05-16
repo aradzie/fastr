@@ -1,6 +1,6 @@
 import { type Context } from "@fastr/core";
+import { type PropertyKey } from "@fastr/metadata";
 import { addHandlerUse, setHandlerMetadata } from "../impl/metadata.js";
-import { type PropertyKey } from "../impl/types.js";
 
 export interface HandlerOptions {
   readonly path?: string;

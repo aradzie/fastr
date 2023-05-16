@@ -14,14 +14,14 @@ import { Context } from "./context.js";
 import { inspectError } from "./errors.js";
 import {
   type AnyMiddleware,
-  type DefaultState,
   type Handler,
   type HandlerClass,
   type Middleware,
+  toMiddleware,
 } from "./middleware.js";
 import { type ProxyOptions, Request } from "./request.js";
 import { Response } from "./response.js";
-import { toMiddleware } from "./util.js";
+import { type DefaultState } from "./state.js";
 
 export interface ApplicationOptions extends ProxyOptions {
   readonly defaultState: DefaultState;

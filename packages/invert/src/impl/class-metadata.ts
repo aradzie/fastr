@@ -3,7 +3,7 @@ import { kInjectable } from "./constants.js";
 import { type ClassMetadata, type InjectableAnn } from "./types.js";
 import { getConstructorParamsMetadata, getPropsMetadata } from "./util.js";
 
-export function getClassMetadata(newable: Newable<any>): ClassMetadata {
+export function getClassMetadata(newable: Newable): ClassMetadata {
   if (!isConstructor(newable)) {
     throw new TypeError();
   }

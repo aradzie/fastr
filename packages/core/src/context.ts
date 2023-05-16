@@ -1,8 +1,8 @@
 import { type Container } from "@fastr/invert";
 import { Cookies } from "./cookies.js";
-import { type DefaultState } from "./middleware.js";
 import { Request } from "./request.js";
 import { Response } from "./response.js";
+import { type DefaultState } from "./state.js";
 
 const kCookies = Symbol("kCookies");
 

@@ -1,4 +1,5 @@
-import { type Context, type Newable } from "@fastr/core";
+import { type Context } from "@fastr/core";
+import { type Newable } from "@fastr/metadata";
 import { type RouterState } from "@fastr/middleware-router";
 
 export interface Pipe {

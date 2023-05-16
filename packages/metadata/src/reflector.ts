@@ -8,9 +8,9 @@ import { isConstructor, type Newable } from "./newable.js";
 
 const kPropKeys = Symbol("props");
 
-type PropertyKey = string | symbol;
-type MetadataKey = string | symbol;
-type Callable = (...args: any) => any;
+export type PropertyKey = string | symbol;
+export type MetadataKey = string | symbol;
+export type Callable = (...args: any) => any;
 
 export type HasMetadata = {
   hasMetadata(metadataKey: MetadataKey): boolean;

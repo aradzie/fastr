@@ -17,6 +17,7 @@
     "@fastr/controller": "^0.0.1-alpha.1",
     "@fastr/core": "^0.0.1-alpha.1",
     "@fastr/invert": "^0.0.1-alpha.1",
+    "@fastr/metadata": "^0.0.1-alpha.1",
     "@fastr/middleware-body": "^0.0.1-alpha.1",
     "@fastr/middleware-router": "^0.0.1-alpha.1",
     "reflect-metadata": "^0.1.13",

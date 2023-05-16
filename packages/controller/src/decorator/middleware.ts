@@ -1,6 +1,6 @@
 import { type AnyMiddleware } from "@fastr/core";
+import { type PropertyKey } from "@fastr/metadata";
 import { addControllerUse, addHandlerUse } from "../impl/metadata.js";
-import { type PropertyKey } from "../impl/types.js";
 
 export function use(
   ...middleware: readonly AnyMiddleware[]

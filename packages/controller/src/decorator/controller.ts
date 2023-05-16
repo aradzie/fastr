@@ -1,5 +1,4 @@
-import { type Newable } from "@fastr/core";
-import { reflector } from "@fastr/metadata";
+import { type Newable, reflector } from "@fastr/metadata";
 import { setControllerMetadata } from "../impl/metadata.js";
 import { annotateParameters } from "../impl/parameter.js";
 import { type HandlerOptions } from "./handler.js";

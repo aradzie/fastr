@@ -1,4 +1,4 @@
-export type Newable<T> = new (...args: any[]) => T;
+export type Newable<T = unknown> = new (...args: any[]) => T;
 
 export const isConstructor = <T>(target: unknown): target is Newable<T> => {
   return (

@@ -1,9 +1,5 @@
-import { type Newable } from "@fastr/metadata";
+import { type Callable, type Newable, type PropertyKey } from "@fastr/metadata";
 import { type Name, type ValueId } from "../types.js";
-
-export type PropertyKey = string | symbol;
-export type MetadataKey = string | symbol;
-export type Callable = (...args: any) => any;
 
 export type InjectableAnn = {
   readonly id: ValueId | null;
