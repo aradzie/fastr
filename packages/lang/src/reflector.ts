@@ -5,13 +5,16 @@ import {
   hasOwnMetadata,
   setMetadata,
 } from "./metadata.js";
-import { isConstructor, type Newable } from "./newable.js";
+import { getBaseConstructor, isConstructor, type Newable } from "./newable.js";
 import { type Callable, type MetadataKey, type PropertyKey } from "./types.js";
 
 const kPropertyKeys = Symbol("kPropertyKeys");
 const kDesignType = "design:type";
 const kDesignParamTypes = "design:paramtypes";
 const kDesignReturnType = "design:returntype";
+
+export type PropertyMap = Record<PropertyKey, Property>;
+export type MethodMap = Record<PropertyKey, Method>;
 
 export type HasMetadata = {
   hasOwnMetadata(metadataKey: MetadataKey): boolean;
@@ -21,19 +24,24 @@ export type HasMetadata = {
   setMetadata(metadataKey: MetadataKey, metadataValue: unknown): void;
 };
 
-export type Reflector<T = unknown> = {
+export type Reflector<T = any> = {
   readonly newable: Newable<T>;
   readonly paramTypes: readonly unknown[];
-  readonly properties: Record<PropertyKey, Property>;
-  readonly methods: Record<PropertyKey, Method>;
+  readonly properties: PropertyMap;
+  readonly methods: MethodMap;
+  readonly allProperties: PropertyMap;
+  readonly allMethods: MethodMap;
+  readonly base: Reflector | null;
   construct(...args: any[]): T;
 } & HasMetadata;
 
-class ClassReflector<T = unknown> implements Reflector<T> {
+class ClassReflector<T = any> implements Reflector<T> {
   readonly newable: Newable<T>;
   readonly paramTypes: readonly unknown[];
-  readonly properties = {} as Record<PropertyKey, Property>;
-  readonly methods = {} as Record<PropertyKey, Method>;
+  private _properties: PropertyMap | null = null;
+  private _methods: MethodMap | null = null;
+  private _allProperties: PropertyMap | null = null;
+  private _allMethods: MethodMap | null = null;
 
   constructor(newable: Newable<T>) {
     if (!isConstructor(newable)) {
@@ -41,16 +49,30 @@ class ClassReflector<T = unknown> implements Reflector<T> {
     }
     this.newable = newable;
     this.paramTypes = getOwnMetadata(kDesignParamTypes, newable) ?? [];
-    const { prototype } = newable;
-    for (const key of getOwnMetadata(kPropertyKeys, prototype) ?? []) {
-      this.properties[key] = new PropertyReflector(prototype, key);
-    }
-    for (const [key, { value }] of Object.entries(
-      Object.getOwnPropertyDescriptors(prototype),
-    )) {
-      if (key !== "constructor" && typeof value === "function") {
-        this.methods[key] = new MethodReflector(prototype, key, value);
-      }
+  }
+
+  get properties(): PropertyMap {
+    return (this._properties ??= getProperties(this.newable));
+  }
+
+  get methods(): MethodMap {
+    return (this._methods ??= getMethods(this.newable));
+  }
+
+  get allProperties(): PropertyMap {
+    return (this._allProperties ??= getAllProperties(this));
+  }
+
+  get allMethods(): MethodMap {
+    return (this._allMethods ??= getAllMethods(this));
+  }
+
+  get base(): Reflector | null {
+    const base = getBaseConstructor(this.newable);
+    if (base != null) {
+      return reflectorOf(base);
+    } else {
+      return null;
     }
   }
 
@@ -189,9 +211,59 @@ class MethodReflector implements Method {
   }
 }
 
-const cache = new WeakMap<Newable<any>, Reflector>();
+const getProperties = ({ prototype }: Newable): PropertyMap => {
+  const map = Object.create(null) as PropertyMap;
+  for (const key of getOwnMetadata(kPropertyKeys, prototype) ?? []) {
+    map[key] = new PropertyReflector(prototype, key);
+  }
+  return map;
+};
 
-export const reflectorOf = <T = unknown>(newable: Newable<T>): Reflector<T> => {
+const getMethods = ({ prototype }: Newable): MethodMap => {
+  const map = Object.create(null) as MethodMap;
+  for (const [key, { value }] of Object.entries(
+    Object.getOwnPropertyDescriptors(prototype),
+  )) {
+    if (key !== "constructor" && typeof value === "function") {
+      map[key] = new MethodReflector(prototype, key, value);
+    }
+  }
+  return map;
+};
+
+const getAllProperties = (ref: Reflector): PropertyMap => {
+  const map = Object.create(null) as PropertyMap;
+  const visit = (current: Reflector) => {
+    const { base } = current;
+    if (base != null) {
+      visit(base);
+    }
+    for (const value of Object.values(current.properties)) {
+      map[value.key] = value;
+    }
+  };
+  visit(ref);
+  return map;
+};
+
+const getAllMethods = (ref: Reflector): MethodMap => {
+  const map = Object.create(null) as MethodMap;
+  const visit = (current: Reflector) => {
+    const { base } = current;
+    if (base != null) {
+      visit(base);
+    }
+    for (const value of Object.values(current.methods)) {
+      map[value.key] = value;
+    }
+  };
+  visit(ref);
+  return map;
+};
+
+const cache = new WeakMap<Newable, Reflector>();
+
+export const reflectorOf = <T = any>(newable: Newable<T>): Reflector<T> => {
   let reflector = cache.get(newable);
   if (reflector == null) {
     cache.set(newable, (reflector = new ClassReflector<T>(newable)));

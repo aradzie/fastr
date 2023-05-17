@@ -1,11 +1,23 @@
 import test from "ava";
-import { getConstructor, isConstructor } from "./newable.js";
+import {
+  getBaseConstructor,
+  getConstructor,
+  isConstructor,
+} from "./newable.js";
 
 test("is constructor", (t) => {
-  t.true(isConstructor(class Foo {}));
-  t.true(isConstructor(function Bar() {}));
+  class Foo {}
+  function Bar() {}
+
+  t.true(isConstructor(Foo));
+  t.true(isConstructor(Bar));
+  t.true(isConstructor(Object));
   t.true(isConstructor(Array));
-  t.true(isConstructor(Date));
+  t.true(isConstructor(String));
+  t.true(isConstructor(Number));
+  t.true(isConstructor(Boolean));
+  t.true(isConstructor(Function));
+
   t.false(isConstructor(undefined));
   t.false(isConstructor(null));
   t.false(isConstructor(0));
@@ -18,10 +30,12 @@ test("is constructor", (t) => {
 
 test("get constructor", (t) => {
   class Foo {}
+  function Bar() {}
 
-  t.is(getConstructor(new Foo()), Foo);
-  t.is(getConstructor({}), Object as any);
-  t.is(getConstructor([]), Array as any);
+  t.is(getConstructor(Reflect.construct(Foo, [])), Foo as any);
+  t.is(getConstructor(Reflect.construct(Bar, [])), Bar as any);
+  t.is(getConstructor<any>({}), Object);
+  t.is(getConstructor<any>([]), Array);
 
   t.throws(
     () => {
@@ -49,7 +63,69 @@ test("get constructor", (t) => {
   );
   t.throws(
     () => {
+      getConstructor(true);
+    },
+    { instanceOf: TypeError },
+  );
+  t.throws(
+    () => {
       getConstructor(Object.create(null));
+    },
+    { instanceOf: TypeError },
+  );
+});
+
+test("get base constructor", (t) => {
+  class A {}
+  class B extends A {}
+  class C extends B {}
+  function Foo() {}
+
+  t.is(getBaseConstructor(C), B);
+  t.is(getBaseConstructor(B), A);
+  t.is(getBaseConstructor(A), null);
+  t.is(getBaseConstructor(Foo as any), null);
+
+  t.is(getBaseConstructor(Object), null);
+  t.is(getBaseConstructor(Array), null);
+  t.is(getBaseConstructor(String), null);
+  t.is(getBaseConstructor(Number), null);
+  t.is(getBaseConstructor(Boolean), null);
+  t.is(getBaseConstructor(Function), null);
+
+  t.throws(
+    () => {
+      getBaseConstructor(undefined as any);
+    },
+    { instanceOf: TypeError },
+  );
+  t.throws(
+    () => {
+      getBaseConstructor(null as any);
+    },
+    { instanceOf: TypeError },
+  );
+  t.throws(
+    () => {
+      getBaseConstructor("" as any);
+    },
+    { instanceOf: TypeError },
+  );
+  t.throws(
+    () => {
+      getBaseConstructor(0 as any);
+    },
+    { instanceOf: TypeError },
+  );
+  t.throws(
+    () => {
+      getBaseConstructor(true as any);
+    },
+    { instanceOf: TypeError },
+  );
+  t.throws(
+    () => {
+      getBaseConstructor(Object.create(null));
     },
     { instanceOf: TypeError },
   );
