@@ -1,6 +1,6 @@
 {
   "name": "@fastr/browser-client-tests",
-  "version": "0.0.2-alpha.2",
+  "version": "0.0.2-alpha.3",
   "private": true,
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
@@ -15,10 +15,10 @@
   "dependencies": {
     "@babel/core": "^7.21.8",
     "@babel/preset-env": "^7.21.5",
-    "@fastr/body": "^0.0.2-alpha.2",
-    "@fastr/browser-client": "^0.0.2-alpha.2",
-    "@fastr/headers": "^0.0.2-alpha.2",
-    "@fastr/url": "^0.0.2-alpha.2",
+    "@fastr/body": "^0.0.2-alpha.3",
+    "@fastr/browser-client": "^0.0.2-alpha.3",
+    "@fastr/headers": "^0.0.2-alpha.3",
+    "@fastr/url": "^0.0.2-alpha.3",
     "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.1",
     "@types/serve-static": "^1.15.1",

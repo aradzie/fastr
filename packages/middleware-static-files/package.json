@@ -1,6 +1,6 @@
 {
   "name": "@fastr/middleware-static-files",
-  "version": "0.0.2-alpha.2",
+  "version": "0.0.2-alpha.3",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,17 +14,17 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/core": "^0.0.2-alpha.2",
-    "@fastr/errors": "^0.0.2-alpha.2",
-    "@fastr/headers": "^0.0.2-alpha.2",
-    "@fastr/mediatypes": "^0.0.2-alpha.2",
+    "@fastr/core": "^0.0.2-alpha.3",
+    "@fastr/errors": "^0.0.2-alpha.3",
+    "@fastr/headers": "^0.0.2-alpha.3",
+    "@fastr/mediatypes": "^0.0.2-alpha.3",
     "@sosimple/fsx": "^0.1.0",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.5.0"
   },
   "devDependencies": {
-    "@fastr/client": "^0.0.2-alpha.2",
-    "@fastr/client-testlib": "^0.0.2-alpha.2"
+    "@fastr/client": "^0.0.2-alpha.3",
+    "@fastr/client-testlib": "^0.0.2-alpha.3"
   },
   "engines": {
     "node": ">=18.12"

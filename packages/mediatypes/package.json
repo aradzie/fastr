@@ -1,6 +1,6 @@
 {
   "name": "@fastr/mediatypes",
-  "version": "0.0.2-alpha.2",
+  "version": "0.0.2-alpha.3",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/headers": "^0.0.2-alpha.2",
+    "@fastr/headers": "^0.0.2-alpha.3",
     "mime-db": "^1.52.0",
     "tslib": "^2.5.0"
   },

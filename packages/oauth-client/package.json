@@ -1,6 +1,6 @@
 {
   "name": "@fastr/oauth-client",
-  "version": "0.0.2-alpha.2",
+  "version": "0.0.2-alpha.3",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,9 +14,9 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/client": "^0.0.2-alpha.2",
-    "@fastr/headers": "^0.0.2-alpha.2",
-    "@fastr/status": "^0.0.2-alpha.2"
+    "@fastr/client": "^0.0.2-alpha.3",
+    "@fastr/headers": "^0.0.2-alpha.3",
+    "@fastr/status": "^0.0.2-alpha.3"
   },
   "engines": {
     "node": ">=18.12"
