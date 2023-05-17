@@ -8,7 +8,7 @@ export function getClassMetadata(newable: Newable): ClassMetadata {
     throw new TypeError();
   }
   const ref = reflectorOf(newable);
-  const injectableAnn = ref.getMetadata<InjectableAnn>(kInjectable);
+  const injectableAnn = ref.getOwnMetadata<InjectableAnn>(kInjectable);
   const params = getConstructorParamsMetadata(ref);
   const props = getPropsMetadata(ref);
   return {

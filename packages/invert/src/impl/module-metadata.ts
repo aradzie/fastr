@@ -7,7 +7,7 @@ import { getMethodParamsMetadata, typeToValueId } from "./util.js";
 export function* getProviders(module: Module): Iterable<ProviderMetadata> {
   const ref = reflectorOf(getConstructor(module));
   for (const method of Object.values(ref.methods)) {
-    const providesAnn = method.getMetadata<ProvidesAnn>(kProvides) ?? null;
+    const providesAnn = method.getOwnMetadata<ProvidesAnn>(kProvides) ?? null;
     if (providesAnn != null) {
       const { value, returnType: type } = method;
       const params = getMethodParamsMetadata(ref, method);

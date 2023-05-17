@@ -1,7 +1,7 @@
 import { type AnyMiddleware } from "@fastr/core";
 import {
-  getMetadata,
-  hasMetadata,
+  getOwnMetadata,
+  hasOwnMetadata,
   type Newable,
   type PropertyKey,
   setMetadata,
@@ -35,7 +35,7 @@ export const addControllerUse = (
   target: object,
   ...middleware: readonly AnyMiddleware[]
 ): void => {
-  let list: AnyMiddleware[] = getMetadata(kUseMiddleware, target);
+  let list: AnyMiddleware[] = getOwnMetadata(kUseMiddleware, target);
   if (list == null) {
     setMetadata(kUseMiddleware, (list = []), target);
   }
@@ -43,7 +43,7 @@ export const addControllerUse = (
 };
 
 export const getControllerUse = (target: object): readonly AnyMiddleware[] => {
-  return getMetadata(kUseMiddleware, target) ?? [];
+  return getOwnMetadata(kUseMiddleware, target) ?? [];
 };
 
 export const addHandlerUse = (
@@ -51,7 +51,11 @@ export const addHandlerUse = (
   propertyKey: PropertyKey,
   ...middleware: readonly AnyMiddleware[]
 ): void => {
-  let list: AnyMiddleware[] = getMetadata(kUseMiddleware, target, propertyKey);
+  let list: AnyMiddleware[] = getOwnMetadata(
+    kUseMiddleware,
+    target,
+    propertyKey,
+  );
   if (list == null) {
     setMetadata(kUseMiddleware, (list = []), target, propertyKey);
   }
@@ -62,14 +66,14 @@ export const getHandlerUse = (
   target: object,
   propertyKey: PropertyKey,
 ): readonly AnyMiddleware[] => {
-  return getMetadata(kUseMiddleware, target, propertyKey) ?? [];
+  return getOwnMetadata(kUseMiddleware, target, propertyKey) ?? [];
 };
 
 export const setControllerMetadata = (
   target: object,
   metadata: ControllerMetadata,
 ): void => {
-  if (hasMetadata(kController, target)) {
+  if (hasOwnMetadata(kController, target)) {
     throw new TypeError();
   }
   setMetadata(kController, metadata, target);
@@ -78,7 +82,7 @@ export const setControllerMetadata = (
 export const getControllerMetadata = (
   target: object,
 ): ControllerMetadata | null => {
-  return getMetadata(kController, target) ?? null;
+  return getOwnMetadata(kController, target) ?? null;
 };
 
 export const setHandlerMetadata = (
@@ -86,7 +90,7 @@ export const setHandlerMetadata = (
   propertyKey: PropertyKey,
   metadata: HandlerMetadata,
 ): void => {
-  if (hasMetadata(kHandler, target, propertyKey)) {
+  if (hasOwnMetadata(kHandler, target, propertyKey)) {
     throw new TypeError();
   }
   setMetadata(kHandler, metadata, target, propertyKey);
@@ -96,7 +100,7 @@ export const getHandlerMetadata = (
   target: object,
   propertyKey: PropertyKey,
 ): HandlerMetadata | null => {
-  return getMetadata(kHandler, target, propertyKey) ?? null;
+  return getOwnMetadata(kHandler, target, propertyKey) ?? null;
 };
 
 export const setParameterMetadata = (
@@ -104,7 +108,11 @@ export const setParameterMetadata = (
   propertyKey: PropertyKey,
   metadata: ParameterMetadata,
 ): void => {
-  let list: ParameterMetadata[] = getMetadata(kParameter, target, propertyKey);
+  let list: ParameterMetadata[] = getOwnMetadata(
+    kParameter,
+    target,
+    propertyKey,
+  );
   if (list == null) {
     setMetadata(kParameter, (list = []), target, propertyKey);
   }
@@ -115,5 +123,5 @@ export const getParameterMetadata = (
   target: object,
   propertyKey: PropertyKey,
 ): readonly ParameterMetadata[] => {
-  return getMetadata(kParameter, target, propertyKey) ?? [];
+  return getOwnMetadata(kParameter, target, propertyKey) ?? [];
 };

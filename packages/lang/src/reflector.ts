@@ -1,4 +1,10 @@
-import { getMetadata, hasMetadata, setMetadata } from "./metadata.js";
+import {
+  getMetadata,
+  getOwnMetadata,
+  hasMetadata,
+  hasOwnMetadata,
+  setMetadata,
+} from "./metadata.js";
 import { isConstructor, type Newable } from "./newable.js";
 import { type Callable, type MetadataKey, type PropertyKey } from "./types.js";
 
@@ -8,7 +14,9 @@ const kDesignParamTypes = "design:paramtypes";
 const kDesignReturnType = "design:returntype";
 
 export type HasMetadata = {
+  hasOwnMetadata(metadataKey: MetadataKey): boolean;
   hasMetadata(metadataKey: MetadataKey): boolean;
+  getOwnMetadata<T = unknown>(metadataKey: MetadataKey): T | undefined;
   getMetadata<T = unknown>(metadataKey: MetadataKey): T | undefined;
   setMetadata(metadataKey: MetadataKey, metadataValue: unknown): void;
 };
@@ -32,17 +40,17 @@ class ClassReflector<T = unknown> implements Reflector<T> {
       throw new TypeError();
     }
     this.newable = newable;
-    this.paramTypes = getMetadata(kDesignParamTypes, newable) ?? [];
+    this.paramTypes = getOwnMetadata(kDesignParamTypes, newable) ?? [];
     const { prototype } = newable;
+    for (const key of getOwnMetadata(kPropertyKeys, prototype) ?? []) {
+      this.properties[key] = new PropertyReflector(prototype, key);
+    }
     for (const [key, { value }] of Object.entries(
       Object.getOwnPropertyDescriptors(prototype),
     )) {
       if (key !== "constructor" && typeof value === "function") {
         this.methods[key] = new MethodReflector(prototype, key, value);
       }
-    }
-    for (const key of getMetadata(kPropertyKeys, prototype) ?? []) {
-      this.properties[key] = new PropertyReflector(prototype, key);
     }
   }
 
@@ -53,8 +61,16 @@ class ClassReflector<T = unknown> implements Reflector<T> {
     return Reflect.construct(this.newable, args);
   }
 
+  hasOwnMetadata(metadataKey: MetadataKey): boolean {
+    return hasOwnMetadata(metadataKey, this.newable);
+  }
+
   hasMetadata(metadataKey: MetadataKey): boolean {
     return hasMetadata(metadataKey, this.newable);
+  }
+
+  getOwnMetadata<T>(metadataKey: MetadataKey): T | undefined {
+    return getOwnMetadata(metadataKey, this.newable);
   }
 
   getMetadata<T>(metadataKey: MetadataKey): T | undefined {
@@ -81,7 +97,7 @@ class PropertyReflector implements Property {
   readonly type: unknown;
 
   constructor(readonly prototype: object, readonly key: PropertyKey) {
-    this.type = getMetadata(kDesignType, prototype, key);
+    this.type = getOwnMetadata(kDesignType, prototype, key);
   }
 
   get(inst: object): unknown {
@@ -92,8 +108,16 @@ class PropertyReflector implements Property {
     Reflect.set(inst, this.key, value);
   }
 
+  hasOwnMetadata(metadataKey: MetadataKey): boolean {
+    return hasOwnMetadata(metadataKey, this.prototype, this.key);
+  }
+
   hasMetadata(metadataKey: MetadataKey): boolean {
     return hasMetadata(metadataKey, this.prototype, this.key);
+  }
+
+  getOwnMetadata<T>(metadataKey: MetadataKey): T | undefined {
+    return getOwnMetadata(metadataKey, this.prototype, this.key);
   }
 
   getMetadata<T>(metadataKey: MetadataKey): T | undefined {
@@ -128,9 +152,9 @@ class MethodReflector implements Method {
     readonly key: PropertyKey,
     readonly value: Callable,
   ) {
-    this.type = getMetadata(kDesignType, prototype, key);
-    this.paramTypes = getMetadata(kDesignParamTypes, prototype, key) ?? [];
-    this.returnType = getMetadata(kDesignReturnType, prototype, key);
+    this.type = getOwnMetadata(kDesignType, prototype, key);
+    this.paramTypes = getOwnMetadata(kDesignParamTypes, prototype, key) ?? [];
+    this.returnType = getOwnMetadata(kDesignReturnType, prototype, key);
   }
 
   apply(inst: object, ...args: any[]): unknown {
@@ -140,8 +164,16 @@ class MethodReflector implements Method {
     return Reflect.apply(this.value, inst, args);
   }
 
+  hasOwnMetadata(metadataKey: MetadataKey): boolean {
+    return hasOwnMetadata(metadataKey, this.prototype, this.key);
+  }
+
   hasMetadata(metadataKey: MetadataKey): boolean {
     return hasMetadata(metadataKey, this.prototype, this.key);
+  }
+
+  getOwnMetadata<T>(metadataKey: MetadataKey): T | undefined {
+    return getOwnMetadata(metadataKey, this.prototype, this.key);
   }
 
   getMetadata<T>(metadataKey: MetadataKey): T | undefined {
@@ -168,7 +200,10 @@ export const reflectorOf = <T = unknown>(newable: Newable<T>): Reflector<T> => {
 };
 
 reflectorOf.addPropertyKey = (prototype: object, key: PropertyKey): void => {
-  let propertyKeys = getMetadata(kPropertyKeys, prototype) as Set<PropertyKey>;
+  let propertyKeys = getOwnMetadata(
+    kPropertyKeys,
+    prototype,
+  ) as Set<PropertyKey>;
   if (propertyKeys == null) {
     setMetadata(kPropertyKeys, (propertyKeys = new Set()), prototype);
   }

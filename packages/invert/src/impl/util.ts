@@ -58,7 +58,7 @@ export const getConstructorParamsMetadata = <T>(
   if (newable.length !== paramTypes.length) {
     throw new Error(`Design types are missing on ${newable.name}`);
   }
-  const injectAnn = ref.getMetadata<InjectAnn[]>(kInject) ?? [];
+  const injectAnn = ref.getOwnMetadata<InjectAnn[]>(kInject) ?? [];
   return mergeParams(newable, paramTypes, injectAnn);
 };
 
@@ -71,14 +71,14 @@ export const getMethodParamsMetadata = (
   if (value.length !== paramTypes.length) {
     throw new Error(`Design types are missing on ${newable.name}`);
   }
-  const injectAnn = method.getMetadata<InjectAnn[]>(kInject) ?? [];
+  const injectAnn = method.getOwnMetadata<InjectAnn[]>(kInject) ?? [];
   return mergeParams(value, paramTypes, injectAnn);
 };
 
 export const getPropsMetadata = (ref: Reflector): PropMetadata[] => {
   const { newable } = ref;
   const metadata = new Array<PropMetadata>();
-  const propAnn = ref.getMetadata<PropAnnRecord>(kProp) ?? {};
+  const propAnn = ref.getOwnMetadata<PropAnnRecord>(kProp) ?? {};
   for (const property of Object.values(ref.properties)) {
     const { key, type } = property;
     if (type == null) {

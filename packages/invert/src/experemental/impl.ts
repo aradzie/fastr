@@ -1,4 +1,4 @@
-import { getMetadata, type PropertyKey, setMetadata } from "@fastr/lang";
+import { getOwnMetadata, type PropertyKey, setMetadata } from "@fastr/lang";
 import { type Name } from "../types.js";
 import { addTag, type TagMap } from "./tags.js";
 
@@ -13,7 +13,7 @@ export const tagParameter = (
   name: Name,
   value: Name,
 ): void => {
-  let list = getMetadata(kParameterTags, target, propertyKey) as TagMap[];
+  let list = getOwnMetadata(kParameterTags, target, propertyKey) as TagMap[];
   if (list == null) {
     setMetadata(kParameterTags, (list = []), target, propertyKey);
   }
@@ -30,7 +30,7 @@ export const tagProperty = (
   name: Name,
   value: Name,
 ): void => {
-  let map = getMetadata(kPropertyTags, target, propertyKey) as TagMap;
+  let map = getOwnMetadata(kPropertyTags, target, propertyKey) as TagMap;
   if (map == null) {
     setMetadata(kPropertyTags, (map = newMap()), target, propertyKey);
   }
@@ -41,12 +41,12 @@ export const getParameterTags = (
   target: object,
   propertyKey: PropertyKey | undefined,
 ): readonly TagMap[] => {
-  return getMetadata(kParameterTags, target, propertyKey) ?? [];
+  return getOwnMetadata(kParameterTags, target, propertyKey) ?? [];
 };
 
 export const getPropertyTags = (
   target: object,
   propertyKey: PropertyKey,
 ): TagMap | null => {
-  return getMetadata(kPropertyTags, target, propertyKey) ?? null;
+  return getOwnMetadata(kPropertyTags, target, propertyKey) ?? null;
 };

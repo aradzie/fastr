@@ -1,6 +1,6 @@
 import {
-  getMetadata,
-  hasMetadata,
+  getOwnMetadata,
+  hasOwnMetadata,
   type PropertyKey,
   reflectorOf,
   setMetadata,
@@ -42,7 +42,7 @@ export const injectable = (
   { id, name, singleton }: Partial<InjectableOptions> = {}, //
 ): ClassDecorator => {
   return (target: object): void => {
-    if (hasMetadata(kInjectable, target)) {
+    if (hasOwnMetadata(kInjectable, target)) {
       throw new Error("Duplicate annotation @injectable");
     }
     setMetadata(
@@ -98,7 +98,7 @@ export const inject = <T = unknown>(
     propertyKey: PropertyKey | undefined,
     parameterIndex: number,
   ): void => {
-    const metadata = getMetadata(kInject, target, propertyKey) ?? [];
+    const metadata = getOwnMetadata(kInject, target, propertyKey) ?? [];
     if (metadata[parameterIndex] != null) {
       throw new Error("Duplicate annotation @inject");
     }
@@ -124,7 +124,7 @@ export const prop = <T = unknown>(
   return (target: object, propertyKey: PropertyKey): void => {
     reflectorOf.addPropertyKey(target, propertyKey);
     const { constructor } = target;
-    const metadata = getMetadata(kProp, constructor) ?? {};
+    const metadata = getOwnMetadata(kProp, constructor) ?? {};
     if (metadata[propertyKey] != null) {
       throw new Error("Duplicate annotation @prop");
     }
@@ -163,7 +163,7 @@ export const provides = (
   { id, name, singleton }: Partial<ProvidesOptions> = {}, //
 ): MethodDecorator => {
   return (target: object, propertyKey: PropertyKey): void => {
-    if (hasMetadata(kProvides, target, propertyKey)) {
+    if (hasOwnMetadata(kProvides, target, propertyKey)) {
       throw new Error("Duplicate annotation @provides");
     }
     setMetadata(

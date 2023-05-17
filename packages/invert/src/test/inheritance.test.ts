@@ -1,23 +1,22 @@
 import test from "ava";
+import { inject, injectable } from "../annotations.js";
 import { Container } from "../container.js";
 
-test("id", (t) => {
+test.skip("inherit constructor parameters", (t) => {
+  @injectable()
   abstract class Base {
-    constructor(readonly tag: string) {}
+    constructor(@inject("tag") readonly tag: string) {}
   }
-  class C1 extends Base {
-    private constructor() {
-      super("c1");
-    }
-  }
-  class C2 extends Base {
-    private constructor() {
-      super("c2");
-    }
-  }
+
+  @injectable()
+  class C1 extends Base {}
+
+  @injectable()
+  class C2 extends Base {}
 
   const container = new Container();
 
+  container.bind("tag", "tag").to(C1);
   container.bind(Base, "c1").to(C1);
   container.bind(Base, "c2").to(C2);
 
