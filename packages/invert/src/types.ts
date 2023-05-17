@@ -20,7 +20,6 @@ export type Binder = {
 export type BindTo<T> = {
   toSelf(): void;
   to(constructor: Newable<T> | Abstract<T>): void;
-  toFactory(factory: (container: ReadonlyContainer) => T): void;
   toValue(value: T): void;
 };
 

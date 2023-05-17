@@ -4,11 +4,9 @@ import {
   type BindTo,
   type Module,
   type Name,
-  type ReadonlyContainer,
   type ValueId,
 } from "../types.js";
 import { ClassBinding } from "./binding/class.js";
-import { FactoryBinding } from "./binding/factory.js";
 import { ProviderBinding } from "./binding/provider.js";
 import { ValueBinding } from "./binding/value.js";
 import { getClassMetadata } from "./class-metadata.js";
@@ -32,9 +30,6 @@ export function makeBinder(reg: Registry): Binder {
             throw new TypeError();
           }
           reg.set(id, name, new ClassBinding(getClassMetadata(constructor)));
-        },
-        toFactory(factory: (container: ReadonlyContainer) => T): void {
-          reg.set(id, name, new FactoryBinding(factory));
         },
         toValue: <T>(value: T): void => {
           reg.set(id, name, new ValueBinding(value));
