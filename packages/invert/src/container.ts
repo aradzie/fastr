@@ -36,7 +36,7 @@ export class Container implements ReadonlyContainer, Binder {
     this._registry = new Registry();
     this._binder = makeBinder(this._registry);
     this._parent = null;
-    this.bind(Container).toValue(this);
+    this._binder.bind(Container).toValue(this);
   }
 
   get parent(): Container | null {
@@ -65,7 +65,7 @@ export class Container implements ReadonlyContainer, Binder {
       return true;
     }
     if (this._parent != null) {
-      return this._parent.has(id);
+      return this._parent.has(id, name);
     }
     return false;
   }

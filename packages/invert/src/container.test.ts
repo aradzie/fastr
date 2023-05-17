@@ -241,31 +241,31 @@ test("container hierarchy", (t) => {
   t.false(child1.has(id));
   t.false(child2.has(id));
 
-  child1.bind(id).toValue(1);
+  child1.bind(id).toValue("a");
 
   t.false(parent.has(id));
   t.true(child1.has(id));
   t.false(child2.has(id));
 
-  parent.bind(id).toValue(2);
+  parent.bind(id).toValue("b");
 
   t.true(parent.has(id));
   t.true(child1.has(id));
   t.true(child2.has(id));
 
-  t.is(parent.get(id), 2);
-  t.is(child1.get(id), 1);
-  t.is(child2.get(id), 2);
+  t.is(parent.get(id), "b");
+  t.is(child1.get(id), "a");
+  t.is(child2.get(id), "b");
 
-  child2.bind(id).toValue(3);
+  child2.bind(id).toValue("c");
 
   t.true(parent.has(id));
   t.true(child1.has(id));
   t.true(child2.has(id));
 
-  t.is(parent.get(id), 2);
-  t.is(child1.get(id), 1);
-  t.is(child2.get(id), 3);
+  t.is(parent.get(id), "b");
+  t.is(child1.get(id), "a");
+  t.is(child2.get(id), "c");
 });
 
 test.skip("inherit constructor parameters", (t) => {
