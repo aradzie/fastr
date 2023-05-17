@@ -14,10 +14,12 @@ import { ValueBinding } from "./binding/value.js";
 import { getClassMetadata } from "./class-metadata.js";
 import { getProviders } from "./module-metadata.js";
 import { type Registry } from "./registry.js";
+import { checkValueId } from "./util.js";
 
 export function makeBinder(reg: Registry): Binder {
   const binder: Binder = {
     bind: <T>(id: ValueId<T>, name: Name | null = null): BindTo<T> => {
+      checkValueId(id, name);
       const bindTo: BindTo<T> = {
         toSelf: (): void => {
           if (!isConstructor(id)) {

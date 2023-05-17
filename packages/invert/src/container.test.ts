@@ -21,6 +21,9 @@ test("auto-bind off", (t) => {
 
   const container = new Container({ autoBindInjectable: false });
 
+  t.true(container.has(Container));
+  t.is(container.get(Container), container);
+
   container.bind(B).toSelf();
 
   t.false(container.has(A));
@@ -57,6 +60,9 @@ test("auto-bind on", (t) => {
   }
 
   const container = new Container();
+
+  t.true(container.has(Container));
+  t.is(container.get(Container), container);
 
   t.false(container.has(A));
   t.false(container.has(B));
@@ -332,4 +338,45 @@ test("load modules", (t) => {
   t.is(container.get(String, "x"), "abc");
   t.is(container.get(Number, "x"), 123);
   t.is(container.get(Boolean, "x"), true);
+});
+
+test("check arguments", (t) => {
+  const container = new Container();
+
+  t.throws(
+    () => {
+      container.bind(null as any, null);
+    },
+    { instanceOf: TypeError },
+  );
+  t.throws(
+    () => {
+      container.bind(Object as any, null);
+    },
+    { instanceOf: TypeError },
+  );
+  t.throws(
+    () => {
+      container.has(null as any, null);
+    },
+    { instanceOf: TypeError },
+  );
+  t.throws(
+    () => {
+      container.has(Object as any, null);
+    },
+    { instanceOf: TypeError },
+  );
+  t.throws(
+    () => {
+      container.get(null as any, null);
+    },
+    { instanceOf: TypeError },
+  );
+  t.throws(
+    () => {
+      container.get(Object as any, null);
+    },
+    { instanceOf: TypeError },
+  );
 });

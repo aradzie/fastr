@@ -94,3 +94,9 @@ export const getPropsMetadata = (ref: Reflector): PropMetadata[] => {
   }
   return metadata;
 };
+
+export const checkValueId = (id: unknown, name: unknown): void => {
+  if ((id == null || id === Object) && name == null) {
+    throw new TypeError();
+  }
+};

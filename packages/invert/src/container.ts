@@ -4,6 +4,7 @@ import { makeBinder } from "./impl/binder.js";
 import { ClassBinding } from "./impl/binding/class.js";
 import { getClassMetadata } from "./impl/class-metadata.js";
 import { Registry } from "./impl/registry.js";
+import { checkValueId } from "./impl/util.js";
 import {
   type Binder,
   type BindTo,
@@ -35,6 +36,7 @@ export class Container implements ReadonlyContainer, Binder {
     this._registry = new Registry();
     this._binder = makeBinder(this._registry);
     this._parent = null;
+    this.bind(Container).toValue(this);
   }
 
   get parent(): Container | null {
@@ -53,10 +55,12 @@ export class Container implements ReadonlyContainer, Binder {
   }
 
   bind<T>(id: ValueId<T>, name: Name | null = null): BindTo<T> {
+    checkValueId(id, name);
     return this._binder.bind(id, name);
   }
 
   has(id: ValueId, name: Name | null = null): boolean {
+    checkValueId(id, name);
     if (this._registry.has(id, name)) {
       return true;
     }
@@ -67,6 +71,7 @@ export class Container implements ReadonlyContainer, Binder {
   }
 
   get<T>(id: ValueId<T>, name: Name | null = null): T {
+    checkValueId(id, name);
     const binding = this._registry.get(id, name);
     if (binding != null) {
       return binding.getValue(this) as T;
