@@ -1,6 +1,6 @@
 {
   "name": "@fastr/example-session",
-  "version": "0.0.2-alpha.3",
+  "version": "0.0.2-alpha.4",
   "private": true,
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
@@ -12,8 +12,8 @@
     "compile": "tsc"
   },
   "dependencies": {
-    "@fastr/core": "^0.0.2-alpha.3",
-    "@fastr/middleware-session": "^0.0.2-alpha.3",
+    "@fastr/core": "^0.0.2-alpha.4",
+    "@fastr/middleware-session": "^0.0.2-alpha.4",
     "tslib": "^2.5.0"
   },
   "engines": {

@@ -1,6 +1,6 @@
 {
   "name": "@fastr/controller-tests",
-  "version": "0.0.2-alpha.3",
+  "version": "0.0.2-alpha.4",
   "private": true,
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
@@ -12,14 +12,14 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/client": "^0.0.2-alpha.3",
-    "@fastr/client-testlib": "^0.0.2-alpha.3",
-    "@fastr/controller": "^0.0.2-alpha.3",
-    "@fastr/core": "^0.0.2-alpha.3",
-    "@fastr/invert": "^0.0.2-alpha.3",
-    "@fastr/lang": "^0.0.2-alpha.3",
-    "@fastr/middleware-body": "^0.0.2-alpha.3",
-    "@fastr/middleware-router": "^0.0.2-alpha.3",
+    "@fastr/client": "^0.0.2-alpha.4",
+    "@fastr/client-testlib": "^0.0.2-alpha.4",
+    "@fastr/controller": "^0.0.2-alpha.4",
+    "@fastr/core": "^0.0.2-alpha.4",
+    "@fastr/invert": "^0.0.2-alpha.4",
+    "@fastr/lang": "^0.0.2-alpha.4",
+    "@fastr/middleware-body": "^0.0.2-alpha.4",
+    "@fastr/middleware-router": "^0.0.2-alpha.4",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.5.0"
   },

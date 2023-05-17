@@ -1,6 +1,6 @@
 {
   "name": "@fastr/core",
-  "version": "0.0.2-alpha.3",
+  "version": "0.0.2-alpha.4",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,13 +14,13 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/body": "^0.0.2-alpha.3",
-    "@fastr/errors": "^0.0.2-alpha.3",
-    "@fastr/headers": "^0.0.2-alpha.3",
-    "@fastr/invert": "^0.0.2-alpha.3",
-    "@fastr/lang": "^0.0.2-alpha.3",
-    "@fastr/mediatypes": "^0.0.2-alpha.3",
-    "@fastr/status": "^0.0.2-alpha.3",
+    "@fastr/body": "^0.0.2-alpha.4",
+    "@fastr/errors": "^0.0.2-alpha.4",
+    "@fastr/headers": "^0.0.2-alpha.4",
+    "@fastr/invert": "^0.0.2-alpha.4",
+    "@fastr/lang": "^0.0.2-alpha.4",
+    "@fastr/mediatypes": "^0.0.2-alpha.4",
+    "@fastr/status": "^0.0.2-alpha.4",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.5.0"
   },
