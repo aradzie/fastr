@@ -74,7 +74,7 @@ export class Container implements ReadonlyContainer, Binder {
     if (this._parent != null && this._parent.has(id, name)) {
       return this._parent.get(id, name);
     }
-    if (this._options.autoBindInjectable && isConstructor(id)) {
+    if (name == null && this._options.autoBindInjectable && isConstructor(id)) {
       const binding = new ClassBinding<T>(getClassMetadata(id));
       this._registry.set(id, name, binding);
       return binding.getValue(this);
