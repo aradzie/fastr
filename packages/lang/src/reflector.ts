@@ -77,7 +77,7 @@ class ClassReflector<T = any> implements Reflector<T> {
   }
 
   construct(...args: any[]): T {
-    if (args.length !== this.newable.length) {
+    if (args.length < this.newable.length) {
       throw new TypeError();
     }
     return Reflect.construct(this.newable, args);
@@ -180,7 +180,7 @@ class MethodReflector implements Method {
   }
 
   apply(inst: object, ...args: any[]): unknown {
-    if (args.length !== this.value.length) {
+    if (args.length < this.value.length) {
       throw new TypeError();
     }
     return Reflect.apply(this.value, inst, args);
