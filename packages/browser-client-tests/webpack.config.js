@@ -1,4 +1,7 @@
-const { join } = require("path");
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const rule_ts = () => ({
   test: /\.(ts|tsx)$/,
@@ -13,7 +16,7 @@ const rule_ts = () => ({
   ],
 });
 
-module.exports = [
+export default [
   {
     name: "test-server",
     target: "node",

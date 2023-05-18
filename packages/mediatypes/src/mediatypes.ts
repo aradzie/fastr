@@ -1,5 +1,5 @@
 import { MediaType } from "@fastr/headers";
-import { data, type MimeDbItemMap } from "./db.js";
+import data, { type MimeDbItemMap } from "mime-db";
 
 export type MediaTypeInfo = {
   /** Canonical type name. */

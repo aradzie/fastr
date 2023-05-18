@@ -3,12 +3,11 @@
   "extends": "../../tsconfig-template.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "lib-esm",
-    "lib": ["es2022", "dom", "dom.iterable"],
-    "module": "esnext",
+    "outDir": "lib-cjs",
+    "module": "commonjs",
     "declaration": false,
     "incremental": true,
-    "tsBuildInfoFile": "lib-esm/.tsbuildcache"
+    "tsBuildInfoFile": "lib-cjs/.tsbuildcache"
   },
   "include": [
     "src/**/*"

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   typescript: {
     rewritePaths: {
       "src/": "lib/",

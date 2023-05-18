@@ -2,7 +2,7 @@ import test from "ava";
 import Knex from "knex";
 import { SqlStore } from "./sqlstore.js";
 
-const knex = Knex({
+const knex = (Knex as any)({
   client: "sqlite3",
   useNullAsDefault: true,
   connection: {

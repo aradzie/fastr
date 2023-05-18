@@ -4,8 +4,8 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "lib",
-    "target": "es2022",
-    "module": "commonjs",
+    "module": "esnext",
+    "declaration": true,
     "incremental": true,
     "tsBuildInfoFile": "lib/.tsbuildcache"
   },

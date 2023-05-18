@@ -5,12 +5,15 @@
   "repository": "aradzie/fastr",
   "license": "MIT",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
-  "main": "lib/index.js",
-  "module": "lib-esm/index.js",
-  "types": "lib/index.d.ts",
+  "type": "module",
+  "exports": {
+    "types": "./lib/index.d.ts",
+    "import": "./lib/index.js",
+    "require": "./lib-cjs/index.js"
+  },
   "scripts": {
-    "clean": "rm -fr lib lib-esm",
-    "compile": "tsc && tsc -b tsconfig-esm.json",
+    "clean": "rm -fr lib lib-cjs",
+    "compile": "tsc && tsc -b tsconfig-cjs.json",
     "test": "ava"
   },
   "dependencies": {

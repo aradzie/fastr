@@ -4,7 +4,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "lib",
-    "module": "commonjs",
+    "module": "esnext",
     "declaration": false,
     "incremental": true,
     "tsBuildInfoFile": "lib/.tsbuildcache"
