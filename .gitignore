@@ -9,7 +9,6 @@ lib-esm/
 # Other
 node_modules/
 tmp/
-sandbox/
 backup/
 .cache/
 .vscode/
