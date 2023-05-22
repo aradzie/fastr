@@ -1,5 +1,5 @@
 import { entriesOf, type NameValueEntries } from "./entries.js";
-import { type Header, parseOrThrow } from "./headers.js";
+import { type Header } from "./headers.js";
 import { Params } from "./params.js";
 import { readParams } from "./syntax-params.js";
 import { isToken, Scanner, Separator } from "./syntax.js";
@@ -17,7 +17,11 @@ export class MediaType implements Header {
   }
 
   static parse(input: string): MediaType {
-    return parseOrThrow(MediaType, input);
+    const type = MediaType.tryParse(input);
+    if (type == null) {
+      throw new Error(`Invalid media type [${input}]`);
+    }
+    return type;
   }
 
   static tryParse(input: string): MediaType | null {

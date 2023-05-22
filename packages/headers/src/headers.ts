@@ -40,16 +40,13 @@ export interface Header {
   readonly [Symbol.toStringTag]: string;
 }
 
-export type Parseable<T> = {
-  readonly parse: (value: string) => T;
-  readonly tryParse: (value: string) => T | null;
-};
-
 export type HeaderClass<T extends Header> = {
   new (...args: any[]): T;
   readonly headerName: string;
   readonly headerNameLc: string;
-} & Parseable<T>;
+  readonly parse: (value: string) => T;
+  readonly tryParse: (value: string) => T | null;
+};
 
 export const isHeaderClass = <T extends Header = any>(
   value: unknown,
@@ -62,36 +59,37 @@ export const isHeaderClass = <T extends Header = any>(
 };
 
 export const getHeader = <T extends Header>(
-  header: HeaderClass<T>,
+  headerClass: HeaderClass<T>,
   headers: GetHeader,
 ): T | null => {
-  const value = headers.get(header.headerNameLc);
-  if (value != null) {
-    return header.parse(value);
+  const header = headers.get(headerClass.headerNameLc);
+  if (header != null) {
+    return headerClass.parse(header);
   } else {
     return null;
   }
 };
 
 export const tryGetHeader = <T extends Header>(
-  header: HeaderClass<T>,
+  headerClass: HeaderClass<T>,
   headers: GetHeader,
 ): T | null => {
-  const value = headers.get(header.headerNameLc);
-  if (value != null) {
-    return header.tryParse(value);
+  const header = headers.get(headerClass.headerNameLc);
+  if (header != null) {
+    return headerClass.tryParse(header);
   } else {
     return null;
   }
 };
 
 export const parseOrThrow = <T extends Header>(
-  parseable: Parseable<T>,
+  headerClass: HeaderClass<T>,
   input: string,
 ): T => {
-  const header = parseable.tryParse(input);
-  if (header == null) {
-    throw new TypeError(`Invalid header value "${input}"`);
+  const header = headerClass.tryParse(input);
+  if (header != null) {
+    return header;
+  } else {
+    throw new Error(`Invalid header value "${input}"`);
   }
-  return header;
 };
