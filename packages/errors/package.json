@@ -14,7 +14,6 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/headers": "^0.0.2-alpha.4",
     "@fastr/status": "^0.0.2-alpha.4",
     "tslib": "^2.5.0"
   },

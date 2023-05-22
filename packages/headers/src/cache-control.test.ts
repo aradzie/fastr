@@ -1,5 +1,6 @@
 import test from "ava";
 import { CacheControl } from "./cache-control.js";
+import { InvalidHeaderError } from "./errors.js";
 
 test("parse", (t) => {
   t.deepEqual(
@@ -26,6 +27,16 @@ test("parse", (t) => {
         ["ext2", "value"],
       ],
     }),
+  );
+
+  t.throws(
+    () => {
+      CacheControl.parse(";");
+    },
+    {
+      instanceOf: InvalidHeaderError,
+      message: 'Header "Cache-Control" has invalid value ";"',
+    },
   );
 });
 

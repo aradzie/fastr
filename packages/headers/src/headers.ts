@@ -1,3 +1,5 @@
+import { InvalidHeaderError } from "./errors.js";
+
 export interface GetHeader {
   get(name: string): string | null;
 }
@@ -90,6 +92,8 @@ export const parseOrThrow = <T extends Header>(
   if (header != null) {
     return header;
   } else {
-    throw new Error(`Invalid header value "${input}"`);
+    throw new InvalidHeaderError(
+      `Header "${headerClass.headerName}" has invalid value "${input}"`,
+    );
   }
 };

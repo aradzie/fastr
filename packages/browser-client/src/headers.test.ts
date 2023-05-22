@@ -10,7 +10,6 @@ test("reject invalid header names", (t) => {
     },
     {
       instanceOf: TypeError,
-      code: "ERR_INVALID_HEADER_NAME",
     },
   );
   t.throws(
@@ -19,7 +18,6 @@ test("reject invalid header names", (t) => {
     },
     {
       instanceOf: TypeError,
-      code: "ERR_INVALID_HEADER_NAME",
     },
   );
   t.throws(
@@ -28,7 +26,6 @@ test("reject invalid header names", (t) => {
     },
     {
       instanceOf: TypeError,
-      code: "ERR_INVALID_HEADER_NAME",
     },
   );
   t.throws(
@@ -37,7 +34,6 @@ test("reject invalid header names", (t) => {
     },
     {
       instanceOf: TypeError,
-      code: "ERR_INVALID_HEADER_NAME",
     },
   );
   t.throws(
@@ -46,7 +42,6 @@ test("reject invalid header names", (t) => {
     },
     {
       instanceOf: TypeError,
-      code: "ERR_INVALID_HEADER_NAME",
     },
   );
 });
@@ -60,7 +55,6 @@ test("reject invalid header values", (t) => {
     },
     {
       instanceOf: TypeError,
-      code: "ERR_INVALID_HEADER_VALUE",
     },
   );
   t.throws(
@@ -69,7 +63,6 @@ test("reject invalid header values", (t) => {
     },
     {
       instanceOf: TypeError,
-      code: "ERR_INVALID_HEADER_VALUE",
     },
   );
 });

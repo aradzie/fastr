@@ -1,10 +1,4 @@
-import {
-  InvalidHeaderNameError,
-  InvalidHeaderValueError,
-  isToken,
-  isValidHeaderValue,
-  multiEntriesOf,
-} from "@fastr/headers";
+import { isToken, isValidHeaderValue, multiEntriesOf } from "@fastr/headers";
 import { type NameValueEntries } from "./types.js";
 
 const kMap = Symbol("kMap");
@@ -72,11 +66,14 @@ export class HttpHeaders implements Headers, Iterable<[string, string]> {
    */
   set(name: string, value: unknown): this {
     if (!isToken(name)) {
-      throw new InvalidHeaderNameError();
+      throw new TypeError(`Invalid header name "${name}"`);
     }
-    let stringified;
-    if (value == null || !isValidHeaderValue((stringified = String(value)))) {
-      throw new InvalidHeaderValueError();
+    if (value == null) {
+      throw new TypeError(`Invalid header value [null]`);
+    }
+    const stringified = String(value);
+    if (!isValidHeaderValue(stringified)) {
+      throw new TypeError(`Invalid header value "${stringified}"`);
     }
     const nameLc = name.toLowerCase();
     const entry = this[kMap].get(nameLc);
@@ -95,11 +92,14 @@ export class HttpHeaders implements Headers, Iterable<[string, string]> {
    */
   append(name: string, value: unknown): this {
     if (!isToken(name)) {
-      throw new InvalidHeaderNameError();
+      throw new TypeError(`Invalid header name "${name}"`);
     }
-    let stringified;
-    if (value == null || !isValidHeaderValue((stringified = String(value)))) {
-      throw new InvalidHeaderValueError();
+    if (value == null) {
+      throw new TypeError(`Invalid header value [null]`);
+    }
+    const stringified = String(value);
+    if (!isValidHeaderValue(stringified)) {
+      throw new TypeError(`Invalid header value "${stringified}"`);
     }
     const nameLc = name.toLowerCase();
     const entry = this[kMap].get(nameLc);
@@ -117,7 +117,7 @@ export class HttpHeaders implements Headers, Iterable<[string, string]> {
    */
   delete(name: string): this {
     if (!isToken(name)) {
-      throw new InvalidHeaderNameError();
+      throw new TypeError(`Invalid header name "${name}"`);
     }
     const nameLc = name.toLowerCase();
     this[kMap].delete(nameLc);
@@ -138,7 +138,7 @@ export class HttpHeaders implements Headers, Iterable<[string, string]> {
    */
   has(name: string): boolean {
     if (!isToken(name)) {
-      throw new InvalidHeaderNameError();
+      throw new TypeError(`Invalid header name "${name}"`);
     }
     const nameLc = name.toLowerCase();
     return this[kMap].has(nameLc);
@@ -151,7 +151,7 @@ export class HttpHeaders implements Headers, Iterable<[string, string]> {
    */
   get(name: string): string | null {
     if (!isToken(name)) {
-      throw new InvalidHeaderNameError();
+      throw new TypeError(`Invalid header name "${name}"`);
     }
     const nameLc = name.toLowerCase();
     const entry = this[kMap].get(nameLc);

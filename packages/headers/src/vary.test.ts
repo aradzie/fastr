@@ -1,4 +1,5 @@
 import test from "ava";
+import { InvalidHeaderError } from "./errors.js";
 import { Vary } from "./vary.js";
 
 test("manipulate", (t) => {
@@ -87,13 +88,31 @@ test("parse", (t) => {
     new Vary("Accept", "Accept-Encoding"),
   );
 
-  t.throws(() => {
-    Vary.parse("Accept,");
-  });
-  t.throws(() => {
-    Vary.parse(",Accept");
-  });
-  t.throws(() => {
-    Vary.parse("=");
-  });
+  t.throws(
+    () => {
+      Vary.parse("Accept,");
+    },
+    {
+      instanceOf: InvalidHeaderError,
+      message: 'Header "Vary" has invalid value "Accept,"',
+    },
+  );
+  t.throws(
+    () => {
+      Vary.parse(",Accept");
+    },
+    {
+      instanceOf: InvalidHeaderError,
+      message: 'Header "Vary" has invalid value ",Accept"',
+    },
+  );
+  t.throws(
+    () => {
+      Vary.parse("=");
+    },
+    {
+      instanceOf: InvalidHeaderError,
+      message: 'Header "Vary" has invalid value "="',
+    },
+  );
 });

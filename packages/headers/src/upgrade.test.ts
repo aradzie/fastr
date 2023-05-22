@@ -1,4 +1,5 @@
 import test from "ava";
+import { InvalidHeaderError } from "./errors.js";
 import { Upgrade } from "./upgrade.js";
 
 test("matches", (t) => {
@@ -44,13 +45,31 @@ test("parse", (t) => {
     new Upgrade("websocket", "IRC/6.9"),
   );
 
-  t.throws(() => {
-    Upgrade.parse("websocket,");
-  });
-  t.throws(() => {
-    Upgrade.parse(",websocket");
-  });
-  t.throws(() => {
-    Upgrade.parse("=");
-  });
+  t.throws(
+    () => {
+      Upgrade.parse("websocket,");
+    },
+    {
+      instanceOf: InvalidHeaderError,
+      message: 'Header "Upgrade" has invalid value "websocket,"',
+    },
+  );
+  t.throws(
+    () => {
+      Upgrade.parse(",websocket");
+    },
+    {
+      instanceOf: InvalidHeaderError,
+      message: 'Header "Upgrade" has invalid value ",websocket"',
+    },
+  );
+  t.throws(
+    () => {
+      Upgrade.parse("=");
+    },
+    {
+      instanceOf: InvalidHeaderError,
+      message: 'Header "Upgrade" has invalid value "="',
+    },
+  );
 });

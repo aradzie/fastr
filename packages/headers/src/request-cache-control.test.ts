@@ -1,4 +1,5 @@
 import test from "ava";
+import { InvalidHeaderError } from "./errors.js";
 import { RequestCacheControl } from "./request-cache-control.js";
 
 test("parse", (t) => {
@@ -28,6 +29,16 @@ test("parse", (t) => {
         ["ext2", "value"],
       ],
     }),
+  );
+
+  t.throws(
+    () => {
+      RequestCacheControl.parse(";");
+    },
+    {
+      instanceOf: InvalidHeaderError,
+      message: 'Header "Cache-Control" has invalid value ";"',
+    },
   );
 });
 
