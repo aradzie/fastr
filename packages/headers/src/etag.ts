@@ -1,4 +1,7 @@
-import { type Header } from "./headers.js";
+import { type Header, parseOrThrow } from "./headers.js";
+
+const headerName = "ETag";
+const headerNameLc = "etag";
 
 /**
  * The `E-Tag` header.
@@ -6,6 +9,9 @@ import { type Header } from "./headers.js";
  * @see https://httpwg.org/specs/rfc9110.html#rfc.section.8.8.3
  */
 export class ETag implements Header {
+  static readonly headerName = headerName;
+  static readonly headerNameLc = headerNameLc;
+
   static from(value: ETag | string): ETag {
     if (typeof value === "string") {
       return new ETag(value);
@@ -15,6 +21,10 @@ export class ETag implements Header {
   }
 
   static parse(input: string): ETag {
+    return parseOrThrow(ETag, input);
+  }
+
+  static tryParse(input: string): ETag {
     // ETag       = entity-tag
     // entity-tag = [ weak ] opaque-tag
     // weak       = %s"W/"

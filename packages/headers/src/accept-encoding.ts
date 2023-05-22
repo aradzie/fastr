@@ -3,18 +3,17 @@ import { type Header, type IncomingHeaders, parseOrThrow } from "./headers.js";
 import { readWeight } from "./params.js";
 import { isToken, Scanner, Separator } from "./syntax.js";
 
+const headerName = "Accept-Encoding";
+const headerNameLc = "accept-encoding";
+
 /**
  * The `Accept-Encoding` header.
  *
  * @see https://httpwg.org/specs/rfc9110.html#field.accept-encoding
  */
 export class AcceptEncoding implements Header {
-  static get(headers: IncomingHeaders): AcceptEncoding {
-    return (
-      headers.map("Accept-Encoding", AcceptEncoding.parse) ??
-      new AcceptEncoding()
-    );
-  }
+  static readonly headerName = headerName;
+  static readonly headerNameLc = headerNameLc;
 
   static from(value: AcceptEncoding | string): AcceptEncoding {
     if (typeof value === "string") {
@@ -22,6 +21,13 @@ export class AcceptEncoding implements Header {
     } else {
       return value;
     }
+  }
+
+  static get(headers: IncomingHeaders): AcceptEncoding {
+    return (
+      headers.map("Accept-Encoding", AcceptEncoding.parse) ??
+      new AcceptEncoding()
+    );
   }
 
   static parse(input: string): AcceptEncoding {

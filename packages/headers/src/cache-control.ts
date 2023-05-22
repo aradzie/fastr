@@ -15,6 +15,9 @@ export interface CacheControlInit {
   readonly ext?: readonly ExtField[] | null;
 }
 
+const headerName = "Cache-Control";
+const headerNameLc = "cache-control";
+
 /**
  * The `Cache-Control` header, transferred in a response.
  *
@@ -22,6 +25,9 @@ export interface CacheControlInit {
  * @see https://httpwg.org/specs/rfc9111.html#rfc.section.5.2.1
  */
 export class CacheControl implements Header {
+  static readonly headerName = headerName;
+  static readonly headerNameLc = headerNameLc;
+
   static from(value: CacheControl | string): CacheControl {
     if (typeof value === "string") {
       return CacheControl.parse(value);

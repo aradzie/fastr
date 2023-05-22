@@ -3,18 +3,17 @@ import { type Header, type IncomingHeaders, parseOrThrow } from "./headers.js";
 import { readWeight } from "./params.js";
 import { isToken, Scanner, Separator } from "./syntax.js";
 
+const headerName = "Accept-Language";
+const headerNameLc = "accept-language";
+
 /**
  * The `Accept-Language` header.
  *
  * @see https://httpwg.org/specs/rfc9110.html#field.accept-language
  */
 export class AcceptLanguage implements Header {
-  static get(headers: IncomingHeaders): AcceptLanguage {
-    return (
-      headers.map("Accept-Language", AcceptLanguage.parse) ??
-      new AcceptLanguage()
-    );
-  }
+  static readonly headerName = headerName;
+  static readonly headerNameLc = headerNameLc;
 
   static from(value: AcceptLanguage | string): AcceptLanguage {
     if (typeof value === "string") {
@@ -22,6 +21,13 @@ export class AcceptLanguage implements Header {
     } else {
       return value;
     }
+  }
+
+  static get(headers: IncomingHeaders): AcceptLanguage {
+    return (
+      headers.map("Accept-Language", AcceptLanguage.parse) ??
+      new AcceptLanguage()
+    );
   }
 
   static parse(input: string): AcceptLanguage {

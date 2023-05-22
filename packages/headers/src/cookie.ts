@@ -4,6 +4,9 @@ import { type Header, parseOrThrow } from "./headers.js";
 import { isValidCookieValue } from "./syntax-cookie.js";
 import { isToken, Scanner, Separator } from "./syntax.js";
 
+const headerName = "Cookie";
+const headerNameLc = "cookie";
+
 /**
  * The `Cookie` header.
  *
@@ -11,6 +14,9 @@ import { isToken, Scanner, Separator } from "./syntax.js";
  * @see https://httpwg.org/specs/rfc6265.html#section-4.2
  */
 export class Cookie implements Header, Iterable<[string, string]> {
+  static readonly headerName = headerName;
+  static readonly headerNameLc = headerNameLc;
+
   static from(value: Cookie | string): Cookie {
     if (typeof value === "string") {
       return Cookie.parse(value);

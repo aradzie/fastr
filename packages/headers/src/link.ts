@@ -32,12 +32,18 @@ export class LinkEntry {
   }
 }
 
+const headerName = "Link";
+const headerNameLc = "link";
+
 /**
  * The `Link` header.
  *
  * @see https://httpwg.org/specs/rfc8288.html
  */
 export class Link implements Header, Iterable<LinkEntry> {
+  static readonly headerName = headerName;
+  static readonly headerNameLc = headerNameLc;
+
   static from(value: Link | string): Link {
     if (typeof value === "string") {
       return Link.parse(value);

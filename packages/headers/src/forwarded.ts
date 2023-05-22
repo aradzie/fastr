@@ -8,12 +8,18 @@ export interface ForwardedInit {
   readonly proto?: string;
 }
 
+const headerName = "Forwarded";
+const headerNameLc = "forwarded";
+
 /**
  * The `Forwarded` header.
  *
  * @see https://www.rfc-editor.org/rfc/rfc7239
  */
 export class Forwarded implements Header {
+  static readonly headerName = headerName;
+  static readonly headerNameLc = headerNameLc;
+
   static from(value: Forwarded | string): Forwarded {
     if (typeof value === "string") {
       return Forwarded.parse(value);

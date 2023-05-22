@@ -14,6 +14,9 @@ export interface SetCookieInit {
   httpOnly?: boolean;
 }
 
+const headerName = "Set-Cookie";
+const headerNameLc = "set-cookie";
+
 /**
  * The `Set-Cookie` header.
  *
@@ -23,6 +26,9 @@ export interface SetCookieInit {
  * @see https://httpwg.org/specs/rfc6265.html
  */
 export class SetCookie implements Header {
+  static readonly headerName = headerName;
+  static readonly headerNameLc = headerNameLc;
+
   static from(value: SetCookie | string): SetCookie {
     if (typeof value === "string") {
       return SetCookie.parse(value);

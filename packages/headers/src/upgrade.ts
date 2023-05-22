@@ -1,12 +1,18 @@
 import { type Header, parseOrThrow } from "./headers.js";
 import { Scanner, Separator } from "./syntax.js";
 
+const headerName = "Upgrade";
+const headerNameLc = "upgrade";
+
 /**
  * The `Upgrade` header.
  *
  * @see https://httpwg.org/specs/rfc9110.html#field.upgrade
  */
 export class Upgrade implements Header, Iterable<string> {
+  static readonly headerName = headerName;
+  static readonly headerNameLc = headerNameLc;
+
   static from(value: Upgrade | string): Upgrade {
     if (typeof value === "string") {
       return Upgrade.parse(value);

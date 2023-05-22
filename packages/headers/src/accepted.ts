@@ -25,23 +25,12 @@ export abstract class Accepted<T> implements Weighted {
   abstract compare(candidate: T): number | null;
 }
 
-export function negotiateAll<T>(
+export const negotiateAll = <T>(
   candidates: readonly string[],
   accepted: Accepted<T>[],
   transform: (value: string) => T,
-): string[] {
-  const list = [];
-  for (const candidate of candidates) {
-    const { s, q, i } = findMostSpecific(transform(candidate));
-    if (q > 0) {
-      list.push({ s, q, i, candidate });
-    }
-  }
-  return list
-    .sort((a, b) => b.s - a.s || b.q - a.q || a.i - b.i)
-    .map(({ candidate }) => candidate);
-
-  function findMostSpecific(candidate: T) {
+): string[] => {
+  const findMostSpecific = (candidate: T) => {
     let ms = -1;
     let mq = -1;
     let mi = -1;
@@ -57,13 +46,24 @@ export function negotiateAll<T>(
       i += 1;
     }
     return { s: ms, q: mq, i: mi };
-  }
-}
+  };
 
-export function head<T>(list: T[]): T | null {
+  const list = [];
+  for (const candidate of candidates) {
+    const { s, q, i } = findMostSpecific(transform(candidate));
+    if (q > 0) {
+      list.push({ s, q, i, candidate });
+    }
+  }
+  return list
+    .sort((a, b) => b.s - a.s || b.q - a.q || a.i - b.i)
+    .map(({ candidate }) => candidate);
+};
+
+export const head = <T>(list: readonly T[]): T | null => {
   if (list.length > 0) {
     return list[0];
   } else {
     return null;
   }
-}
+};

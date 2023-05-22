@@ -4,15 +4,17 @@ import { MediaType } from "./media-type.js";
 import { readParams } from "./syntax-params.js";
 import { Scanner, Separator } from "./syntax.js";
 
+const headerName = "Accept";
+const headerNameLc = "accept";
+
 /**
  * The `Accept` header.
  *
  * @see https://httpwg.org/specs/rfc9110.html#field.accept
  */
 export class Accept implements Header {
-  static get(headers: IncomingHeaders): Accept {
-    return headers.map("Accept", Accept.parse) ?? new Accept();
-  }
+  static readonly headerName = headerName;
+  static readonly headerNameLc = headerNameLc;
 
   static from(value: Accept | string): Accept {
     if (typeof value === "string") {
@@ -20,6 +22,10 @@ export class Accept implements Header {
     } else {
       return value;
     }
+  }
+
+  static get(headers: IncomingHeaders): Accept {
+    return headers.map("Accept", Accept.parse) ?? new Accept();
   }
 
   static parse(input: string): Accept {

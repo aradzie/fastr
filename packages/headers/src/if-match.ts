@@ -3,10 +3,16 @@ import { type Header, parseOrThrow } from "./headers.js";
 import { readETag } from "./syntax-etag.js";
 import { Scanner, Separator } from "./syntax.js";
 
+const headerName = "If-Match";
+const headerNameLc = "if-match";
+
 /**
  * The `If-Match` header.
  */
 export class IfMatch implements Header, Iterable<ETag> {
+  static readonly headerName = headerName;
+  static readonly headerNameLc = headerNameLc;
+
   static from(value: IfMatch | string): IfMatch {
     if (typeof value === "string") {
       return IfMatch.parse(value);

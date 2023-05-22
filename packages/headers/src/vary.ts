@@ -1,12 +1,18 @@
 import { type Header, parseOrThrow } from "./headers.js";
 import { isToken, Scanner, Separator } from "./syntax.js";
 
+const headerName = "Vary";
+const headerNameLc = "vary";
+
 /**
  * The `Vary` header.
  *
  * @see https://httpwg.org/specs/rfc9110.html#field.vary
  */
 export class Vary implements Header, Iterable<string> {
+  static readonly headerName = headerName;
+  static readonly headerNameLc = headerNameLc;
+
   static from(value: Vary | string): Vary {
     if (typeof value === "string") {
       return Vary.parse(value);

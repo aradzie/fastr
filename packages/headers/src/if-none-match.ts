@@ -3,10 +3,16 @@ import { type Header, parseOrThrow } from "./headers.js";
 import { readETag } from "./syntax-etag.js";
 import { Scanner, Separator } from "./syntax.js";
 
+const headerName = "If-None-Match";
+const headerNameLc = "if-none-match";
+
 /**
  * The `If-None-Match` header.
  */
 export class IfNoneMatch implements Header, Iterable<ETag> {
+  static readonly headerName = headerName;
+  static readonly headerNameLc = headerNameLc;
+
   static from(value: IfNoneMatch | string): IfNoneMatch {
     if (typeof value === "string") {
       return IfNoneMatch.parse(value);
