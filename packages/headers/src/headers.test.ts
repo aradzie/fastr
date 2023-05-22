@@ -3,6 +3,8 @@ import { AcceptEncoding } from "./accept-encoding.js";
 import { AcceptLanguage } from "./accept-language.js";
 import { Accept } from "./accept.js";
 import { CacheControl } from "./cache-control.js";
+import { ContentLength } from "./content-length.js";
+import { ContentType } from "./content-type.js";
 import { Cookie } from "./cookie.js";
 import { ETag } from "./etag.js";
 import { Forwarded } from "./forwarded.js";
@@ -20,6 +22,8 @@ const headers: readonly HeaderClass<any>[] = [
   AcceptEncoding,
   AcceptLanguage,
   CacheControl,
+  ContentLength,
+  ContentType,
   Cookie,
   ETag,
   Forwarded,

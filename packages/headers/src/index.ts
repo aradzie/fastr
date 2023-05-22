@@ -2,6 +2,8 @@ export * from "./accept-encoding.js";
 export * from "./accept-language.js";
 export * from "./accept.js";
 export * from "./cache-control.js";
+export * from "./content-length.js";
+export * from "./content-type.js";
 export * from "./cookie-codec.js";
 export * from "./cookie.js";
 export * from "./entries.js";
