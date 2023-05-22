@@ -1,5 +1,5 @@
 import { UnsupportedMediaTypeError } from "@fastr/errors";
-import { Accept, MediaType } from "@fastr/headers";
+import { Accept, ContentType, type MediaType } from "@fastr/headers";
 import { isSuccess } from "@fastr/status";
 import { HttpHeaders } from "../headers.js";
 import {
@@ -40,10 +40,8 @@ export function expectType(
     if (!isSuccess(response.status)) {
       return response;
     }
-    const responseType =
-      response.headers.map("Content-Type", MediaType.parse) ??
-      new MediaType("application", "octet-stream");
-    if (accept.accepts(responseType.essence)) {
+    const { type } = ContentType.get(response.headers) ?? ContentType.generic;
+    if (accept.accepts(type.essence)) {
       return response;
     }
     response.abort();

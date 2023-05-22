@@ -2,7 +2,7 @@ import { Accepted, head, negotiateAll, type Weighted } from "./accepted.js";
 import {
   getHeader,
   type Header,
-  type IncomingHeaders,
+  type HeadersLike,
   parseOrThrow,
   tryGetHeader,
 } from "./headers.js";
@@ -30,11 +30,11 @@ export class Accept implements Header {
     }
   }
 
-  static get(headers: IncomingHeaders): Accept | null {
+  static get(headers: HeadersLike): Accept | null {
     return getHeader(Accept, headers);
   }
 
-  static tryGet(headers: IncomingHeaders): Accept | null {
+  static tryGet(headers: HeadersLike): Accept | null {
     return tryGetHeader(Accept, headers);
   }
 

@@ -5,7 +5,7 @@ import {
   request,
   xhrAdapter,
 } from "@fastr/browser-client";
-import { MediaType } from "@fastr/headers";
+import { ContentType } from "@fastr/headers";
 import { mergeSearchParams } from "@fastr/url";
 import { expect } from "chai";
 import { formDataEntries, parseFormData } from "./util.js";
@@ -70,9 +70,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(400);
       expect(statusText).to.eq("Bad Request");
-      expect(headers.map("Content-Type", MediaType.parse)?.essence).to.eq(
-        "application/json",
-      );
+      expect(String(ContentType.get(headers))).to.eq("application/json");
       expect(await response.json()).to.deep.eq({ type: "json" });
     });
 
@@ -81,9 +79,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(500);
       expect(statusText).to.eq("Internal Server Error");
-      expect(headers.map("Content-Type", MediaType.parse)?.essence).to.eq(
-        "application/json",
-      );
+      expect(String(ContentType.get(headers))).to.eq("application/json");
       expect(await response.json()).to.deep.eq({ type: "json" });
     });
 
@@ -92,7 +88,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(204);
       expect(statusText).to.eq("No Content");
-      expect(headers.map("Content-Type", MediaType.parse)).to.eq(null);
+      expect(ContentType.get(headers)).to.eq(null);
       expect(await response.text()).to.eq("");
     });
 
@@ -137,9 +133,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
-      expect(headers.map("Content-Type", MediaType.parse)?.essence).to.eq(
-        "multipart/form-data",
-      );
+      expect(String(ContentType.get(headers))).to.eq("multipart/form-data");
       if (underTest === xhrAdapter) {
         // The XHR adapter cannot read multipart form data.
         try {
@@ -168,7 +162,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
-      expect(headers.map("Content-Type", MediaType.parse)?.essence).to.eq(
+      expect(String(ContentType.get(headers))).to.eq(
         "application/x-www-form-urlencoded",
       );
       expect(formDataEntries(await response.formData())).to.deep.eq([
@@ -183,9 +177,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
-      expect(headers.map("Content-Type", MediaType.parse)?.essence).to.eq(
-        "application/json",
-      );
+      expect(String(ContentType.get(headers))).to.eq("application/json");
       expect(await response.json()).to.deep.eq({ type: "json" });
     });
 

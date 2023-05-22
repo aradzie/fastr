@@ -3,7 +3,7 @@ import { entriesOf, type NameValueEntries } from "./entries.js";
 import {
   getHeader,
   type Header,
-  type IncomingHeaders,
+  type HeadersLike,
   parseOrThrow,
   tryGetHeader,
 } from "./headers.js";
@@ -31,11 +31,11 @@ export class Cookie implements Header, Iterable<[string, string]> {
     }
   }
 
-  static get(headers: IncomingHeaders): Cookie | null {
+  static get(headers: HeadersLike): Cookie | null {
     return getHeader(Cookie, headers);
   }
 
-  static tryGet(headers: IncomingHeaders): Cookie | null {
+  static tryGet(headers: HeadersLike): Cookie | null {
     return tryGetHeader(Cookie, headers);
   }
 

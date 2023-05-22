@@ -1,7 +1,7 @@
 import {
   getHeader,
   type Header,
-  type IncomingHeaders,
+  type HeadersLike,
   parseOrThrow,
   tryGetHeader,
 } from "./headers.js";
@@ -21,11 +21,11 @@ export class ContentLength implements Header {
     }
   }
 
-  static get(headers: IncomingHeaders): ContentLength | null {
+  static get(headers: HeadersLike): ContentLength | null {
     return getHeader(ContentLength, headers);
   }
 
-  static tryGet(headers: IncomingHeaders): ContentLength | null {
+  static tryGet(headers: HeadersLike): ContentLength | null {
     return tryGetHeader(ContentLength, headers);
   }
 

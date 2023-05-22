@@ -1,7 +1,7 @@
 import {
   getHeader,
   type Header,
-  type IncomingHeaders,
+  type HeadersLike,
   parseOrThrow,
   tryGetHeader,
 } from "./headers.js";
@@ -22,11 +22,11 @@ export class ContentType implements Header {
     }
   }
 
-  static get(headers: IncomingHeaders): ContentType | null {
+  static get(headers: HeadersLike): ContentType | null {
     return getHeader(ContentType, headers);
   }
 
-  static tryGet(headers: IncomingHeaders): ContentType | null {
+  static tryGet(headers: HeadersLike): ContentType | null {
     return tryGetHeader(ContentType, headers);
   }
 
@@ -42,6 +42,8 @@ export class ContentType implements Header {
       return null;
     }
   }
+
+  static readonly generic = new ContentType("application/octet-stream");
 
   private _type!: MediaType;
 

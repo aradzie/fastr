@@ -2,7 +2,7 @@ import { ETag } from "./etag.js";
 import {
   getHeader,
   type Header,
-  type IncomingHeaders,
+  type HeadersLike,
   parseOrThrow,
   tryGetHeader,
 } from "./headers.js";
@@ -27,11 +27,11 @@ export class IfNoneMatch implements Header, Iterable<ETag> {
     }
   }
 
-  static get(headers: IncomingHeaders): IfNoneMatch | null {
+  static get(headers: HeadersLike): IfNoneMatch | null {
     return getHeader(IfNoneMatch, headers);
   }
 
-  static tryGet(headers: IncomingHeaders): IfNoneMatch | null {
+  static tryGet(headers: HeadersLike): IfNoneMatch | null {
     return tryGetHeader(IfNoneMatch, headers);
   }
 

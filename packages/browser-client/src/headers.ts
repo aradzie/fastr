@@ -162,20 +162,6 @@ export class HttpHeaders implements Headers, Iterable<[string, string]> {
     }
   }
 
-  /**
-   * Passes header string value through the specified parser and returns either
-   * a parsed value of `null` if the header is missing.
-   * Header name is case-insensitive.
-   */
-  map<T>(name: string, parser: (value: string) => T | null): T | null {
-    const v = this.get(name);
-    if (v != null) {
-      return parser(v);
-    } else {
-      return null;
-    }
-  }
-
   forEach(
     cb: (value: string, key: string, parent: Headers) => void,
     thisArg?: any,

@@ -1,4 +1,4 @@
-import { MediaType } from "@fastr/headers";
+import { ContentType, type MediaType } from "@fastr/headers";
 import { isSuccess } from "@fastr/status";
 import { type EventEmitter } from "events";
 import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "../events.js";
@@ -136,16 +136,14 @@ function makeResponse(xhr: XMLHttpRequest, body: Promise<Blob>): HttpResponse {
 
     async formData(): Promise<FormData> {
       const body = await readBody();
-      const contentType =
-        headers.map("Content-Type", MediaType.parse) ??
-        new MediaType("application", "octet-stream");
-      switch (contentType.essence) {
+      const { type } = ContentType.get(headers) ?? ContentType.generic;
+      switch (type.essence) {
         case "application/x-www-form-urlencoded":
           return parseUrlEncodedFormData(await body.text());
         case "multipart/form-data":
-          return xhrAdapter.parseMultipartFormData(contentType, body);
+          return xhrAdapter.parseMultipartFormData(type, body);
         default:
-          throw new TypeError(`Invalid content type ${contentType}`);
+          throw new TypeError(`Invalid content type ${type}`);
       }
     }
 

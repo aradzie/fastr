@@ -1,3 +1,7 @@
+export interface HeadersLike {
+  get(name: string): string | null;
+}
+
 export interface IncomingHeaders {
   /**
    * Returns an array of names of headers. All names are lowercase.
@@ -47,7 +51,7 @@ export const isHeaderClass = <T extends Header = any>(
 
 export const getHeader = <T extends Header>(
   header: HeaderClass<T>,
-  headers: IncomingHeaders,
+  headers: HeadersLike,
 ): T | null => {
   const value = headers.get(header.headerNameLc);
   if (value != null) {
@@ -59,7 +63,7 @@ export const getHeader = <T extends Header>(
 
 export const tryGetHeader = <T extends Header>(
   header: HeaderClass<T>,
-  headers: IncomingHeaders,
+  headers: HeadersLike,
 ): T | null => {
   const value = headers.get(header.headerNameLc);
   if (value != null) {
