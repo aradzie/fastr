@@ -1,8 +1,8 @@
 import { type ExtField, ExtFields } from "./extfields.js";
 import {
   getHeader,
+  type GetHeader,
   type Header,
-  type HeadersLike,
   parseOrThrow,
   tryGetHeader,
 } from "./headers.js";
@@ -42,11 +42,11 @@ export class CacheControl implements Header {
     }
   }
 
-  static get(headers: HeadersLike): CacheControl | null {
+  static get(headers: GetHeader): CacheControl | null {
     return getHeader(CacheControl, headers);
   }
 
-  static tryGet(headers: HeadersLike): CacheControl | null {
+  static tryGet(headers: GetHeader): CacheControl | null {
     return tryGetHeader(CacheControl, headers);
   }
 

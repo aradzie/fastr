@@ -181,30 +181,6 @@ export class HttpHeaders
     return this[kMap].get(nameLc)?.getAll() ?? [];
   }
 
-  /**
-   * Passes header string value through the specified parser and returns either
-   * a parsed value of `null` if the header is missing.
-   * Header name is case-insensitive.
-   */
-  map<T>(name: string, parser: (value: string) => T | null): T | null {
-    const v = this.get(name);
-    if (v != null) {
-      return parser(v);
-    } else {
-      return null;
-    }
-  }
-
-  /**
-   * Passes header string values through the specified parser and returns either
-   * an array of parsed values or an empty array if the header is missing.
-   */
-  mapAll<T>(name: string, parser: (value: string) => T | null): T[] {
-    return this.getAll(name)
-      .map((v) => parser(v))
-      .filter((v) => v != null) as T[];
-  }
-
   toJSON(): Record<string, string | string[]> {
     return Object.fromEntries(this);
   }

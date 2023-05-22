@@ -15,9 +15,7 @@ test("update cookie", async (t) => {
     const { status, headers, body } = await req.get("/create").send();
 
     t.is(status, 200);
-    t.deepEqual(headers.mapAll("Set-Cookie", SetCookie.parse), [
-      new SetCookie("x", "abc"),
-    ]);
+    t.deepEqual(SetCookie.getAll(headers), [new SetCookie("x", "abc")]);
     t.deepEqual(await body.json(), { requestCookies: {} });
     t.is(jar.get("x"), "abc");
   }
@@ -27,9 +25,7 @@ test("update cookie", async (t) => {
     const { status, headers, body } = await req.get("/update").send();
 
     t.is(status, 200);
-    t.deepEqual(headers.mapAll("Set-Cookie", SetCookie.parse), [
-      new SetCookie("x", "xyz"),
-    ]);
+    t.deepEqual(SetCookie.getAll(headers), [new SetCookie("x", "xyz")]);
     t.deepEqual(await body.json(), { requestCookies: { x: "abc" } });
     t.is(jar.get("x"), "xyz");
   }
@@ -42,9 +38,7 @@ test("update cookie", async (t) => {
       .send();
 
     t.is(status, 200);
-    t.deepEqual(headers.mapAll("Set-Cookie", SetCookie.parse), [
-      new SetCookie("x", "xyz"),
-    ]);
+    t.deepEqual(SetCookie.getAll(headers), [new SetCookie("x", "xyz")]);
     t.deepEqual(await body.json(), { requestCookies: { x: "user" } });
     t.is(jar.get("x"), "xyz");
   }
@@ -54,7 +48,7 @@ test("update cookie", async (t) => {
     const { status, headers, body } = await req.get("/clear").send();
 
     t.is(status, 200);
-    t.deepEqual(headers.mapAll("Set-Cookie", SetCookie.parse), [
+    t.deepEqual(SetCookie.getAll(headers), [
       new SetCookie("x", "", { expires: new Date(0) }),
     ]);
     t.deepEqual(await body.json(), { requestCookies: { x: "xyz" } });
@@ -80,7 +74,7 @@ function listener(req: IncomingMessage, res: ServerResponse): void {
   res.end(
     JSON.stringify({
       requestCookies: Object.fromEntries(
-        new HttpHeaders(req.headers).map("Cookie", Cookie.parse) ?? [],
+        Cookie.get(new HttpHeaders(req.headers)) ?? [],
       ),
     }),
   );

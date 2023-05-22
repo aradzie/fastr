@@ -5,7 +5,7 @@ import {
   RequestError,
 } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
-import { MediaType } from "@fastr/headers";
+import { ContentType } from "@fastr/headers";
 import test from "ava";
 import { reflect } from "./util.js";
 
@@ -157,10 +157,7 @@ test("on redirect follow to not found", async (t) => {
   t.is(status, 404);
   t.is(statusText, "Not Found");
   t.true(url.endsWith("/b"));
-  t.deepEqual(
-    headers.map("Content-Type", MediaType.parse),
-    new MediaType("text", "plain"),
-  );
+  t.is(String(ContentType.get(headers)), "text/plain");
   t.is(await body.text(), "this is the end");
 });
 
@@ -188,10 +185,7 @@ test("on redirect return", async (t) => {
   t.is(status, 302);
   t.is(statusText, "Found");
   t.true(url.endsWith("/a"));
-  t.deepEqual(
-    headers.map("Content-Type", MediaType.parse),
-    new MediaType("text", "plain"),
-  );
+  t.is(String(ContentType.get(headers)), "text/plain");
   t.is(await body.text(), "done");
 });
 

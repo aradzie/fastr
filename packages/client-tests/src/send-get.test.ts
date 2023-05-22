@@ -1,6 +1,6 @@
 import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
-import { MediaType } from "@fastr/headers";
+import { ContentType } from "@fastr/headers";
 import test from "ava";
 
 test("get text", async (t) => {
@@ -24,10 +24,7 @@ test("get text", async (t) => {
   t.true(ok);
   t.is(status, 200);
   t.is(statusText, "OK");
-  t.deepEqual(
-    headers.map("Content-Type", MediaType.parse),
-    new MediaType("text", "plain"),
-  );
+  t.is(String(ContentType.get(headers)), "text/plain");
   t.is(await body.text(), "text response");
 });
 
@@ -52,10 +49,7 @@ test("get buffer", async (t) => {
   t.true(ok);
   t.is(status, 200);
   t.is(statusText, "OK");
-  t.deepEqual(
-    headers.map("Content-Type", MediaType.parse),
-    new MediaType("application", "octet-stream"),
-  );
+  t.is(String(ContentType.get(headers)), "application/octet-stream");
   t.is(await body.text(), "buffer response");
 });
 
@@ -80,9 +74,6 @@ test("get json", async (t) => {
   t.true(ok);
   t.is(status, 200);
   t.is(statusText, "OK");
-  t.deepEqual(
-    headers.map("Content-Type", MediaType.parse),
-    new MediaType("application", "json"),
-  );
+  t.is(String(ContentType.get(headers)), "application/json");
   t.deepEqual(await body.json(), { type: "json" });
 });

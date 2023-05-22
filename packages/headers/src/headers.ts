@@ -1,8 +1,12 @@
-export interface HeadersLike {
+export interface GetHeader {
   get(name: string): string | null;
 }
 
-export interface IncomingHeaders {
+export interface GetAllHeaders {
+  getAll(name: string): readonly string[] | null;
+}
+
+export interface IncomingHeaders extends GetHeader, GetAllHeaders {
   /**
    * Returns an array of names of headers. All names are lowercase.
    */
@@ -12,7 +16,15 @@ export interface IncomingHeaders {
    * The header name is case-insensitive.
    */
   has(name: string): boolean;
+  /**
+   * Returns a value of a header with the given name is present.
+   * The header name is case-insensitive.
+   */
   get(name: string): string | null;
+  /**
+   * Returns all values of a header with the given name is present.
+   * The header name is case-insensitive.
+   */
   getAll(name: string): readonly string[] | null;
 }
 
@@ -51,7 +63,7 @@ export const isHeaderClass = <T extends Header = any>(
 
 export const getHeader = <T extends Header>(
   header: HeaderClass<T>,
-  headers: HeadersLike,
+  headers: GetHeader,
 ): T | null => {
   const value = headers.get(header.headerNameLc);
   if (value != null) {
@@ -63,7 +75,7 @@ export const getHeader = <T extends Header>(
 
 export const tryGetHeader = <T extends Header>(
   header: HeaderClass<T>,
-  headers: HeadersLike,
+  headers: GetHeader,
 ): T | null => {
   const value = headers.get(header.headerNameLc);
   if (value != null) {

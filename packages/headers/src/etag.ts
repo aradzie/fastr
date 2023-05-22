@@ -1,7 +1,7 @@
 import {
   getHeader,
+  type GetHeader,
   type Header,
-  type HeadersLike,
   parseOrThrow,
   tryGetHeader,
 } from "./headers.js";
@@ -26,11 +26,11 @@ export class ETag implements Header {
     }
   }
 
-  static get(headers: HeadersLike): ETag | null {
+  static get(headers: GetHeader): ETag | null {
     return getHeader(ETag, headers);
   }
 
-  static tryGet(headers: HeadersLike): ETag | null {
+  static tryGet(headers: GetHeader): ETag | null {
     return tryGetHeader(ETag, headers);
   }
 

@@ -1,8 +1,8 @@
 import { ETag } from "./etag.js";
 import {
   getHeader,
+  type GetHeader,
   type Header,
-  type HeadersLike,
   parseOrThrow,
   tryGetHeader,
 } from "./headers.js";
@@ -27,11 +27,11 @@ export class IfNoneMatch implements Header, Iterable<ETag> {
     }
   }
 
-  static get(headers: HeadersLike): IfNoneMatch | null {
+  static get(headers: GetHeader): IfNoneMatch | null {
     return getHeader(IfNoneMatch, headers);
   }
 
-  static tryGet(headers: HeadersLike): IfNoneMatch | null {
+  static tryGet(headers: GetHeader): IfNoneMatch | null {
     return tryGetHeader(IfNoneMatch, headers);
   }
 

@@ -1,14 +1,13 @@
 import { HttpHeaders, request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
-import { Accept, MediaType } from "@fastr/headers";
+import { Accept, ContentType } from "@fastr/headers";
 import test from "ava";
 
 test("negotiate media type", async (t) => {
   // Arrange.
 
   const server = start((req, res) => {
-    const accept =
-      new HttpHeaders(req.headers).map("Accept", Accept.parse) ?? Accept.any();
+    const accept = Accept.get(new HttpHeaders(req.headers)) ?? Accept.any();
 
     switch (accept.negotiate("text/plain", "application/json")) {
       case "text/plain":
@@ -43,10 +42,7 @@ test("negotiate media type", async (t) => {
     t.true(ok);
     t.is(status, 200);
     t.is(statusText, "OK");
-    t.deepEqual(
-      headers.map("Content-Type", MediaType.parse),
-      new MediaType("text", "plain"),
-    );
+    t.is(String(ContentType.get(headers)), "text/plain");
     t.is(await body.text(), "text");
   }
 
@@ -64,10 +60,7 @@ test("negotiate media type", async (t) => {
     t.true(ok);
     t.is(status, 200);
     t.is(statusText, "OK");
-    t.deepEqual(
-      headers.map("Content-Type", MediaType.parse),
-      new MediaType("application", "json"),
-    );
+    t.is(String(ContentType.get(headers)), "application/json");
     t.deepEqual(await body.json(), { type: "json" });
   }
 });

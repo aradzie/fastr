@@ -8,7 +8,7 @@ import {
   type Middleware,
   request,
 } from "@fastr/client";
-import { MediaType } from "@fastr/headers";
+import { ContentType } from "@fastr/headers";
 import { isClientError } from "@fastr/status";
 import { OAuthError } from "./errors.js";
 import { type ResourceOwner } from "./resource-owner.js";
@@ -98,8 +98,7 @@ export abstract class AbstractAdapter {
       const response = await adapter(request);
       if (
         isClientError(response.status) &&
-        response.headers.map("Content-Type", MediaType.parse)?.essence ===
-          "application/json"
+        String(ContentType.get(response.headers)) === "application/json"
       ) {
         const body = await response.body.json<ErrorResponse>();
         throw OAuthError.from(body);

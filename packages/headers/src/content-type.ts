@@ -1,7 +1,7 @@
 import {
   getHeader,
+  type GetHeader,
   type Header,
-  type HeadersLike,
   parseOrThrow,
   tryGetHeader,
 } from "./headers.js";
@@ -22,11 +22,11 @@ export class ContentType implements Header {
     }
   }
 
-  static get(headers: HeadersLike): ContentType | null {
+  static get(headers: GetHeader): ContentType | null {
     return getHeader(ContentType, headers);
   }
 
-  static tryGet(headers: HeadersLike): ContentType | null {
+  static tryGet(headers: GetHeader): ContentType | null {
     return tryGetHeader(ContentType, headers);
   }
 

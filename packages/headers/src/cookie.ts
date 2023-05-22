@@ -2,8 +2,8 @@ import { CookieCodec } from "./cookie-codec.js";
 import { entriesOf, type NameValueEntries } from "./entries.js";
 import {
   getHeader,
+  type GetHeader,
   type Header,
-  type HeadersLike,
   parseOrThrow,
   tryGetHeader,
 } from "./headers.js";
@@ -31,11 +31,11 @@ export class Cookie implements Header, Iterable<[string, string]> {
     }
   }
 
-  static get(headers: HeadersLike): Cookie | null {
+  static get(headers: GetHeader): Cookie | null {
     return getHeader(Cookie, headers);
   }
 
-  static tryGet(headers: HeadersLike): Cookie | null {
+  static tryGet(headers: GetHeader): Cookie | null {
     return tryGetHeader(Cookie, headers);
   }
 

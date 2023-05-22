@@ -23,22 +23,29 @@ export function cookies(jar = new CookieJar()): Middleware {
     request: HttpRequest,
     adapter: Adapter,
   ): Promise<HttpResponse> => {
+    const headers = new HttpHeaders(request.headers);
+
     // Compute cookies to send.
-    const cookie = new Cookie([
-      // Remembered cookies.
-      ...jar,
-      // User specified cookies.
-      ...(request.headers?.map("Cookie", Cookie.parse) ?? []),
-    ]);
+    const cookie = new Cookie();
+
+    // Remembered cookies.
+    for (const [name, value] of jar) {
+      cookie.set(name, value);
+    }
+
+    // User specified cookies.
+    for (const [name, value] of Cookie.get(headers) ?? []) {
+      cookie.set(name, value);
+    }
 
     // Append cookies to request.
-    const response = await adapter({
-      ...request,
-      headers: new HttpHeaders(request.headers).set("Cookie", cookie),
-    });
+    headers.set("Cookie", cookie);
+
+    const response = await adapter({ ...request, headers });
 
     // Save cookies from response.
-    jar.addAll(response.headers.mapAll("Set-Cookie", SetCookie.parse));
+    jar.addAll(SetCookie.getAll(response.headers));
+
     return response;
   };
 }

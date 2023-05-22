@@ -4,7 +4,7 @@ import {
   type HttpResponse,
   type Middleware,
 } from "@fastr/client";
-import { MediaType } from "@fastr/headers";
+import { ContentType } from "@fastr/headers";
 import {
   AbstractAdapter,
   type AccessToken,
@@ -81,8 +81,7 @@ export class FacebookAdapter extends AbstractAdapter {
       const response = await adapter(request);
       if (
         isClientError(response.status) &&
-        response.headers.map("Content-Type", MediaType.parse)?.essence ===
-          "application/json"
+        String(ContentType.get(response.headers)) === "application/json"
       ) {
         const body = await response.body.json<FacebookErrorResponse>();
         throw FacebookAdapter.translateError(body);

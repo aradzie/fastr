@@ -1,5 +1,5 @@
 import { CookieCodec } from "./cookie-codec.js";
-import { type Header, parseOrThrow } from "./headers.js";
+import { type GetAllHeaders, type Header, parseOrThrow } from "./headers.js";
 import { isValidCookieValue } from "./syntax-cookie.js";
 import { parseDate, stringifyDate } from "./syntax-date.js";
 import { isToken, Scanner, Separator } from "./syntax.js";
@@ -35,6 +35,31 @@ export class SetCookie implements Header {
     } else {
       return value;
     }
+  }
+
+  static getAll(headers: GetAllHeaders): SetCookie[] {
+    const result: SetCookie[] = [];
+    const values = headers.getAll(headerNameLc);
+    if (values != null) {
+      for (const value of values) {
+        result.push(SetCookie.parse(value));
+      }
+    }
+    return result;
+  }
+
+  static tryGetAll(headers: GetAllHeaders): SetCookie[] {
+    const result: SetCookie[] = [];
+    const values = headers.getAll(headerNameLc);
+    if (values != null) {
+      for (const value of values) {
+        const parsed = SetCookie.tryParse(value);
+        if (parsed != null) {
+          result.push(parsed);
+        }
+      }
+    }
+    return result;
   }
 
   static parse(input: string): SetCookie {
