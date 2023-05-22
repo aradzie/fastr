@@ -1,4 +1,10 @@
-import { type Header, parseOrThrow } from "./headers.js";
+import {
+  getHeader,
+  type Header,
+  type IncomingHeaders,
+  parseOrThrow,
+  tryGetHeader,
+} from "./headers.js";
 
 const headerName = "ETag";
 const headerNameLc = "etag";
@@ -18,6 +24,14 @@ export class ETag implements Header {
     } else {
       return value;
     }
+  }
+
+  static get(headers: IncomingHeaders): ETag | null {
+    return getHeader(ETag, headers);
+  }
+
+  static tryGet(headers: IncomingHeaders): ETag | null {
+    return tryGetHeader(ETag, headers);
   }
 
   static parse(input: string): ETag {

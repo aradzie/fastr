@@ -19,17 +19,14 @@ export function isCacheable({ request, response }: Context): boolean {
   if (!isSuccess(response.status)) {
     return false;
   }
-  const cacheControl = request.headers.map(
-    "Cache-Control",
-    RequestCacheControl.parse,
-  );
-  return !cacheControl || !cacheControl.noCache;
+  const cacheControl = RequestCacheControl.tryGet(request.headers);
+  return cacheControl == null || !cacheControl.noCache;
 }
 
 export function isFresh({ request, response }: Context): boolean {
-  const ifNoneMatch = request.headers.map("If-None-Match", IfNoneMatch.parse);
-  const eTag = response.headers.map("ETag", ETag.parse);
-  if (!ifNoneMatch || !eTag) {
+  const ifNoneMatch = IfNoneMatch.tryGet(request.headers);
+  const eTag = ETag.tryGet(response.headers);
+  if (ifNoneMatch == null || eTag == null) {
     return false;
   }
   return !ifNoneMatch.any && ifNoneMatch.matches(eTag);

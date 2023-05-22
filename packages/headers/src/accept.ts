@@ -1,5 +1,11 @@
 import { Accepted, head, negotiateAll, type Weighted } from "./accepted.js";
-import { type Header, type IncomingHeaders, parseOrThrow } from "./headers.js";
+import {
+  getHeader,
+  type Header,
+  type IncomingHeaders,
+  parseOrThrow,
+  tryGetHeader,
+} from "./headers.js";
 import { MediaType } from "./media-type.js";
 import { readParams } from "./syntax-params.js";
 import { Scanner, Separator } from "./syntax.js";
@@ -25,11 +31,11 @@ export class Accept implements Header {
   }
 
   static get(headers: IncomingHeaders): Accept | null {
-    return headers.map(headerNameLc, Accept.parse);
+    return getHeader(Accept, headers);
   }
 
   static tryGet(headers: IncomingHeaders): Accept | null {
-    return headers.map(headerNameLc, Accept.tryParse);
+    return tryGetHeader(Accept, headers);
   }
 
   static parse(input: string): Accept {

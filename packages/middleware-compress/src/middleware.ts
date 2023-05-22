@@ -62,7 +62,7 @@ export function compress({
   function replace(ctx: Context, encoding: string, transform: Transform): void {
     ctx.response.headers.delete("Content-Length");
     ctx.response.headers.set("Content-Encoding", encoding);
-    const etag = ctx.response.headers.map("ETag", ETag.parse);
+    const etag = ETag.tryGet(ctx.response.headers);
     if (etag != null) {
       etag.value = `${etag.value}-${encoding}`;
       ctx.response.etag = etag;

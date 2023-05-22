@@ -1,5 +1,11 @@
 import { ETag } from "./etag.js";
-import { type Header, parseOrThrow } from "./headers.js";
+import {
+  getHeader,
+  type Header,
+  type IncomingHeaders,
+  parseOrThrow,
+  tryGetHeader,
+} from "./headers.js";
 import { readETag } from "./syntax-etag.js";
 import { Scanner, Separator } from "./syntax.js";
 
@@ -19,6 +25,14 @@ export class IfNoneMatch implements Header, Iterable<ETag> {
     } else {
       return value;
     }
+  }
+
+  static get(headers: IncomingHeaders): IfNoneMatch | null {
+    return getHeader(IfNoneMatch, headers);
+  }
+
+  static tryGet(headers: IncomingHeaders): IfNoneMatch | null {
+    return tryGetHeader(IfNoneMatch, headers);
   }
 
   static parse(input: string): IfNoneMatch {

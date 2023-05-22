@@ -1,5 +1,11 @@
 import { Accepted, head, negotiateAll, type Weighted } from "./accepted.js";
-import { type Header, type IncomingHeaders, parseOrThrow } from "./headers.js";
+import {
+  getHeader,
+  type Header,
+  type IncomingHeaders,
+  parseOrThrow,
+  tryGetHeader,
+} from "./headers.js";
 import { readWeight } from "./params.js";
 import { isToken, Scanner, Separator } from "./syntax.js";
 
@@ -24,11 +30,11 @@ export class AcceptEncoding implements Header {
   }
 
   static get(headers: IncomingHeaders): AcceptEncoding | null {
-    return headers.map(headerNameLc, AcceptEncoding.parse);
+    return getHeader(AcceptEncoding, headers);
   }
 
   static tryGet(headers: IncomingHeaders): AcceptEncoding | null {
-    return headers.map(headerNameLc, AcceptEncoding.tryParse);
+    return tryGetHeader(AcceptEncoding, headers);
   }
 
   static parse(input: string): AcceptEncoding {

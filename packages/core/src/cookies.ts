@@ -36,7 +36,7 @@ export class Cookies implements SetCookieInit {
   ) {
     this.#incoming = incoming;
     this.#outgoing = outgoing;
-    this.#cookie = incoming.map("cookie", Cookie.tryParse) ?? new Cookie();
+    this.#cookie = Cookie.tryGet(incoming) ?? new Cookie();
     this.#setCookie = new Map<string, SetCookie>();
     this.path = path;
     this.domain = domain;

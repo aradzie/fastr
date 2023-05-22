@@ -1,8 +1,3 @@
-/**
- * Converts a header string value into a parsed object.
- */
-export type HeaderParser<T> = (value: string) => T | null;
-
 export interface IncomingHeaders {
   /**
    * Returns an array of names of headers. All names are lowercase.
@@ -14,9 +9,7 @@ export interface IncomingHeaders {
    */
   has(name: string): boolean;
   get(name: string): string | null;
-  map<T>(name: string, parser: (value: string) => T): T | null;
   getAll(name: string): readonly string[] | null;
-  mapAll<T>(name: string, parser: (value: string) => T): readonly T[] | null;
 }
 
 export interface OutgoingHeaders extends IncomingHeaders {
@@ -32,8 +25,8 @@ export interface Header {
 }
 
 export type Parseable<T> = {
-  readonly parse: HeaderParser<T>;
-  readonly tryParse: HeaderParser<T>;
+  readonly parse: (value: string) => T;
+  readonly tryParse: (value: string) => T | null;
 };
 
 export type HeaderClass<T extends Header> = {
@@ -50,6 +43,30 @@ export const isHeaderClass = <T extends Header = any>(
     typeof (value as HeaderClass<T>).headerName === "string" &&
     typeof (value as HeaderClass<T>).headerNameLc === "string"
   );
+};
+
+export const getHeader = <T extends Header>(
+  header: HeaderClass<T>,
+  headers: IncomingHeaders,
+): T | null => {
+  const value = headers.get(header.headerNameLc);
+  if (value != null) {
+    return header.parse(value);
+  } else {
+    return null;
+  }
+};
+
+export const tryGetHeader = <T extends Header>(
+  header: HeaderClass<T>,
+  headers: IncomingHeaders,
+): T | null => {
+  const value = headers.get(header.headerNameLc);
+  if (value != null) {
+    return header.tryParse(value);
+  } else {
+    return null;
+  }
 };
 
 export const parseOrThrow = <T extends Header>(

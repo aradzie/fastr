@@ -37,22 +37,6 @@ export class IncomingMessageHeaders implements IncomingHeaders {
     }
     return value;
   }
-
-  map<T>(name: string, parser: (value: string) => T): T | null {
-    const value = this.get(name);
-    if (value == null) {
-      return null;
-    }
-    return parser(value);
-  }
-
-  mapAll<T>(name: string, parser: (value: string) => T): readonly T[] | null {
-    const value = this.getAll(name);
-    if (value == null) {
-      return null;
-    }
-    return value.map((item) => parser(item));
-  }
 }
 
 export class OutgoingMessageHeaders implements OutgoingHeaders {

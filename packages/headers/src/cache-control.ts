@@ -1,5 +1,11 @@
 import { type ExtField, ExtFields } from "./extfields.js";
-import { type Header, parseOrThrow } from "./headers.js";
+import {
+  getHeader,
+  type Header,
+  type IncomingHeaders,
+  parseOrThrow,
+  tryGetHeader,
+} from "./headers.js";
 import { Scanner, Separator } from "./syntax.js";
 
 export interface CacheControlInit {
@@ -34,6 +40,14 @@ export class CacheControl implements Header {
     } else {
       return value;
     }
+  }
+
+  static get(headers: IncomingHeaders): CacheControl | null {
+    return getHeader(CacheControl, headers);
+  }
+
+  static tryGet(headers: IncomingHeaders): CacheControl | null {
+    return tryGetHeader(CacheControl, headers);
   }
 
   static parse(input: string): CacheControl {

@@ -1,6 +1,12 @@
 import { CookieCodec } from "./cookie-codec.js";
 import { entriesOf, type NameValueEntries } from "./entries.js";
-import { type Header, parseOrThrow } from "./headers.js";
+import {
+  getHeader,
+  type Header,
+  type IncomingHeaders,
+  parseOrThrow,
+  tryGetHeader,
+} from "./headers.js";
 import { isValidCookieValue } from "./syntax-cookie.js";
 import { isToken, Scanner, Separator } from "./syntax.js";
 
@@ -23,6 +29,14 @@ export class Cookie implements Header, Iterable<[string, string]> {
     } else {
       return value;
     }
+  }
+
+  static get(headers: IncomingHeaders): Cookie | null {
+    return getHeader(Cookie, headers);
+  }
+
+  static tryGet(headers: IncomingHeaders): Cookie | null {
+    return tryGetHeader(Cookie, headers);
   }
 
   static parse(input: string): Cookie {
