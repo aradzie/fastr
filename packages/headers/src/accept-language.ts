@@ -23,11 +23,12 @@ export class AcceptLanguage implements Header {
     }
   }
 
-  static get(headers: IncomingHeaders): AcceptLanguage {
-    return (
-      headers.map("Accept-Language", AcceptLanguage.parse) ??
-      new AcceptLanguage()
-    );
+  static get(headers: IncomingHeaders): AcceptLanguage | null {
+    return headers.map(headerNameLc, AcceptLanguage.parse);
+  }
+
+  static tryGet(headers: IncomingHeaders): AcceptLanguage | null {
+    return headers.map(headerNameLc, AcceptLanguage.tryParse);
   }
 
   static parse(input: string): AcceptLanguage {

@@ -23,11 +23,12 @@ export class AcceptEncoding implements Header {
     }
   }
 
-  static get(headers: IncomingHeaders): AcceptEncoding {
-    return (
-      headers.map("Accept-Encoding", AcceptEncoding.parse) ??
-      new AcceptEncoding()
-    );
+  static get(headers: IncomingHeaders): AcceptEncoding | null {
+    return headers.map(headerNameLc, AcceptEncoding.parse);
+  }
+
+  static tryGet(headers: IncomingHeaders): AcceptEncoding | null {
+    return headers.map(headerNameLc, AcceptEncoding.tryParse);
   }
 
   static parse(input: string): AcceptEncoding {

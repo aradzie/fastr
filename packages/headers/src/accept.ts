@@ -24,8 +24,12 @@ export class Accept implements Header {
     }
   }
 
-  static get(headers: IncomingHeaders): Accept {
-    return headers.map("Accept", Accept.parse) ?? new Accept();
+  static get(headers: IncomingHeaders): Accept | null {
+    return headers.map(headerNameLc, Accept.parse);
+  }
+
+  static tryGet(headers: IncomingHeaders): Accept | null {
+    return headers.map(headerNameLc, Accept.tryParse);
   }
 
   static parse(input: string): Accept {

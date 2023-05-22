@@ -201,14 +201,14 @@ export class Request {
     return null;
   }
 
-  is(...types: readonly string[]): string | false | null {
+  is(value: string, ...rest: readonly string[]): string | false | null {
     if (!this.hasBody) {
       return null;
     }
     const contentType = this.headers.get("content-type");
     if (contentType != null) {
       const mediaType = MediaType.parse(contentType);
-      for (const type of types) {
+      for (const type of [value, ...rest]) {
         if (mediaType.matches(type)) {
           return mediaType.essence;
         }
@@ -217,28 +217,32 @@ export class Request {
     return false;
   }
 
-  acceptsType(candidate: string): boolean {
-    return Accept.get(this.headers).accepts(candidate);
+  acceptsType(value: string): boolean {
+    return Accept.tryGet(this.headers)?.accepts(value) ?? true;
   }
 
-  negotiateType(...candidates: readonly string[]): string | null {
-    return Accept.get(this.headers).negotiate(...candidates);
+  negotiateType(value: string, ...rest: readonly string[]): string | null {
+    return Accept.tryGet(this.headers)?.negotiate(value, ...rest) ?? value;
   }
 
-  acceptsEncoding(candidate: string): boolean {
-    return AcceptEncoding.get(this.headers).accepts(candidate);
+  acceptsEncoding(value: string): boolean {
+    return AcceptEncoding.tryGet(this.headers)?.accepts(value) ?? true;
   }
 
-  negotiateEncoding(...candidates: readonly string[]): string | null {
-    return AcceptEncoding.get(this.headers).negotiate(...candidates);
+  negotiateEncoding(value: string, ...rest: readonly string[]): string | null {
+    return (
+      AcceptEncoding.tryGet(this.headers)?.negotiate(value, ...rest) ?? value
+    );
   }
 
-  acceptsLanguage(candidate: string): boolean {
-    return AcceptLanguage.get(this.headers).accepts(candidate);
+  acceptsLanguage(value: string): boolean {
+    return AcceptLanguage.tryGet(this.headers)?.accepts(value) ?? true;
   }
 
-  negotiateLanguage(...candidates: readonly string[]): string | null {
-    return AcceptLanguage.get(this.headers).negotiate(...candidates);
+  negotiateLanguage(value: string, ...rest: readonly string[]): string | null {
+    return (
+      AcceptLanguage.tryGet(this.headers)?.negotiate(value, ...rest) ?? value
+    );
   }
 
   get [Symbol.toStringTag](): string {
