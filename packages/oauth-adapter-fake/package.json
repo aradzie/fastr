@@ -1,6 +1,6 @@
 {
   "name": "@fastr/oauth-adapter-fake",
-  "version": "0.0.2-alpha.4",
+  "version": "0.0.3-alpha.0",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -13,7 +13,7 @@
     "compile": "tsc && tsc -b tsconfig-esm.json"
   },
   "dependencies": {
-    "@fastr/oauth-client": "^0.0.2-alpha.4"
+    "@fastr/oauth-client": "^0.0.3-alpha.0"
   },
   "engines": {
     "node": ">=18.12"
