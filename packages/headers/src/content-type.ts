@@ -59,7 +59,26 @@ export class ContentType implements Header {
     if (type.type === "*" || type.subtype === "*") {
       throw new TypeError();
     }
+    for (const [name, value] of type.params) {
+      if (name === "*" || value === "*") {
+        throw new TypeError();
+      }
+    }
     this._type = type;
+  }
+
+  is(...candidates: readonly string[]): string | false {
+    // TODO Match parameters.
+    // TODO Select the most specific.
+    if (candidates.length === 0) {
+      throw new TypeError("Empty candidates");
+    }
+    for (const candidate of candidates) {
+      if (this._type.matches(candidate)) {
+        return candidate;
+      }
+    }
+    return false;
   }
 
   toString(): string {

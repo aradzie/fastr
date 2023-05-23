@@ -14,8 +14,8 @@ test("empty body", (t) => {
   t.false(request.hasBody);
   t.is(request.contentType, null);
   t.is(request.contentLength, null);
-  t.is(request.is("text/plain"), null);
-  t.is(request.is("*/*"), null);
+  t.is(request.is("text/plain"), false);
+  t.is(request.is("*/*"), false);
 });
 
 test("unknown body type and length", (t) => {
@@ -51,16 +51,18 @@ test("known body type and length", (t) => {
   );
 
   t.true(request.hasBody);
-  t.is(request.contentType, "text/plain; charset=UTF-8");
+  t.is(request.contentType, "text/plain");
   t.is(request.contentLength, 100);
   t.is(request.is("text/plain"), "text/plain");
-  t.is(request.is("text/*"), "text/plain");
-  t.is(request.is("*/*"), "text/plain");
+  t.is(request.is("TEXT/PLAIN"), "TEXT/PLAIN");
+  t.is(request.is("text/*"), "text/*");
+  t.is(request.is("TEXT/*"), "TEXT/*");
+  t.is(request.is("*/*"), "*/*");
   t.is(request.is("text/html"), false);
   t.is(request.is("application/json"), false);
   t.is(request.is("text/html", "application/json"), false);
   t.is(request.is("text/html", "application/json", "text/plain"), "text/plain");
-  t.is(request.is("text/html", "application/json", "*/*"), "text/plain");
+  t.is(request.is("text/html", "application/json", "*/*"), "*/*");
 });
 
 test("negotiate with empty headers", (t) => {

@@ -2,8 +2,8 @@ import {
   Accept,
   AcceptEncoding,
   AcceptLanguage,
+  ContentType,
   type IncomingHeaders,
-  MediaType,
 } from "@fastr/headers";
 import { type IncomingMessage } from "http";
 import { IncomingMessageHeaders } from "./headers.js";
@@ -171,8 +171,8 @@ export class Request {
    */
   get hasBody(): boolean {
     return (
-      this.headers.has("content-length") ||
-      this.headers.has("transfer-encoding")
+      this.#headers.has("content-length") ||
+      this.#headers.has("transfer-encoding")
     );
   }
 
@@ -181,38 +181,27 @@ export class Request {
    * does not have a body.
    */
   get contentLength(): number | null {
-    if (this.hasBody) {
-      const header = this.headers.get("content-length");
-      if (header != null) {
-        return Number(header);
-      }
+    const header = this.#headers.get("content-length");
+    if (header != null) {
+      return Number(header);
     }
     return null;
   }
 
   /**
-   * Returns value of the `"Content-Type"` header or `null` if the request
-   * does not have a body.
+   * Returns value of the `"Content-Type"` header without parameters
+   * or `null` if the request does not have a body.
    */
   get contentType(): string | null {
     if (this.hasBody) {
-      return this.headers.get("content-type");
+      return ContentType.get(this.#headers)?.type.essence ?? null;
     }
     return null;
   }
 
-  is(value: string, ...rest: readonly string[]): string | false | null {
-    if (!this.hasBody) {
-      return null;
-    }
-    const contentType = this.headers.get("content-type");
-    if (contentType != null) {
-      const mediaType = MediaType.parse(contentType);
-      for (const type of [value, ...rest]) {
-        if (mediaType.matches(type)) {
-          return mediaType.essence;
-        }
-      }
+  is(value: string, ...rest: readonly string[]): string | false {
+    if (this.hasBody) {
+      return ContentType.get(this.#headers)?.is(value, ...rest) ?? false;
     }
     return false;
   }
@@ -221,42 +210,42 @@ export class Request {
   #acceptEncoding: AcceptEncoding | null = null;
   #acceptLanguage: AcceptLanguage | null = null;
 
-  #getAcceptHeader(): Accept {
+  #getAccept(): Accept {
     return (this.#accept ??= Accept.tryGet(this.#headers) ?? new Accept("*/*"));
   }
 
-  #getAcceptEncodingHeader(): AcceptEncoding {
+  #getAcceptEncoding(): AcceptEncoding {
     return (this.#acceptEncoding ??=
       AcceptEncoding.tryGet(this.#headers) ?? new AcceptEncoding("*"));
   }
 
-  #getAcceptLanguageHeader(): AcceptLanguage {
+  #getAcceptLanguage(): AcceptLanguage {
     return (this.#acceptLanguage ??=
       AcceptLanguage.tryGet(this.#headers) ?? new AcceptLanguage("*"));
   }
 
   acceptsType(value: string): boolean {
-    return this.#getAcceptHeader().accepts(value);
+    return this.#getAccept().accepts(value);
   }
 
   negotiateType(value: string, ...rest: readonly string[]): string | null {
-    return this.#getAcceptHeader().negotiate(value, ...rest);
+    return this.#getAccept().negotiate(value, ...rest);
   }
 
   acceptsEncoding(value: string): boolean {
-    return this.#getAcceptEncodingHeader().accepts(value);
+    return this.#getAcceptEncoding().accepts(value);
   }
 
   negotiateEncoding(value: string, ...rest: readonly string[]): string | null {
-    return this.#getAcceptEncodingHeader().negotiate(value, ...rest);
+    return this.#getAcceptEncoding().negotiate(value, ...rest);
   }
 
   acceptsLanguage(value: string): boolean {
-    return this.#getAcceptLanguageHeader().accepts(value);
+    return this.#getAcceptLanguage().accepts(value);
   }
 
   negotiateLanguage(value: string, ...rest: readonly string[]): string | null {
-    return this.#getAcceptLanguageHeader().negotiate(value, ...rest);
+    return this.#getAcceptLanguage().negotiate(value, ...rest);
   }
 
   get [Symbol.toStringTag](): string {

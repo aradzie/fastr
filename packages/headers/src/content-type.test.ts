@@ -7,23 +7,41 @@ test("validate type", (t) => {
     new ContentType("*/*");
   });
   t.throws(() => {
-    new ContentType("foo/*");
+    new ContentType("a/*");
+  });
+  t.throws(() => {
+    new ContentType("a/b; x=*");
   });
 });
 
+test("is", (t) => {
+  const header = ContentType.parse("text/plain; charset=UTF-8");
+
+  t.is(header.is("text/plain"), "text/plain");
+  t.is(header.is("TEXT/PLAIN"), "TEXT/PLAIN");
+  t.is(header.is("text/*"), "text/*");
+  t.is(header.is("TEXT/*"), "TEXT/*");
+  t.is(header.is("*/*"), "*/*");
+  t.is(header.is("text/html"), false);
+  t.is(header.is("application/json"), false);
+  t.is(header.is("text/html", "application/json"), false);
+  t.is(header.is("text/html", "application/json", "text/plain"), "text/plain");
+  t.is(header.is("text/html", "application/json", "*/*"), "*/*");
+});
+
 test("stringify", (t) => {
-  t.is(String(new ContentType("foo/bar")), "foo/bar");
-  t.is(String(new ContentType("foo/bar; a=x")), "foo/bar; a=x");
+  t.is(String(new ContentType("A/B")), "a/b");
+  t.is(String(new ContentType("A/B; X=1")), "a/b; x=1");
 });
 
 test("parse", (t) => {
   t.deepEqual(
-    ContentType.parse("foo/bar").type, //
-    new MediaType("foo", "bar"),
+    ContentType.parse("A/B").type, //
+    new MediaType("a", "b"),
   );
   t.deepEqual(
-    ContentType.parse("foo/bar; a=x").type, //
-    new MediaType("foo", "bar", [["a", "x"]]),
+    ContentType.parse("A/B; X=1").type, //
+    new MediaType("a", "b", [["x", "1"]]),
   );
 });
 
