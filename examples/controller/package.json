@@ -6,10 +6,11 @@
   "repository": "aradzie/fastr",
   "license": "MIT",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
-  "main": "lib/index.js",
+  "exports": null,
   "scripts": {
     "clean": "rm -fr lib",
-    "compile": "tsc"
+    "compile": "tsc",
+    "start": "node ./lib/index.js"
   },
   "dependencies": {
     "@fastr/controller": "^0.0.3-alpha.2",
