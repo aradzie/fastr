@@ -19,9 +19,9 @@
     "@fastr/errors": "^0.0.3-alpha.2",
     "@fastr/headers": "^0.0.3-alpha.2",
     "@fastr/mediatypes": "^0.0.3-alpha.2",
-    "qs": "^6.11.1",
+    "qs": "^6.11.2",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.5.0"
+    "tslib": "^2.5.2"
   },
   "devDependencies": {
     "@fastr/client": "^0.0.3-alpha.2",

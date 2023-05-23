@@ -21,7 +21,7 @@
     "@sosimple/fsx-lockfile": "^0.1.0",
     "@sosimple/retry": "^0.1.0",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.5.0"
+    "tslib": "^2.5.2"
   },
   "engines": {
     "node": ">=18.12"

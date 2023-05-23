@@ -21,7 +21,7 @@
     "@fastr/middleware-router": "^0.0.3-alpha.2",
     "@fastr/middleware-session": "^0.0.3-alpha.2",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.5.0"
+    "tslib": "^2.5.2"
   },
   "engines": {
     "node": ">=18.12"

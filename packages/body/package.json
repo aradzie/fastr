@@ -19,9 +19,9 @@
     "@fastr/json": "^0.0.3-alpha.2",
     "@fastr/mediatypes": "^0.0.3-alpha.2",
     "@types/qs": "^6.9.7",
-    "qs": "^6.11.1",
+    "qs": "^6.11.2",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.5.0"
+    "tslib": "^2.5.2"
   },
   "engines": {
     "node": ">=18.12"

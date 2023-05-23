@@ -15,7 +15,7 @@
   "dependencies": {
     "@fastr/core": "^0.0.3-alpha.2",
     "@fastr/middleware-websocket": "^0.0.3-alpha.2",
-    "tslib": "^2.5.0",
+    "tslib": "^2.5.2",
     "ws": "^8.13.0"
   },
   "devDependencies": {

@@ -16,7 +16,7 @@
   "dependencies": {
     "@fastr/headers": "^0.0.3-alpha.2",
     "mime-db": "^1.52.0",
-    "tslib": "^2.5.0"
+    "tslib": "^2.5.2"
   },
   "engines": {
     "node": ">=18.12"

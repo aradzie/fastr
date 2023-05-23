@@ -19,7 +19,7 @@
     "bson": "^5.3.0",
     "knex": "^2.4.2",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.5.0"
+    "tslib": "^2.5.2"
   },
   "devDependencies": {
     "sqlite3": "^5.1.6"

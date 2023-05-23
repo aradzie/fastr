@@ -19,7 +19,7 @@
     "@fastr/middleware-body": "^0.0.3-alpha.2",
     "joi": "^17.9.2",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.5.0"
+    "tslib": "^2.5.2"
   },
   "devDependencies": {
     "@fastr/client": "^0.0.3-alpha.2",
