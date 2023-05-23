@@ -24,7 +24,7 @@ test("get text", async (t) => {
   t.true(ok);
   t.is(status, 200);
   t.is(statusText, "OK");
-  t.is(String(ContentType.get(headers)), "text/plain");
+  t.is(ContentType.get(headers)?.type.essence, "text/plain");
   t.is(await body.text(), "text response");
 });
 
@@ -49,7 +49,7 @@ test("get buffer", async (t) => {
   t.true(ok);
   t.is(status, 200);
   t.is(statusText, "OK");
-  t.is(String(ContentType.get(headers)), "application/octet-stream");
+  t.is(ContentType.get(headers)?.type.essence, "application/octet-stream");
   t.is(await body.text(), "buffer response");
 });
 
@@ -74,6 +74,6 @@ test("get json", async (t) => {
   t.true(ok);
   t.is(status, 200);
   t.is(statusText, "OK");
-  t.is(String(ContentType.get(headers)), "application/json");
+  t.is(ContentType.get(headers)?.type.essence, "application/json");
   t.deepEqual(await body.json(), { type: "json" });
 });

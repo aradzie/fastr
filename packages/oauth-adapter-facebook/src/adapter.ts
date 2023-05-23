@@ -81,7 +81,7 @@ export class FacebookAdapter extends AbstractAdapter {
       const response = await adapter(request);
       if (
         isClientError(response.status) &&
-        String(ContentType.get(response.headers)) === "application/json"
+        ContentType.get(response.headers)?.type.essence === "application/json"
       ) {
         const body = await response.body.json<FacebookErrorResponse>();
         throw FacebookAdapter.translateError(body);

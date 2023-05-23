@@ -98,7 +98,7 @@ export abstract class AbstractAdapter {
       const response = await adapter(request);
       if (
         isClientError(response.status) &&
-        String(ContentType.get(response.headers)) === "application/json"
+        ContentType.get(response.headers)?.type.essence === "application/json"
       ) {
         const body = await response.body.json<ErrorResponse>();
         throw OAuthError.from(body);

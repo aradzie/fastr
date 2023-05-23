@@ -56,14 +56,14 @@ export class ContentType implements Header {
   }
 
   set type(type: MediaType) {
-    if (type.type === "*" || type.subtype === "*" || type.params.size > 0) {
+    if (type.type === "*" || type.subtype === "*") {
       throw new TypeError();
     }
     this._type = type;
   }
 
   toString(): string {
-    return `${this._type.essence}`;
+    return `${this._type}`;
   }
 
   get [Symbol.toStringTag](): string {

@@ -70,7 +70,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(400);
       expect(statusText).to.eq("Bad Request");
-      expect(String(ContentType.get(headers))).to.eq("application/json");
+      expect(ContentType.get(headers)?.type.essence).to.eq("application/json");
       expect(await response.json()).to.deep.eq({ type: "json" });
     });
 
@@ -79,7 +79,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(500);
       expect(statusText).to.eq("Internal Server Error");
-      expect(String(ContentType.get(headers))).to.eq("application/json");
+      expect(ContentType.get(headers)?.type.essence).to.eq("application/json");
       expect(await response.json()).to.deep.eq({ type: "json" });
     });
 
@@ -133,7 +133,9 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
-      expect(String(ContentType.get(headers))).to.eq("multipart/form-data");
+      expect(ContentType.get(headers)?.type.essence).to.eq(
+        "multipart/form-data",
+      );
       if (underTest === xhrAdapter) {
         // The XHR adapter cannot read multipart form data.
         try {
@@ -162,7 +164,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
-      expect(String(ContentType.get(headers))).to.eq(
+      expect(ContentType.get(headers)?.type.essence).to.eq(
         "application/x-www-form-urlencoded",
       );
       expect(formDataEntries(await response.formData())).to.deep.eq([
@@ -177,7 +179,7 @@ function makeAdapterTests(underTest: Adapter): void {
       const { status, statusText, headers } = response;
       expect(status).to.eq(200);
       expect(statusText).to.eq("OK");
-      expect(String(ContentType.get(headers))).to.eq("application/json");
+      expect(ContentType.get(headers)?.type.essence).to.eq("application/json");
       expect(await response.json()).to.deep.eq({ type: "json" });
     });
 

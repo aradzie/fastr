@@ -42,7 +42,7 @@ test("negotiate media type", async (t) => {
     t.true(ok);
     t.is(status, 200);
     t.is(statusText, "OK");
-    t.is(String(ContentType.get(headers)), "text/plain");
+    t.is(ContentType.get(headers)?.type.essence, "text/plain");
     t.is(await body.text(), "text");
   }
 
@@ -60,7 +60,7 @@ test("negotiate media type", async (t) => {
     t.true(ok);
     t.is(status, 200);
     t.is(statusText, "OK");
-    t.is(String(ContentType.get(headers)), "application/json");
+    t.is(ContentType.get(headers)?.type.essence, "application/json");
     t.deepEqual(await body.json(), { type: "json" });
   }
 });

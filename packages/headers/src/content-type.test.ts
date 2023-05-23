@@ -3,27 +3,28 @@ import { ContentType } from "./content-type.js";
 import { MediaType } from "./media-type.js";
 
 test("validate type", (t) => {
-  const header = new ContentType("foo/bar");
-
-  const a = MediaType.parse("*/*");
-  const b = MediaType.parse("foo/bar; q=1");
-
   t.throws(() => {
-    header.type = a;
+    new ContentType("*/*");
   });
   t.throws(() => {
-    header.type = b;
+    new ContentType("foo/*");
   });
-
-  t.is(String(header.type), "foo/bar");
 });
 
 test("stringify", (t) => {
   t.is(String(new ContentType("foo/bar")), "foo/bar");
+  t.is(String(new ContentType("foo/bar; a=x")), "foo/bar; a=x");
 });
 
 test("parse", (t) => {
-  t.deepEqual(ContentType.parse("foo/bar"), new ContentType("foo/bar"));
+  t.deepEqual(
+    ContentType.parse("foo/bar").type, //
+    new MediaType("foo", "bar"),
+  );
+  t.deepEqual(
+    ContentType.parse("foo/bar; a=x").type, //
+    new MediaType("foo", "bar", [["a", "x"]]),
+  );
 });
 
 for (const input of [
