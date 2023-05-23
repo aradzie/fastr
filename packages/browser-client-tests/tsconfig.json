@@ -3,13 +3,11 @@
   "extends": "../../tsconfig-template.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "lib",
     "lib": ["es2022", "dom", "dom.iterable"],
-    "module": "commonjs",
-    "target": "es2019",
-    "declaration": false,
-    "incremental": true,
-    "tsBuildInfoFile": "lib/.tsbuildcache"
+    "module": "es2022",
+    "target": "es2022",
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   },
   "include": [
     "src/**/*"

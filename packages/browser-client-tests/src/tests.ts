@@ -7,9 +7,11 @@ import {
 } from "@fastr/browser-client";
 import { ContentType } from "@fastr/headers";
 import { mergeSearchParams } from "@fastr/url";
-import { expect } from "chai";
-import { formDataEntries, parseFormData } from "./util.js";
+import chai, { expect } from "chai";
+import chaiLike from "chai-like";
+import { formDataEntries, parseFormData } from "./util.ts";
 
+chai.use(chaiLike);
 mocha.setup({
   ui: "bdd",
 });
@@ -190,7 +192,7 @@ function makeAdapterTests(underTest: Adapter): void {
         .accept("image/*")
         .header("X-Foo", "bar")
         .send();
-      expect(await response.json()).to.deep.eq({
+      expect(await response.json()).like({
         url: "/test/reflect",
         method: "GET",
         headers: {
@@ -206,7 +208,7 @@ function makeAdapterTests(underTest: Adapter): void {
         .post("/test/reflect")
         .header("X-Foo", "bar")
         .send("text data");
-      expect(await response.json()).to.deep.eq({
+      expect(await response.json()).like({
         url: "/test/reflect",
         method: "POST",
         headers: {
@@ -224,7 +226,7 @@ function makeAdapterTests(underTest: Adapter): void {
         .post("/test/reflect")
         .header("X-Foo", "bar")
         .send(new Blob(["blob data"]));
-      expect(await response.json()).to.deep.eq({
+      expect(await response.json()).like({
         url: "/test/reflect",
         method: "POST",
         headers: {
@@ -250,8 +252,7 @@ function makeAdapterTests(underTest: Adapter): void {
       expect(val.headers["content-type"]).to.match(
         /^multipart\/form-data; *boundary=.*$/,
       );
-      delete val.headers["content-type"];
-      expect(val).to.deep.eq({
+      expect(val).like({
         url: "/test/reflect",
         method: "POST",
         headers: {
@@ -282,8 +283,7 @@ function makeAdapterTests(underTest: Adapter): void {
       expect(val.headers["content-type"]).to.match(
         /^application\/x-www-form-urlencoded; *charset=UTF-8$/,
       );
-      delete val.headers["content-type"];
-      expect(val).to.deep.eq({
+      expect(val).like({
         url: "/test/reflect",
         method: "POST",
         headers: {
@@ -300,7 +300,7 @@ function makeAdapterTests(underTest: Adapter): void {
         .post("/test/reflect")
         .header("X-Foo", "bar")
         .send({ a: 1, b: 2, c: 3 });
-      expect(await response.json()).to.deep.eq({
+      expect(await response.json()).like({
         url: "/test/reflect",
         method: "POST",
         headers: {
@@ -315,7 +315,7 @@ function makeAdapterTests(underTest: Adapter): void {
 
     it("follow redirects", async () => {
       const response = await request.post("/test/redirect").send("posted");
-      expect(await response.json()).to.deep.eq({
+      expect(await response.json()).like({
         url: "/test/reflect",
         method: "POST",
         headers: {

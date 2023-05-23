@@ -2,8 +2,8 @@ import { Body } from "@fastr/body";
 import fs from "fs";
 import { Readable } from "stream";
 import util from "util";
-import { index } from "./mainpage.js";
-import { startServer } from "./server.js";
+import { index } from "./mainpage.ts";
+import { startServer } from "./server.ts";
 
 const readFile = util.promisify(fs.readFile);
 

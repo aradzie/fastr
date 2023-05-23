@@ -29,6 +29,13 @@ export class Router {
     if (i !== -1) {
       url = url.substring(0, i);
     }
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "*");
+    if (method === "OPTIONS") {
+      res.statusCode = 204;
+      res.end();
+      return;
+    }
     for (const route of this.#routes) {
       if (
         (route.method === "*" || route.method === method) &&
