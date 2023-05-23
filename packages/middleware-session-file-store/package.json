@@ -1,6 +1,6 @@
 {
   "name": "@fastr/middleware-session-file-store",
-  "version": "0.0.3-alpha.1",
+  "version": "0.0.3-alpha.2",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,8 +14,8 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/invert": "^0.0.3-alpha.1",
-    "@fastr/middleware-session": "^0.0.3-alpha.1",
+    "@fastr/invert": "^0.0.3-alpha.2",
+    "@fastr/middleware-session": "^0.0.3-alpha.2",
     "@sosimple/fsx": "^0.1.0",
     "@sosimple/fsx-file": "^0.1.0",
     "@sosimple/fsx-lockfile": "^0.1.0",

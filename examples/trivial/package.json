@@ -1,6 +1,6 @@
 {
   "name": "@fastr/example-trivial",
-  "version": "0.0.3-alpha.1",
+  "version": "0.0.3-alpha.2",
   "private": true,
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
@@ -12,7 +12,7 @@
     "compile": "tsc"
   },
   "dependencies": {
-    "@fastr/core": "^0.0.3-alpha.1",
+    "@fastr/core": "^0.0.3-alpha.2",
     "tslib": "^2.5.0"
   },
   "engines": {

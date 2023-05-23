@@ -1,6 +1,6 @@
 {
   "name": "@fastr/headers",
-  "version": "0.0.3-alpha.1",
+  "version": "0.0.3-alpha.2",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/errors": "^0.0.3-alpha.1",
+    "@fastr/errors": "^0.0.3-alpha.2",
     "tslib": "^2.5.0"
   },
   "engines": {
