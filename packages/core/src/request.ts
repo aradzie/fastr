@@ -217,32 +217,46 @@ export class Request {
     return false;
   }
 
+  #accept: Accept | null = null;
+  #acceptEncoding: AcceptEncoding | null = null;
+  #acceptLanguage: AcceptLanguage | null = null;
+
+  #getAcceptHeader(): Accept {
+    return (this.#accept ??= Accept.tryGet(this.#headers) ?? new Accept("*/*"));
+  }
+
+  #getAcceptEncodingHeader(): AcceptEncoding {
+    return (this.#acceptEncoding ??=
+      AcceptEncoding.tryGet(this.#headers) ?? new AcceptEncoding("*"));
+  }
+
+  #getAcceptLanguageHeader(): AcceptLanguage {
+    return (this.#acceptLanguage ??=
+      AcceptLanguage.tryGet(this.#headers) ?? new AcceptLanguage("*"));
+  }
+
   acceptsType(value: string): boolean {
-    return Accept.tryGet(this.headers)?.accepts(value) ?? true;
+    return this.#getAcceptHeader().accepts(value);
   }
 
   negotiateType(value: string, ...rest: readonly string[]): string | null {
-    return Accept.tryGet(this.headers)?.negotiate(value, ...rest) ?? value;
+    return this.#getAcceptHeader().negotiate(value, ...rest);
   }
 
   acceptsEncoding(value: string): boolean {
-    return AcceptEncoding.tryGet(this.headers)?.accepts(value) ?? true;
+    return this.#getAcceptEncodingHeader().accepts(value);
   }
 
   negotiateEncoding(value: string, ...rest: readonly string[]): string | null {
-    return (
-      AcceptEncoding.tryGet(this.headers)?.negotiate(value, ...rest) ?? value
-    );
+    return this.#getAcceptEncodingHeader().negotiate(value, ...rest);
   }
 
   acceptsLanguage(value: string): boolean {
-    return AcceptLanguage.tryGet(this.headers)?.accepts(value) ?? true;
+    return this.#getAcceptLanguageHeader().accepts(value);
   }
 
   negotiateLanguage(value: string, ...rest: readonly string[]): string | null {
-    return (
-      AcceptLanguage.tryGet(this.headers)?.negotiate(value, ...rest) ?? value
-    );
+    return this.#getAcceptLanguageHeader().negotiate(value, ...rest);
   }
 
   get [Symbol.toStringTag](): string {
