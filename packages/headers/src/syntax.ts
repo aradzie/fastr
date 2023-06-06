@@ -289,15 +289,14 @@ export class Scanner {
   }
 
   readUntil(ch: number): string {
-    let begin = this.pos;
+    const start = this.pos;
     while (this.pos < this.length) {
       if (this.input.charCodeAt(this.pos) === ch) {
         break;
       }
       this.pos += 1;
     }
-    let end = this.pos;
-    return this.input.substring(begin, end);
+    return this.input.substring(start, this.pos);
   }
 
   readInteger(): number | null {

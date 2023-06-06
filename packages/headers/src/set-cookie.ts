@@ -1,6 +1,6 @@
 import { CookieCodec } from "./cookie-codec.js";
 import { type GetAllHeaders, type Header, parseOrThrow } from "./headers.js";
-import { isValidCookieValue } from "./syntax-cookie.js";
+import { readCookieNameValue } from "./syntax-cookie.js";
 import { parseDate, stringifyDate } from "./syntax-date.js";
 import { isToken, Scanner, Separator } from "./syntax.js";
 
@@ -99,19 +99,14 @@ export class SetCookie implements Header {
     // secure-av         = "Secure"
     // httponly-av       = "HttpOnly"
     const scanner = new Scanner(input);
-    const name = scanner.readToken();
-    if (name == null) {
+    const nameValue = readCookieNameValue(scanner);
+    if (nameValue == null) {
       return null;
     }
-    if (!scanner.readChar(Separator.Equals)) {
-      return null;
-    }
-    const value = scanner.readUntil(Separator.Semicolon);
-    if (!isValidCookieValue(value)) {
-      return null;
-    }
-    const header = new SetCookie(name, CookieCodec.decode(value));
-    scanner.skipWs();
+    const header = new SetCookie(
+      nameValue[0],
+      CookieCodec.decode(nameValue[1]),
+    );
     let hasSecure = false;
     let hasHttpOnly = false;
     while (scanner.hasNext()) {
@@ -272,9 +267,6 @@ export class SetCookie implements Header {
     value: string,
     init: Readonly<SetCookieInit> | null = null,
   ) {
-    if (!isToken(name)) {
-      throw new TypeError();
-    }
     this.name = name;
     this.value = value;
     if (init != null) {
@@ -309,6 +301,9 @@ export class SetCookie implements Header {
       secure,
       httpOnly,
     } = this;
+    if (!isToken(name)) {
+      throw new TypeError(`Invalid cookie name [${name}]`);
+    }
     const parts: string[] = [];
     parts.push(`${name}=${CookieCodec.encode(value)}`);
     if (path != null) {

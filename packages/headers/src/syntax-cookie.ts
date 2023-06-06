@@ -1,3 +1,5 @@
+import { type Scanner, Separator } from "./syntax.js";
+
 /**
  * Validate value, which may be according to RFC 6265.
  *
@@ -32,4 +34,26 @@ export function isValidCookieValue(value: string): boolean {
     }
   }
   return true;
+}
+
+export function readCookieNameValue(scanner: Scanner): [string, string] | null {
+  const start = scanner.pos;
+  let valueStart = -1;
+  while (scanner.pos < scanner.length) {
+    const ch = scanner.input.charCodeAt(scanner.pos);
+    if (ch === Separator.Semicolon) {
+      break;
+    }
+    if (ch === Separator.Equals && valueStart === -1) {
+      valueStart = scanner.pos;
+    }
+    scanner.pos += 1;
+  }
+  if (valueStart > start) {
+    return [
+      scanner.input.substring(start, valueStart),
+      scanner.input.substring(valueStart + 1, scanner.pos),
+    ];
+  }
+  return null;
 }

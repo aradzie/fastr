@@ -7,7 +7,7 @@ import {
   parseOrThrow,
   tryGetHeader,
 } from "./headers.js";
-import { isValidCookieValue } from "./syntax-cookie.js";
+import { readCookieNameValue } from "./syntax-cookie.js";
 import { isToken, Scanner, Separator } from "./syntax.js";
 
 const headerName = "Cookie";
@@ -56,18 +56,10 @@ export class Cookie implements Header, Iterable<[string, string]> {
     const header = new Cookie();
     const scanner = new Scanner(input);
     while (scanner.hasNext()) {
-      const name = scanner.readToken();
-      if (name == null) {
-        return null;
+      const nameValue = readCookieNameValue(scanner);
+      if (nameValue != null) {
+        header.set(nameValue[0], CookieCodec.decode(nameValue[1]));
       }
-      if (!scanner.readChar(Separator.Equals)) {
-        return null;
-      }
-      const value = scanner.readUntil(Separator.Semicolon);
-      if (!isValidCookieValue(value)) {
-        return null;
-      }
-      header.#map.set(name, CookieCodec.decode(value));
       if (!scanner.readChar(Separator.Semicolon)) {
         break;
       }
@@ -103,30 +95,18 @@ export class Cookie implements Header, Iterable<[string, string]> {
   }
 
   has(name: string): boolean {
-    if (!isToken(name)) {
-      throw new TypeError();
-    }
     return this.#map.has(name);
   }
 
   get(name: string): string | null {
-    if (!isToken(name)) {
-      throw new TypeError();
-    }
     return this.#map.get(name) ?? null;
   }
 
   set(name: string, value: unknown): void {
-    if (!isToken(name)) {
-      throw new TypeError();
-    }
     this.#map.set(name, String(value));
   }
 
   delete(name: string): void {
-    if (!isToken(name)) {
-      throw new TypeError();
-    }
     this.#map.delete(name);
   }
 
@@ -137,6 +117,9 @@ export class Cookie implements Header, Iterable<[string, string]> {
   toString(): string {
     const parts: string[] = [];
     for (const [name, value] of this.#map) {
+      if (!isToken(name)) {
+        throw new TypeError(`Invalid cookie name [${name}]`);
+      }
       parts.push(`${name}=${CookieCodec.encode(value)}`);
     }
     return parts.join("; ");

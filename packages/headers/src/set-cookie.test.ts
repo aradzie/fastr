@@ -1,53 +1,69 @@
 import test from "ava";
 import { SetCookie } from "./set-cookie.js";
 
-test("parse empty values", (t) => {
+test("parse values", (t) => {
   t.deepEqual(SetCookie.parse("a="), new SetCookie("a", ""));
   t.deepEqual(
     SetCookie.parse("a=; Max-Age=0"),
     new SetCookie("a", "", { maxAge: 0 }),
   );
-});
-
-test("parse simple values", (t) => {
   t.deepEqual(SetCookie.parse("a=1"), new SetCookie("a", "1"));
   t.deepEqual(
     SetCookie.parse("a=1; Max-Age=0"),
     new SetCookie("a", "1", { maxAge: 0 }),
   );
-});
-
-test("parse empty quoted values", (t) => {
   t.deepEqual(SetCookie.parse(`a=""`), new SetCookie("a", ""));
   t.deepEqual(
     SetCookie.parse(`a=""; Max-Age=0`),
     new SetCookie("a", "", { maxAge: 0 }),
   );
-});
-
-test("parse quoted values", (t) => {
   t.deepEqual(SetCookie.parse(`a="1"`), new SetCookie("a", "1"));
   t.deepEqual(
     SetCookie.parse(`a="1"; Max-Age=0`),
     new SetCookie("a", "1", { maxAge: 0 }),
   );
-});
-
-test("parse escaped values", (t) => {
   t.deepEqual(SetCookie.parse(`a=%00`), new SetCookie("a", "\x00"));
   t.deepEqual(
-    SetCookie.parse(`a=%00; Max-Age=0`),
-    new SetCookie("a", "\x00", { maxAge: 0 }),
+    SetCookie.parse(`a=%01; Max-Age=0`),
+    new SetCookie("a", "\x01", { maxAge: 0 }),
   );
-  t.deepEqual(SetCookie.parse(`b="%01"`), new SetCookie("b", "\x01"));
+  t.deepEqual(SetCookie.parse(`a="%00"`), new SetCookie("a", "\x00"));
   t.deepEqual(
-    SetCookie.parse(`b="%01"; Max-Age=0`),
-    new SetCookie("b", "\x01", { maxAge: 0 }),
+    SetCookie.parse(`a="%01"; Max-Age=0`),
+    new SetCookie("a", "\x01", { maxAge: 0 }),
   );
-  t.deepEqual(SetCookie.parse(`c=%%%`), new SetCookie("c", "%%%"));
+  t.deepEqual(SetCookie.parse(`a=%%%`), new SetCookie("a", "%%%"));
   t.deepEqual(
     SetCookie.parse(`c=%%%; Max-Age=0`),
     new SetCookie("c", "%%%", { maxAge: 0 }),
+  );
+  t.deepEqual(SetCookie.parse(`a="%%%"`), new SetCookie("a", "%%%"));
+  t.deepEqual(
+    SetCookie.parse(`c="%%%"; Max-Age=0`),
+    new SetCookie("c", "%%%", { maxAge: 0 }),
+  );
+});
+
+test("parse invalid values", (t) => {
+  t.deepEqual(SetCookie.parse(`?=`), new SetCookie("?", ""));
+  t.deepEqual(
+    SetCookie.parse(`?=; Max-Age=0`),
+    new SetCookie("?", "", { maxAge: 0 }),
+  );
+  t.deepEqual(SetCookie.parse(`?==`), new SetCookie("?", "="));
+  t.deepEqual(
+    SetCookie.parse(`?==; Max-Age=0`),
+    new SetCookie("?", "=", { maxAge: 0 }),
+  );
+  t.deepEqual(SetCookie.parse(`a=1\\2`), new SetCookie("a", "1\\2"));
+  t.deepEqual(
+    SetCookie.parse(`a=1\\2; Max-Age=0`),
+    new SetCookie("a", "1\\2", { maxAge: 0 }),
+  );
+  t.deepEqual(SetCookie.parse(`a="1\\2"`), new SetCookie("a", "1\\2"));
+  t.deepEqual(
+    SetCookie.parse(`a="1\\2"; Max-Age=0`),
+    new SetCookie("a", "1\\2", { maxAge: 0 }),
   );
 });
 
@@ -245,15 +261,9 @@ test("parse all attributes", (t) => {
   );
 });
 
-test("format empty value", (t) => {
-  t.is(String(new SetCookie("one", "")), "one=");
-});
-
-test("format simple value", (t) => {
-  t.is(String(new SetCookie("one", "1")), "one=1");
-});
-
-test("format escaped value", (t) => {
+test("format value", (t) => {
+  t.is(String(new SetCookie("a", "")), "a=");
+  t.is(String(new SetCookie("a", "1")), "a=1");
   t.is(String(new SetCookie("a", "\x00")), "a=%00");
   t.is(String(new SetCookie("a", '"?"')), "a=%22%3F%22");
 });
@@ -338,16 +348,22 @@ test("format with attributes", (t) => {
   );
 });
 
-test("format and parse escaped cookie value", (t) => {
-  const value = ' ",;\u{1F36D},;" ';
+test("format and parse encoded cookie value", (t) => {
+  const value = ` \\",;\\u{1F36D},;"\\ `;
   t.is(SetCookie.parse(String(new SetCookie("name", value)))?.value, value);
 });
 
 test("validate cooke name", (t) => {
   t.throws(
     () => {
-      new SetCookie("?", "anything");
+      new SetCookie("", "value").toString();
     },
-    { instanceOf: TypeError },
+    { instanceOf: TypeError, message: "Invalid cookie name []" },
+  );
+  t.throws(
+    () => {
+      new SetCookie("???", "value").toString();
+    },
+    { instanceOf: TypeError, message: "Invalid cookie name [???]" },
   );
 });

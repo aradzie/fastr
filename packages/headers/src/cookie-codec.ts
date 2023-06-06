@@ -21,11 +21,7 @@ let delegate: CodecDelegate = new (class URICodec implements CodecDelegate {
   }
 
   decode(value: string): string {
-    try {
-      return decodeURIComponent(value);
-    } catch {
-      return value;
-    }
+    return decodeURIComponent(value);
   }
 })();
 
@@ -39,7 +35,12 @@ export class CookieCodec {
   }
 
   static decode(value: string): string {
-    return delegate.decode(unquoteCookieValue(value));
+    value = unquoteCookieValue(value);
+    try {
+      return delegate.decode(value);
+    } catch {
+      return value;
+    }
   }
 }
 

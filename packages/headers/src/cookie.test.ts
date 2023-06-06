@@ -1,7 +1,9 @@
 import test from "ava";
 import { Cookie } from "./cookie.js";
 
-test("parse empty values", (t) => {
+test("parse values", (t) => {
+  t.deepEqual(Cookie.parse(``), new Cookie([]));
+  t.deepEqual(Cookie.parse(`;;;`), new Cookie([]));
   t.deepEqual(
     Cookie.parse(`a=`),
     new Cookie([
@@ -22,9 +24,6 @@ test("parse empty values", (t) => {
       ["b", ""],
     ]),
   );
-});
-
-test("parse simple values", (t) => {
   t.deepEqual(
     Cookie.parse("a=1"),
     new Cookie([
@@ -45,9 +44,6 @@ test("parse simple values", (t) => {
       ["b", "2"],
     ]),
   );
-});
-
-test("parse quoted values", (t) => {
   t.deepEqual(
     Cookie.parse(`a="1"`),
     new Cookie([
@@ -68,62 +64,67 @@ test("parse quoted values", (t) => {
       ["b", "2"],
     ]),
   );
-});
-
-test("parse escaped values", (t) => {
   t.deepEqual(
-    Cookie.parse(`a=%00; b="%01"; c=%%%`),
+    Cookie.parse(`a=a%01; b="b%01"; c=c%%%; d="d%%%"`),
     new Cookie([
-      ["a", "\x00"],
-      ["b", "\x01"],
-      ["c", "%%%"],
+      ["a", "a\x01"],
+      ["b", "b\x01"],
+      ["c", "c%%%"],
+      ["d", "d%%%"],
     ]),
   );
-});
-
-test("parse duplicate names", (t) => {
   t.deepEqual(
-    Cookie.parse("a=1; b=2; a=x"),
+    Cookie.parse("a=1; A=2; a=x"),
     new Cookie([
       ["a", "x"],
-      ["b", "2"],
+      ["A", "2"],
     ]),
   );
 });
 
-test("format empty values", (t) => {
+test("parse invalid values", (t) => {
+  t.deepEqual(
+    Cookie.parse(";;;   ?==;;;   a=1\\2;;;   b=2;;;   c   ;;;   d=4"),
+    new Cookie([
+      ["?", "="],
+      ["a", "1\\2"],
+      ["b", "2"],
+      ["d", "4"],
+    ]),
+  );
+});
+
+test("format values", (t) => {
   t.is(String(new Cookie([])), "");
-  t.is(String(new Cookie([["one", ""]])), "one=");
-});
-
-test("format simple values", (t) => {
-  t.is(String(new Cookie([["one", "1"]])), "one=1");
+  t.is(String(new Cookie([["a", ""]])), "a=");
+  t.is(String(new Cookie([["a", "1"]])), "a=1");
   t.is(
     String(
       new Cookie([
-        ["one", "1"],
-        ["two", "2"],
+        ["a", "1"],
+        ["b", "2"],
       ]),
     ),
-    "one=1; two=2",
+    "a=1; b=2",
   );
 });
 
-test("format escaped values", (t) => {
+test("format encoded values", (t) => {
   t.is(
     String(
       new Cookie([
-        ["a", "\x00"],
-        ["b", "\x01"],
-        ["c", '"?"'],
+        ["a", `\x00`],
+        ["b", `\x01`],
+        ["c", `"?"`],
+        ["d", `\\?\\`],
       ]),
     ),
-    "a=%00; b=%01; c=%22%3F%22",
+    "a=%00; b=%01; c=%22%3F%22; d=%5C%3F%5C",
   );
 });
 
-test("format and parse escaped cookie value", (t) => {
-  const value = ' ",;\u{1F36D},;" ';
+test("format and parse encoded cookie value", (t) => {
+  const value = ` \\",;\\u{1F36D},;"\\ `;
   const cookie = new Cookie([["name", value]]);
   t.is(Cookie.parse(String(cookie)).get("name"), value);
 });
@@ -131,32 +132,14 @@ test("format and parse escaped cookie value", (t) => {
 test("validate cooke name", (t) => {
   t.throws(
     () => {
-      new Cookie([["?", "anything"]]);
+      new Cookie([["", "value"]]).toString();
     },
-    { instanceOf: TypeError },
+    { instanceOf: TypeError, message: "Invalid cookie name []" },
   );
   t.throws(
     () => {
-      new Cookie().has("?");
+      new Cookie([["???", "value"]]).toString();
     },
-    { instanceOf: TypeError },
-  );
-  t.throws(
-    () => {
-      new Cookie().get("?");
-    },
-    { instanceOf: TypeError },
-  );
-  t.throws(
-    () => {
-      new Cookie().set("?", "anything");
-    },
-    { instanceOf: TypeError },
-  );
-  t.throws(
-    () => {
-      new Cookie().delete("?");
-    },
-    { instanceOf: TypeError },
+    { instanceOf: TypeError, message: "Invalid cookie name [???]" },
   );
 });
