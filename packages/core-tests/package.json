@@ -1,6 +1,6 @@
 {
   "name": "@fastr/core-tests",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "private": true,
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
@@ -13,10 +13,10 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/client": "^0.0.12",
-    "@fastr/client-testlib": "^0.0.12",
-    "@fastr/core": "^0.0.12",
-    "@fastr/errors": "^0.0.12",
+    "@fastr/client": "^0.0.13",
+    "@fastr/client-testlib": "^0.0.13",
+    "@fastr/core": "^0.0.13",
+    "@fastr/errors": "^0.0.13",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.5.2"
   },

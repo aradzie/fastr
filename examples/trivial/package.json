@@ -1,6 +1,6 @@
 {
   "name": "@fastr/example-trivial",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "private": true,
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
@@ -13,7 +13,7 @@
     "start": "node ./lib/index.js"
   },
   "dependencies": {
-    "@fastr/core": "^0.0.12",
+    "@fastr/core": "^0.0.13",
     "tslib": "^2.5.2"
   },
   "engines": {

@@ -1,6 +1,6 @@
 {
   "name": "@fastr/browser-client",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,11 +14,11 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/errors": "^0.0.12",
-    "@fastr/headers": "^0.0.12",
-    "@fastr/json": "^0.0.12",
-    "@fastr/status": "^0.0.12",
-    "@fastr/url": "^0.0.12",
+    "@fastr/errors": "^0.0.13",
+    "@fastr/headers": "^0.0.13",
+    "@fastr/json": "^0.0.13",
+    "@fastr/status": "^0.0.13",
+    "@fastr/url": "^0.0.13",
     "events": "^3.3.0",
     "tslib": "^2.5.2"
   },
