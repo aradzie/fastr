@@ -7,8 +7,8 @@ import {
   parseOrThrow,
   tryGetHeader,
 } from "./headers.js";
-import { readCookieNameValue } from "./syntax-cookie.js";
-import { isToken, Scanner, Separator } from "./syntax.js";
+import { readCookieNameValue } from "./syntax/cookie.js";
+import { isToken, Scanner, Separator } from "./syntax/syntax.js";
 
 const headerName = "Cookie";
 const headerNameLc = "cookie";

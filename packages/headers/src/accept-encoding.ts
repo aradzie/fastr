@@ -7,7 +7,7 @@ import {
   tryGetHeader,
 } from "./headers.js";
 import { readWeight } from "./params.js";
-import { isToken, Scanner, Separator } from "./syntax.js";
+import { isToken, Scanner, Separator } from "./syntax/syntax.js";
 
 const headerName = "Accept-Encoding";
 const headerNameLc = "accept-encoding";

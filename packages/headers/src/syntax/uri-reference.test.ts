@@ -1,6 +1,6 @@
 import test from "ava";
-import { readUriReference } from "./syntax-uri-reference.js";
 import { Scanner } from "./syntax.js";
+import { readUriReference } from "./uri-reference.js";
 
 test("read URI-Reference", (t) => {
   t.is(readUriReference(new Scanner(`<http://host/>`)), "http://host/");

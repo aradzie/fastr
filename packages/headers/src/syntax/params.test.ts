@@ -1,6 +1,6 @@
 import test from "ava";
-import { Params, readWeight } from "./params.js";
-import { readParams } from "./syntax-params.js";
+import { Params, readWeight } from "../params.js";
+import { readParams } from "./params.js";
 import { Scanner } from "./syntax.js";
 
 test("read params", (t) => {

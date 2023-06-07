@@ -1,6 +1,11 @@
 import { type Weighted } from "./accepted.js";
 import { entriesOf, type NameValueEntries } from "./entries.js";
-import { escapeToken, isToken, type Scanner, Separator } from "./syntax.js";
+import {
+  escapeToken,
+  isToken,
+  type Scanner,
+  Separator,
+} from "./syntax/syntax.js";
 
 export class Params implements Iterable<[string, string]> {
   readonly #map = new Map<string, string>();

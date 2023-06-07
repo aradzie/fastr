@@ -6,7 +6,7 @@ import {
   parseOrThrow,
   tryGetHeader,
 } from "./headers.js";
-import { Scanner, Separator } from "./syntax.js";
+import { Scanner, Separator } from "./syntax/syntax.js";
 
 export interface CacheControlInit {
   readonly isPublic?: boolean;

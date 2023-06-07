@@ -7,8 +7,8 @@ import {
   tryGetHeader,
 } from "./headers.js";
 import { MediaType } from "./media-type.js";
-import { readParams } from "./syntax-params.js";
-import { Scanner, Separator } from "./syntax.js";
+import { readParams } from "./syntax/params.js";
+import { Scanner, Separator } from "./syntax/syntax.js";
 
 const headerName = "Accept";
 const headerNameLc = "accept";

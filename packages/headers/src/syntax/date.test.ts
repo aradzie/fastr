@@ -1,5 +1,5 @@
 import test from "ava";
-import { parseDate, stringifyDate } from "./syntax-date.js";
+import { parseDate, stringifyDate } from "./date.js";
 
 test("parse", (t) => {
   t.deepEqual(parseDate("Thu, 01 Jan 1970 00:00:00 GMT"), new Date(0));

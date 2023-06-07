@@ -1,9 +1,9 @@
 import { entriesOf, type NameValueEntries } from "./entries.js";
 import { type Header, parseOrThrow } from "./headers.js";
 import { Params } from "./params.js";
-import { readParams } from "./syntax-params.js";
-import { readUriReference } from "./syntax-uri-reference.js";
-import { Scanner, Separator } from "./syntax.js";
+import { readParams } from "./syntax/params.js";
+import { Scanner, Separator } from "./syntax/syntax.js";
+import { readUriReference } from "./syntax/uri-reference.js";
 
 export class LinkEntry {
   readonly params = new Params();

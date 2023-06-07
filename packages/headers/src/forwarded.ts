@@ -1,5 +1,5 @@
 import { type Header, parseOrThrow } from "./headers.js";
-import { escapeToken, Scanner, Separator } from "./syntax.js";
+import { escapeToken, Scanner, Separator } from "./syntax/syntax.js";
 
 export interface ForwardedInit {
   readonly by?: string;

@@ -1,8 +1,8 @@
 import { entriesOf, type NameValueEntries } from "./entries.js";
 import { type Header } from "./headers.js";
 import { Params } from "./params.js";
-import { readParams } from "./syntax-params.js";
-import { isToken, Scanner, Separator } from "./syntax.js";
+import { readParams } from "./syntax/params.js";
+import { isToken, Scanner, Separator } from "./syntax/syntax.js";
 
 /**
  * @see https://www.rfc-editor.org/rfc/rfc7231#section-3.1.1.1

@@ -6,8 +6,8 @@ import {
   parseOrThrow,
   tryGetHeader,
 } from "./headers.js";
-import { readETag } from "./syntax-etag.js";
-import { Scanner, Separator } from "./syntax.js";
+import { readETag } from "./syntax/etag.js";
+import { Scanner, Separator } from "./syntax/syntax.js";
 
 const headerName = "If-None-Match";
 const headerNameLc = "if-none-match";

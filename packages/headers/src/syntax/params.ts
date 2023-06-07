@@ -1,5 +1,5 @@
-import { type Weighted } from "./accepted.js";
-import { type Params } from "./params.js";
+import { type Weighted } from "../accepted.js";
+import { type Params } from "../params.js";
 import { type Scanner, Separator } from "./syntax.js";
 
 export function readParams(

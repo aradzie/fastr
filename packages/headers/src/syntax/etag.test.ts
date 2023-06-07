@@ -1,5 +1,5 @@
 import test from "ava";
-import { readETag } from "./syntax-etag.js";
+import { readETag } from "./etag.js";
 import { Scanner } from "./syntax.js";
 
 test("read ETag", (t) => {

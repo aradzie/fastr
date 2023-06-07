@@ -1,5 +1,5 @@
 import { type Header, parseOrThrow } from "./headers.js";
-import { isToken, Scanner, Separator } from "./syntax.js";
+import { isToken, Scanner, Separator } from "./syntax/syntax.js";
 
 const headerName = "Vary";
 const headerNameLc = "vary";

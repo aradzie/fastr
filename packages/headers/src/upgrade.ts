@@ -1,5 +1,5 @@
 import { type Header, parseOrThrow } from "./headers.js";
-import { Scanner, Separator } from "./syntax.js";
+import { Scanner, Separator } from "./syntax/syntax.js";
 
 const headerName = "Upgrade";
 const headerNameLc = "upgrade";

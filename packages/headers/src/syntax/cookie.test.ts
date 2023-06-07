@@ -1,5 +1,5 @@
 import test from "ava";
-import { isValidCookieValue, readCookieNameValue } from "./syntax-cookie.js";
+import { isValidCookieValue, readCookieNameValue } from "./cookie.js";
 import { Scanner } from "./syntax.js";
 
 test("validate cookie value", (t) => {

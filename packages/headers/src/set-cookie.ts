@@ -1,8 +1,8 @@
 import { CookieCodec } from "./cookie-codec.js";
 import { type GetAllHeaders, type Header, parseOrThrow } from "./headers.js";
-import { readCookieNameValue } from "./syntax-cookie.js";
-import { parseDate, stringifyDate } from "./syntax-date.js";
-import { isToken, Scanner, Separator } from "./syntax.js";
+import { readCookieNameValue } from "./syntax/cookie.js";
+import { parseDate, stringifyDate } from "./syntax/date.js";
+import { isToken, Scanner, Separator } from "./syntax/syntax.js";
 
 export interface SetCookieInit {
   path?: string | null;

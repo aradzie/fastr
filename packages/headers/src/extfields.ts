@@ -1,4 +1,4 @@
-import { escapeToken, isToken } from "./syntax.js";
+import { escapeToken, isToken } from "./syntax/syntax.js";
 
 export type ExtField = readonly [name: string, value: string | null];
 
