@@ -9,12 +9,12 @@ test("no proxy headers, http", (t) => {
       {
         socket: {} as unknown, // Socket
         headers: {
-          host: "some-host",
+          host: `host:123`,
         } as IncomingHttpHeaders,
       } as IncomingMessage,
       true,
     ),
-    "http://some-host",
+    "http://host:123",
   );
 });
 
@@ -26,91 +26,44 @@ test("no proxy headers, https", (t) => {
           encrypted: true,
         } as unknown, // TLSSocket
         headers: {
-          host: "some-host",
+          host: `host:123`,
         } as IncomingHttpHeaders,
       } as IncomingMessage,
       true,
     ),
-    "https://some-host",
+    "https://host:123",
   );
 });
 
-test("use `forwarded` proxy header, http", (t) => {
+test("no proxy headers, :authority, http", (t) => {
   t.is(
     getOrigin(
       {
-        socket: {},
+        socket: {} as unknown, // Socket
         headers: {
-          "host": "ignored-host",
-          "forwarded": "host=forwarded-host; proto=http",
-          "x-forwarded-host": "ignored-x-forwarded-host",
-          "x-forwarded-proto": "http",
+          ":authority": `host:123`,
         } as IncomingHttpHeaders,
       } as IncomingMessage,
       true,
     ),
-    "http://forwarded-host",
+    "http://host:123",
   );
 });
 
-test("use `forwarded` proxy header, https", (t) => {
+test("no proxy headers, :authority, https", (t) => {
   t.is(
     getOrigin(
       {
-        socket: {},
+        socket: {
+          encrypted: true,
+        } as unknown, // TLSSocket
         headers: {
-          "host": "ignored-host",
-          "forwarded": "host=forwarded-host; proto=https",
-          "x-forwarded-host": "ignored-x-forwarded-host",
-          "x-forwarded-proto": "http",
+          ":authority": `host:123`,
         } as IncomingHttpHeaders,
       } as IncomingMessage,
       true,
     ),
-    "https://forwarded-host",
-  );
-});
-
-test("use `forwarded` proxy header, incomplete", (t) => {
-  t.throws(
-    () => {
-      getOrigin(
-        {
-          socket: {},
-          headers: {
-            "host": "ignored-host",
-            "forwarded": "host=forwarded-host",
-            "x-forwarded-host": "x-forwarded-host",
-            "x-forwarded-proto": "http",
-          } as IncomingHttpHeaders,
-        } as IncomingMessage,
-        true,
-      );
-    },
-    {
-      instanceOf: BadRequestError,
-      message: "Invalid Headers",
-    },
-  );
-  t.throws(
-    () => {
-      getOrigin(
-        {
-          socket: {},
-          headers: {
-            "host": "ignored-host",
-            "forwarded": "proto=forwarded-proto",
-            "x-forwarded-host": "x-forwarded-host",
-            "x-forwarded-proto": "http",
-          } as IncomingHttpHeaders,
-        } as IncomingMessage,
-        true,
-      );
-    },
-    {
-      instanceOf: BadRequestError,
-      message: "Invalid Headers",
-    },
+    "https://host:123",
   );
 });
 
@@ -120,14 +73,14 @@ test("use `x-forwarded-*` proxy headers, http", (t) => {
       {
         socket: {},
         headers: {
-          "host": "ignored-host",
-          "x-forwarded-host": "x-forwarded-host",
-          "x-forwarded-proto": "http",
+          "host": `ignored`,
+          "x-forwarded-host": `host:123`,
+          "x-forwarded-proto": `http`,
         } as IncomingHttpHeaders,
       } as IncomingMessage,
       true,
     ),
-    "http://x-forwarded-host",
+    "http://host:123",
   );
 });
 
@@ -137,14 +90,14 @@ test("use `x-forwarded-*` proxy headers, https", (t) => {
       {
         socket: {},
         headers: {
-          "host": "ignored-host",
-          "x-forwarded-host": "x-forwarded-host",
-          "x-forwarded-proto": "https",
+          "host": `ignored`,
+          "x-forwarded-host": `host:123`,
+          "x-forwarded-proto": `https`,
         } as IncomingHttpHeaders,
       } as IncomingMessage,
       true,
     ),
-    "https://x-forwarded-host",
+    "https://host:123",
   );
 });
 
@@ -155,8 +108,8 @@ test("use `x-forwarded-*` proxy headers, incomplete", (t) => {
         {
           socket: {},
           headers: {
-            "host": "ignored-host",
-            "x-forwarded-host": "x-forwarded-host",
+            "host": `ignored`,
+            "x-forwarded-host": `host:123`,
           } as IncomingHttpHeaders,
         } as IncomingMessage,
         true,
@@ -164,7 +117,6 @@ test("use `x-forwarded-*` proxy headers, incomplete", (t) => {
     },
     {
       instanceOf: BadRequestError,
-      message: "Invalid Headers",
     },
   );
   t.throws(
@@ -173,8 +125,8 @@ test("use `x-forwarded-*` proxy headers, incomplete", (t) => {
         {
           socket: {},
           headers: {
-            "host": "ignored-host",
-            "x-forwarded-proto": "http",
+            "host": `ignored`,
+            "x-forwarded-proto": `http`,
           } as IncomingHttpHeaders,
         } as IncomingMessage,
         true,
@@ -182,7 +134,6 @@ test("use `x-forwarded-*` proxy headers, incomplete", (t) => {
     },
     {
       instanceOf: BadRequestError,
-      message: "Invalid Headers",
     },
   );
 });
@@ -193,15 +144,15 @@ test("ignore proxy headers", (t) => {
       {
         socket: {},
         headers: {
-          "host": "some-host",
-          "forwarded": "host=ignored-forwarded-host; proto=http",
-          "x-forwarded-host": "ignored-x-forwarded-host",
-          "x-forwarded-proto": "http",
+          "host": `host:123`,
+          "forwarded": `host=ignored; proto=ignored`,
+          "x-forwarded-host": `ignored`,
+          "x-forwarded-proto": `ignored`,
         } as IncomingHttpHeaders,
       } as IncomingMessage,
       false,
     ),
-    "http://some-host",
+    "http://host:123",
   );
 });
 
@@ -212,7 +163,6 @@ test("empty headers", (t) => {
     },
     {
       instanceOf: BadRequestError,
-      message: "Invalid Headers",
     },
   );
   t.throws(
@@ -221,7 +171,6 @@ test("empty headers", (t) => {
     },
     {
       instanceOf: BadRequestError,
-      message: "Invalid Headers",
     },
   );
 });

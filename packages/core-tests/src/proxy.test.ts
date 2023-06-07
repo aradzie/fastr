@@ -32,62 +32,13 @@ test("detect remote host and proto", async (t) => {
     const res = await request
       .use(server)
       .GET("/")
-      .header("Forwarded", "host=host1; proto=https")
-      .send();
-
-    // Assert.
-
-    t.is(res.status, 200);
-    t.is(await res.body.text(), "https://host1");
-  }
-
-  {
-    // Act.
-
-    const res = await request
-      .use(server)
-      .GET("/")
-      .header("X-Forwarded-Host", "host2")
+      .header("X-Forwarded-Host", "host1:123")
       .header("X-Forwarded-Proto", "http")
       .send();
 
     // Assert.
 
     t.is(res.status, 200);
-    t.is(await res.body.text(), "http://host2");
-  }
-
-  {
-    // Act.
-
-    const res = await request
-      .use(server)
-      .GET("/")
-      .header("Forwarded", "host=host1; proto=https")
-      .header("X-Forwarded-Host", "host2")
-      .header("X-Forwarded-Proto", "http")
-      .send();
-
-    // Assert.
-
-    t.is(res.status, 200);
-    t.is(await res.body.text(), "https://host1");
-  }
-
-  {
-    // Act.
-
-    const res = await request
-      .use(server)
-      .GET("/")
-      .header("Forwarded", "for=192.168.1.1")
-      .header("X-Forwarded-Host", "host2")
-      .header("X-Forwarded-Proto", "http")
-      .send();
-
-    // Assert.
-
-    t.is(res.status, 200);
-    t.is(await res.body.text(), "http://host2");
+    t.is(await res.body.text(), "http://host1:123");
   }
 });
