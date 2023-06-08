@@ -6,11 +6,14 @@
   "repository": "aradzie/fastr",
   "license": "MIT",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
   "scripts": {
     "clean": "lerna run clean",
     "compile": "lerna run compile",
     "format": "prettier --write '**/*.ts'",
-    "postinstall": "lerna bootstrap",
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --ext .ts --fix",
     "test": "lerna run test"
@@ -24,7 +27,7 @@
     "eslint": "^8.41.0",
     "eslint-plugin-ava": "^14.0.0",
     "eslint-plugin-n": "^16.0.0",
-    "lerna": "^6.6.2",
+    "lerna": "^7.0.0",
     "mockdate": "^3.0.5",
     "prettier": "^2.8.8",
     "typescript": "^5.0.4"
