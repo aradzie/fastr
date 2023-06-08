@@ -4,7 +4,7 @@ import {
   request,
   useAdapter,
   xhrAdapter,
-} from "@fastr/browser-client";
+} from "@fastr/fetch";
 import { ContentType } from "@fastr/headers";
 import { mergeSearchParams } from "@fastr/url";
 import chai, { expect } from "chai";

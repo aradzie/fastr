@@ -3,7 +3,7 @@ import {
   expectType,
   request,
   type UploadProgressEvent,
-} from "@fastr/browser-client";
+} from "@fastr/fetch";
 
 run().catch((err) => {
   console.error(err);
