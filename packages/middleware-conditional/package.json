@@ -18,7 +18,7 @@
     "@fastr/headers": "^0.0.13",
     "@fastr/status": "^0.0.13",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.5.2"
+    "tslib": "^2.5.3"
   },
   "devDependencies": {
     "@fastr/client": "^0.0.13",

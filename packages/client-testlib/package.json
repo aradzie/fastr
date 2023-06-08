@@ -16,7 +16,7 @@
   "dependencies": {
     "@fastr/client": "^0.0.13",
     "@fastr/headers": "^0.0.13",
-    "tslib": "^2.5.2"
+    "tslib": "^2.5.3"
   },
   "engines": {
     "node": ">=18.12"

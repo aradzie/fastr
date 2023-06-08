@@ -19,7 +19,7 @@
     "@fastr/middleware-compress": "^0.0.13",
     "@fastr/middleware-conditional": "^0.0.13",
     "@fastr/middleware-router": "^0.0.13",
-    "tslib": "^2.5.2",
+    "tslib": "^2.5.3",
     "zod": "^3.21.4"
   },
   "engines": {

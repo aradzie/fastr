@@ -23,7 +23,7 @@
     "@fastr/middleware-body": "^0.0.13",
     "@fastr/middleware-router": "^0.0.13",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.5.2",
+    "tslib": "^2.5.3",
     "zod": "^3.21.4"
   },
   "engines": {

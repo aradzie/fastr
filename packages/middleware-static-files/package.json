@@ -20,7 +20,7 @@
     "@fastr/mediatypes": "^0.0.13",
     "@sosimple/fsx": "^0.1.0",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.5.2"
+    "tslib": "^2.5.3"
   },
   "devDependencies": {
     "@fastr/client": "^0.0.13",
