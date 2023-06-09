@@ -1,6 +1,6 @@
 {
   "name": "@fastr/invert",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/lang": "^0.0.13",
+    "@fastr/lang": "^0.0.14",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.5.3"
   },
