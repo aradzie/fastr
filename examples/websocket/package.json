@@ -15,11 +15,11 @@
   "dependencies": {
     "@fastr/core": "^0.0.14",
     "@fastr/middleware-websocket": "^0.0.14",
-    "tslib": "^2.5.3",
+    "tslib": "^2.6.0",
     "ws": "^8.13.0"
   },
   "devDependencies": {
-    "@types/ws": "^8.5.4"
+    "@types/ws": "^8.5.5"
   },
   "engines": {
     "node": ">=18.12"

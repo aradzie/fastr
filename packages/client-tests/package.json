@@ -20,7 +20,7 @@
     "@fastr/headers": "^0.0.14",
     "@fastr/mediatypes": "^0.0.14",
     "@fastr/status": "^0.0.14",
-    "tslib": "^2.5.3"
+    "tslib": "^2.6.0"
   },
   "engines": {
     "node": ">=18.12"

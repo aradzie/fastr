@@ -21,7 +21,7 @@
     "@fastr/mediatypes": "^0.0.14",
     "qs": "^6.11.2",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.5.3"
+    "tslib": "^2.6.0"
   },
   "devDependencies": {
     "@fastr/client": "^0.0.14",

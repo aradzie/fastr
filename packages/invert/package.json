@@ -16,7 +16,7 @@
   "dependencies": {
     "@fastr/lang": "^0.0.14",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.5.3"
+    "tslib": "^2.6.0"
   },
   "engines": {
     "node": ">=18.12"
