@@ -1,6 +1,6 @@
 {
   "name": "@fastr/example-controller",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "private": true,
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
@@ -13,12 +13,12 @@
     "start": "node ./lib/index.js"
   },
   "dependencies": {
-    "@fastr/controller": "^0.0.14",
-    "@fastr/core": "^0.0.14",
-    "@fastr/invert": "^0.0.14",
-    "@fastr/middleware-compress": "^0.0.14",
-    "@fastr/middleware-conditional": "^0.0.14",
-    "@fastr/middleware-router": "^0.0.14",
+    "@fastr/controller": "^0.0.15",
+    "@fastr/core": "^0.0.15",
+    "@fastr/invert": "^0.0.15",
+    "@fastr/middleware-compress": "^0.0.15",
+    "@fastr/middleware-conditional": "^0.0.15",
+    "@fastr/middleware-router": "^0.0.15",
     "tslib": "^2.6.0",
     "zod": "^3.21.4"
   },

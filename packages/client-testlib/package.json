@@ -1,6 +1,6 @@
 {
   "name": "@fastr/client-testlib",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,8 +14,8 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/client": "^0.0.14",
-    "@fastr/headers": "^0.0.14",
+    "@fastr/client": "^0.0.15",
+    "@fastr/headers": "^0.0.15",
     "tslib": "^2.6.0"
   },
   "engines": {
