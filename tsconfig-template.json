@@ -12,7 +12,7 @@
     "importsNotUsedAsValues": "remove",
     "lib": ["es2022"],
     "module": "commonjs",
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,

@@ -20,7 +20,7 @@
     "@fastr/json": "^0.0.15",
     "@fastr/status": "^0.0.15",
     "@fastr/url": "^0.0.15",
-    "tslib": "^2.6.0"
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@fastr/fake-http": "^0.0.15"

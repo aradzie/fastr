@@ -18,10 +18,10 @@
     "@fastr/headers": "^0.0.15",
     "@fastr/json": "^0.0.15",
     "@fastr/mediatypes": "^0.0.15",
-    "@types/qs": "^6.9.7",
+    "@types/qs": "^6.9.8",
     "qs": "^6.11.2",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.6.0"
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@fastr/fake-http": "^0.0.15"

@@ -20,7 +20,7 @@
     "@fastr/status": "^0.0.15",
     "@fastr/url": "^0.0.15",
     "events": "^3.3.0",
-    "tslib": "^2.6.0"
+    "tslib": "^2.6.2"
   },
   "engines": {
     "node": ">=18.12"

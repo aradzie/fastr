@@ -16,10 +16,10 @@
   "dependencies": {
     "@fastr/invert": "^0.0.15",
     "@fastr/middleware-session": "^0.0.15",
-    "bson": "^5.3.0",
-    "knex": "^2.4.2",
+    "bson": "^6.1.0",
+    "knex": "^2.5.1",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.6.0"
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
     "sqlite3": "^5.1.6"

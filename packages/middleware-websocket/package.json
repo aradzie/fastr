@@ -18,8 +18,8 @@
     "@fastr/headers": "^0.0.15",
     "@fastr/status": "^0.0.15",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.6.0",
-    "ws": "^8.13.0"
+    "tslib": "^2.6.2",
+    "ws": "^8.14.2"
   },
   "devDependencies": {
     "@fastr/client": "^0.0.15",
