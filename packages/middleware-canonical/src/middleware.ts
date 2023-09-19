@@ -4,6 +4,12 @@ export function canonical(
   canonicalUrl: string,
   methods: readonly string[] = ["GET", "HEAD"],
 ): Middleware {
+  if (canonicalUrl === "*") {
+    return async (ctx: Context, next: Next): Promise<void> => {
+      return await next();
+    };
+  }
+
   const { protocol, hostname, port } = new URL(canonicalUrl);
 
   return async (ctx: Context, next: Next): Promise<void> => {

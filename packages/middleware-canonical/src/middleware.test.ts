@@ -163,6 +163,29 @@ test("request url is a wildcard", async (t) => {
   t.is(response.body, "ok");
 });
 
+test("disable canonical", async (t) => {
+  const app = new Application(null, { behindProxy: true })
+    .use(canonical("*"))
+    .use((ctx) => {
+      ctx.response.headers.set("X-Request-Url", ctx.request.url);
+      ctx.response.body = "ok";
+    });
+  const req = request.use(start(app.callback()));
+
+  for (const host of ["abc.com", "www.abc.com", "xyz.com", "www.xyz.com"]) {
+    for (const proto of ["http", "https"]) {
+      const res = await req
+        .GET("/foo/bar?a=b#x")
+        .header("X-Forwarded-Host", host)
+        .header("X-Forwarded-Proto", proto)
+        .send();
+      t.is(res.status, 200);
+      t.is(res.headers.get("Location"), null);
+      t.is(await res.body.text(), "ok");
+    }
+  }
+});
+
 function makeContext(method: string, url: string): Context {
   const request = new Request(
     new FakeIncomingMessage(null, {
