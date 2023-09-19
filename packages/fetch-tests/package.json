@@ -1,6 +1,6 @@
 {
   "name": "@fastr/fetch-tests",
-  "version": "0.0.15",
+  "version": "0.0.17",
   "private": true,
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
@@ -13,10 +13,10 @@
     "start": "node ./lib/start-server.js"
   },
   "dependencies": {
-    "@fastr/body": "^0.0.15",
-    "@fastr/fetch": "^0.0.15",
-    "@fastr/headers": "^0.0.15",
-    "@fastr/url": "^0.0.15",
+    "@fastr/body": "^0.0.17",
+    "@fastr/fetch": "^0.0.17",
+    "@fastr/headers": "^0.0.17",
+    "@fastr/url": "^0.0.17",
     "@types/chai": "^4.3.6",
     "@types/chai-like": "^1.1.1",
     "@types/mocha": "^10.0.1",

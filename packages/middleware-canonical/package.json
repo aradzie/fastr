@@ -1,6 +1,6 @@
 {
   "name": "@fastr/middleware-canonical",
-  "version": "0.0.15",
+  "version": "0.0.17",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,15 +14,15 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/core": "^0.0.15",
-    "@fastr/invert": "^0.0.15",
+    "@fastr/core": "^0.0.17",
+    "@fastr/invert": "^0.0.17",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.6.2"
   },
   "devDependencies": {
-    "@fastr/client": "^0.0.15",
-    "@fastr/client-testlib": "^0.0.15",
-    "@fastr/fake-http": "^0.0.15"
+    "@fastr/client": "^0.0.17",
+    "@fastr/client-testlib": "^0.0.17",
+    "@fastr/fake-http": "^0.0.17"
   },
   "engines": {
     "node": ">=18.12"
