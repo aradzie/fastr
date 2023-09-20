@@ -1,6 +1,6 @@
 {
   "name": "@fastr/middleware-websocket",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,16 +14,16 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/core": "^0.0.17",
-    "@fastr/headers": "^0.0.17",
-    "@fastr/status": "^0.0.17",
+    "@fastr/core": "^0.0.18",
+    "@fastr/headers": "^0.0.18",
+    "@fastr/status": "^0.0.18",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.6.2",
     "ws": "^8.14.2"
   },
   "devDependencies": {
-    "@fastr/client": "^0.0.17",
-    "@fastr/client-testlib": "^0.0.17",
+    "@fastr/client": "^0.0.18",
+    "@fastr/client-testlib": "^0.0.18",
     "@types/ws": "^8.5.5"
   },
   "engines": {
