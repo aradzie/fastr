@@ -4,7 +4,7 @@ import { makeBinder } from "./impl/binder.js";
 import { ClassBinding } from "./impl/binding/class.js";
 import { getClassMetadata } from "./impl/class-metadata.js";
 import { Registry } from "./impl/registry.js";
-import { checkValueId } from "./impl/util.js";
+import { checkValueId, nameOf } from "./impl/util.js";
 import {
   type Binder,
   type BindTo,
@@ -84,9 +84,7 @@ export class Container implements ReadonlyContainer, Binder {
       this.#registry.set(id, name, binding);
       return binding.getValue(this);
     }
-    throw new ContainerError(
-      `Binding not found [${String(id)}/${String(name)}]`,
-    );
+    throw new ContainerError(`Binding ${nameOf(id, name)} not found`);
   }
 
   get [Symbol.toStringTag](): string {

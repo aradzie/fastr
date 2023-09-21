@@ -4,8 +4,9 @@ import {
   type Method,
   type Newable,
   type Reflector,
+  typeId,
 } from "@fastr/lang";
-import { type ReadonlyContainer, type ValueId } from "../types.js";
+import { type Name, type ReadonlyContainer, type ValueId } from "../types.js";
 import { kInject, kProp } from "./constants.js";
 import {
   type InjectAnn,
@@ -21,14 +22,30 @@ export const getArgs = (
   return params.map(({ id, name }) => factory.get(id, name));
 };
 
-export const typeToValueId = (type: unknown): ValueId => {
-  if (typeof type === "string" || typeof type === "symbol") {
-    return type;
+export const toValueId = (arg: unknown): ValueId => {
+  if (typeof arg === "string" || typeof arg === "symbol") {
+    return arg;
   }
-  if (isConstructor(type)) {
-    return type;
+  if (isConstructor(arg)) {
+    return arg;
   }
-  throw new TypeError(`Value ${type} cannot be used as a ValueId`);
+  throw new TypeError(`${typeId(arg)} cannot be used as a ValueId`);
+};
+
+export const checkValueId = (id: ValueId | null, name: Name | null): void => {
+  if ((id == null || id === Object) && name == null) {
+    throw new TypeError(`${typeId(id)} is not a valid binding identifier`);
+  }
+};
+
+export const nameOf = (id: ValueId | null, name: Name | null): string => {
+  if (id == null) {
+    return `name=${typeId(name)}`;
+  }
+  if (name == null) {
+    return `id=${typeId(id)}`;
+  }
+  return `id=${typeId(id)} name=${typeId(name)}`;
 };
 
 const mergeParams = (
@@ -44,7 +61,7 @@ const mergeParams = (
     params[index] = {
       index,
       type,
-      id: ann?.id ?? typeToValueId(type),
+      id: ann?.id ?? toValueId(type),
       name: ann?.name ?? null,
     };
   }
@@ -88,15 +105,9 @@ export const getPropsMetadata = (ref: Reflector): PropMetadata[] => {
     metadata.push({
       propertyKey: key,
       type,
-      id: ann?.id ?? typeToValueId(type),
+      id: ann?.id ?? toValueId(type),
       name: ann?.name ?? null,
     });
   }
   return metadata;
-};
-
-export const checkValueId = (id: unknown, name: unknown): void => {
-  if ((id == null || id === Object) && name == null) {
-    throw new TypeError();
-  }
 };

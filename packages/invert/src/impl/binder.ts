@@ -1,4 +1,4 @@
-import { isConstructor, type Newable } from "@fastr/lang";
+import { isConstructor, type Newable, typeId } from "@fastr/lang";
 import {
   type Binder,
   type BindTo,
@@ -12,7 +12,7 @@ import { ValueBinding } from "./binding/value.js";
 import { getClassMetadata } from "./class-metadata.js";
 import { getProviders } from "./module-metadata.js";
 import { type Registry } from "./registry.js";
-import { checkValueId } from "./util.js";
+import { checkValueId, nameOf } from "./util.js";
 
 export function makeBinder(reg: Registry): Binder {
   const binder: Binder = {
@@ -21,22 +21,29 @@ export function makeBinder(reg: Registry): Binder {
       const bindTo: BindTo<T> = {
         toSelf: (): void => {
           if (!isConstructor(id)) {
-            throw new TypeError();
+            throw new TypeError(
+              `Cannot bind ${nameOf(id, name)} ` +
+                `to itself because it is not a constructor`,
+            );
           }
           reg.set(id, name, new ClassBinding(getClassMetadata(id)));
         },
-        to: <T>(constructor: Newable<T>): void => {
+        to: (constructor: Newable<T>): void => {
           if (!isConstructor(constructor)) {
-            throw new TypeError();
+            throw new TypeError(
+              `Cannot bind ${nameOf(id, name)} ` +
+                `to ${typeId(constructor)} because it is not a constructor`,
+            );
           }
           reg.set(id, name, new ClassBinding(getClassMetadata(constructor)));
         },
-        toValue: <T>(value: T): void => {
+        toValue: (value: T): void => {
           reg.set(id, name, new ValueBinding(value));
         },
       };
       return bindTo;
     },
+
     load: (module: Module): Binder => {
       module.configure(binder);
       for (const provider of getProviders(module)) {
@@ -45,5 +52,6 @@ export function makeBinder(reg: Registry): Binder {
       return binder;
     },
   };
+
   return binder;
 }

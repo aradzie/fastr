@@ -29,22 +29,15 @@ test("auto-bind off", (t) => {
   t.false(container.has(A));
   t.true(container.has(B));
 
-  t.throws(
-    () => {
-      container.get(A);
-    },
-    {
-      instanceOf: ContainerError,
-    },
-  );
-  t.throws(
-    () => {
-      container.get(B);
-    },
-    {
-      instanceOf: ContainerError,
-    },
-  );
+  t.throws(() => container.get(A), {
+    instanceOf: ContainerError,
+    message: "Binding id=<function A> not found",
+  });
+
+  t.throws(() => container.get(B), {
+    instanceOf: ContainerError,
+    message: "Binding id=<function A> not found",
+  });
 
   t.false(container.has(A));
   t.true(container.has(B));
@@ -92,14 +85,10 @@ test("auto-bind with named dependencies", (t) => {
   t.false(container.has(A, id));
   t.false(container.has(B));
   t.true(container.get(A) instanceof A);
-  t.throws(
-    () => {
-      container.get(B);
-    },
-    {
-      instanceOf: ContainerError,
-    },
-  );
+  t.throws(() => container.get(B), {
+    instanceOf: ContainerError,
+    message: "Binding id=<function A> name=<symbol> not found",
+  });
   t.true(container.has(A));
   t.false(container.has(A, id));
   t.true(container.has(B));
@@ -344,40 +333,47 @@ test("load modules", (t) => {
 test("check arguments", (t) => {
   const container = new Container();
 
+  t.throws(() => container.bind(null as any, null), {
+    instanceOf: TypeError,
+    message: "<null> is not a valid binding identifier",
+  });
+  t.throws(() => container.bind(Object as any, null), {
+    instanceOf: TypeError,
+    message: "<function Object> is not a valid binding identifier",
+  });
+  t.throws(() => container.has(null as any, null), {
+    instanceOf: TypeError,
+    message: "<null> is not a valid binding identifier",
+  });
+  t.throws(() => container.has(Object as any, null), {
+    instanceOf: TypeError,
+    message: "<function Object> is not a valid binding identifier",
+  });
+  t.throws(() => container.get(null as any, null), {
+    instanceOf: TypeError,
+    message: "<null> is not a valid binding identifier",
+  });
+  t.throws(() => container.get(Object as any, null), {
+    instanceOf: TypeError,
+    message: "<function Object> is not a valid binding identifier",
+  });
+
+  const bindTo = container.bind("x");
+  t.throws(() => bindTo.toSelf(), {
+    instanceOf: TypeError,
+    message:
+      'Cannot bind id=<string "x"> to itself ' +
+      "because it is not a constructor",
+  });
   t.throws(
-    () => {
-      container.bind(null as any, null);
+    () =>
+      // @ts-expect-error Test invalid arguments.
+      bindTo.to(null),
+    {
+      instanceOf: TypeError,
+      message:
+        'Cannot bind id=<string "x"> to <null> ' +
+        "because it is not a constructor",
     },
-    { instanceOf: TypeError },
-  );
-  t.throws(
-    () => {
-      container.bind(Object as any, null);
-    },
-    { instanceOf: TypeError },
-  );
-  t.throws(
-    () => {
-      container.has(null as any, null);
-    },
-    { instanceOf: TypeError },
-  );
-  t.throws(
-    () => {
-      container.has(Object as any, null);
-    },
-    { instanceOf: TypeError },
-  );
-  t.throws(
-    () => {
-      container.get(null as any, null);
-    },
-    { instanceOf: TypeError },
-  );
-  t.throws(
-    () => {
-      container.get(Object as any, null);
-    },
-    { instanceOf: TypeError },
   );
 });

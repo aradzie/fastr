@@ -2,7 +2,7 @@ import { getConstructor, reflectorOf } from "@fastr/lang";
 import { type Module } from "../types.js";
 import { kProvides } from "./constants.js";
 import { type ProviderMetadata, type ProvidesAnn } from "./types.js";
-import { getMethodParamsMetadata, typeToValueId } from "./util.js";
+import { getMethodParamsMetadata, toValueId } from "./util.js";
 
 export function* getProviders(module: Module): Iterable<ProviderMetadata> {
   const ref = reflectorOf(getConstructor(module));
@@ -21,7 +21,7 @@ export function* getProviders(module: Module): Iterable<ProviderMetadata> {
     const params = getMethodParamsMetadata(ref, method);
     yield {
       type,
-      id: providesAnn.id ?? typeToValueId(type),
+      id: providesAnn.id ?? toValueId(type),
       name: providesAnn.name ?? null,
       singleton: providesAnn.singleton ?? false,
       module,
