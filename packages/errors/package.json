@@ -1,6 +1,6 @@
 {
   "name": "@fastr/errors",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/status": "^0.0.18",
+    "@fastr/status": "^0.0.19",
     "tslib": "^2.6.2"
   },
   "engines": {
