@@ -2,13 +2,21 @@ import { isClientError, isServerError, statusMessage } from "@fastr/status";
 
 const cache = new Map<number, { new (): HttpError }>();
 
+export type HttpErrorOptions = ErrorOptions & {
+  readonly expose?: boolean | null;
+  readonly description?: string | null;
+};
+
 export class HttpError extends Error {
   declare readonly status: number;
   declare readonly expose: boolean;
+  declare readonly description: string | null;
 
-  constructor(status: number, message?: string, options?: ErrorOptions) {
+  constructor(status: number, message?: string, options?: HttpErrorOptions) {
     super(message ?? statusMessage(status), options);
     assertValidErrorStatusCode(status);
+    const expose = options?.expose ?? isClientError(status);
+    const description = options?.description ?? null;
     Object.defineProperty(this, "name", {
       value: `HttpError [${status}]`,
     });
@@ -16,7 +24,10 @@ export class HttpError extends Error {
       value: status,
     });
     Object.defineProperty(this, "expose", {
-      value: isClientError(status),
+      value: expose,
+    });
+    Object.defineProperty(this, "description", {
+      value: description,
     });
   }
 
@@ -30,13 +41,13 @@ export class HttpError extends Error {
  * @param status HTTP status code.
  */
 export function createError(status: number): {
-  new (message?: string, options?: ErrorOptions): HttpError;
+  new (message?: string, options?: HttpErrorOptions): HttpError;
 } {
   assertValidErrorStatusCode(status);
   let ctor = cache.get(status);
   if (ctor == null) {
     ctor = class extends HttpError {
-      constructor(message?: string, options?: ErrorOptions) {
+      constructor(message?: string, options?: HttpErrorOptions) {
         super(status, message, options);
       }
     };

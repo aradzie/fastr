@@ -30,14 +30,33 @@ test("create error uses cache", (t) => {
   t.true(new b() instanceof BadRequestError);
 });
 
+test("uses custom error message", (t) => {
+  t.is(new (createError(400))("OMG").message, "OMG");
+  t.is(new (createError(500))("OMG").message, "OMG");
+});
+
 test("exposes only client errors", (t) => {
   t.true(new (createError(400))().expose);
   t.false(new (createError(500))().expose);
 });
 
-test("uses custom error message", (t) => {
-  t.is(new (createError(400))("OMG").message, "OMG");
-  t.is(new (createError(500))("OMG").message, "OMG");
+test("respects error option `expose`", (t) => {
+  t.true(new (createError(400))("400", { expose: true }).expose);
+  t.false(new (createError(400))("400", { expose: false }).expose);
+  t.true(new (createError(500))("500", { expose: true }).expose);
+  t.false(new (createError(500))("500", { expose: false }).expose);
+});
+
+test("respects error options", (t) => {
+  const ctor = createError(400);
+  const inst = new ctor("OMG", {
+    description: "This is wrong",
+    cause: new TypeError("Cause"),
+  });
+  t.is(inst.status, 400);
+  t.is(inst.message, "OMG");
+  t.is(inst.description, "This is wrong");
+  t.is((inst.cause as Error).message, "Cause");
 });
 
 test("accepts only valid HTTP error status codes", (t) => {
