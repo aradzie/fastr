@@ -1,5 +1,4 @@
 import test from "ava";
-
 import { ValueBinding } from "./binding/value.js";
 import { Registry } from "./registry.js";
 

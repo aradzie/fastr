@@ -1,7 +1,7 @@
 import { Accepted, head, negotiateAll, type Weighted } from "./accepted.js";
 import {
-  getHeader,
   type GetHeader,
+  getHeader,
   type Header,
   parseOrThrow,
   tryGetHeader,

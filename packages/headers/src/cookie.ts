@@ -1,8 +1,8 @@
 import { CookieCodec } from "./cookie-codec.js";
 import { entriesOf, type NameValueEntries } from "./entries.js";
 import {
-  getHeader,
   type GetHeader,
+  getHeader,
   type Header,
   parseOrThrow,
   tryGetHeader,

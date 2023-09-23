@@ -1,6 +1,6 @@
 import {
-  getHeader,
   type GetHeader,
+  getHeader,
   type Header,
   parseOrThrow,
   tryGetHeader,

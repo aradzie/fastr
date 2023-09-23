@@ -1,7 +1,7 @@
 import { type ExtField, ExtFields } from "./extfields.js";
 import {
-  getHeader,
   type GetHeader,
+  getHeader,
   type Header,
   parseOrThrow,
   tryGetHeader,

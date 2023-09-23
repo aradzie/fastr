@@ -4,6 +4,7 @@ module.exports = {
     es2022: true,
     node: true,
   },
+  plugins: ["simple-import-sort"],
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -14,6 +15,11 @@ module.exports = {
     "eqeqeq": ["error", "always", { null: "never" }],
     "no-constant-condition": ["error", { checkLoops: false }],
     "prefer-const": "off",
+    "simple-import-sort/exports": ["error"],
+    "simple-import-sort/imports": [
+      "error",
+      { groups: [["^\\u0000", "^node:", "^@?\\w", "^", "^\\."]] },
+    ],
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/no-explicit-any": "off",

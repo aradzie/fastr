@@ -1,7 +1,6 @@
 import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
 import { Application } from "@fastr/core";
-
 import test from "ava";
 
 test("detect remote host and proto", async (t) => {
