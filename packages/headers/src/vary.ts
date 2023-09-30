@@ -54,7 +54,7 @@ export class Vary implements Header, Iterable<string> {
     }
   }
 
-  [Symbol.iterator](): Iterator<string> {
+  [Symbol.iterator](): IterableIterator<string> {
     return this.#map.values();
   }
 

@@ -7,7 +7,7 @@ export class Registry implements Iterable<[ValueId, Name | null, Binding]> {
   readonly #unnamed: BindingMap = new Map();
   readonly #named: Map<Name, BindingMap> = new Map();
 
-  *[Symbol.iterator](): Iterator<[ValueId, Name | null, Binding]> {
+  *[Symbol.iterator](): IterableIterator<[ValueId, Name | null, Binding]> {
     for (const [id, binding] of this.#unnamed) {
       yield [id, null, binding];
     }

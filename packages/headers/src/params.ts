@@ -18,7 +18,7 @@ export class Params implements Iterable<[string, string]> {
     }
   }
 
-  [Symbol.iterator](): Iterator<[string, string]> {
+  [Symbol.iterator](): IterableIterator<[string, string]> {
     return this.#map.entries();
   }
 

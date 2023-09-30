@@ -73,7 +73,7 @@ export class IfNoneMatch implements Header, Iterable<ETag> {
     }
   }
 
-  [Symbol.iterator](): Iterator<ETag> {
+  [Symbol.iterator](): IterableIterator<ETag> {
     return this.#etags[Symbol.iterator]();
   }
 

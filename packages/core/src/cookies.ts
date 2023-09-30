@@ -47,7 +47,7 @@ export class Cookies implements SetCookieInit {
     this.httpOnly = httpOnly;
   }
 
-  [Symbol.iterator](): Iterator<[string, string]> {
+  [Symbol.iterator](): IterableIterator<[string, string]> {
     return this.#cookie.entries();
   }
 

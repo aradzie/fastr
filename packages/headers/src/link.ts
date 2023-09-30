@@ -8,7 +8,10 @@ import { readUriReference } from "./syntax/uri-reference.js";
 export class LinkEntry {
   readonly params = new Params();
 
-  constructor(public uri: string, params: NameValueEntries | null = null) {
+  constructor(
+    public uri: string,
+    params: NameValueEntries | null = null,
+  ) {
     if (params != null) {
       for (const [name, value] of entriesOf(params)) {
         this.params.set(name, value);
@@ -81,7 +84,7 @@ export class Link implements Header, Iterable<LinkEntry> {
     }
   }
 
-  [Symbol.iterator](): Iterator<LinkEntry> {
+  [Symbol.iterator](): IterableIterator<LinkEntry> {
     return this.#list[Symbol.iterator]();
   }
 

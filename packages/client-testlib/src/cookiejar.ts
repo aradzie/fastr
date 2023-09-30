@@ -36,7 +36,7 @@ export class CookieJar implements Iterable<[string, string]> {
     }
   }
 
-  *[Symbol.iterator](): Iterator<[string, string]> {
+  *[Symbol.iterator](): IterableIterator<[string, string]> {
     for (const entry of this.#data.values()) {
       if (!entry.expired()) {
         yield [entry.name, entry.value];

@@ -26,7 +26,7 @@ export class HttpHeaders
     }
   }
 
-  *[Symbol.iterator](): Iterator<[string, string | string[]]> {
+  *[Symbol.iterator](): IterableIterator<[string, string | string[]]> {
     for (const { name, value } of this.#map.values()) {
       yield [name, value];
     }
@@ -195,7 +195,11 @@ class Entry {
    */
   value!: string | string[];
 
-  constructor(readonly name: string, readonly nameLc: string, value: string) {
+  constructor(
+    readonly name: string,
+    readonly nameLc: string,
+    value: string,
+  ) {
     this.set(value);
   }
 

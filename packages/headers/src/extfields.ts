@@ -13,7 +13,7 @@ export class ExtFields implements Iterable<ExtField> {
     }
   }
 
-  [Symbol.iterator](): Iterator<ExtField> {
+  [Symbol.iterator](): IterableIterator<ExtField> {
     return this.#map.entries();
   }
 
