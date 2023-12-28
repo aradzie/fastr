@@ -16,10 +16,10 @@
     "@fastr/core": "^0.0.19",
     "@fastr/middleware-websocket": "^0.0.19",
     "tslib": "^2.6.2",
-    "ws": "^8.14.2"
+    "ws": "^8.16.0"
   },
   "devDependencies": {
-    "@types/ws": "^8.5.5"
+    "@types/ws": "^8.5.10"
   },
   "engines": {
     "node": ">=18.12"

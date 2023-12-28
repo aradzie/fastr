@@ -18,9 +18,9 @@
     "@fastr/headers": "^0.0.19",
     "@fastr/json": "^0.0.19",
     "@fastr/mediatypes": "^0.0.19",
-    "@types/qs": "^6.9.8",
+    "@types/qs": "^6.9.11",
     "qs": "^6.11.2",
-    "reflect-metadata": "^0.1.13",
+    "reflect-metadata": "^0.2.1",
     "tslib": "^2.6.2"
   },
   "devDependencies": {

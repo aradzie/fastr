@@ -11,7 +11,7 @@
     "compile": "tsc"
   },
   "dependencies": {
-    "reflect-metadata": "^0.1.13",
+    "reflect-metadata": "^0.2.1",
     "tslib": "^2.6.2"
   },
   "engines": {

@@ -16,15 +16,15 @@
   "dependencies": {
     "@fastr/core": "^0.0.19",
     "@fastr/invert": "^0.0.19",
-    "bson": "^6.1.0",
+    "bson": "^6.2.0",
     "object-hash": "^3.0.0",
-    "reflect-metadata": "^0.1.13",
+    "reflect-metadata": "^0.2.1",
     "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@fastr/client": "^0.0.19",
     "@fastr/client-testlib": "^0.0.19",
-    "@types/object-hash": "^3.0.4"
+    "@types/object-hash": "^3.0.6"
   },
   "engines": {
     "node": ">=18.12"

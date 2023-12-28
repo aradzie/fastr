@@ -16,9 +16,9 @@
   "dependencies": {
     "@fastr/invert": "^0.0.19",
     "@fastr/middleware-session": "^0.0.19",
-    "bson": "^6.1.0",
-    "knex": "^2.5.1",
-    "reflect-metadata": "^0.1.13",
+    "bson": "^6.2.0",
+    "knex": "^3.1.0",
+    "reflect-metadata": "^0.2.1",
     "tslib": "^2.6.2"
   },
   "devDependencies": {
