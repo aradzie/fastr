@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 export * from "./annotations.js";
 export * from "./container.js";
 export * from "./errors.js";

@@ -22,7 +22,6 @@
     "@fastr/lang": "^0.0.19",
     "@fastr/middleware-body": "^0.0.19",
     "@fastr/middleware-router": "^0.0.19",
-    "reflect-metadata": "^0.2.1",
     "tslib": "^2.6.2",
     "zod": "^3.22.4"
   },

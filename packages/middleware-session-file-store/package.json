@@ -20,7 +20,6 @@
     "@sosimple/fsx-file": "^0.1.0",
     "@sosimple/fsx-lockfile": "^0.1.0",
     "@sosimple/retry": "^0.1.0",
-    "reflect-metadata": "^0.2.1",
     "tslib": "^2.6.2"
   },
   "engines": {

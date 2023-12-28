@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 export * from "./decorator/body.js";
 export * from "./decorator/controller.js";
 export * from "./decorator/handler.js";

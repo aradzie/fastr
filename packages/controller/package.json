@@ -21,7 +21,6 @@
     "@fastr/lang": "^0.0.19",
     "@fastr/middleware-router": "^0.0.19",
     "@fastr/middleware-session": "^0.0.19",
-    "reflect-metadata": "^0.2.1",
     "tslib": "^2.6.2"
   },
   "engines": {

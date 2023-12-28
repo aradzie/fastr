@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { type MetadataKey, type PropertyKey } from "./types.js";
 
 export const hasMetadata = (

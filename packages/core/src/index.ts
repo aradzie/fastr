@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 export * from "./application.js";
 export * from "./compose.js";
 export * from "./context.js";
