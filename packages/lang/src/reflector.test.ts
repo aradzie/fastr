@@ -70,7 +70,10 @@ class Demo extends Base {
   @propDec() prop1!: string;
   @propDec() prop2!: number;
 
-  constructor(@paramDec() readonly a: string, @paramDec() readonly b: number) {
+  constructor(
+    @paramDec() readonly a: string,
+    @paramDec() readonly b: number,
+  ) {
     super();
   }
 

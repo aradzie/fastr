@@ -66,7 +66,10 @@ export class Router {
 export class TestServer {
   readonly origin: string;
 
-  constructor(readonly server: net.Server, readonly router: Router) {
+  constructor(
+    readonly server: net.Server,
+    readonly router: Router,
+  ) {
     this.origin = origin(server);
   }
 

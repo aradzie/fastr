@@ -34,7 +34,10 @@ export abstract class Adapter<CookieData = unknown> {
    */
   #hash = "";
 
-  constructor(readonly cookies: Cookies, readonly options: ParsedOptions) {}
+  constructor(
+    readonly cookies: Cookies,
+    readonly options: ParsedOptions,
+  ) {}
 
   /**
    * Starts new session if not already started.

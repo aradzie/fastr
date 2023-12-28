@@ -118,7 +118,10 @@ export type Property = {
 class PropertyReflector implements Property {
   readonly type: unknown;
 
-  constructor(readonly prototype: object, readonly key: PropertyKey) {
+  constructor(
+    readonly prototype: object,
+    readonly key: PropertyKey,
+  ) {
     this.type = getOwnMetadata(kDesignType, prototype, key);
   }
 

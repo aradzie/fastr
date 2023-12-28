@@ -51,7 +51,10 @@ export class FileStreamable extends Streamable {
 
   readonly etag: string;
 
-  private constructor(readonly path: PathLike, readonly stats: Stats) {
+  private constructor(
+    readonly path: PathLike,
+    readonly stats: Stats,
+  ) {
     super();
     if (!stats.isFile()) {
       throw new TypeError(`Not a file: ${path}`);

@@ -28,7 +28,10 @@ export class Encoding {
     };
   }
 
-  constructor(readonly name: string, readonly ext: string) {}
+  constructor(
+    readonly name: string,
+    readonly ext: string,
+  ) {}
 
   isAccepted(request: Request): boolean {
     return request.acceptsEncoding(this.name);
