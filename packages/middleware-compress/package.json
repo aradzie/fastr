@@ -1,6 +1,6 @@
 {
   "name": "@fastr/middleware-compress",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,16 +14,16 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/body": "^0.0.19",
-    "@fastr/core": "^0.0.19",
-    "@fastr/headers": "^0.0.19",
-    "@fastr/invert": "^0.0.19",
-    "@fastr/mediatypes": "^0.0.19",
+    "@fastr/body": "^0.0.20",
+    "@fastr/core": "^0.0.20",
+    "@fastr/headers": "^0.0.20",
+    "@fastr/invert": "^0.0.20",
+    "@fastr/mediatypes": "^0.0.20",
     "tslib": "^2.6.2"
   },
   "devDependencies": {
-    "@fastr/client": "^0.0.19",
-    "@fastr/client-testlib": "^0.0.19"
+    "@fastr/client": "^0.0.20",
+    "@fastr/client-testlib": "^0.0.20"
   },
   "engines": {
     "node": ">=18.12"
