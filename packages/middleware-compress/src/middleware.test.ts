@@ -1,10 +1,10 @@
+import crypto from "node:crypto";
+import { Readable } from "node:stream";
 import { Streamable } from "@fastr/body";
 import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
 import { Application } from "@fastr/core";
 import test from "ava";
-import crypto from "crypto";
-import { Readable } from "stream";
 import { compress } from "./middleware.js";
 
 const content = crypto.randomBytes(1024).toString("hex");

@@ -1,8 +1,8 @@
+import { type IncomingHttpHeaders } from "node:http";
+import { type Readable } from "node:stream";
 import { BadRequestError } from "@fastr/errors";
 import { MediaType } from "@fastr/headers";
-import { type IncomingHttpHeaders } from "http";
 import { type IParseOptions, parse } from "qs";
-import { type Readable } from "stream";
 import { toBufferEncoding } from "./charset.js";
 import { type Encoding, getEncoding, readAll } from "./encoding.js";
 import { UTF8 } from "./payload.js";

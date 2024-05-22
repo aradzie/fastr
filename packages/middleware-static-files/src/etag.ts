@@ -1,7 +1,7 @@
+import { createHash } from "node:crypto";
+import { pipeline } from "node:stream";
+import { promisify } from "node:util";
 import { createReadStream, type Stats } from "@sosimple/fsx";
-import { createHash } from "crypto";
-import { pipeline } from "stream";
-import { promisify } from "util";
 
 export interface Tagger {
   (path: string, stats: Stats): Promise<string>;

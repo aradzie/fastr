@@ -1,5 +1,5 @@
+import { type IncomingMessage, type ServerResponse } from "node:http";
 import { Body } from "@fastr/body";
-import { type IncomingMessage, type ServerResponse } from "http";
 
 export function reflect(req: IncomingMessage, res: ServerResponse): void {
   const { url, method } = req;

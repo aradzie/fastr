@@ -1,13 +1,13 @@
+import http, { createServer, type RequestListener } from "node:http";
+import https from "node:https";
+import type net from "node:net";
+import { type AddressInfo } from "node:net";
 import {
   type Adapter,
   type HttpRequest,
   type HttpResponse,
   type Middleware,
 } from "@fastr/client";
-import http, { createServer, type RequestListener } from "http";
-import https from "https";
-import type net from "net";
-import { type AddressInfo } from "net";
 
 /**
  * Returns a new middleware which redirects all requests to the given server.

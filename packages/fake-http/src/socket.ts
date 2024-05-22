@@ -1,4 +1,4 @@
-import { EventEmitter } from "events";
+import { EventEmitter } from "events"; // eslint-disable-line n/prefer-node-protocol
 
 export class FakeSocket extends EventEmitter {
   declare encrypted: boolean;

@@ -1,6 +1,6 @@
+import { createServer } from "node:http";
 import { Application } from "@fastr/core";
 import { websocket } from "@fastr/middleware-websocket";
-import { createServer } from "http";
 import { WebSocketServer } from "ws";
 
 const server = new WebSocketServer({ noServer: true });

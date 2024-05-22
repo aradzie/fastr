@@ -1,5 +1,5 @@
+import { Readable } from "node:stream";
 import { Payload } from "@fastr/body";
-import { Readable } from "stream";
 import { RequestError } from "../errors.js";
 import { HttpHeaders } from "../headers.js";
 import {

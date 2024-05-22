@@ -1,5 +1,5 @@
+import { type IncomingMessage } from "node:http";
 import { BadRequestError } from "@fastr/errors";
-import { type IncomingMessage } from "http";
 
 export function getOrigin(
   message: IncomingMessage,

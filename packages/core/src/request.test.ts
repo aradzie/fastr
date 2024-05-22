@@ -1,5 +1,5 @@
+import { type IncomingHttpHeaders, type IncomingMessage } from "node:http";
 import test from "ava";
-import { type IncomingHttpHeaders, type IncomingMessage } from "http";
 import { Request } from "./request.js";
 
 test("request url", (t) => {

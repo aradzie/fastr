@@ -1,7 +1,7 @@
-import http, { type IncomingMessage, type ServerResponse } from "http";
-import https from "https";
-import type net from "net";
-import { type AddressInfo } from "net";
+import http, { type IncomingMessage, type ServerResponse } from "node:http";
+import https from "node:https";
+import type net from "node:net";
+import { type AddressInfo } from "node:net";
 
 export type AsyncRequestListener = (
   req: IncomingMessage,

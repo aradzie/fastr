@@ -1,7 +1,7 @@
+import { join, normalize, resolve } from "node:path";
 import { type Context, type Middleware, type Next } from "@fastr/core";
 import { type CacheControl } from "@fastr/headers";
 import { createReadStream } from "@sosimple/fsx";
-import { join, normalize, resolve } from "path";
 import { Encoding } from "./encoding.js";
 import { fastTagger, type Tagger } from "./etag.js";
 import { normalizeUriPath } from "./path.js";

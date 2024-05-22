@@ -1,5 +1,4 @@
-import { BadRequestError, PayloadTooLargeError } from "@fastr/errors";
-import { type Readable, type Transform } from "stream";
+import { type Readable, type Transform } from "node:stream";
 import {
   type BrotliOptions,
   createBrotliCompress,
@@ -7,7 +6,8 @@ import {
   createGunzip,
   createGzip,
   type ZlibOptions,
-} from "zlib";
+} from "node:zlib";
+import { BadRequestError, PayloadTooLargeError } from "@fastr/errors";
 
 export interface Encoding {
   get id(): string;

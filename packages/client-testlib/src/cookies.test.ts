@@ -1,7 +1,7 @@
+import { type IncomingMessage, type ServerResponse } from "node:http";
 import { HttpHeaders, request } from "@fastr/client";
 import { Cookie, SetCookie } from "@fastr/headers";
 import test from "ava";
-import { type IncomingMessage, type ServerResponse } from "http";
 import { CookieJar } from "./cookiejar.js";
 import { cookies } from "./cookies.js";
 import { start } from "./start.js";

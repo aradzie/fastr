@@ -1,11 +1,11 @@
+import { join } from "node:path";
+import { brotliCompressSync, gzipSync } from "node:zlib";
 import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
 import { Application } from "@fastr/core";
 import { CacheControl } from "@fastr/headers";
 import { mkdir, removeDir, writeFile } from "@sosimple/fsx";
 import test from "ava";
-import { join } from "path";
-import { brotliCompressSync, gzipSync } from "zlib";
 import { preciseTagger } from "./etag.js";
 import { staticFiles } from "./middleware.js";
 

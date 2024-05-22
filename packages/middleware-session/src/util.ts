@@ -1,5 +1,5 @@
+import { randomBytes } from "node:crypto";
 import { deserialize, serialize } from "bson";
-import { randomBytes } from "crypto";
 
 export function randomString(
   length: number,

@@ -1,8 +1,8 @@
+import { type ServerResponse } from "node:http";
 import { type BodyDataType } from "@fastr/body";
 import { ETag, type MediaType, type OutgoingHeaders } from "@fastr/headers";
 import { MediaTypes } from "@fastr/mediatypes";
 import { isRedirect, statusMessage } from "@fastr/status";
-import { type ServerResponse } from "http";
 import { OutgoingMessageHeaders } from "./headers.js";
 
 export class Response {

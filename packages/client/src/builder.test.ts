@@ -1,5 +1,5 @@
+import { Readable } from "node:stream";
 import test from "ava";
-import { Readable } from "stream";
 import { RequestBuilder } from "./builder.js";
 import { HttpHeaders } from "./headers.js";
 import { type Adapter, type HttpRequest, type HttpResponse } from "./types.js";

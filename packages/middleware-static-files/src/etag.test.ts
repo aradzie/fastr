@@ -1,6 +1,6 @@
+import { join } from "node:path";
 import { mkdir, removeDir, stat, type Stats, writeFile } from "@sosimple/fsx";
 import test from "ava";
-import { join } from "path";
 import { fastTagger, preciseTagger } from "./etag.js";
 
 const dir = "/tmp/static-files-etag/";

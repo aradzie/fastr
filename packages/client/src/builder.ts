@@ -1,3 +1,4 @@
+import { type Readable } from "node:stream";
 import { type BodyDataType, Payload, type Streamable } from "@fastr/body";
 import {
   Accept,
@@ -6,8 +7,7 @@ import {
   type NameValueEntries,
 } from "@fastr/headers";
 import { mergeSearchParams } from "@fastr/url";
-import { EventEmitter } from "events";
-import { type Readable } from "stream";
+import { EventEmitter } from "events"; // eslint-disable-line n/prefer-node-protocol
 import {
   type EV_DOWNLOAD_PROGRESS,
   type EV_UPLOAD_PROGRESS,

@@ -1,3 +1,4 @@
+import { Readable } from "node:stream";
 import {
   type BodyInit,
   type Encoding,
@@ -9,7 +10,6 @@ import {
 import { type Context, type Middleware, type Next } from "@fastr/core";
 import { ETag } from "@fastr/headers";
 import { MediaTypes } from "@fastr/mediatypes";
-import { Readable } from "stream";
 
 export interface CompressOptions {
   readonly threshold?: number;

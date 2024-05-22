@@ -1,6 +1,6 @@
+import { Readable } from "node:stream";
 import { type GetHeader } from "@fastr/headers";
 import test from "ava";
-import { Readable } from "stream";
 import { Payload } from "./payload.js";
 import { Streamable } from "./streamable.js";
 

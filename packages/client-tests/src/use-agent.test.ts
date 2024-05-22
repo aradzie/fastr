@@ -1,7 +1,7 @@
+import { Agent } from "node:http";
 import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
 import test from "ava";
-import { Agent } from "http";
 
 test("get text", async (t) => {
   // Arrange.

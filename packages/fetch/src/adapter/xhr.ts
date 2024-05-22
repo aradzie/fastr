@@ -1,6 +1,6 @@
 import { ContentType, type MediaType } from "@fastr/headers";
 import { isSuccess } from "@fastr/status";
-import { type EventEmitter } from "events";
+import { type EventEmitter } from "events"; // eslint-disable-line n/prefer-node-protocol
 import { EV_DOWNLOAD_PROGRESS, EV_UPLOAD_PROGRESS } from "../events.js";
 import {
   type DownloadProgressEvent,

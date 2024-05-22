@@ -1,7 +1,7 @@
+import http, { type ClientRequest, type IncomingMessage } from "node:http";
+import https from "node:https";
 import { Body, Payload } from "@fastr/body";
 import { isSuccess } from "@fastr/status";
-import http, { type ClientRequest, type IncomingMessage } from "http";
-import https from "https";
 import { HttpHeaders } from "./headers.js";
 import { type HttpRequest, type HttpResponse } from "./types.js";
 

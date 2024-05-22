@@ -1,5 +1,5 @@
+import { createServer } from "node:http";
 import { Application } from "@fastr/core";
-import { createServer } from "http";
 
 const app = new Application();
 

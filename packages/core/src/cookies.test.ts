@@ -1,6 +1,6 @@
+import { IncomingMessage, OutgoingMessage } from "node:http";
+import { type Socket } from "node:net";
 import test from "ava";
-import { IncomingMessage, OutgoingMessage } from "http";
-import { type Socket } from "net";
 import { Cookies } from "./cookies.js";
 import { IncomingMessageHeaders, OutgoingMessageHeaders } from "./headers.js";
 

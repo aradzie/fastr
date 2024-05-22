@@ -1,6 +1,6 @@
+import { createServer } from "node:http";
 import { Application } from "@fastr/core";
 import { session } from "@fastr/middleware-session";
-import { createServer } from "http";
 
 const app = new Application();
 

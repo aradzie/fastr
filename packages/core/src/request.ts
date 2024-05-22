@@ -1,3 +1,4 @@
+import { type IncomingMessage } from "node:http";
 import {
   Accept,
   AcceptEncoding,
@@ -5,7 +6,6 @@ import {
   ContentType,
   type IncomingHeaders,
 } from "@fastr/headers";
-import { type IncomingMessage } from "http";
 import { IncomingMessageHeaders } from "./headers.js";
 import { getOrigin } from "./util/origin.js";
 import { parseRequestURL } from "./util/url.js";

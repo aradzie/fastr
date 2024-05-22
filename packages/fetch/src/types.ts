@@ -1,4 +1,4 @@
-import { type EventEmitter } from "events";
+import { type EventEmitter } from "events"; // eslint-disable-line n/prefer-node-protocol
 import { type RequestBuilder } from "./builder.js";
 
 /**

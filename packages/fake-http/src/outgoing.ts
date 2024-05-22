@@ -1,5 +1,5 @@
-import { type OutgoingHttpHeader, type OutgoingHttpHeaders } from "http";
-import { Writable } from "stream";
+import { type OutgoingHttpHeader, type OutgoingHttpHeaders } from "node:http";
+import { Writable } from "node:stream";
 import { FakeSocket } from "./socket.js";
 
 export class FakeOutgoingMessage extends Writable {

@@ -1,11 +1,11 @@
+import { IncomingMessage, OutgoingMessage } from "node:http";
+import { type Socket } from "node:net";
 import {
   Cookies,
   IncomingMessageHeaders,
   OutgoingMessageHeaders,
 } from "@fastr/core";
 import test from "ava";
-import { IncomingMessage, OutgoingMessage } from "http";
-import { type Socket } from "net";
 import { Adapter } from "./adapter.js";
 import { type ParsedOptions, parseOptions } from "./options.js";
 import { Session } from "./session.js";

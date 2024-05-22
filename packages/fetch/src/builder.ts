@@ -5,7 +5,7 @@ import {
   type NameValueEntries,
 } from "@fastr/headers";
 import { mergeSearchParams } from "@fastr/url";
-import { EventEmitter } from "events";
+import { EventEmitter } from "events"; // eslint-disable-line n/prefer-node-protocol
 import { guessContentType, toFormData } from "./body/type.js";
 import {
   type EV_DOWNLOAD_PROGRESS,

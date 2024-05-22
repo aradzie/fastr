@@ -1,9 +1,9 @@
+import { type IncomingMessage, type ServerResponse } from "node:http";
+import { type Http2ServerRequest, type Http2ServerResponse } from "node:http2";
 import { discardBody, Payload, TEXT_TYPE } from "@fastr/body";
 import { Container } from "@fastr/invert";
 import { statusMessage } from "@fastr/status";
-import { EventEmitter } from "events";
-import { type IncomingMessage, type ServerResponse } from "http";
-import { type Http2ServerRequest, type Http2ServerResponse } from "http2";
+import { EventEmitter } from "events"; // eslint-disable-line n/prefer-node-protocol
 import { compose } from "./compose.js";
 import { Context } from "./context.js";
 import { inspectError } from "./errors.js";

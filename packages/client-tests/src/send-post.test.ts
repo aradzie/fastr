@@ -1,8 +1,8 @@
+import { Readable } from "node:stream";
 import { Streamable } from "@fastr/body";
 import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
 import test from "ava";
-import { Readable } from "stream";
 import { reflect } from "./util.js";
 
 test("post text", async (t) => {

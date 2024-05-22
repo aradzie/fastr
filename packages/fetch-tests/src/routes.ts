@@ -1,7 +1,7 @@
+import fs from "node:fs";
+import { Readable } from "node:stream";
+import util from "node:util";
 import { Body } from "@fastr/body";
-import fs from "fs";
-import { Readable } from "stream";
-import util from "util";
 import { index } from "./mainpage.ts";
 import { startServer } from "./server.ts";
 

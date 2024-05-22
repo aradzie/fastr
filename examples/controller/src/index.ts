@@ -1,10 +1,10 @@
+import { createServer } from "node:http";
 import { body, controller, http, type Pipe, toRoutes } from "@fastr/controller";
 import { Application, Context } from "@fastr/core";
 import { injectable } from "@fastr/invert";
 import { compress } from "@fastr/middleware-compress";
 import { conditional } from "@fastr/middleware-conditional";
 import { Router } from "@fastr/middleware-router";
-import { createServer } from "http";
 import { z, type ZodSchema } from "zod";
 
 const check = (schema: ZodSchema): Pipe => {

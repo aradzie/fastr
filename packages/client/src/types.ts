@@ -1,8 +1,8 @@
+import { type Agent as HttpAgent } from "node:http";
+import { type Agent as HttpsAgent } from "node:https";
+import { type SecureContextOptions } from "node:tls";
 import { type Body, type BodyInit } from "@fastr/body";
-import { type EventEmitter } from "events";
-import { type Agent as HttpAgent } from "http";
-import { type Agent as HttpsAgent } from "https";
-import { type SecureContextOptions } from "tls";
+import { type EventEmitter } from "events"; // eslint-disable-line n/prefer-node-protocol
 import { type RequestBuilder } from "./builder.js";
 import { type HttpHeaders } from "./headers.js";
 

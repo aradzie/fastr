@@ -1,5 +1,5 @@
+import { type IncomingMessage, type OutgoingMessage } from "node:http";
 import { type IncomingHeaders, type OutgoingHeaders } from "@fastr/headers";
-import { type IncomingMessage, type OutgoingMessage } from "http";
 
 export class IncomingMessageHeaders implements IncomingHeaders {
   readonly #message: IncomingMessage;

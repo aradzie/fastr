@@ -1,5 +1,5 @@
-import { type IncomingHttpHeaders } from "http";
-import { Readable } from "stream";
+import { type IncomingHttpHeaders } from "node:http";
+import { Readable } from "node:stream";
 import { FakeSocket } from "./socket.js";
 
 export class FakeIncomingMessage extends Readable {

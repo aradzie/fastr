@@ -1,7 +1,7 @@
-import crypto from "crypto";
-import { createReadStream, type PathLike, stat, type Stats } from "fs";
-import { type Readable } from "stream";
-import { promisify } from "util";
+import crypto from "node:crypto";
+import { createReadStream, type PathLike, stat, type Stats } from "node:fs";
+import { type Readable } from "node:stream";
+import { promisify } from "node:util";
 
 const statAsync = promisify(stat);
 

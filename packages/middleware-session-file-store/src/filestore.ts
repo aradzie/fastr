@@ -1,8 +1,8 @@
+import { join } from "node:path";
 import { inject, injectable } from "@fastr/invert";
 import { type Store, type StoredSession } from "@fastr/middleware-session";
 import { scanDir, type Stats } from "@sosimple/fsx";
 import { File } from "@sosimple/fsx-file";
-import { join } from "path";
 import { loadSession, storeSession } from "./io.js";
 
 export const kFileStoreOptions = Symbol("kFileStoreOptions");

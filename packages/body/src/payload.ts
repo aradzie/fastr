@@ -1,7 +1,7 @@
+import { type OutgoingMessage } from "node:http";
+import { Readable, type Writable } from "node:stream";
 import { type GetHeader } from "@fastr/headers";
 import { isJSON } from "@fastr/json";
-import { type OutgoingMessage } from "http";
-import { Readable, type Writable } from "stream";
 import { useCharset, useCharsetIfText } from "./charset.js";
 import { Streamable } from "./streamable.js";
 

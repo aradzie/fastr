@@ -1,6 +1,6 @@
+import { Readable } from "node:stream";
 import { Payload } from "@fastr/body";
 import { isServerError } from "@fastr/status";
-import { Readable } from "stream";
 import { HttpHeaders } from "../headers.js";
 import {
   type Adapter,

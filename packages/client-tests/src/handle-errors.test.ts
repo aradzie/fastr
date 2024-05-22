@@ -1,7 +1,7 @@
+import { Readable } from "node:stream";
 import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
 import test from "ava";
-import { Readable } from "stream";
 
 test("handle connection refused", async (t) => {
   await t.throwsAsync(

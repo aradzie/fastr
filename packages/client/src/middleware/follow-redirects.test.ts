@@ -1,5 +1,5 @@
+import { Readable } from "node:stream";
 import test from "ava";
-import { Readable } from "stream";
 import { RequestError } from "../errors.js";
 import { FakeResponse, reflect } from "../fakes/index.js";
 import { HttpHeaders } from "../headers.js";

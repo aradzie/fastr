@@ -1,8 +1,8 @@
+import { brotliCompressSync, gzipSync } from "node:zlib";
 import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
 import { Application } from "@fastr/core";
 import test from "ava";
-import { brotliCompressSync, gzipSync } from "zlib";
 import { expectBinary, expectForm, expectJson, expectText } from "./index.js";
 
 test("expect binary", async (t) => {

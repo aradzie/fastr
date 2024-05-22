@@ -1,6 +1,6 @@
+import { type IncomingHttpHeaders, type IncomingMessage } from "node:http";
 import { BadRequestError } from "@fastr/errors";
 import test from "ava";
-import { type IncomingHttpHeaders, type IncomingMessage } from "http";
 import { getOrigin } from "./origin.js";
 
 test("no proxy headers, http", (t) => {

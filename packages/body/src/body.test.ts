@@ -1,7 +1,7 @@
+import { brotliCompressSync, gzipSync } from "node:zlib";
 import { BadRequestError, PayloadTooLargeError } from "@fastr/errors";
 import { FakeIncomingMessage } from "@fastr/fake-http";
 import test from "ava";
-import { brotliCompressSync, gzipSync } from "zlib";
 import { Body } from "./body.js";
 
 test("parse buffer body", async (t) => {

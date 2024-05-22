@@ -1,3 +1,4 @@
+import { Readable } from "node:stream";
 import {
   Body,
   type BodyDataType,
@@ -8,7 +9,6 @@ import {
 import { FakeIncomingMessage } from "@fastr/fake-http";
 import { type NameValueEntries } from "@fastr/headers";
 import { isSuccess, statusMessage } from "@fastr/status";
-import { Readable } from "stream";
 import { HttpHeaders } from "../headers.js";
 import { type Adapter, type HttpRequest, type HttpResponse } from "../types.js";
 
