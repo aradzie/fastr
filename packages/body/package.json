@@ -18,8 +18,8 @@
     "@fastr/headers": "^0.0.20",
     "@fastr/json": "^0.0.20",
     "@fastr/mediatypes": "^0.0.20",
-    "@types/qs": "^6.9.11",
-    "qs": "^6.11.2",
+    "@types/qs": "^6.9.15",
+    "qs": "^6.12.1",
     "tslib": "^2.6.2"
   },
   "devDependencies": {

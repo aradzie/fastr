@@ -32,6 +32,8 @@ module.exports = {
     ],
     "n/file-extension-in-import": ["error", "always"],
     "n/no-extraneous-import": ["error", { allowModules: ["ava", "mockdate"] }],
+    "n/no-unsupported-features/es-builtins": "off",
+    "n/no-unsupported-features/node-builtins": "off",
     "n/prefer-promises/dns": "error",
     "n/prefer-promises/fs": "error",
     "n/prefer-global/buffer": ["error", "always"],
@@ -42,5 +44,6 @@ module.exports = {
   },
   parserOptions: {
     emitDecoratorMetadata: true,
+    experimentalDecorators: true,
   },
 };

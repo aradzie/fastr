@@ -16,7 +16,7 @@
   "dependencies": {
     "@fastr/core": "^0.0.20",
     "@fastr/invert": "^0.0.20",
-    "bson": "^6.2.0",
+    "bson": "^6.7.0",
     "object-hash": "^3.0.0",
     "tslib": "^2.6.2"
   },

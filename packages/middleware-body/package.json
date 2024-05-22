@@ -19,13 +19,13 @@
     "@fastr/errors": "^0.0.20",
     "@fastr/headers": "^0.0.20",
     "@fastr/mediatypes": "^0.0.20",
-    "qs": "^6.11.2",
+    "qs": "^6.12.1",
     "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@fastr/client": "^0.0.20",
     "@fastr/client-testlib": "^0.0.20",
-    "@types/qs": "^6.9.11"
+    "@types/qs": "^6.9.15"
   },
   "engines": {
     "node": ">=18.12"
