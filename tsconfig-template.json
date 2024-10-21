@@ -18,7 +18,6 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,
-    "target": "es2022",
-    "verbatimModuleSyntax": true
+    "target": "es2022"
   }
 }

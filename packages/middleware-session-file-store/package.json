@@ -16,10 +16,10 @@
   "dependencies": {
     "@fastr/invert": "^0.1.0",
     "@fastr/middleware-session": "^0.1.0",
-    "@sosimple/fsx": "^0.2.0",
-    "@sosimple/fsx-file": "^0.2.0",
-    "@sosimple/fsx-lockfile": "^0.2.0",
-    "@sosimple/retry": "^0.2.0",
+    "@sosimple/fsx": "^0.2.1",
+    "@sosimple/fsx-file": "^0.2.1",
+    "@sosimple/fsx-lockfile": "^0.2.1",
+    "@sosimple/retry": "^0.2.1",
     "tslib": "^2.8.0"
   },
   "engines": {
