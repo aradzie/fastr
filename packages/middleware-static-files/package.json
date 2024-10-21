@@ -18,8 +18,8 @@
     "@fastr/errors": "^0.0.20",
     "@fastr/headers": "^0.0.20",
     "@fastr/mediatypes": "^0.0.20",
-    "@sosimple/fsx": "^0.1.0",
-    "tslib": "^2.6.2"
+    "@sosimple/fsx": "^0.2.0",
+    "tslib": "^2.8.0"
   },
   "devDependencies": {
     "@fastr/client": "^0.0.20",

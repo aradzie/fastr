@@ -16,9 +16,9 @@
   "dependencies": {
     "@fastr/invert": "^0.0.20",
     "@fastr/middleware-session": "^0.0.20",
-    "bson": "^6.7.0",
+    "bson": "^6.8.0",
     "knex": "^3.1.0",
-    "tslib": "^2.6.2"
+    "tslib": "^2.8.0"
   },
   "devDependencies": {
     "sqlite3": "^5.1.7"
