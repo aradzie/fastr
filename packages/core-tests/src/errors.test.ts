@@ -2,7 +2,11 @@ import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
 import { Application } from "@fastr/core";
 import { BadRequestError } from "@fastr/errors";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 test("handle client errors", async (t) => {
   // Arrange.

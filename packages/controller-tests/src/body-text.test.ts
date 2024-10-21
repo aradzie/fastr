@@ -1,9 +1,13 @@
 import { body, controller, http, type Pipe } from "@fastr/controller";
 import { BadRequestError } from "@fastr/errors";
 import { injectable } from "@fastr/invert";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import { z, type ZodSchema } from "zod";
 import { helper } from "./helper.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 const check = (schema: ZodSchema): Pipe => {
   return (ctx, value) => {

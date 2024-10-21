@@ -1,10 +1,14 @@
 import { type IncomingMessage, type ServerResponse } from "node:http";
 import { HttpHeaders, request } from "@fastr/client";
 import { Cookie, SetCookie } from "@fastr/headers";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import { CookieJar } from "./cookiejar.js";
 import { cookies } from "./cookies.js";
 import { start } from "./start.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 test("update cookie", async (t) => {
   const jar = new CookieJar();

@@ -6,8 +6,12 @@ import {
 } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
 import { ContentType } from "@fastr/headers";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import { reflect } from "./util.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 const payload = "server response\n".repeat(1000);
 

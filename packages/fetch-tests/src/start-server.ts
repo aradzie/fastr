@@ -1,4 +1,4 @@
-import { launch } from "./routes.ts";
+import { launch } from "./routes.js";
 
 launch().catch((err) => {
   console.error(err);

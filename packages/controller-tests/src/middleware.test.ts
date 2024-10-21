@@ -1,8 +1,12 @@
 import { controller, http, use } from "@fastr/controller";
 import { type Context, type HandlerObject, type Next } from "@fastr/core";
 import { injectable } from "@fastr/invert";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import { helper } from "./helper.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 test("use injectable middleware", async (t) => {
   // Arrange.

@@ -2,8 +2,12 @@ import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
 import { Application, compose, Context, Request, Response } from "@fastr/core";
 import { FakeIncomingMessage, FakeOutgoingMessage } from "@fastr/fake-http";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import { canonical } from "./index.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 test("redirect to canonical url", async (t) => {
   const app = new Application(null, { behindProxy: true })

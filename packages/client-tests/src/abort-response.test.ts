@@ -1,7 +1,11 @@
 import { Readable } from "node:stream";
 import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 test("abort response", async (t) => {
   // Arrange.

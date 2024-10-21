@@ -2,8 +2,12 @@ import { Readable } from "node:stream";
 import { Streamable } from "@fastr/body";
 import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import { reflect } from "./util.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 test("post text", async (t) => {
   // Arrange.

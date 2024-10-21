@@ -1,6 +1,10 @@
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import Knex from "knex";
 import { SqlStore } from "./sqlstore.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 const knex = Knex({
   client: "sqlite3",

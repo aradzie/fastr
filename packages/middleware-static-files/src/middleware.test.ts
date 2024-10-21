@@ -5,9 +5,13 @@ import { start } from "@fastr/client-testlib";
 import { Application } from "@fastr/core";
 import { CacheControl } from "@fastr/headers";
 import { mkdir, removeDir, writeFile } from "@sosimple/fsx";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import { preciseTagger } from "./etag.js";
 import { staticFiles } from "./middleware.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 const dir = "/tmp/static-files-middleware/";
 

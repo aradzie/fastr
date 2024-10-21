@@ -10,8 +10,12 @@ import {
 } from "@fastr/controller";
 import { Context, Request, Response } from "@fastr/core";
 import { injectable } from "@fastr/invert";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import { helper } from "./helper.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 test("provide standard objects", async (t) => {
   // Arrange.

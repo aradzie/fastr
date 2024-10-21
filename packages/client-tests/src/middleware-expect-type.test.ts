@@ -1,6 +1,10 @@
 import { expectType, request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 test("return response if content type matches", async (t) => {
   // Arrange.

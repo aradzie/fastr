@@ -1,9 +1,13 @@
 import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
 import { Application } from "@fastr/core";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import { WebSocket, WebSocketServer } from "ws";
 import { websocket } from "./index.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 test("require upgrade", async (t) => {
   // Arrange.

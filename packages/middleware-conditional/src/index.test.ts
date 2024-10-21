@@ -1,8 +1,12 @@
 import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
 import { Application } from "@fastr/core";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import { conditional } from "./index.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 test("cache if etags strongly match", async (t) => {
   // Arrange.

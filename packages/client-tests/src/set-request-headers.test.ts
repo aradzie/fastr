@@ -1,6 +1,10 @@
 import { HttpHeaders, request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 test("set headers to default values", async (t) => {
   // Arrange.

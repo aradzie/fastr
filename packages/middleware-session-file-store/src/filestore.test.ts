@@ -1,6 +1,10 @@
 import { mkdir, removeDir } from "@sosimple/fsx";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import { FileStore } from "./filestore.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 const directory = "/tmp/wfx-session-test";
 

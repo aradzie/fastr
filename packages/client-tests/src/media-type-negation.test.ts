@@ -1,7 +1,11 @@
 import { HttpHeaders, request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
 import { Accept, ContentType } from "@fastr/headers";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 test("negotiate media type", async (t) => {
   // Arrange.

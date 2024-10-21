@@ -8,9 +8,7 @@ import { toRoutes } from "./route.js";
 test("not a controller", (t) => {
   class Controller {}
 
-  t.throws(() => {
-    [...toRoutes(Controller)];
-  });
+  t.throws(() => [...toRoutes(Controller)]);
 });
 
 test("empty controller", (t) => {

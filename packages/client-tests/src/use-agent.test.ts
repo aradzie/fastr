@@ -1,7 +1,11 @@
 import { Agent } from "node:http";
 import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 test("get text", async (t) => {
   // Arrange.

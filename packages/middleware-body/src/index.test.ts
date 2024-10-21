@@ -2,8 +2,12 @@ import { brotliCompressSync, gzipSync } from "node:zlib";
 import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
 import { Application } from "@fastr/core";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import { expectBinary, expectForm, expectJson, expectText } from "./index.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 test("expect binary", async (t) => {
   const app = new Application() //

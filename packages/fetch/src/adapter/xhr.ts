@@ -95,9 +95,7 @@ export async function xhrAdapter(request: HttpRequest): Promise<HttpResponse> {
 }
 
 xhrAdapter.parseMultipartFormData = (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   contentType: MediaType,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   blob: Blob,
 ): Promise<FormData> => {
   throw new Error(

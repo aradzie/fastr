@@ -4,8 +4,12 @@ import { Streamable } from "@fastr/body";
 import { request } from "@fastr/client";
 import { start } from "@fastr/client-testlib";
 import { Application } from "@fastr/core";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import { compress } from "./middleware.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 const content = crypto.randomBytes(1024).toString("hex");
 

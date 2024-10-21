@@ -1,9 +1,13 @@
 import http, { type IncomingMessage, type ServerResponse } from "node:http";
 import https from "node:https";
 import { request } from "@fastr/client";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import { start } from "./start.js";
 import { cert, key } from "./test/cert.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 test("start with a listener function", async (t) => {
   const response = await request //

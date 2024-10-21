@@ -8,8 +8,12 @@ import {
 } from "@fastr/core";
 import { injectable } from "@fastr/invert";
 import { Router } from "@fastr/middleware-router";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import { helper } from "./helper.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 test("inject arbitrary dependencies", async (t) => {
   // Arrange.

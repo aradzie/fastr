@@ -11,7 +11,7 @@ const rule_ts = () => ({
         compilerOptions: {
           target: "es2022",
           module: "es2022",
-          moduleResolution: "bundler"
+          moduleResolution: "bundler",
         },
       },
     },
@@ -33,6 +33,12 @@ export default [
     module: {
       rules: [rule_ts()],
     },
+    resolve: {
+      extensions: [".ts", ".js"],
+      extensionAlias: {
+        ".js": [".ts", ".js"],
+      },
+    },
     optimization: { concatenateModules: true },
     devtool: "source-map",
   },
@@ -49,6 +55,12 @@ export default [
     },
     module: {
       rules: [rule_ts()],
+    },
+    resolve: {
+      extensions: [".ts", ".js"],
+      extensionAlias: {
+        ".js": [".ts", ".js"],
+      },
     },
     optimization: { concatenateModules: true },
     devtool: "source-map",
@@ -67,6 +79,12 @@ export default [
     module: {
       rules: [rule_ts()],
     },
+    resolve: {
+      extensions: [".ts", ".js"],
+      extensionAlias: {
+        ".js": [".ts", ".js"],
+      },
+    },
     optimization: { concatenateModules: true },
     devtool: "source-map",
   },
@@ -83,6 +101,12 @@ export default [
     },
     module: {
       rules: [rule_ts()],
+    },
+    resolve: {
+      extensions: [".ts", ".js"],
+      extensionAlias: {
+        ".js": [".ts", ".js"],
+      },
     },
     optimization: { concatenateModules: true },
     devtool: "source-map",
@@ -101,6 +125,12 @@ export default [
     module: {
       rules: [rule_ts()],
     },
+    resolve: {
+      extensions: [".ts", ".js"],
+      extensionAlias: {
+        ".js": [".ts", ".js"],
+      },
+    },
     optimization: { concatenateModules: true },
     devtool: "source-map",
   },
@@ -117,6 +147,12 @@ export default [
     },
     module: {
       rules: [rule_ts()],
+    },
+    resolve: {
+      extensions: [".ts", ".js"],
+      extensionAlias: {
+        ".js": [".ts", ".js"],
+      },
     },
     optimization: { concatenateModules: true },
     devtool: "source-map",

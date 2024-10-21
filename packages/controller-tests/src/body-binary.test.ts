@@ -1,8 +1,12 @@
 import { body, controller, http, type Pipe } from "@fastr/controller";
 import { BadRequestError } from "@fastr/errors";
 import { injectable } from "@fastr/invert";
-import test from "ava";
+import test, { registerCompletionHandler } from "ava";
 import { helper } from "./helper.js";
+
+registerCompletionHandler(() => {
+  process.exit();
+});
 
 const expect = (body: string): Pipe => {
   return (ctx, value) => {

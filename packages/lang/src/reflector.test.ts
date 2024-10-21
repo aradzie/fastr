@@ -34,7 +34,7 @@ class Base {
 
   static staticMethod1() {}
 
-  static {}
+  static {} // eslint-disable-line no-empty-static-block
 
   #privateProp1 = "x";
   #privateProp2 = "y";
@@ -62,7 +62,7 @@ class Demo extends Base {
 
   static staticMethod2() {}
 
-  static {}
+  static {} // eslint-disable-line no-empty-static-block
 
   #privateProp1 = "x";
   #privateProp2 = "y";
