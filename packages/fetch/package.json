@@ -1,6 +1,6 @@
 {
   "name": "@fastr/fetch",
-  "version": "0.0.20",
+  "version": "0.1.0",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,11 +14,11 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/errors": "^0.0.20",
-    "@fastr/headers": "^0.0.20",
-    "@fastr/json": "^0.0.20",
-    "@fastr/status": "^0.0.20",
-    "@fastr/url": "^0.0.20",
+    "@fastr/errors": "^0.1.0",
+    "@fastr/headers": "^0.1.0",
+    "@fastr/json": "^0.1.0",
+    "@fastr/status": "^0.1.0",
+    "@fastr/url": "^0.1.0",
     "events": "^3.3.0",
     "tslib": "^2.8.0"
   },
