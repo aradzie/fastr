@@ -5,7 +5,7 @@ export class InvalidHeaderError extends HttpError {
     super(400, message, options);
   }
 
-  get [Symbol.toStringTag](): string {
+  override get [Symbol.toStringTag](): string {
     return "InvalidHeaderError";
   }
 }

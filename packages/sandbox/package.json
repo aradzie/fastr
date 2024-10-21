@@ -6,6 +6,8 @@
   "repository": "aradzie/fastr",
   "license": "MIT",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
+  "type": "module",
+  "exports": null,
   "scripts": {
     "clean": "rm -fr lib",
     "compile": "tsc"

@@ -1,4 +1,4 @@
-import json from "mime-db/db.json";
+import json from "mime-db/db.json" with { type: "json" };
 
 export type MimeDbItem = {
   readonly source?: string;

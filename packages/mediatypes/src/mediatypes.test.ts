@@ -75,7 +75,7 @@ test("lookup by ext", (t) => {
     compressible: true,
   });
   t.like(MediaTypes.lookupByExt("js"), {
-    type: "application/javascript",
+    type: "text/javascript",
     text: true,
     compressible: true,
   });

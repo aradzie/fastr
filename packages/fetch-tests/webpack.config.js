@@ -1,4 +1,4 @@
-const { join } = require("path");
+import { join } from "node:path";
 
 const rule_ts = () => ({
   test: /\.(ts|tsx)$/,
@@ -8,20 +8,25 @@ const rule_ts = () => ({
       loader: "ts-loader",
       options: {
         transpileOnly: true,
+        compilerOptions: {
+          target: "es2022",
+          module: "es2022",
+          moduleResolution: "bundler"
+        },
       },
     },
   ],
 });
 
-module.exports = [
+export default [
   {
     name: "test-server",
     target: "node",
     mode: "development",
-    context: __dirname,
+    context: import.meta.dirname,
     entry: "./src/start-server.ts",
     output: {
-      path: join(__dirname, "lib"),
+      path: join(import.meta.dirname, "lib"),
       filename: "start-server.js",
       publicPath: "/lib/",
     },
@@ -35,10 +40,10 @@ module.exports = [
     name: "test-server",
     target: "node",
     mode: "production",
-    context: __dirname,
+    context: import.meta.dirname,
     entry: "./src/start-server.ts",
     output: {
-      path: join(__dirname, "lib"),
+      path: join(import.meta.dirname, "lib"),
       filename: "start-server-prod.js",
       publicPath: "/lib/",
     },
@@ -52,10 +57,10 @@ module.exports = [
     name: "tests",
     target: "web",
     mode: "development",
-    context: __dirname,
+    context: import.meta.dirname,
     entry: "./src/tests.ts",
     output: {
-      path: join(__dirname, "lib"),
+      path: join(import.meta.dirname, "lib"),
       filename: "tests-bundle.js",
       publicPath: "/lib/",
     },
@@ -69,10 +74,10 @@ module.exports = [
     name: "tests",
     target: "web",
     mode: "production",
-    context: __dirname,
+    context: import.meta.dirname,
     entry: "./src/tests.ts",
     output: {
-      path: join(__dirname, "lib"),
+      path: join(import.meta.dirname, "lib"),
       filename: "tests-bundle-prod.js",
       publicPath: "/lib/",
     },
@@ -86,10 +91,10 @@ module.exports = [
     name: "example",
     target: "web",
     mode: "development",
-    context: __dirname,
+    context: import.meta.dirname,
     entry: "./src/example.ts",
     output: {
-      path: join(__dirname, "lib"),
+      path: join(import.meta.dirname, "lib"),
       filename: "example-bundle.js",
       publicPath: "/lib/",
     },
@@ -103,10 +108,10 @@ module.exports = [
     name: "example",
     target: "web",
     mode: "production",
-    context: __dirname,
+    context: import.meta.dirname,
     entry: "./src/example.ts",
     output: {
-      path: join(__dirname, "lib"),
+      path: join(import.meta.dirname, "lib"),
       filename: "example-bundle-prod.js",
       publicPath: "/lib/",
     },

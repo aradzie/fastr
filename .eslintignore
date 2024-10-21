@@ -2,7 +2,4 @@ build/
 dist/
 out/
 lib/
-lib-cjs/
-lib-esm/
-node_modules/
 tmp/

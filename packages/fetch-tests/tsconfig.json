@@ -4,8 +4,6 @@
   "compilerOptions": {
     "rootDir": "src",
     "lib": ["es2022", "dom", "dom.iterable"],
-    "module": "es2022",
-    "target": "es2022",
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
