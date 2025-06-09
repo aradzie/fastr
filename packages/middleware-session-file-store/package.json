@@ -20,7 +20,7 @@
     "@sosimple/fsx-file": "^0.2.1",
     "@sosimple/fsx-lockfile": "^0.2.1",
     "@sosimple/retry": "^0.2.1",
-    "tslib": "^2.8.0"
+    "tslib": "^2.8.1"
   },
   "engines": {
     "node": ">=20.12"

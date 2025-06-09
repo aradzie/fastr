@@ -7,11 +7,11 @@ import {
 } from "@fastr/fetch";
 import { ContentType } from "@fastr/headers";
 import { mergeSearchParams } from "@fastr/url";
-import chai, { expect } from "chai";
+import { expect, use } from "chai";
 import chaiLike from "chai-like";
 import { formDataEntries, parseFormData } from "./util.js";
 
-chai.use(chaiLike);
+use(chaiLike);
 mocha.setup({
   ui: "bdd",
 });

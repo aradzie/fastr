@@ -30,7 +30,7 @@ test("lookup by type", (t) => {
   t.like(MediaTypes.lookup("application/octet-stream"), {
     type: "application/octet-stream",
     text: false,
-    compressible: false,
+    compressible: true,
   });
   t.like(MediaTypes.lookup("image/jpeg"), {
     type: "image/jpeg",

@@ -16,7 +16,7 @@
   "dependencies": {
     "@fastr/core": "^0.1.1",
     "@fastr/middleware-session": "^0.1.1",
-    "tslib": "^2.8.0"
+    "tslib": "^2.8.1"
   },
   "engines": {
     "node": ">=20.12"

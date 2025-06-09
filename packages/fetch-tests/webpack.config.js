@@ -29,6 +29,8 @@ export default [
       path: join(import.meta.dirname, "lib"),
       filename: "start-server.js",
       publicPath: "/lib/",
+      module: true,
+      chunkFormat: "module",
     },
     module: {
       rules: [rule_ts()],
@@ -41,6 +43,9 @@ export default [
     },
     optimization: { concatenateModules: true },
     devtool: "source-map",
+    experiments: {
+      outputModule: true,
+    },
   },
   {
     name: "test-server",
@@ -52,6 +57,8 @@ export default [
       path: join(import.meta.dirname, "lib"),
       filename: "start-server-prod.js",
       publicPath: "/lib/",
+      module: true,
+      chunkFormat: "module",
     },
     module: {
       rules: [rule_ts()],
@@ -64,6 +71,9 @@ export default [
     },
     optimization: { concatenateModules: true },
     devtool: "source-map",
+    experiments: {
+      outputModule: true,
+    },
   },
   {
     name: "tests",

@@ -16,7 +16,7 @@
   "dependencies": {
     "@fastr/json": "^0.1.1",
     "@fastr/mediatypes": "^0.1.1",
-    "tslib": "^2.8.0"
+    "tslib": "^2.8.1"
   },
   "engines": {
     "node": ">=20.12"
