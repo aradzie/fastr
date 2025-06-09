@@ -1,6 +1,6 @@
 {
   "name": "@fastr/controller",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://github.com/aradzie/fastr#readme",
   "repository": "aradzie/fastr",
   "license": "MIT",
@@ -14,13 +14,13 @@
     "test": "ava"
   },
   "dependencies": {
-    "@fastr/body": "^0.1.1",
-    "@fastr/core": "^0.1.1",
-    "@fastr/errors": "^0.1.1",
-    "@fastr/invert": "^0.1.1",
-    "@fastr/lang": "^0.1.1",
-    "@fastr/middleware-router": "^0.1.1",
-    "@fastr/middleware-session": "^0.1.1",
+    "@fastr/body": "^0.1.2",
+    "@fastr/core": "^0.1.2",
+    "@fastr/errors": "^0.1.2",
+    "@fastr/invert": "^0.1.2",
+    "@fastr/lang": "^0.1.2",
+    "@fastr/middleware-router": "^0.1.2",
+    "@fastr/middleware-session": "^0.1.2",
     "tslib": "^2.8.1"
   },
   "engines": {
