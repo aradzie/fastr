@@ -20,19 +20,19 @@
     "test": "lerna run test"
   },
   "devDependencies": {
-    "@ava/typescript": "^5.0.0",
-    "@eslint/js": "^9.28.0",
-    "@types/node": "^22.15.30",
-    "ava": "^6.4.0",
-    "eslint": "^9.28.0",
-    "eslint-plugin-ava": "^15.0.1",
-    "eslint-plugin-n": "^17.19.0",
+    "@ava/typescript": "^6.0.0",
+    "@eslint/js": "^9.32.0",
+    "@types/node": "^22.16.5",
+    "ava": "^6.4.1",
+    "eslint": "^9.32.0",
+    "eslint-plugin-ava": "^15.1.0",
+    "eslint-plugin-n": "^17.21.3",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "globals": "^16.2.0",
-    "lerna": "^8.2.2",
+    "globals": "^16.3.0",
+    "lerna": "^8.2.3",
     "mockdate": "^3.0.5",
-    "prettier": "^3.5.3",
+    "prettier": "^3.6.2",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.33.1"
+    "typescript-eslint": "^8.38.0"
   }
 }
