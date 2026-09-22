@@ -1,21 +1,14 @@
+import { DatabaseSync } from "node:sqlite";
 import test, { registerCompletionHandler } from "ava";
-import Knex from "knex";
 import { SqlStore } from "./sqlstore.js";
 
 registerCompletionHandler(() => {
   process.exit();
 });
 
-const knex = Knex({
-  client: "sqlite3",
-  useNullAsDefault: true,
-  connection: {
-    filename: ":memory:",
-  },
-  debug: false,
-});
+const database = new DatabaseSync(":memory:");
 
-const store = new SqlStore({ knex });
+const store = new SqlStore({ database });
 
 test.beforeEach(async (t) => {
   await store.dropSchema();

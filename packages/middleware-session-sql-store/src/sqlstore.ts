@@ -1,85 +1,94 @@
+import { type DatabaseSync } from "node:sqlite";
 import { inject, injectable } from "@fastr/invert";
 import { type Store, type StoredSession } from "@fastr/middleware-session";
-import { type Knex } from "knex";
 import { BSON_CODEC, type Codec } from "./codec.js";
-import {
-  kData,
-  kExpiresAt,
-  kId,
-  kUpdatedAt,
-  type SessionTable,
-} from "./schema.js";
+import { kData, kExpiresAt, kId, kUpdatedAt } from "./schema.js";
 
 export const kSqlStoreOptions = Symbol("kSqlStoreOptions");
 
 export interface SqlStoreOptions {
-  readonly knex: Knex;
+  readonly database: DatabaseSync;
   readonly table?: string;
   readonly codec?: Codec;
 }
 
+const kValidTableName = /^[A-Za-z_][A-Za-z0-9_]*$/;
+
 @injectable()
 export class SqlStore implements Store {
-  readonly #knex: Knex;
+  readonly #database: DatabaseSync;
   readonly #table: string;
   readonly #codec: Codec;
 
   constructor(@inject(kSqlStoreOptions) options: SqlStoreOptions) {
-    const { knex, table = "session", codec = BSON_CODEC } = options;
-    this.#knex = knex;
+    const { database, table = "session", codec = BSON_CODEC } = options;
+    if (!kValidTableName.test(table)) {
+      throw new Error(`Invalid table name: ${table}`);
+    }
+    this.#database = database;
     this.#table = table;
     this.#codec = codec;
   }
 
   async load(sessionId: string): Promise<StoredSession | null> {
-    const row = await this.newQueryBuilder().where(kId, sessionId).first();
+    const row = this.#database
+      .prepare(
+        `SELECT "${kData}", "${kExpiresAt}" FROM "${this.#table}" WHERE "${kId}" = ?`,
+      )
+      .get(sessionId) as { [kData]: Uint8Array; [kExpiresAt]: number | null } | undefined;
     if (row == null) {
       return null;
     }
-    const { data, expires_at } = row;
+    const { [kData]: data, [kExpiresAt]: expiresAt } = row;
     return {
-      expires: expires_at != null ? Math.floor(expires_at / 1000) : null,
+      expires: expiresAt != null ? Math.floor(expiresAt / 1000) : null,
       data: this.#codec.decode(data),
     };
   }
 
   async store(sessionId: string, session: StoredSession): Promise<void> {
     const { expires, data } = session;
-    await this.newQueryBuilder()
-      .insert({
-        id: sessionId,
-        data: this.#codec.encode(data),
-        updated_at: new Date(),
-        expires_at: expires != null ? new Date(expires * 1000) : null,
-      })
-      .onConflict(kId)
-      .merge();
+    this.#database
+      .prepare(
+        `INSERT INTO "${this.#table}" ("${kId}", "${kData}", "${kUpdatedAt}", "${kExpiresAt}")
+         VALUES (?, ?, ?, ?)
+         ON CONFLICT("${kId}") DO UPDATE SET
+           "${kData}" = excluded."${kData}",
+           "${kUpdatedAt}" = excluded."${kUpdatedAt}",
+           "${kExpiresAt}" = excluded."${kExpiresAt}"`,
+      )
+      .run(
+        sessionId,
+        this.#codec.encode(data),
+        Date.now(),
+        expires != null ? expires * 1000 : null,
+      );
   }
 
   async destroy(sessionId: string): Promise<void> {
-    await this.newQueryBuilder().where(kId, sessionId).delete();
+    this.#database
+      .prepare(`DELETE FROM "${this.#table}" WHERE "${kId}" = ?`)
+      .run(sessionId);
   }
 
   async gc(): Promise<void> {
-    await this.newQueryBuilder().where(kExpiresAt, "<", new Date()).delete();
-  }
-
-  private newQueryBuilder(): Knex.QueryBuilder<SessionTable> {
-    return this.#knex.table<SessionTable>(this.#table);
+    this.#database
+      .prepare(`DELETE FROM "${this.#table}" WHERE "${kExpiresAt}" < ?`)
+      .run(Date.now());
   }
 
   async createSchema(): Promise<void> {
-    if (!(await this.#knex.schema.hasTable(this.#table))) {
-      await this.#knex.schema.createTable(this.#table, (table) => {
-        table.string(kId).primary();
-        table.binary(kData).notNullable();
-        table.timestamp(kUpdatedAt).notNullable();
-        table.timestamp(kExpiresAt).nullable();
-      });
-    }
+    this.#database.exec(
+      `CREATE TABLE IF NOT EXISTS "${this.#table}" (
+         "${kId}" TEXT PRIMARY KEY,
+         "${kData}" BLOB NOT NULL,
+         "${kUpdatedAt}" INTEGER NOT NULL,
+         "${kExpiresAt}" INTEGER
+       )`,
+    );
   }
 
   async dropSchema(): Promise<void> {
-    await this.#knex.schema.dropTableIfExists(this.#table);
+    this.#database.exec(`DROP TABLE IF EXISTS "${this.#table}"`);
   }
 }
