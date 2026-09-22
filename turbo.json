@@ -1,0 +1,16 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "compile": {
+      "dependsOn": ["^compile"],
+      "outputs": ["lib/**"]
+    },
+    "test": {
+      "dependsOn": ["compile"],
+      "outputs": []
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

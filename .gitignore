@@ -6,6 +6,7 @@ lib/
 
 # Other
 node_modules/
+.turbo/
 tmp/
 backup/
 .cache/

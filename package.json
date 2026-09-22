@@ -7,17 +7,18 @@
   "license": "MIT",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "type": "module",
+  "packageManager": "npm@12.0.2",
   "workspaces": [
     "packages/*",
     "examples/*"
   ],
   "scripts": {
-    "clean": "lerna run clean",
-    "compile": "lerna run compile",
+    "clean": "turbo run clean",
+    "compile": "turbo run compile",
     "format": "prettier '{**/*,*}.{js,ts}' --write",
     "lint": "eslint '{**/*,*}.{js,ts}'",
     "lint-fix": "eslint '{**/*,*}.{js,ts}' --fix",
-    "test": "lerna run test"
+    "test": "turbo run test"
   },
   "devDependencies": {
     "@ava/typescript": "^7.0.0",
@@ -28,9 +29,9 @@
     "eslint-plugin-n": "^18.3.0",
     "eslint-plugin-simple-import-sort": "^14.0.0",
     "globals": "^17.12.0",
-    "lerna": "^10.0.1",
     "mockdate": "^3.0.5",
     "prettier": "^3.9.8",
+    "turbo": "^2.11.2",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.70.1"
   }
