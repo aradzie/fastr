@@ -174,7 +174,7 @@ test.serial("list files", async (t) => {
   // Assert.
 
   t.deepEqual(
-    (await collect(store.listFiles())).map(({ file }) => file.name),
+    (await collect(store.listFiles())).map(({ file }) => file.path),
     [],
   );
 
@@ -192,7 +192,7 @@ test.serial("list files", async (t) => {
   // Assert.
 
   t.deepEqual(
-    (await collect(store.listFiles())).map(({ file }) => file.name),
+    (await collect(store.listFiles())).map(({ file }) => file.path),
     ["/tmp/wfx-session-test/00/X", "/tmp/wfx-session-test/01/X"],
   );
 });
