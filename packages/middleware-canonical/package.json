@@ -24,7 +24,7 @@
     "@fastr/fake-http": "^0.1.3"
   },
   "engines": {
-    "node": ">=20.12"
+    "node": ">=26.9"
   },
   "publishConfig": {
     "access": "public"

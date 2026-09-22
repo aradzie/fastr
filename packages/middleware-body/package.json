@@ -28,7 +28,7 @@
     "@types/qs": "^6.15.1"
   },
   "engines": {
-    "node": ">=20.12"
+    "node": ">=26.9"
   },
   "publishConfig": {
     "access": "public"
