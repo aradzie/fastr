@@ -257,7 +257,6 @@ test("container hierarchy", (t) => {
   t.is(child2.get(id), "c");
 });
 
-// eslint-disable-next-line ava/no-skip-test
 test.skip("inherit constructor parameters", (t) => {
   @injectable()
   abstract class Base {

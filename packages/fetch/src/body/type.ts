@@ -28,7 +28,7 @@ export function guessContentType(
   }
 
   if (body instanceof ArrayBuffer || ArrayBuffer.isView(body)) {
-    return [body, contentType ?? "application/octet-stream"];
+    return [body as any, contentType ?? "application/octet-stream"]; // TODO: Fix `as any`.
   }
 
   if (body instanceof FormData) {
@@ -37,7 +37,7 @@ export function guessContentType(
       throw new TypeError(
         process.env.NODE_ENV !== "production"
           ? "Must not explicitly set the Content-Type header " +
-            "for a FormData body."
+              "for a FormData body."
           : undefined,
       );
     }
@@ -50,7 +50,7 @@ export function guessContentType(
       throw new TypeError(
         process.env.NODE_ENV !== "production"
           ? "Must not explicitly set the Content-Type header " +
-            "for an URLSearchParams body."
+              "for an URLSearchParams body."
           : undefined,
       );
     }

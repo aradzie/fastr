@@ -9,7 +9,7 @@ import { ContentType } from "@fastr/headers";
 import { mergeSearchParams } from "@fastr/url";
 import { expect, use } from "chai";
 import chaiLike from "chai-like";
-import { formDataEntries, parseFormData } from "./util.js";
+import { formDataEntries, parseFormData } from "./util.ts";
 
 use(chaiLike);
 mocha.setup({

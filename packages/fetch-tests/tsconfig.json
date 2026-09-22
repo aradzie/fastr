@@ -5,9 +5,8 @@
     "rootDir": "src",
     "lib": ["es2022", "dom", "dom.iterable"],
     "allowImportingTsExtensions": true,
-    "noEmit": true
+    "noEmit": true,
+    "types": ["node", "mocha"]
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }
